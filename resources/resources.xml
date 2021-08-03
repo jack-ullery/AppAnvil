@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/appanvil-resources">
+    <file preprocess="xml-stripblanks">resources/main.glade</file>
+    <file>resources/icon.svg</file>
+  </gresource>
+</gresources>
