@@ -1,5 +1,5 @@
-# AppAnvil-Private
-Private development repository for the AppAnvil project.
+# AppAnvil
+A GUI for the Linux Security Module AppArmor
 
 ## Dependencies
 ### Compile Time
