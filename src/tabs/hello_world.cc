@@ -1,8 +1,8 @@
 #include "hello_world.h"
-#include <iostream>
 
-#include<vector>
+#include <iostream>
 #include<string>
+#include<vector>
 
 HelloWorld::HelloWorld()
 : builder{Gtk::Builder::create_from_file("./resources/hello.glade")}

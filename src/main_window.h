@@ -7,6 +7,9 @@
 #include <gtkmm/box.h>
 #include <gtkmm/stack.h>
 
+#define DEFAULT_WINDOW_WIDTH  400
+#define DEFAULT_WINDOW_HEIGHT 400
+
 class MainWindow : public Gtk::ApplicationWindow
 {
 

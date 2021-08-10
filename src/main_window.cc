@@ -19,7 +19,7 @@ MainWindow::MainWindow()
   // Set some default settings for the window
   this->set_title("Skeleton GTK Demo");
   this->set_icon_from_file("./resources/icon.svg");
-  this->set_default_size(400, 400);
+  this->set_default_size(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 
   // Show all children
   this->show_all();
