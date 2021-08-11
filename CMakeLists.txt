@@ -12,7 +12,6 @@ set(
 
 set(PROJECT_RESOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/resources)
 set(XML_GRESOURCE ${PROJECT_RESOURCE_DIR}/resources.gresource.xml)
-set(RESOURCE_BUNDLE_HEADER ${PROJECT_RESOURCE_DIR}/resources.h)
 
 set(RESOURCE_BUNDLE_OUTPUT ${PROJECT_SOURCE_DIR}/resource.autogen.c)
 
@@ -30,7 +29,7 @@ find_program(CPPCHECK_EXISTS cppcheck)
 if(CPPCHECK_EXISTS)
   add_custom_target(
     CPPCHECK
-    COMMAND cppcheck --enable=all --check-config --suppress=missingIncludeSystem ${SOURCES}
+    COMMAND cppcheck --enable=all --check-config --suppress=missingIncludeSystem ${SOURCES} ${RESOURCE_BUNDLE_OUTPUT}
     COMMENT "Running cppcheck..."
     VERBATIM
   )
@@ -49,7 +48,7 @@ if(CLANG_TIDY_EXISTS)
     COMMAND clang-tidy 
       -checks=-*,bugprone-*,cert-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,google-*,hicpp-*,linuxkernel-*,llvm-*,llvmlibc-*,misc-*,performance-*,portability-*,readability-*
       -header-filter=.*,-gtkmm*
-      ${SOURCES}
+      ${SOURCES} ${RESOURCE_BUNDLE_OUTPUT}
     COMMENT "Running clang-tidy (this may take a while)..."
     VERBATIM
   )
@@ -78,7 +77,7 @@ add_custom_target(
 )
 
 add_custom_command(
-    OUTPUT ${RESOURCE_BUNDLE_OUTPUT} ${RESOURCE_BUNDLE_HEADER}
+    OUTPUT ${RESOURCE_BUNDLE_OUTPUT}
     COMMAND glib-compile-resources --target=${RESOURCE_BUNDLE_OUTPUT} --generate-source ${XML_GRESOURCE}
     DEPENDS ${XML_GRESOURCE} GLADE_RESOURCES
     COMMENT "Generating Glib Resource Bundle."
