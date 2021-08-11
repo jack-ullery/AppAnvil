@@ -14,5 +14,6 @@ _deps
 build/
 
 resources/*.glade~
+src/resources.autogen.c
 
 dist/appanvil

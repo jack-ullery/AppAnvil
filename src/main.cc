@@ -1,7 +1,5 @@
 #include "main_window.h"
-// #include "tabs/random_box_window.h"
 #include <gtkmm/application.h>
-#include <iostream>
 
 int main()
 {

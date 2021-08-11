@@ -1,20 +1,32 @@
 #include "main_window.h"
-#include <iostream>
+#include "resource.autogen.c"
 
 #include <gtkmm/button.h>
 #include <gtkmm/label.h>
+#include <iostream>
+
+Glib::RefPtr<Gio::Resource> MainWindow::get_resource_bundle(){
+  Glib::RefPtr<Gio::Resource> resource_bundle = Glib::wrap(resources_get_resource());
+  resource_bundle->register_global();
+  return resource_bundle;
+}
+
+// Need to convert to Glib::RefPtr someday
+template <typename T_Widget>
+T_Widget* MainWindow::get_widget(const Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder){
+  T_Widget *raw_addr = nullptr;
+  builder->get_widget<T_Widget>(name, raw_addr);
+  return raw_addr;
+}
 
 MainWindow::MainWindow()
-: builder{Gtk::Builder::create_from_file("./resources/main_window.glade")},
-  hw(new HelloWorld())
+: resource_bundle{get_resource_bundle()},
+  builder{Gtk::Builder::create_from_file("./resources/main_window.glade")},
+  m_container{get_widget<Gtk::Box>("m_box", builder)},
+  m_stack{get_widget<Gtk::Stack>("m_stack", builder)}
 {
   // Get the main container and add it to the current window
-  builder->get_widget<Gtk::Box>("m_box", m_container);
-  builder->get_widget<Gtk::Stack>("m_stack", m_stack);
   this->add(*m_container);
-
-  // Add the Hello World page to the stack
-  m_stack->add(*hw,"page3", "Hello World");
 
   // Set some default settings for the window
   this->set_title("Skeleton GTK Demo");
@@ -28,8 +40,6 @@ MainWindow::MainWindow()
 MainWindow::~MainWindow()
 {
   std::cout << "Closing Main Window!" << std::endl;
-  // Delete all tabs
-  hw.reset();
   // Delete all the widgets
   delete m_stack;
   delete m_container;
