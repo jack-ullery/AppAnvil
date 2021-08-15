@@ -8,6 +8,10 @@ set(
   SOURCES
   ${PROJECT_SOURCE_DIR}/main.cc
   ${PROJECT_SOURCE_DIR}/main_window.cc
+  ${PROJECT_SOURCE_DIR}/tabs/hello_world.cc
+  ${PROJECT_SOURCE_DIR}/tabs/status.cc
+  ${PROJECT_SOURCE_DIR}/tabs/profiles.cc
+  ${PROJECT_SOURCE_DIR}/tabs/processes.cc
 )
 
 set(PROJECT_RESOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/resources)
@@ -67,6 +71,9 @@ pkg_check_modules(GTKMM gtkmm-3.0)
 link_directories(${GTKMM_LIBRARY_DIRS})
 include_directories(include ${GTKMM_INCLUDE_DIRS})
 
+#### Include jsoncpp libraries ####
+pkg_check_modules(JSONCPP jsoncpp)
+
 #### Package the .gresource.xml resource bundle ####
 add_custom_target(
   GLADE_RESOURCES
@@ -95,4 +102,4 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_executable(${PROJECT_NAME} ${RESOURCE_BUNDLE_OUTPUT} ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME} ${GTKMM_LIBRARIES})
-
+target_link_libraries(${PROJECT_NAME} jsoncpp)

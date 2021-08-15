@@ -14,13 +14,21 @@ std::unique_ptr<T_Widget> MainWindow::get_widget(const Glib::ustring name, const
 MainWindow::MainWindow()
 : builder{Gtk::Builder::create_from_file("./resources/main_window.glade")},
   m_container{MainWindow::get_widget<Gtk::Box>("m_box", builder)},
-  m_stack{MainWindow::get_widget<Gtk::Stack>("m_stack", builder)}
+  m_stack{MainWindow::get_widget<Gtk::Stack>("m_stack", builder)},
+  hw{new HelloWorld()},
+  prof{new Profiles()},
+  proc{new Processes()}
 {
   // Get the main container and add it to the current window
   this->add(*m_container);
 
+  // Add tabs to the stack pane
+  m_stack->add(*hw, "hw", "Hello World!");
+  m_stack->add(*prof, "prof", "Profiles");
+  m_stack->add(*proc, "proc", "Processes");
+
   // Set some default settings for the window
-  this->set_title("Skeleton GTK Demo");
+  this->set_title("AppAnvil (pre-alpha release)");
   this->set_icon_from_file("./resources/icon.svg");
   this->set_default_size(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 
