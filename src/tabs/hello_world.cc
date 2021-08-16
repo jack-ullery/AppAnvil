@@ -12,7 +12,7 @@ std::unique_ptr<T_Widget> HelloWorld::get_widget(const Glib::ustring name, const
 }
 
 HelloWorld::HelloWorld()
-: builder{Gtk::Builder::create_from_file("./resources/hello.glade")},
+: builder{Gtk::Builder::create_from_resource("/resources/hello.glade")},
   h_label{HelloWorld::get_widget<Gtk::Label>("h_label", builder)},
   h_btn{HelloWorld::get_widget<Gtk::Button>("h_btn", builder)},
   h_box{HelloWorld::get_widget<Gtk::Box>("h_box", builder)}

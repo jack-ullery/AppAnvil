@@ -12,7 +12,7 @@ std::unique_ptr<T_Widget> MainWindow::get_widget(const Glib::ustring name, const
 }
 
 MainWindow::MainWindow()
-: builder{Gtk::Builder::create_from_file("./resources/main_window.glade")},
+: builder{Gtk::Builder::create_from_resource("/resources/main_window.glade")},
   m_container{MainWindow::get_widget<Gtk::Box>("m_box", builder)},
   m_stack{MainWindow::get_widget<Gtk::Stack>("m_stack", builder)},
   hw{new HelloWorld()},
