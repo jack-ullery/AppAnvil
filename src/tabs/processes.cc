@@ -23,16 +23,15 @@ Processes::Processes()
 {
   s_view.set_model(s_model);
   
-  s_view.append_column("Profile", s_record.s_process);
-  s_view.append_column("Status",  s_record.s_status);
+  s_view.append_column("Process", s_record.s_process);
+  // s_view.append_column("Status",  s_record.s_status);
 
   // Make both of those appended columns reorerable.
-  for(guint i = 0; i < 2; i++)
+  for(guint i = 0; i < s_view.get_n_columns(); i++)
   {
-    auto column = s_view.get_column(i);
+    auto *column = s_view.get_column(i);
     column->set_reorderable();
-    // column->set_sort_column(s_record.s_process);
-    column->set_sort_column(s_record.s_status);
+    column->set_sort_column(s_record.s_process);
   }
 
 
@@ -43,4 +42,4 @@ Processes::Processes()
   this->show_all();
 }
 
-Processes::~Processes(){ }
+Processes::~Processes() = default;

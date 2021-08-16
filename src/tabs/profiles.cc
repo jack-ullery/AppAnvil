@@ -28,9 +28,9 @@ Profiles::Profiles()
   s_view.append_column("Status",  s_record.s_status);
 
   // Make both of those appended columns reorerable.
-  for(guint i = 0; i < 2; i++)
+  for(guint i = 0; i < s_view.get_n_columns(); i++)
   {
-    auto column = s_view.get_column(i);
+    auto *column = s_view.get_column(i);
     column->set_reorderable();
     // column->set_sort_column(s_record.s_profile);
     column->set_sort_column(s_record.s_status);
@@ -44,4 +44,4 @@ Profiles::Profiles()
   this->show_all();
 }
 
-Profiles::~Profiles(){ }
+Profiles::~Profiles() = default;

@@ -1,6 +1,6 @@
 #include "resource.autogen.c"
-
 #include "main_window.h"
+
 #include <gtkmm/application.h>
 
 Glib::RefPtr<Gio::Resource> get_resource_bundle(){

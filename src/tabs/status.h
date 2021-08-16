@@ -11,7 +11,7 @@ class Status
     static Json::Value get_status_JSON();
 
   private:
-    static Json::Value parse_JSON(std::string raw_json);
+    static Json::Value parse_JSON(const std::string& raw_json);
 };
 
 #endif // GTKMM_EXAMPLE_STATUS_H

@@ -1,9 +1,4 @@
 #include "jsoncpp/json/json.h"
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <giomm.h>
-#include <glibmm.h>
 #include "status.h"
 
 #include <giomm.h>
@@ -12,7 +7,7 @@
 #include <sstream>
 #include <string>
 
-Json::Value Status::parse_JSON(std::string raw_json){
+Json::Value Status::parse_JSON(const std::string& raw_json){
   std::stringstream stream;
   stream << raw_json;
 
@@ -32,7 +27,7 @@ std::string Status::get_status_str(){
 
   std::string child_output;
   std::string child_error;
-  int exit_status;
+  int exit_status = 0;
 
   Glib::spawn_sync("/usr/sbin/", args, Glib::SpawnFlags::SPAWN_DEFAULT, {}, &child_output, &child_error, &exit_status);
 

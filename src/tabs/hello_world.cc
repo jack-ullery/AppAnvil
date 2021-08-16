@@ -4,14 +4,19 @@
 #include<string>
 #include<vector>
 
-HelloWorld::HelloWorld()
-: builder{Gtk::Builder::create_from_file("./resources/hello.glade")}
-{
-  // Get main widgets
-  builder->get_widget<Gtk::Label>("h_label",h_label);
-  builder->get_widget<Gtk::Button>("h_btn",h_btn);
-  builder->get_widget<Gtk::Box>("h_box",h_box);
+template <typename T_Widget>
+std::unique_ptr<T_Widget> HelloWorld::get_widget(const Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder){
+  T_Widget *raw_addr = nullptr;
+  builder->get_widget<T_Widget>(name, raw_addr);
+  return std::unique_ptr<T_Widget>(raw_addr);
+}
 
+HelloWorld::HelloWorld()
+: builder{Gtk::Builder::create_from_file("./resources/hello.glade")},
+  h_label{HelloWorld::get_widget<Gtk::Label>("h_label", builder)},
+  h_btn{HelloWorld::get_widget<Gtk::Button>("h_btn", builder)},
+  h_box{HelloWorld::get_widget<Gtk::Box>("h_box", builder)}
+{
   // Call on_button_clicked() method, when button is clicked.
   h_btn->signal_clicked().connect(sigc::mem_fun(*this, &HelloWorld::on_button_clicked));
 
@@ -19,12 +24,7 @@ HelloWorld::HelloWorld()
   this->show_all();
 }
 
-HelloWorld::~HelloWorld(){
-  std::cout << "Closing HelloWorld!" << std::endl;
-  delete h_box;
-  delete h_btn;
-  delete h_label;
-}
+HelloWorld::~HelloWorld() = default;
 
 void HelloWorld::on_button_clicked()
 {
