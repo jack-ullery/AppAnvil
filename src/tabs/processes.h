@@ -13,9 +13,8 @@ class Processes : public Gtk::ScrolledWindow
 {
   public:
     Processes();
-    virtual ~Processes();
-    void refresh();
-  
+    void refresh();  
+
   protected:
     Gtk::TreeView s_view;
 

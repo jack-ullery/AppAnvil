@@ -36,12 +36,8 @@ Profiles::Profiles()
     column->set_sort_column(s_record.s_status);
   }
 
-
   refresh();
-
 
   this->add(s_view);
   this->show_all();
 }
-
-Profiles::~Profiles() = default;

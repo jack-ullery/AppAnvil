@@ -15,7 +15,6 @@ class Profiles : public Gtk::ScrolledWindow
 {
   public:
     Profiles();
-    virtual ~Profiles();
     void refresh();
   
   protected:

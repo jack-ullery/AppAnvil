@@ -34,12 +34,8 @@ Processes::Processes()
     column->set_sort_column(s_record.s_process);
   }
 
-
   refresh();
-
 
   this->add(s_view);
   this->show_all();
 }
-
-Processes::~Processes() = default;

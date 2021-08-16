@@ -24,8 +24,6 @@ HelloWorld::HelloWorld()
   this->show_all();
 }
 
-HelloWorld::~HelloWorld() = default;
-
 void HelloWorld::on_button_clicked()
 {
   std::cout << messages[message_index] << std::endl;

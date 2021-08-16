@@ -13,7 +13,6 @@ class HelloWorld : public Gtk::ScrolledWindow
 {
   public:
     HelloWorld();
-    virtual ~HelloWorld();
 
   protected:
     //Signal handlers:
