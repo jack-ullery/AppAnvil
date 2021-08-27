@@ -31,6 +31,7 @@ MainWindow::MainWindow()
   this->set_title("AppAnvil (pre-alpha release)");
   this->set_icon_from_file("./resources/icon.svg");
   this->set_default_size(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+  this->add_events(Gdk::EventMask::ENTER_NOTIFY_MASK);
 
   // Show all children
   this->show_all();

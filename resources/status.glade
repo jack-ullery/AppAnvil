@@ -21,6 +21,9 @@
             <property name="can-focus">True</property>
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
+            <child internal-child="selection">
+              <object class="GtkTreeSelection"/>
+            </child>
           </object>
         </child>
       </object>
@@ -31,7 +34,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkSearchEntry">
+      <object class="GtkSearchEntry" id="s_search">
         <property name="visible">True</property>
         <property name="can-focus">True</property>
         <property name="margin-start">10</property>

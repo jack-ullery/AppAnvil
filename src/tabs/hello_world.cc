@@ -1,8 +1,8 @@
 #include "hello_world.h"
 
 #include <iostream>
-#include<string>
-#include<vector>
+#include <string>
+#include <vector>
 
 template <typename T_Widget>
 std::unique_ptr<T_Widget> HelloWorld::get_widget(const Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder){
