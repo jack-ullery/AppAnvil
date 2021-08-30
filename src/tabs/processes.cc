@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <regex>
+#include <gtkmm/enums.h>
 #include <string>
 #include <vector>
 
@@ -30,29 +31,44 @@ bool Processes::filter(const std::string& str, const std::string& rule){
   return false;
 }
 
-// Not finished yet. Need to add information for PID somewhere.
+// Not finished yet. Want to improve how the columns with the children look.
 void Processes::refresh(const std::string& rule){
   Json::Value root = Status::get_status_JSON();
   Json::Value processes = root["processes"];
 
-  list_store->clear();
+  // std::cout << "Root: \n\t" << root << std::endl;
+  tree_store->clear();
   for(auto proc = processes.begin(); proc != processes.end(); proc++){
-    std::string key = proc.key().asString();
+    const std::string& key = proc.key().asString();
     if(filter(key, rule)){
-      auto row = *(list_store->append());
-      row[s_record.s_process] = proc.key().asString();
-      // row[s_record.s_status] =  profiles.get(proc.key().asString(), UNKNOWN_STATUS).asString();
+      auto row = *(tree_store->append());
+      row[s_record.s_process] = key;
+
+      Json::Value val = (*proc)[0];
+      for(auto inst = proc->begin(); inst != proc->end(); inst++){
+        auto child = *(tree_store->append(row.children()));
+        child[s_record.s_process] = "pid: " + inst->get("pid", "Unknown").asString();
+        child[s_record.s_profile] = inst->get("profile", "Unknown").asString();
+        child[s_record.s_status]  = inst->get("status", "Unknown").asString();
+      }
     }
   }
 }
 
 void Processes::order_columns(){
-  for(guint i = 0; i < s_view->get_n_columns(); i++)
-  {
-    auto *column = s_view->get_column(i);
-    column->set_reorderable();
-    column->set_sort_column(s_record.s_process);
-  }
+  // Notice the column retrieved is a TreeViewColumn, not a TreeModelColumn like was used with s_record
+  // The column numbers depend on the order the are added to s_view
+  auto *column = s_view->get_column(0);
+  column->set_reorderable();
+  column->set_sort_column(s_record.s_process);
+
+  column = s_view->get_column(1);
+  column->set_reorderable();
+  column->set_sort_column(s_record.s_profile);
+
+  column = s_view->get_column(2);
+  column->set_reorderable();
+  column->set_sort_column(s_record.s_status);
 }
 
 Processes::Processes()
@@ -61,10 +77,16 @@ Processes::Processes()
   s_win{Processes::get_widget<Gtk::ScrolledWindow>("s_win", builder)},
   s_box{Processes::get_widget<Gtk::Box>("s_box", builder)},
   s_search{Processes::get_widget<Gtk::SearchEntry>("s_search", builder)},
-  list_store{Gtk::ListStore::create(s_record)}
+  tree_store{Gtk::TreeStore::create(s_record)}
 {
-  s_view->set_model(list_store);
+  s_view->set_model(tree_store);
   s_view->append_column("Process", s_record.s_process);
+  s_view->append_column("Profile", s_record.s_profile);
+  s_view->append_column("Status", s_record.s_status);
+
+  s_win->set_policy(Gtk::PolicyType::POLICY_AUTOMATIC, Gtk::PolicyType::POLICY_AUTOMATIC);
+  s_win->set_hexpand();
+  s_win->set_vexpand();
 
   refresh(".*");
   order_columns();

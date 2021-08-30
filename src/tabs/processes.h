@@ -3,7 +3,7 @@
 
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
-#include <gtkmm/liststore.h>
+#include <gtkmm/treestore.h>
 #include <gtkmm/treemodel.h>
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treeview.h>
@@ -38,15 +38,17 @@ class Processes : public Gtk::ScrolledWindow
         StatusColumnRecord()
         {
           add(s_process);
+          add(s_profile);
           add(s_status);
         }
         // Will need to change these columns
         Gtk::TreeModelColumn<std::string> s_process;
+        Gtk::TreeModelColumn<std::string> s_profile;
         Gtk::TreeModelColumn<std::string> s_status;
     };
 
     StatusColumnRecord s_record;
-    Glib::RefPtr<Gtk::ListStore> list_store;
+    Glib::RefPtr<Gtk::TreeStore> tree_store;
 
   private:
     template <typename T_Widget>
