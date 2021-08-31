@@ -75,18 +75,28 @@ include_directories(include ${GTKMM_INCLUDE_DIRS})
 pkg_check_modules(JSONCPP jsoncpp)
 
 #### Package the .gresource.xml resource bundle ####
-add_custom_target(
-  GLADE_RESOURCES
+
+# This gets the list of dependencies for ${XML_GRESOURCE} when cmake is called.
+# If a dependency is added to the ${XML_GRESOURCE} file, you should run cmake again
+execute_process(
   COMMAND glib-compile-resources ${XML_GRESOURCE} --generate-dependencies 
-  DEPENDS ${XML_GRESOURCE}
-  COMMENT "Discovering required GLib resources."
-  VERBATIM
+  OUTPUT_VARIABLE GLADE_RESOURCES
+  RESULT_VARIABLE GLIB_RETURN_VALUE
+  OUTPUT_STRIP_TRAILING_WHITESPACE
 )
+
+# This ensures that ${GLADE_RESOURCES} uses semicolons instead of newline characters as seperators
+string(REGEX REPLACE "\n" ";" GLADE_RESOURCES "${GLADE_RESOURCES}")
+
+# If glib-compile-resources did not complete succesfully, throw a fatal error
+if (NOT GLIB_RETURN_VALUE EQUAL 0)
+    message(FATAL_ERROR "Failed to get the dependencies from glib-compile-resources")
+endif()
 
 add_custom_command(
     OUTPUT ${RESOURCE_BUNDLE_OUTPUT}
     COMMAND glib-compile-resources --target=${RESOURCE_BUNDLE_OUTPUT} --generate-source ${XML_GRESOURCE}
-    DEPENDS ${XML_GRESOURCE} GLADE_RESOURCES
+    DEPENDS ${XML_GRESOURCE} ${GLADE_RESOURCES}
     COMMENT "Generating Glib Resource Bundle."
     VERBATIM
 )
