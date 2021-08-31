@@ -15,7 +15,6 @@ MainWindow::MainWindow()
 : builder{Gtk::Builder::create_from_resource("/resources/main_window.glade")},
   m_container{MainWindow::get_widget<Gtk::Box>("m_box", builder)},
   m_stack{MainWindow::get_widget<Gtk::Stack>("m_stack", builder)},
-  hw{new HelloWorld()},
   prof{new Profiles()},
   proc{new Processes()}
 {
@@ -23,7 +22,6 @@ MainWindow::MainWindow()
   this->add(*m_container);
 
   // Add tabs to the stack pane
-  m_stack->add(*hw, "hw", "Hello World!");
   m_stack->add(*prof, "prof", "Profiles");
   m_stack->add(*proc, "proc", "Processes");
 

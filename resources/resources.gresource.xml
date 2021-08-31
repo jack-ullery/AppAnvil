@@ -3,7 +3,6 @@
   <gresource>
     <file preprocess="xml-stripblanks">resources/main_window.glade</file>
     <file>resources/icon.svg</file>
-    <file preprocess="xml-stripblanks">resources/hello.glade</file>
     <file preprocess="xml-stripblanks">resources/status.glade</file>
   </gresource>
 </gresources>

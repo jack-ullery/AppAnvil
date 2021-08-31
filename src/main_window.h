@@ -1,7 +1,6 @@
 #ifndef GTKMM_EXAMPLE_MAINWINDOW_H
 #define GTKMM_EXAMPLE_MAINWINDOW_H
 
-#include "tabs/hello_world.h"
 #include "tabs/profiles.h"
 #include "tabs/processes.h"
 #include "tabs/status.h"
@@ -33,7 +32,6 @@ class MainWindow : public Gtk::ApplicationWindow
     std::unique_ptr<Gtk::Stack> m_stack;
 
     // Tabs
-    std::unique_ptr<HelloWorld> hw;
     std::unique_ptr<Profiles> prof;
     std::unique_ptr<Processes> proc;
 
