@@ -2,9 +2,9 @@
 #include "processes.h"
 #include "status.h"
 
+#include <gtkmm/enums.h>
 #include <iostream>
 #include <regex>
-#include <gtkmm/enums.h>
 #include <string>
 #include <vector>
 
