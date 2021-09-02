@@ -32,7 +32,7 @@ find_program(CPPCHECK_EXISTS cppcheck)
 if(CPPCHECK_EXISTS)
   add_custom_target(
     CPPCHECK
-    COMMAND cppcheck --enable=all --check-config --suppress=missingIncludeSystem ${SOURCES} ${RESOURCE_BUNDLE_OUTPUT}
+    COMMAND cppcheck --enable=all --check-config --suppress=missingInclude ${SOURCES}
     COMMENT "Running cppcheck..."
     VERBATIM
   )
@@ -51,7 +51,7 @@ if(CLANG_TIDY_EXISTS)
     COMMAND clang-tidy 
       -checks=-*,bugprone-*,cert-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,google-*,hicpp-*,linuxkernel-*,llvm-*,llvmlibc-*,misc-*,performance-*,portability-*,readability-*
       -header-filter=.*,-gtkmm*
-      ${SOURCES} ${RESOURCE_BUNDLE_OUTPUT}
+      ${SOURCES}
     COMMENT "Running clang-tidy (this may take a while)..."
     VERBATIM
   )
