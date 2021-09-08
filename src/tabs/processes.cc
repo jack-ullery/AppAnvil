@@ -1,35 +1,10 @@
 #include "jsoncpp/json/json.h"
 #include "processes.h"
-#include "status.h"
 
 #include <gtkmm/enums.h>
 #include <iostream>
 #include <regex>
 #include <string>
-#include <vector>
-
-template <typename T_Widget>
-std::unique_ptr<T_Widget> Processes::get_widget(const Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder){
-  T_Widget *raw_addr = nullptr;
-  builder->get_widget<T_Widget>(name, raw_addr);
-  return std::unique_ptr<T_Widget>(raw_addr);
-}
-
-bool Processes::filter(const std::string& str, const std::string& rule){
-
-  if(str.find(rule) != std::string::npos){
-    return true;
-  }
-
-  try{
-    std::regex filter_regex(rule);
-    if(std::regex_match(str, filter_regex)){
-      return true;
-    }
-  } catch(const std::regex_error& ex){  }
-
-  return false;
-}
 
 // Not finished yet. Want to improve how the columns with the children look.
 void Processes::refresh(const std::string& rule){
@@ -40,7 +15,7 @@ void Processes::refresh(const std::string& rule){
   tree_store->clear();
   for(auto proc = processes.begin(); proc != processes.end(); proc++){
     const std::string& key = proc.key().asString();
-    if(filter(key, rule)){
+    if(Status::filter(key, rule)){
       auto row = *(tree_store->append());
       row[s_record.s_process] = key;
 
@@ -72,29 +47,18 @@ void Processes::order_columns(){
 }
 
 Processes::Processes()
-: builder{Gtk::Builder::create_from_resource("/resources/status.glade")},
-  s_view{Processes::get_widget<Gtk::TreeView>("s_view", builder)},
-  s_win{Processes::get_widget<Gtk::ScrolledWindow>("s_win", builder)},
-  s_box{Processes::get_widget<Gtk::Box>("s_box", builder)},
-  s_search{Processes::get_widget<Gtk::SearchEntry>("s_search", builder)},
-  tree_store{Gtk::TreeStore::create(s_record)}
+: tree_store{Gtk::TreeStore::create(s_record)}
 {
   s_view->set_model(tree_store);
   s_view->append_column("Process", s_record.s_process);
   s_view->append_column("Profile", s_record.s_profile);
   s_view->append_column("Status", s_record.s_status);
 
-  s_win->set_policy(Gtk::PolicyType::POLICY_AUTOMATIC, Gtk::PolicyType::POLICY_AUTOMATIC);
-  s_win->set_hexpand();
-  s_win->set_vexpand();
-
   refresh(".*");
   order_columns();
 
-  s_win->set_shadow_type(Gtk::ShadowType::SHADOW_NONE);
   s_search->signal_search_changed().connect(
     sigc::mem_fun(*this, &Processes::on_search_changed), true);
-  this->add(*s_box);
   this->show_all();
 }
 
