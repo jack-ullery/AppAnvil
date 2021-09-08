@@ -14,7 +14,7 @@ void Profiles::refresh(const std::string& rule){
   list_store->clear();
   for(auto prof = profiles.begin(); prof != profiles.end(); prof++){
     std::string key = prof.key().asString();
-    if(Status::filter(key, rule)){
+    if(filter(key, rule)){
       auto row = *(list_store->append());
       row[col_record.profile_col] = key;
       row[col_record.status_col] =  profiles.get(key, UNKNOWN_STATUS).asString();
@@ -39,11 +39,15 @@ Profiles::Profiles()
   s_view->append_column("Profile", col_record.profile_col);
   s_view->append_column("Status", col_record.status_col);
 
-  refresh(".*");
+  refresh("");
   order_columns();
 
-  s_search->signal_search_changed().connect(
-    sigc::mem_fun(*this, &Profiles::on_search_changed), true);
+  auto sig_handler = sigc::mem_fun(*this, &Profiles::on_search_changed);
+  s_search->signal_search_changed().connect(sig_handler, true);
+  s_use_regex->signal_clicked().connect(sig_handler, true);
+  s_match_case->signal_clicked().connect(sig_handler, true);
+  s_whole_word->signal_clicked().connect(sig_handler, true);
+
   this->show_all();
 }
 

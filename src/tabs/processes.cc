@@ -15,7 +15,7 @@ void Processes::refresh(const std::string& rule){
   tree_store->clear();
   for(auto proc = processes.begin(); proc != processes.end(); proc++){
     const std::string& key = proc.key().asString();
-    if(Status::filter(key, rule)){
+    if(filter(key, rule)){
       auto row = *(tree_store->append());
       row[s_record.s_process] = key;
 
@@ -54,11 +54,15 @@ Processes::Processes()
   s_view->append_column("Profile", s_record.s_profile);
   s_view->append_column("Status", s_record.s_status);
 
-  refresh(".*");
+  refresh("");
   order_columns();
 
-  s_search->signal_search_changed().connect(
-    sigc::mem_fun(*this, &Processes::on_search_changed), true);
+  auto sig_handler = sigc::mem_fun(*this, &Processes::on_search_changed);
+  s_search->signal_search_changed().connect(sig_handler, true);
+  s_use_regex->signal_clicked().connect(sig_handler, true);
+  s_match_case->signal_clicked().connect(sig_handler, true);
+  s_whole_word->signal_clicked().connect(sig_handler, true);
+
   this->show_all();
 }
 

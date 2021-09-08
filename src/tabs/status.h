@@ -5,7 +5,9 @@
 #include <sstream>
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
+#include <gtkmm/checkbutton.h>
 #include <gtkmm/enums.h>
+#include <gtkmm/label.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treeview.h>
@@ -24,13 +26,20 @@ class Status : public Gtk::ScrolledWindow
     // GUI Builder to parse UI from xml file
     Glib::RefPtr<Gtk::Builder> builder;
 
-    // Member Widgets
+    // Container Widgets
     std::unique_ptr<Gtk::TreeView> s_view;
     std::unique_ptr<Gtk::ScrolledWindow> s_win;
     std::unique_ptr<Gtk::Box> s_box;
-    std::unique_ptr<Gtk::SearchEntry> s_search;
 
-    static bool filter(const std::string& str, const std::string& rule);
+    // Widgets related to searchbar
+    std::unique_ptr<Gtk::SearchEntry> s_search;
+    std::unique_ptr<Gtk::CheckButton> s_use_regex;
+    std::unique_ptr<Gtk::CheckButton> s_match_case;
+    std::unique_ptr<Gtk::CheckButton> s_whole_word;
+    std::unique_ptr<Gtk::Label>       s_found_label;
+
+    static bool filter(const std::string& str, const std::string& rule, const bool& use_regex);
+    bool filter(const std::string& str, const std::string& rule);
 
   private:
     template <typename T_Widget>

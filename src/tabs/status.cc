@@ -18,20 +18,26 @@ std::unique_ptr<T_Widget> Status::get_widget(const Glib::ustring name, const Gli
   return std::unique_ptr<T_Widget>(raw_addr);
 }
 
-bool Status::filter(const std::string& str, const std::string& rule){
-
-  if(str.find(rule) != std::string::npos){
-    return true;
+bool Status::filter(const std::string& str, const std::string& rule, const bool& use_regex){
+  if(use_regex){
+    try{
+      std::regex filter_regex(rule);
+      if(std::regex_match(str, filter_regex)){
+        return true;
+      }
+    } catch(const std::regex_error& ex){  }
   }
-
-  try{
-    std::regex filter_regex(rule);
-    if(std::regex_match(str, filter_regex)){
+  else {
+    if(rule == "" || str.find(rule) != std::string::npos){
       return true;
     }
-  } catch(const std::regex_error& ex){  }
+  }
 
   return false;
+}
+
+bool Status::filter(const std::string& str, const std::string& rule){
+  return Status::filter(str, rule, s_use_regex->get_active());
 }
 
 Json::Value Status::parse_JSON(const std::string& raw_json){
@@ -75,7 +81,11 @@ Status::Status()
   s_view{Status::get_widget<Gtk::TreeView>("s_view", builder)},
   s_win{Status::get_widget<Gtk::ScrolledWindow>("s_win", builder)},
   s_box{Status::get_widget<Gtk::Box>("s_box", builder)},
-  s_search{Status::get_widget<Gtk::SearchEntry>("s_search", builder)}
+  s_search{Status::get_widget<Gtk::SearchEntry>("s_search", builder)},
+  s_use_regex{Status::get_widget<Gtk::CheckButton>("s_use_regex", builder)},
+  s_match_case{Status::get_widget<Gtk::CheckButton>("s_match_case", builder)},
+  s_whole_word{Status::get_widget<Gtk::CheckButton>("s_whole_word", builder)},
+  s_found_label{Status::get_widget<Gtk::Label>("s_found_label", builder)}
 {
   s_win->set_shadow_type(Gtk::ShadowType::SHADOW_NONE);
   s_win->set_policy(Gtk::PolicyType::POLICY_AUTOMATIC, Gtk::PolicyType::POLICY_AUTOMATIC);
