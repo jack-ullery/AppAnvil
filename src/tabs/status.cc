@@ -33,6 +33,7 @@ std::string Status::get_status_str(){
 
   if(exit_status != 0){
     std::cout << "Error calling '"<< args[0] <<"'. " << child_error << std::endl;
+    child_output = "{\"processes\": {}, \"profiles\": {}";
   }
 
   return child_output;
