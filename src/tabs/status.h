@@ -38,7 +38,7 @@ class Status : public Gtk::ScrolledWindow
     std::unique_ptr<Gtk::CheckButton> s_whole_word;
     std::unique_ptr<Gtk::Label>       s_found_label;
 
-    static bool filter(const std::string& str, const std::string& rule, const bool& use_regex);
+    static bool filter(const std::string& str, const std::string& rule, const bool& use_regex, const bool& match_case, const bool& whole_word);
     bool filter(const std::string& str, const std::string& rule);
 
   private:

@@ -18,26 +18,51 @@ std::unique_ptr<T_Widget> Status::get_widget(const Glib::ustring name, const Gli
   return std::unique_ptr<T_Widget>(raw_addr);
 }
 
-bool Status::filter(const std::string& str, const std::string& rule, const bool& use_regex){
-  if(use_regex){
-    try{
-      std::regex filter_regex(rule);
-      if(std::regex_match(str, filter_regex)){
-        return true;
-      }
-    } catch(const std::regex_error& ex){  }
+bool Status::filter(const std::string& str, const std::string& rule, const bool& use_regex, const bool& match_case, const bool& whole_word){
+  std::string new_str = str;
+  std::string new_rule = rule;
+
+  if(!match_case){
+    // Convert the filtered string and rule to lower case
+    transform(str.begin(), str.end(), new_str.begin(), ::tolower);
+    transform(rule.begin(), rule.end(), new_rule.begin(), ::tolower);
   }
-  else {
-    if(rule == "" || str.find(rule) != std::string::npos){
-      return true;
+
+  if(use_regex && whole_word){
+    try{
+      // Try to parse the regular expression rule.
+      std::regex filter_regex(new_rule);
+      // Match strings that entirely match the rule
+      return std::regex_match(new_str, filter_regex);
+    } catch(const std::regex_error& ex){
+      // If the regular expression was not valid, return false
+      return false;
     }
   }
 
-  return false;
+  if(use_regex && !whole_word){
+    try{
+      std::regex filter_regex(new_rule);
+      // Match strings that have substrings that match the rule
+      return std::regex_search(new_str, filter_regex);
+    } catch(const std::regex_error& ex){
+      return false;
+    }
+  }
+
+  if(whole_word){
+    // Only match strings that are exactly equal to the rule
+    return new_str == new_rule;
+  }
+
+  if(!whole_word){
+    // Otherwise, match any string that contains the rule as a substring
+    return new_str.find(new_rule) != std::string::npos;    
+  }
 }
 
 bool Status::filter(const std::string& str, const std::string& rule){
-  return Status::filter(str, rule, s_use_regex->get_active());
+  return Status::filter(str, rule, s_use_regex->get_active(), s_match_case->get_active(), s_whole_word->get_active());
 }
 
 Json::Value Status::parse_JSON(const std::string& raw_json){

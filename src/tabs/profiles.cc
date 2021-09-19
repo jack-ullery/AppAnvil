@@ -11,6 +11,8 @@ void Profiles::refresh(const std::string& rule){
   Json::Value root = Status::get_status_JSON();
   Json::Value profiles = root["profiles"];
 
+  int num_found = 0;
+
   list_store->clear();
   for(auto prof = profiles.begin(); prof != profiles.end(); prof++){
     std::string key = prof.key().asString();
@@ -18,8 +20,11 @@ void Profiles::refresh(const std::string& rule){
       auto row = *(list_store->append());
       row[col_record.profile_col] = key;
       row[col_record.status_col] =  profiles.get(key, UNKNOWN_STATUS).asString();
+      num_found++;
     }
   }
+
+  s_found_label->set_text(" " + std::to_string(num_found) + " matching profiles");
 }
 
 void Profiles::order_columns(){

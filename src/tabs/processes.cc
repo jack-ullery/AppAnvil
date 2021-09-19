@@ -11,6 +11,7 @@ void Processes::refresh(const std::string& rule){
   Json::Value root = Status::get_status_JSON();
   Json::Value processes = root["processes"];
 
+  int num_found = 0;
   // std::cout << "Root: \n\t" << root << std::endl;
   tree_store->clear();
   for(auto proc = processes.begin(); proc != processes.end(); proc++){
@@ -26,7 +27,9 @@ void Processes::refresh(const std::string& rule){
         child[s_record.s_profile] = inst->get("profile", "Unknown").asString();
         child[s_record.s_status]  = inst->get("status", "Unknown").asString();
       }
+      num_found++;
     }
+    s_found_label->set_text(" " + std::to_string(num_found) + " matching processes");
   }
 }
 
