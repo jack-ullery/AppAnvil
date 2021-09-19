@@ -16,6 +16,12 @@ Linters and Static Analysis tools used by the Makefile
 * clang-tidy
 
 ## Compilation Instructions
+
+To modify pkexec's behavior when authenticating calls to some AppArmor utilities.
+```
+sudo cp ./resources/com.github.jack-ullery.AppAnvil.pkexec.policy /usr/share/polkit-1/actions/
+```
+
 To generate a makefile, and build the project using that makefile:
 ```
 $ cmake .

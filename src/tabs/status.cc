@@ -23,29 +23,24 @@ bool Status::filter(const std::string& str, const std::string& rule, const bool&
   std::string new_rule = rule;
 
   if(!match_case){
-    // Convert the filtered string and rule to lower case
+    // If we don't care about case, convert the filtered string and rule to lower case
     transform(str.begin(), str.end(), new_str.begin(), ::tolower);
     transform(rule.begin(), rule.end(), new_rule.begin(), ::tolower);
   }
 
-  if(use_regex && whole_word){
+  if(use_regex){
     try{
       // Try to parse the regular expression rule.
       std::regex filter_regex(new_rule);
-      // Match strings that entirely match the rule
-      return std::regex_match(new_str, filter_regex);
+      if(whole_word){
+        // Match strings that entirely match the rule
+        return std::regex_match(new_str, filter_regex);
+      }
+      // Otherwise, match strings that contain a substring that matches the rule
+      return std::regex_search(new_str, filter_regex);
+
     } catch(const std::regex_error& ex){
       // If the regular expression was not valid, return false
-      return false;
-    }
-  }
-
-  if(use_regex && !whole_word){
-    try{
-      std::regex filter_regex(new_rule);
-      // Match strings that have substrings that match the rule
-      return std::regex_search(new_str, filter_regex);
-    } catch(const std::regex_error& ex){
       return false;
     }
   }
@@ -55,10 +50,8 @@ bool Status::filter(const std::string& str, const std::string& rule, const bool&
     return new_str == new_rule;
   }
 
-  if(!whole_word){
-    // Otherwise, match any string that contains the rule as a substring
-    return new_str.find(new_rule) != std::string::npos;    
-  }
+  // Otherwise, match any string that contains the rule as a substring
+  return new_str.find(new_rule) != std::string::npos;    
 }
 
 bool Status::filter(const std::string& str, const std::string& rule){
@@ -81,7 +74,7 @@ Json::Value Status::parse_JSON(const std::string& raw_json){
 }
 
 std::string Status::get_status_str(){
-  std::vector<std::string> args = {"sudo", "aa-status","--json"};
+  std::vector<std::string> args = {"pkexec", "aa-status","--json"};
 
   std::string child_output;
   std::string child_error;
