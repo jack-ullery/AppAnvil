@@ -7,7 +7,7 @@
 
 // refresh() is based on assumptions about the output of aa-status.
 // If those assumptions are incorrect, or aa-status changes, this could crash.
-void Profiles::refresh(const std::string& rule){
+void Profiles::refresh(){
   Json::Value root = Status::get_status_JSON();
   Json::Value profiles = root["profiles"];
 
@@ -16,7 +16,7 @@ void Profiles::refresh(const std::string& rule){
   list_store->clear();
   for(auto prof = profiles.begin(); prof != profiles.end(); prof++){
     std::string key = prof.key().asString();
-    if(filter(key, rule)){
+    if(filter(key)){
       auto row = *(list_store->append());
       row[col_record.profile_col] = key;
       row[col_record.status_col] =  profiles.get(key, UNKNOWN_STATUS).asString();
@@ -28,12 +28,18 @@ void Profiles::refresh(const std::string& rule){
 }
 
 void Profiles::order_columns(){
+  // Notice the column retrieved is a TreeViewColumn, not a TreeModelColumn like was used with s_record
+  // The column numbers depend on the order the are added to s_view
   auto *profile_view_col = s_view->get_column(0);
   profile_view_col->set_reorderable();
+  profile_view_col->set_resizable();
+  profile_view_col->set_min_width(20);
   profile_view_col->set_sort_column(col_record.profile_col);
 
   auto *status_view_col = s_view->get_column(1);
   status_view_col->set_reorderable();
+  status_view_col->set_resizable();
+  status_view_col->set_min_width(20);
   status_view_col->set_sort_column(col_record.status_col);
 }
 
@@ -44,7 +50,7 @@ Profiles::Profiles()
   s_view->append_column("Profile", col_record.profile_col);
   s_view->append_column("Status", col_record.status_col);
 
-  refresh("");
+  refresh();
   order_columns();
 
   auto sig_handler = sigc::mem_fun(*this, &Profiles::on_search_changed);
@@ -57,5 +63,5 @@ Profiles::Profiles()
 }
 
 void Profiles::on_search_changed(){
-  refresh(s_search->get_text());
+  refresh();
 }

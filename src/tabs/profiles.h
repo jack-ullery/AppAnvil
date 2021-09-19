@@ -22,7 +22,7 @@ class Profiles : public Status
 {
   public:
     Profiles();
-    void refresh(const std::string& rule);
+    void refresh();
     void order_columns();
   
   protected:

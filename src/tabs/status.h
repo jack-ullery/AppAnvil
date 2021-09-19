@@ -38,13 +38,13 @@ class Status : public Gtk::ScrolledWindow
     std::unique_ptr<Gtk::CheckButton> s_whole_word;
     std::unique_ptr<Gtk::Label>       s_found_label;
 
-    static bool filter(const std::string& str, const std::string& rule, const bool& use_regex, const bool& match_case, const bool& whole_word);
-    bool filter(const std::string& str, const std::string& rule);
+    bool filter(const std::string& str);
 
   private:
     template <typename T_Widget>
     static std::unique_ptr<T_Widget> get_widget(const Glib::ustring name, const Glib::RefPtr<Gtk::Builder>& builder);    
     static Json::Value parse_JSON(const std::string& raw_json);
+    static bool filter(const std::string& str, const std::string& rule, const bool& use_regex, const bool& match_case, const bool& whole_word);
 };
 
 #endif // GTKMM_EXAMPLE_STATUS_H

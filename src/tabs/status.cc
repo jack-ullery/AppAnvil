@@ -54,8 +54,8 @@ bool Status::filter(const std::string& str, const std::string& rule, const bool&
   return new_str.find(new_rule) != std::string::npos;    
 }
 
-bool Status::filter(const std::string& str, const std::string& rule){
-  return Status::filter(str, rule, s_use_regex->get_active(), s_match_case->get_active(), s_whole_word->get_active());
+bool Status::filter(const std::string& str){
+  return Status::filter(str, s_search->get_text(), s_use_regex->get_active(), s_match_case->get_active(), s_whole_word->get_active());
 }
 
 Json::Value Status::parse_JSON(const std::string& raw_json){
