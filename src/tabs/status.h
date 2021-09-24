@@ -15,12 +15,15 @@
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/searchentry.h>
 
+#define MIN_COL_WIDTH 20
+
 class Status : public Gtk::ScrolledWindow
 {
   public:
     Status();
     static std::string get_status_str();
     static Json::Value get_status_JSON();
+    static std::string get_logs_str();
 
   protected:
     // GUI Builder to parse UI from xml file

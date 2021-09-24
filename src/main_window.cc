@@ -16,7 +16,8 @@ MainWindow::MainWindow()
   m_container{MainWindow::get_widget<Gtk::Box>("m_box", builder)},
   m_stack{MainWindow::get_widget<Gtk::Stack>("m_stack", builder)},
   prof{new Profiles()},
-  proc{new Processes()}
+  proc{new Processes()},
+  logs{new Logs()}
 {
   // Get the main container and add it to the current window
   this->add(*m_container);
@@ -24,6 +25,7 @@ MainWindow::MainWindow()
   // Add tabs to the stack pane
   m_stack->add(*prof, "prof", "Profiles");
   m_stack->add(*proc, "proc", "Processes");
+  m_stack->add(*logs, "logs", "Logs");
 
   // Set some default settings for the window
   this->set_title("AppAnvil (pre-alpha release)");

@@ -90,6 +90,23 @@ std::string Status::get_status_str(){
   return child_output;
 }
 
+std::string Status::get_logs_str(){
+  std::vector<std::string> args = {"dmesg"};
+
+  std::string child_output;
+  std::string child_error;
+  int exit_status = 0;
+
+  Glib::spawn_sync("/usr/sbin/", args, Glib::SpawnFlags::SPAWN_DEFAULT, {}, &child_output, &child_error, &exit_status);
+
+  if(exit_status != 0){
+    std::cout << "Error calling '"<< args[0] <<"'. " << child_error << std::endl;
+    child_output = "";
+  }
+
+  return child_output;
+}
+
 Json::Value Status::get_status_JSON(){
   return parse_JSON(get_status_str());
 }

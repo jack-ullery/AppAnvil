@@ -11,6 +11,7 @@ set(
   ${PROJECT_SOURCE_DIR}/tabs/status.cc
   ${PROJECT_SOURCE_DIR}/tabs/profiles.cc
   ${PROJECT_SOURCE_DIR}/tabs/processes.cc
+  ${PROJECT_SOURCE_DIR}/tabs/logs.cc
 )
 
 set(PROJECT_RESOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/resources)

@@ -1,6 +1,7 @@
 #ifndef GTKMM_EXAMPLE_MAINWINDOW_H
 #define GTKMM_EXAMPLE_MAINWINDOW_H
 
+#include "tabs/logs.h"
 #include "tabs/profiles.h"
 #include "tabs/processes.h"
 #include "tabs/status.h"
@@ -34,6 +35,7 @@ class MainWindow : public Gtk::ApplicationWindow
     // Tabs
     std::unique_ptr<Profiles> prof;
     std::unique_ptr<Processes> proc;
+    std::unique_ptr<Logs> logs;
 
   private:
     template <typename T_Widget>
