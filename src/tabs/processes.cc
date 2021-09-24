@@ -34,7 +34,7 @@ void Processes::order_columns(){
   auto *column = s_view->get_column(0);
   column->set_reorderable();
   column->set_resizable();
-  column->set_min_width(20);
+  column->set_min_width(MIN_COL_WIDTH);
   column->set_sort_column(s_record.s_process);
 }
 

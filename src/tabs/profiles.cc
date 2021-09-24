@@ -33,13 +33,13 @@ void Profiles::order_columns(){
   auto *profile_view_col = s_view->get_column(0);
   profile_view_col->set_reorderable();
   profile_view_col->set_resizable();
-  profile_view_col->set_min_width(20);
+  profile_view_col->set_min_width(MIN_COL_WIDTH);
   profile_view_col->set_sort_column(col_record.profile_col);
 
   auto *status_view_col = s_view->get_column(1);
   status_view_col->set_reorderable();
   status_view_col->set_resizable();
-  status_view_col->set_min_width(20);
+  status_view_col->set_min_width(MIN_COL_WIDTH);
   status_view_col->set_sort_column(col_record.status_col);
 }
 
