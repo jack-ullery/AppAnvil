@@ -13,6 +13,7 @@
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/searchentry.h>
 #include <memory>
+#include <regex>
 #include <string>
 #include <vector>
 
@@ -34,14 +35,21 @@ class Logs : public Status
       public:
         StatusColumnRecord()
         {
-          add(log_col);
+          for(uint i = 0; i < column.size(); i++){
+            column[i] = Gtk::TreeModelColumn<std::string>();
+            add(column[i]);
+          }
         }
 
-      Gtk::TreeModelColumn<std::string> log_col;
+      std::vector<Gtk::TreeModelColumn<std::string>> column = std::vector<Gtk::TreeModelColumn<std::string>>(5);
     };
 
     StatusColumnRecord col_record;
     Glib::RefPtr<Gtk::ListStore> list_store;
+
+  private:
+    void add_row_from_line(std::string line);
+    static std::string parse_line(std::string line, std::regex elem);
 };
 
 #endif // GTKMM_EXAMPLE_LOGS_H
