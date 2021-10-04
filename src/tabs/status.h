@@ -2,6 +2,8 @@
 #define GTKMM_EXAMPLE_STATUS_H
 
 #include "jsoncpp/json/json.h"
+#include "status_column_record.h"
+
 #include <sstream>
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
@@ -15,8 +17,6 @@
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/searchentry.h>
 
-#define MIN_COL_WIDTH 20
-
 class Status : public Gtk::ScrolledWindow
 {
   public:
@@ -24,13 +24,14 @@ class Status : public Gtk::ScrolledWindow
     static std::string get_status_str();
     static Json::Value get_status_JSON();
     static std::string get_logs_str();
+    static std::string get_unconfined();
 
   protected:
     // GUI Builder to parse UI from xml file
     Glib::RefPtr<Gtk::Builder> builder;
 
     // Container Widgets
-    std::unique_ptr<Gtk::TreeView> s_view;
+    std::shared_ptr<Gtk::TreeView> s_view;
     std::unique_ptr<Gtk::ScrolledWindow> s_win;
     std::unique_ptr<Gtk::Box> s_box;
 

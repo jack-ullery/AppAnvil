@@ -23,27 +23,13 @@ class Profiles : public Status
   public:
     Profiles();
     void refresh();
-    void order_columns();
   
   protected:
     // Signal handlers    
     void on_search_changed();
 
-    class StatusColumnRecord : public Gtk::TreeModel::ColumnRecord
-    {
-      public:
-        StatusColumnRecord()
-        {
-          add(profile_col);
-          add(status_col);
-        }
-
-      Gtk::TreeModelColumn<std::string> profile_col;
-      Gtk::TreeModelColumn<std::string> status_col;
-    };
-
-    StatusColumnRecord col_record;
-    Glib::RefPtr<Gtk::ListStore> list_store;
+    const std::vector<std::string> col_names{"Profile", "Status"};
+    std::shared_ptr<StatusColumnRecord> col_record;
 };
 
 #endif // GTKMM_EXAMPLE_PROFILES_H

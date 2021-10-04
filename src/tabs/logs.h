@@ -24,32 +24,17 @@ class Logs : public Status
   public:
     Logs();
     void refresh();
-    void order_columns();
   
   protected:
     // Signal handlers    
     void on_search_changed();
 
-    class StatusColumnRecord : public Gtk::TreeModel::ColumnRecord
-    {
-      public:
-        StatusColumnRecord()
-        {
-          for(uint i = 0; i < column.size(); i++){
-            column[i] = Gtk::TreeModelColumn<std::string>();
-            add(column[i]);
-          }
-        }
-
-      std::vector<Gtk::TreeModelColumn<std::string>> column = std::vector<Gtk::TreeModelColumn<std::string>>(5);
-    };
-
-    StatusColumnRecord col_record;
-    Glib::RefPtr<Gtk::ListStore> list_store;
+    const std::vector<std::string> col_names{"Type", "Operation", "Profile", "Name", "Pid"};
+    std::shared_ptr<StatusColumnRecord> col_record;
 
   private:
-    void add_row_from_line(std::string line);
-    static std::string parse_line(std::string line, std::regex elem);
+    void add_row_from_line(const std::string& line);
+    static std::string parse_line(const std::string& line, const std::regex& elem);
 };
 
 #endif // GTKMM_EXAMPLE_LOGS_H

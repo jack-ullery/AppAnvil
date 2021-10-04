@@ -13,4 +13,13 @@
     <annotate key="org.freedesktop.policykit.exec.path">/usr/sbin/aa-status</annotate>
   </action>
 
+  <action id="com.github.jack-ullery.AppAnvil.pkexec.aa-unconfined">
+    <message>Authentication is needed to run 'aa-unconfined' as the super user.</message>
+    <icon_name>aa-unconfined</icon_name>
+    <defaults>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/sbin/aa-unconfined</annotate>
+  </action>
+
 </policyconfig>

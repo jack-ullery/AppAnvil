@@ -6,46 +6,58 @@
 #include <regex>
 #include <string>
 
+const std::regex filter_unconfined_proc("\\b([1234567890]+) ([^ ]+) (not confined)");
+
+// Need to improve!
 void Processes::refresh(){
   Json::Value root = Status::get_status_JSON();
   Json::Value processes = root["processes"];
 
   int num_found = 0;
-  // std::cout << "Root: \n\t" << root << std::endl;
-  tree_store->clear();
+  col_record->clear();
   for(auto proc = processes.begin(); proc != processes.end(); proc++){
     const std::string& key = proc.key().asString();
     if(filter(key)){
-      auto row = *(tree_store->append());
-      row[s_record.s_process] = key;
+      auto row = col_record->new_column();
+      row[col_record->column[0]] = key;
 
       Json::Value val = (*proc)[0];
       for(auto inst = proc->begin(); inst != proc->end(); inst++){
-        auto child = *(tree_store->append(row.children()));
-        child[s_record.s_process] = "pid: " + inst->get("pid", "Unknown").asString() + "\t profile: "+inst->get("profile", "Unknown").asString()+"\t status: " + inst->get("status", "Unknown").asString();
+        auto child = col_record->new_child_column(row);
+        child[col_record->column[0]] = "pid: " + inst->get("pid", "Unknown").asString() + "\t status: " + inst->get("status", "Unknown").asString();
       }
       num_found++;
     }
-    s_found_label->set_text(" " + std::to_string(num_found) + " matching processes");
   }
-}
 
-void Processes::order_columns(){
-  auto *column = s_view->get_column(0);
-  column->set_reorderable();
-  column->set_resizable();
-  column->set_min_width(MIN_COL_WIDTH);
-  column->set_sort_column(s_record.s_process);
+  std::stringstream unconfined_results;
+  std::string line;
+  unconfined_results << Status::get_unconfined();
+  while(std::getline(unconfined_results, line)){
+    std::smatch m;
+    bool re = regex_search(line, m, filter_unconfined_proc);
+    if(re){
+      std::string prof_name = m[2].str();
+      std::string pid = m[1].str();
+
+      if(filter(prof_name)){
+        auto row = col_record->new_column();
+        row[col_record->column[0]] = m[2].str();
+
+        auto child = col_record->new_child_column(row);
+        child[col_record->column[0]] = "pid: " + m[1].str() + "\t status: " + "unconfined";
+        num_found++;
+      }
+    }
+  }
+
+  s_found_label->set_text(" " + std::to_string(num_found) + " matching processes");
 }
 
 Processes::Processes()
-: tree_store{Gtk::TreeStore::create(s_record)}
+: col_record{StatusColumnRecord::create(s_view, col_names)}
 {
-  s_view->set_model(tree_store);
-  s_view->append_column("Process", s_record.s_process);
-
   refresh();
-  order_columns();
 
   auto sig_handler = sigc::mem_fun(*this, &Processes::on_search_changed);
   s_search->signal_search_changed().connect(sig_handler, true);
