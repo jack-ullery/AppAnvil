@@ -29,7 +29,7 @@ class Logs : public Status
     // Signal handlers    
     void on_search_changed();
 
-    const std::vector<std::string> col_names{"Type", "Operation", "Profile", "Name", "Pid"};
+    const std::vector<std::string> col_names{"Type", "Operation", "Name", "Pid", "Status"};
     std::shared_ptr<StatusColumnRecord> col_record;
 
   private:

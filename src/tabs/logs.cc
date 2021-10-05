@@ -13,7 +13,7 @@ std::regex create_regex_from_tag(const std::string& tag){
 const std::regex filter_log_regex("audit: type=1400");
 const std::regex filter_log_type      = create_regex_from_tag("apparmor");
 const std::regex filter_log_operation = create_regex_from_tag("operation");
-const std::regex filter_log_profile   = create_regex_from_tag("profile");
+const std::regex filter_log_status    = create_regex_from_tag("profile");
 const std::regex filter_log_name      = create_regex_from_tag("name");
 const std::regex filter_log_pid("\\bpid=([0123456789]*)");
 
@@ -27,9 +27,9 @@ void Logs::add_row_from_line(const std::string& line){
   auto row = col_record->new_column();
   row[col_record->column[0]] = parse_line(line, filter_log_type);
   row[col_record->column[1]] = parse_line(line, filter_log_operation);
-  row[col_record->column[2]] = parse_line(line, filter_log_profile);
-  row[col_record->column[3]] = parse_line(line, filter_log_name);
-  row[col_record->column[4]] = parse_line(line, filter_log_pid);
+  row[col_record->column[2]] = parse_line(line, filter_log_name);
+  row[col_record->column[3]] = parse_line(line, filter_log_pid);
+  row[col_record->column[4]] = parse_line(line, filter_log_status);
 }
 
 // refresh() is based on assumptions about the output of aa-status.
