@@ -5,7 +5,7 @@
 #include <iostream>
 
 template <typename T_Widget>
-std::unique_ptr<T_Widget> MainWindow::get_widget(const Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder){
+std::unique_ptr<T_Widget> MainWindow::get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder){
   T_Widget *raw_addr = nullptr;
   builder->get_widget<T_Widget>(name, raw_addr);
   return std::unique_ptr<T_Widget>(raw_addr);
@@ -35,9 +35,4 @@ MainWindow::MainWindow()
 
   // Show all children
   this->show_all();
-}
-
-MainWindow::~MainWindow()
-{
-  std::cout << "Closing Main Window!" << std::endl;
 }

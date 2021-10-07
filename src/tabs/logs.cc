@@ -7,15 +7,15 @@
 
 
 std::regex create_regex_from_tag(const std::string& tag){
-  return std::regex("\\b" + tag + "=\"([^ ]*)\""); 
+  return std::regex("\\b" + tag + "=\"([^ ]*)\"");
 }
 
-const std::regex filter_log_regex("audit: type=1400");
-const std::regex filter_log_type      = create_regex_from_tag("apparmor");
-const std::regex filter_log_operation = create_regex_from_tag("operation");
-const std::regex filter_log_status    = create_regex_from_tag("profile");
-const std::regex filter_log_name      = create_regex_from_tag("name");
-const std::regex filter_log_pid("\\bpid=([0123456789]*)");
+const std::regex filter_log_regex("audit: type=1400");                      // NOLINT(cert-err-58-cpp)
+const std::regex filter_log_type      = create_regex_from_tag("apparmor");  // NOLINT(cert-err-58-cpp)
+const std::regex filter_log_operation = create_regex_from_tag("operation"); // NOLINT(cert-err-58-cpp)
+const std::regex filter_log_status    = create_regex_from_tag("profile");   // NOLINT(cert-err-58-cpp)
+const std::regex filter_log_name      = create_regex_from_tag("name");      // NOLINT(cert-err-58-cpp)
+const std::regex filter_log_pid("\\bpid=([0123456789]*)");                  // NOLINT(cert-err-58-cpp)
 
 std::string Logs::parse_line(const std::string& line, const std::regex& elem){
   std::smatch m;
@@ -51,19 +51,16 @@ void Logs::refresh(){
     }
   }
 
-  s_found_label->set_text(" " + std::to_string(num_found) + " logs");
+  Status::set_status_label_text(" " + std::to_string(num_found) + " logs");
 }
 
 Logs::Logs()
-: col_record{StatusColumnRecord::create(s_view, col_names)}
+: col_record{StatusColumnRecord::create(Status::get_view(), col_names)}
 {
   refresh();
 
-  auto sig_handler = sigc::mem_fun(*this, &Logs::on_search_changed);
-  s_search->signal_search_changed().connect(sig_handler, true);
-  s_use_regex->signal_clicked().connect(sig_handler, true);
-  s_match_case->signal_clicked().connect(sig_handler, true);
-  s_whole_word->signal_clicked().connect(sig_handler, true);
+  auto func = sigc::mem_fun(*this, &Logs::on_search_changed);
+  Status::set_signal_handler(func);
 
   this->show_all();
 }

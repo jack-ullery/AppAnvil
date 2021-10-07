@@ -17,8 +17,7 @@ set(
 
 set(PROJECT_RESOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/resources)
 set(XML_GRESOURCE ${PROJECT_RESOURCE_DIR}/resources.gresource.xml)
-
-set(RESOURCE_BUNDLE_OUTPUT ${PROJECT_SOURCE_DIR}/resource.autogen.c)
+set(RESOURCE_BUNDLE_OUTPUT ${PROJECT_RESOURCE_DIR}/resource.autogen.c)
 
 #### Add Linters and Static Analysis ####
 add_custom_target(
@@ -50,9 +49,11 @@ find_program(CLANG_TIDY_EXISTS clang-tidy)
 if(CLANG_TIDY_EXISTS)
   add_custom_target(
     CLANG-TIDY
-    COMMAND clang-tidy 
-      -checks=-*,bugprone-*,cert-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,google-*,hicpp-*,linuxkernel-*,llvm-*,llvmlibc-*,misc-*,performance-*,portability-*,readability-*
-      -header-filter=.*,-gtkmm*
+    COMMAND clang-tidy;
+      -checks=-*,bugprone-*,cert-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,google-*,hicpp-*,linuxkernel-*,llvm-*,llvmlibc-*,misc-*,performance-*,portability-*,readability-*,-llvm-header-guard*,-misc-non-private-member-variables-in-classes*
+      -format-style='file'
+      -header-filter=.*
+      -p .
       ${SOURCES}
     COMMENT "Running clang-tidy (this may take a while)..."
     VERBATIM
@@ -69,8 +70,13 @@ endif()
 find_package(PkgConfig)
 pkg_check_modules(GTKMM gtkmm-3.0)
 
-link_directories(${GTKMM_LIBRARY_DIRS})
-include_directories(include ${GTKMM_INCLUDE_DIRS})
+#link_directories(${GTKMM_LIBRARY_DIRS})
+#include_directories(
+#  header_only_library_no_static_code_analysis 
+#  SYSTEM # Adds -isystem instead of -I and this tells clang-tidy not to analyze these includes
+#  INTERFACE
+#    ${GTKMM_INCLUDE_DIRS}
+#)
 
 #### Include jsoncpp libraries ####
 pkg_check_modules(JSONCPP jsoncpp)
@@ -97,9 +103,16 @@ endif()
 add_custom_command(
     OUTPUT ${RESOURCE_BUNDLE_OUTPUT}
     COMMAND glib-compile-resources --target=${RESOURCE_BUNDLE_OUTPUT} --generate-source ${XML_GRESOURCE}
-    DEPENDS ${XML_GRESOURCE} ${GLADE_RESOURCES}
+    DEPENDS ${XML_GRESOURCE} ${GLADE_RESOURCES} 
     COMMENT "Generating Glib Resource Bundle."
     VERBATIM
+)
+
+include_directories(
+  header_only_library_no_static_code_analysis 
+  SYSTEM # Adds -isystem instead of -I and this tells clang-tidy not to analyze these includes
+  INTERFACE
+    ${PROJECT_RESOURCE_DIR}
 )
 
 #### Set Compiler Options ####
@@ -108,9 +121,18 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # set(CMAKE_LINK_WHAT_YOU_USE TRUE)
+#set(CMAKE_CXX_CLANG_TIDY
+#  clang-tidy;
+#  -checks=-*,bugprone-*,cert-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,google-*,hicpp-*,linuxkernel-*,llvm-*,llvmlibc-*,misc-*,performance-*,portability-*,readability-*,-llvm-header-guard*,-misc-non-private-member-variables-in-classes*,
+#  -format-style='file';
+#  -header-filter=${CMAKE_CURRENT_SOURCE_DIR};
+#)
 
 #### Link everything together ####
 add_executable(${PROJECT_NAME} ${RESOURCE_BUNDLE_OUTPUT} ${SOURCES})
 
-target_link_libraries(${PROJECT_NAME} ${GTKMM_LIBRARIES})
-target_link_libraries(${PROJECT_NAME} jsoncpp)
+target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${jsoncpp_DIRS})
+
+target_link_libraries(${PROJECT_NAME} PUBLIC ${GTKMM_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PUBLIC jsoncpp)

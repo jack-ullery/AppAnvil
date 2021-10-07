@@ -1,5 +1,5 @@
-#ifndef GTKMM_EXAMPLE_STATUS_COLUMN_RECORD_H
-#define GTKMM_EXAMPLE_STATUS_COLUMN_RECORD_H
+#ifndef TABS_STATUS_COLUMN_RECORD_H
+#define TABS_STATUS_COLUMN_RECORD_H
 
 #include <gtkmm/treemodel.h>
 #include <gtkmm/treemodelcolumn.h>
@@ -7,7 +7,7 @@
 #include <gtkmm/treeview.h>
 #include <memory>
 
-#define MIN_COL_WIDTH 20
+constexpr int MIN_COL_WIDTH = 20;
 
 class StatusColumnRecord : public Gtk::TreeModel::ColumnRecord
 {
@@ -19,9 +19,9 @@ class StatusColumnRecord : public Gtk::TreeModel::ColumnRecord
 
         std::vector<Gtk::TreeModelColumn<std::string>> column;
 
-    protected:
-        StatusColumnRecord(const std::vector<std::string>& names);
+    private:
+        explicit StatusColumnRecord(const std::vector<std::string>& names);
         Glib::RefPtr<Gtk::TreeStore> store;
 };
 
-#endif // GTKMM_EXAMPLE_STATUS_COLUMN_RECORD_H
+#endif // TABS_STATUS_COLUMN_RECORD_H

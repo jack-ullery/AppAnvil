@@ -12,7 +12,7 @@
 
 
 template <typename T_Widget>
-std::unique_ptr<T_Widget> Status::get_widget(const Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder){
+std::unique_ptr<T_Widget> Status::get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder){
   T_Widget *raw_addr = nullptr;
   builder->get_widget<T_Widget>(name, raw_addr);
   return std::unique_ptr<T_Widget>(raw_addr);
@@ -127,6 +127,22 @@ std::string Status::get_logs_str(){
 Json::Value Status::get_status_JSON(){
   return parse_JSON(get_status_str());
 }
+
+void Status::set_status_label_text(const std::string& str){
+  s_found_label->set_text(str);
+}
+
+void Status::set_signal_handler(const Glib::SignalProxyProperty::SlotType& func){
+  s_search->signal_search_changed().connect(func, true);
+  s_use_regex->signal_clicked().connect(func, true);
+  s_match_case->signal_clicked().connect(func, true);
+  s_whole_word->signal_clicked().connect(func, true);
+}
+
+std::shared_ptr<Gtk::TreeView> Status::get_view(){
+  return s_view;
+}
+
 
 Status::Status()
 : builder{Gtk::Builder::create_from_resource("/resources/status.glade")},

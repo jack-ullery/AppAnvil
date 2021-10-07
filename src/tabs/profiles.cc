@@ -24,19 +24,16 @@ void Profiles::refresh(){
     }
   }
 
-  s_found_label->set_text(" " + std::to_string(num_found) + " matching profiles");
+  Status::set_status_label_text(" " + std::to_string(num_found) + " matching profiles");
 }
 
 Profiles::Profiles()
-: col_record{StatusColumnRecord::create(s_view, col_names)}
+: col_record{StatusColumnRecord::create(Status::get_view(), col_names)}
 {
   refresh();
 
-  auto sig_handler = sigc::mem_fun(*this, &Profiles::on_search_changed);
-  s_search->signal_search_changed().connect(sig_handler, true);
-  s_use_regex->signal_clicked().connect(sig_handler, true);
-  s_match_case->signal_clicked().connect(sig_handler, true);
-  s_whole_word->signal_clicked().connect(sig_handler, true);
+  auto func = sigc::mem_fun(*this, &Profiles::on_search_changed);
+  Status::set_signal_handler(func);
 
   this->show_all();
 }
