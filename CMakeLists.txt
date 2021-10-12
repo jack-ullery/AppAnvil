@@ -8,11 +8,11 @@ set(
   SOURCES
   ${PROJECT_SOURCE_DIR}/main.cc
   ${PROJECT_SOURCE_DIR}/main_window.cc
+  ${PROJECT_SOURCE_DIR}/tabs/status_column_record.cc
   ${PROJECT_SOURCE_DIR}/tabs/status.cc
   ${PROJECT_SOURCE_DIR}/tabs/profiles.cc
   ${PROJECT_SOURCE_DIR}/tabs/processes.cc
   ${PROJECT_SOURCE_DIR}/tabs/logs.cc
-  ${PROJECT_SOURCE_DIR}/tabs/status_column_record.cc
 )
 
 set(PROJECT_RESOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/resources)
@@ -33,7 +33,7 @@ find_program(CPPCHECK_EXISTS cppcheck)
 if(CPPCHECK_EXISTS)
   add_custom_target(
     CPPCHECK
-    COMMAND cppcheck --enable=all --check-config --suppress=missingInclude ${SOURCES}
+    COMMAND cppcheck --project=compile_commands.json --inline-suppr --enable=all
     COMMENT "Running cppcheck..."
     VERBATIM
   )
@@ -109,10 +109,8 @@ add_custom_command(
 )
 
 include_directories(
-  header_only_library_no_static_code_analysis 
   SYSTEM # Adds -isystem instead of -I and this tells clang-tidy not to analyze these includes
-  INTERFACE
-    ${PROJECT_RESOURCE_DIR}
+  ${PROJECT_RESOURCE_DIR}
 )
 
 #### Set Compiler Options ####
@@ -126,6 +124,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #  -checks=-*,bugprone-*,cert-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,google-*,hicpp-*,linuxkernel-*,llvm-*,llvmlibc-*,misc-*,performance-*,portability-*,readability-*,-llvm-header-guard*,-misc-non-private-member-variables-in-classes*,
 #  -format-style='file';
 #  -header-filter=${CMAKE_CURRENT_SOURCE_DIR};
+#  -p .
 #)
 
 #### Link everything together ####
