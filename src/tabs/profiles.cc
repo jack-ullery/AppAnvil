@@ -18,8 +18,8 @@ void Profiles::refresh(){
     std::string key = prof.key().asString();
     if(filter(key)){
       auto row = col_record->new_column();
-      row[col_record->column[0]] = key;
-      row[col_record->column[1]] =  profiles.get(key, UNKNOWN_STATUS).asString();
+      col_record->set_row_column_data(row, 0, key);
+      col_record->set_row_column_data(row, 1, profiles.get(key, UNKNOWN_STATUS).asString());
       num_found++;
     }
   }

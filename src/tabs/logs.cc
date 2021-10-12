@@ -10,12 +10,14 @@ std::regex create_regex_from_tag(const std::string& tag){
   return std::regex("\\b" + tag + "=\"([^ ]*)\"");
 }
 
-const std::regex filter_log_regex("audit: type=1400");                      // NOLINT(cert-err-58-cpp)
-const std::regex filter_log_type      = create_regex_from_tag("apparmor");  // NOLINT(cert-err-58-cpp)
-const std::regex filter_log_operation = create_regex_from_tag("operation"); // NOLINT(cert-err-58-cpp)
-const std::regex filter_log_status    = create_regex_from_tag("profile");   // NOLINT(cert-err-58-cpp)
-const std::regex filter_log_name      = create_regex_from_tag("name");      // NOLINT(cert-err-58-cpp)
-const std::regex filter_log_pid("\\bpid=([0123456789]*)");                  // NOLINT(cert-err-58-cpp)
+// clang-tidy throws [cert-err58-cpp], but it's not a problem in this case, so lets ignore it.
+const std::regex filter_log_regex("audit: type=1400");                      // NOLINT(cert-err58-cpp)
+const std::regex filter_log_type      = create_regex_from_tag("apparmor");  // NOLINT(cert-err58-cpp)
+const std::regex filter_log_operation = create_regex_from_tag("operation"); // NOLINT(cert-err58-cpp)
+const std::regex filter_log_status    = create_regex_from_tag("profile");   // NOLINT(cert-err58-cpp)
+const std::regex filter_log_name      = create_regex_from_tag("name");      // NOLINT(cert-err58-cpp)
+const std::regex filter_log_pid("\\bpid=([0123456789]*)");                  // NOLINT(cert-err58-cpp)
+
 
 std::string Logs::parse_line(const std::string& line, const std::regex& elem){
   std::smatch m;
@@ -25,11 +27,11 @@ std::string Logs::parse_line(const std::string& line, const std::regex& elem){
 
 void Logs::add_row_from_line(const std::string& line){
   auto row = col_record->new_column();
-  row[col_record->column[0]] = parse_line(line, filter_log_type);
-  row[col_record->column[1]] = parse_line(line, filter_log_operation);
-  row[col_record->column[2]] = parse_line(line, filter_log_name);
-  row[col_record->column[3]] = parse_line(line, filter_log_pid);
-  row[col_record->column[4]] = parse_line(line, filter_log_status);
+  col_record->set_row_column_data(row, 0, parse_line(line, filter_log_type));
+  col_record->set_row_column_data(row, 1, parse_line(line, filter_log_operation)); 
+  col_record->set_row_column_data(row, 2, parse_line(line, filter_log_name));
+  col_record->set_row_column_data(row, 3, parse_line(line, filter_log_pid));
+  col_record->set_row_column_data(row, 4, parse_line(line, filter_log_status)); 
 }
 
 // refresh() is based on assumptions about the output of aa-status.

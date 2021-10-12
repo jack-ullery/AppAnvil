@@ -6,7 +6,8 @@
 #include <regex>
 #include <string>
 
-const std::regex filter_unconfined_proc("\\b([1234567890]+) ([^ ]+) (not confined)");
+// clang-tidy throws [cert-err58-cpp], but it's not a problem in this case, so lets ignore it.
+const std::regex filter_unconfined_proc("\\b([1234567890]+) ([^ ]+) (not confined)"); // NOLINT(cert-err58-cpp)
 
 // Need to improve!
 void Processes::refresh(){
@@ -19,12 +20,12 @@ void Processes::refresh(){
     const std::string& key = proc.key().asString();
     if(filter(key)){
       auto row = col_record->new_column();
-      row[col_record->column[0]] = key;
+      col_record->set_row_column_data(row, 0, key);
 
       Json::Value val = (*proc)[0];
       for(auto inst = proc->begin(); inst != proc->end(); inst++){
         auto child = col_record->new_child_column(row);
-        child[col_record->column[0]] = "pid: " + inst->get("pid", "Unknown").asString() + "\t status: " + inst->get("status", "Unknown").asString();
+        col_record->set_row_column_data(child, 0, "pid: " + inst->get("pid", "Unknown").asString() + "\t status: " + inst->get("status", "Unknown").asString());
       }
       num_found++;
     }
@@ -42,10 +43,10 @@ void Processes::refresh(){
 
       if(filter(prof_name)){
         auto row = col_record->new_column();
-        row[col_record->column[0]] = m[2].str();
+        col_record->set_row_column_data(row, 0,  m[2].str());
 
         auto child = col_record->new_child_column(row);
-        child[col_record->column[0]] = "pid: " + m[1].str() + "\t status: " + "unconfined";
+        col_record->set_row_column_data(child, 0, "pid: " + m[1].str() + "\t status: " + "unconfined");
         num_found++;
       }
     }
