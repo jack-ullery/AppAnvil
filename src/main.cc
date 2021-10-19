@@ -3,6 +3,13 @@
 
 #include <gtkmm/application.h>
 
+/**
+ * @brief Globally registers the resources from resource.autogen.c
+ * 
+ * @details
+ * The Makefile automatically compiles the resources in (./resources) into resource.autogen.c using
+ * glib-compile-resources
+ */
 void register_resource_bundle(){
   Glib::RefPtr<Gio::Resource> resource_bundle = Glib::wrap(resources_get_resource());
   resource_bundle->register_global();

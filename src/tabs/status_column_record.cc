@@ -30,16 +30,15 @@ std::shared_ptr<StatusColumnRecord> StatusColumnRecord::create(const std::shared
     return record;
 }
 
-Gtk::TreeRow StatusColumnRecord::new_column(){
+Gtk::TreeRow StatusColumnRecord::new_row(){
     return *(store->append());
 }
 
-Gtk::TreeRow StatusColumnRecord::new_child_column(const Gtk::TreeRow& parent){
+Gtk::TreeRow StatusColumnRecord::new_child_row(const Gtk::TreeRow& parent){
     return *(store->append(parent.children()));
 }
 
-void StatusColumnRecord::set_row_column_data(const Gtk::TreeRow& row, const uint& index, const std::string& data){
-    
+void StatusColumnRecord::set_row_data(const Gtk::TreeRow& row, const uint& index, const std::string& data){
     if(index >= column.size()){
         throw std::out_of_range("Attempting to access invalid column.");
     }

@@ -19,13 +19,13 @@ void Processes::refresh(){
   for(auto proc = processes.begin(); proc != processes.end(); proc++){
     const std::string& key = proc.key().asString();
     if(filter(key)){
-      auto row = col_record->new_column();
-      col_record->set_row_column_data(row, 0, key);
+      auto row = col_record->new_row();
+      col_record->set_row_data(row, 0, key);
 
       Json::Value val = (*proc)[0];
       for(auto inst = proc->begin(); inst != proc->end(); inst++){
-        auto child = col_record->new_child_column(row);
-        col_record->set_row_column_data(child, 0, "pid: " + inst->get("pid", "Unknown").asString() + "\t status: " + inst->get("status", "Unknown").asString());
+        auto child = col_record->new_child_row(row);
+        col_record->set_row_data(child, 0, "pid: " + inst->get("pid", "Unknown").asString() + "\t status: " + inst->get("status", "Unknown").asString());
       }
       num_found++;
     }
@@ -42,11 +42,11 @@ void Processes::refresh(){
       std::string pid = m[1].str();
 
       if(filter(prof_name)){
-        auto row = col_record->new_column();
-        col_record->set_row_column_data(row, 0,  m[2].str());
+        auto row = col_record->new_row();
+        col_record->set_row_data(row, 0,  m[2].str());
 
-        auto child = col_record->new_child_column(row);
-        col_record->set_row_column_data(child, 0, "pid: " + m[1].str() + "\t status: " + "unconfined");
+        auto child = col_record->new_child_row(row);
+        col_record->set_row_data(child, 0, "pid: " + m[1].str() + "\t status: " + "unconfined");
         num_found++;
       }
     }

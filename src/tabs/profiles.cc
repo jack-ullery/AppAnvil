@@ -17,9 +17,9 @@ void Profiles::refresh(){
   for(auto prof = profiles.begin(); prof != profiles.end(); prof++){
     std::string key = prof.key().asString();
     if(filter(key)){
-      auto row = col_record->new_column();
-      col_record->set_row_column_data(row, 0, key);
-      col_record->set_row_column_data(row, 1, profiles.get(key, UNKNOWN_STATUS).asString());
+      auto row = col_record->new_row();
+      col_record->set_row_data(row, 0, key);
+      col_record->set_row_data(row, 1, profiles.get(key, UNKNOWN_STATUS).asString());
       num_found++;
     }
   }

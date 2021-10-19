@@ -23,15 +23,72 @@ class Status : public Gtk::ScrolledWindow
 {
   public:
     Status();
+
     static std::string get_status_str();
+
+    /**
+     * @brief Parse the output of `aa-status --json`
+     * 
+     * @details
+     * Parses the output of `pkexec aa-status --json` to get a list of profiles and processes confined by apparmor. 
+     * 
+     * @returns Json::Value the output of aa-status as parsed by jsoncpp
+     */
     static Json::Value get_status_JSON();
+
+    /**
+     * @brief Return the output of `aa-status --json`
+     * 
+     * @details
+     * Returns the output of `pkexec aa-status --json` to get a list of profiles and processes confined by apparmor. 
+     * 
+     * @returns std::string the raw output of aa-status
+     */
     static std::string get_logs_str();
+
+    /**
+     * @brief Return the output of `aa-unconfined`
+     * 
+     * @details
+     * Returns the output of `pkexec aa-unconfined` to get a list of processes not confined by apparmor. 
+     * 
+     * @returns std::string the raw output of aa-unconfined
+     */
     static std::string get_unconfined();
 
   protected:
+    /**
+     * @brief Decide whether a string should be added to the table
+     * 
+     * @details
+     * Takes a string as input and decides whether it should be added the table.
+     * Uses the text in the searchbar and the state of the checkboxes to determine
+     * whether the string can be added.
+     *  
+     * @returns `true` if the string should be added, `false` if it should not
+     */
     bool filter(const std::string& str);
+
+    /**
+     * @brief Change the text in the label directly above the searchbar.
+     */
     void set_status_label_text(const std::string& str);
+
+    /**
+     * @brief Set the method to be called every time the search area updated.
+     * 
+     * @details
+     * Sets the signal handler method to be called every time the search area is updated. This
+     * happens when the user clicks a checkbutton, or types into the searchbar.
+     * 
+     * The signal handler should have the following protoype: `void method_name()`
+     */
     void set_signal_handler(const Glib::SignalProxyProperty::SlotType& func);
+
+    /**
+     * @brief Return the TreeView associated with this class.
+     * @returns The TreeView data member used by this class.
+     */
     std::shared_ptr<Gtk::TreeView> get_view();
 
   private:

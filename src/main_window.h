@@ -18,6 +18,13 @@ constexpr int DEFAULT_WINDOW_HEIGHT = 500;
 class MainWindow : public Gtk::ApplicationWindow
 {
   public:
+    /**
+     * @brief Constructor to build a Gtk::ApplicationWindow.
+     * 
+     * @details
+     * Constructor to build a Gtk::ApplicationWindow that initializes and show the entire application.
+     * The MainWindow contains a stack that switches multiple different "tabs".
+     */
     MainWindow();
 
   protected:
@@ -38,6 +45,12 @@ class MainWindow : public Gtk::ApplicationWindow
     std::unique_ptr<Logs> logs;
 
     // Methods
+    /**
+     * @brief Gets a widget from the builder by its ID.
+     * 
+     * @param name The widget id as specified in the builder xml file 
+     * @param builder The object that reads xml descriptions (look in /resources) of the user interface 
+     */
     template <typename T_Widget>
     static std::unique_ptr<T_Widget> get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);
 };
