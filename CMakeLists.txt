@@ -8,11 +8,9 @@ set(
   SOURCES
   ${PROJECT_SOURCE_DIR}/main.cc
   ${PROJECT_SOURCE_DIR}/main_window.cc
-  ${PROJECT_SOURCE_DIR}/tabs/status_column_record.cc
-  ${PROJECT_SOURCE_DIR}/tabs/status.cc
-  ${PROJECT_SOURCE_DIR}/tabs/profiles.cc
-  ${PROJECT_SOURCE_DIR}/tabs/processes.cc
-  ${PROJECT_SOURCE_DIR}/tabs/logs.cc
+  ${PROJECT_SOURCE_DIR}/tabs/message_world.cc
+  ${PROJECT_SOURCE_DIR}/tabs/hello_world.cc
+  ${PROJECT_SOURCE_DIR}/tabs/dialog_world.cc
 )
 
 set(PROJECT_RESOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/resources)

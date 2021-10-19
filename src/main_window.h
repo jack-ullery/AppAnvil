@@ -1,10 +1,8 @@
 #ifndef SRC_MAIN_WINDOW_H
 #define SRC_MAIN_WINDOW_H
 
-#include "tabs/logs.h"
-#include "tabs/processes.h"
-#include "tabs/profiles.h"
-#include "tabs/status.h"
+#include "tabs/message_world.h"
+#include "tabs/dialog_world.h"
 
 #include <gtkmm/applicationwindow.h>
 #include <gtkmm/box.h>
@@ -33,9 +31,8 @@ class MainWindow : public Gtk::ApplicationWindow
     std::unique_ptr<Gtk::Stack> m_stack;
 
     // Tabs
-    std::unique_ptr<Profiles> prof;
-    std::unique_ptr<Processes> proc;
-    std::unique_ptr<Logs> logs;
+    std::unique_ptr<MessageWorld> mw;
+    std::unique_ptr<DialogWorld> dw;
 
     // Methods
     template <typename T_Widget>

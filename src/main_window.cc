@@ -15,17 +15,15 @@ MainWindow::MainWindow()
 : builder{Gtk::Builder::create_from_resource("/resources/main_window.glade")},
   m_container{MainWindow::get_widget<Gtk::Box>("m_box", builder)},
   m_stack{MainWindow::get_widget<Gtk::Stack>("m_stack", builder)},
-  prof{new Profiles()},
-  proc{new Processes()},
-  logs{new Logs()}
+  mw{new MessageWorld()},
+  dw{new DialogWorld()}
 {
   // Get the main container and add it to the current window
   this->add(*m_container);
 
   // Add tabs to the stack pane
-  m_stack->add(*prof, "prof", "Profiles");
-  m_stack->add(*proc, "proc", "Processes");
-  m_stack->add(*logs, "logs", "Logs");
+  m_stack->add(*mw, "MessageWorld", "Message Dialog Example");
+  m_stack->add(*dw, "DialogWorld", "Basic Dialog Example");
 
   // Set some default settings for the window
   this->set_title("AppAnvil (pre-alpha release)");
