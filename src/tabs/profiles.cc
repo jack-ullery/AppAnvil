@@ -30,8 +30,6 @@ void Profiles::refresh(){
 Profiles::Profiles()
 : col_record{StatusColumnRecord::create(Status::get_view(), col_names)}
 {
-  refresh();
-
   auto func = sigc::mem_fun(*this, &Profiles::on_search_changed);
   Status::set_signal_handler(func);
 

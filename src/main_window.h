@@ -31,7 +31,10 @@ class MainWindow : public Gtk::ApplicationWindow
 
   protected:
     //Signal handlers:
-    void on_button_clicked();
+    /**
+     * @brief Calls refresh() on the visible tab when the stackswitcher is pressed
+     */
+    bool on_switch(GdkEvent* direction);
 
   private:
     // GUI Builder to parse UI from xml file

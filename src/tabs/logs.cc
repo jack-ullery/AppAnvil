@@ -59,8 +59,6 @@ void Logs::refresh(){
 Logs::Logs()
 : col_record{StatusColumnRecord::create(Status::get_view(), col_names)}
 {
-  refresh();
-
   auto func = sigc::mem_fun(*this, &Logs::on_search_changed);
   Status::set_signal_handler(func);
 

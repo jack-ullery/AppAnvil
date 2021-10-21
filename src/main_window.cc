@@ -16,7 +16,11 @@ MainWindow::MainWindow()
 
   // Attach the stack to the stack switcher
   m_switcher.set_stack(m_stack);
-  // m_headerbar.pack_end(m_switcher);
+
+  // Connect the stackswitcher to the 'on_switch' method
+  auto focus = sigc::mem_fun(*this, &MainWindow::on_switch);
+  m_switcher.signal_event().connect(focus, true);
+  on_switch(NULL);
 
   // Set some default properties for titlebar
   m_headerbar.set_custom_title(m_switcher);
@@ -24,7 +28,6 @@ MainWindow::MainWindow()
   m_headerbar.set_subtitle("AppArmor GUI");
   m_headerbar.set_hexpand(true);
   m_headerbar.set_show_close_button(true);
-
 
   // Set some default settings for the window
   this->set_icon_from_file("./resources/icon.svg");
@@ -35,4 +38,18 @@ MainWindow::MainWindow()
   this->set_titlebar(m_headerbar);
   this->add(m_stack);
   this->show_all();
+}
+
+bool MainWindow::on_switch(GdkEvent* direction){
+  std::string visible_child  = m_stack.get_visible_child_name();
+
+  if(visible_child == "prof"){
+    prof->refresh();
+  } else if(visible_child == "proc"){
+    proc->refresh();    
+  } else if(visible_child == "logs"){
+    logs->refresh();
+  }
+
+  return false;
 }
