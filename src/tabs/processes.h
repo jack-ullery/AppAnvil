@@ -27,7 +27,6 @@ class Processes : public Status
   private:
     const std::vector<std::string> col_names{"Process"};
     std::shared_ptr<StatusColumnRecord> col_record;
-
 };
 
 #endif // TABS_PROCESSES_H

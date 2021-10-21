@@ -58,8 +58,6 @@ void Processes::refresh(){
 Processes::Processes()
 : col_record{StatusColumnRecord::create(Status::get_view(), col_names)}
 {
-  refresh();
-
   auto func = sigc::mem_fun(*this, &Processes::on_search_changed);
   Status::set_refresh_signal_handler(func);
 
