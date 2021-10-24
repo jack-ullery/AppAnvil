@@ -59,7 +59,7 @@ Processes::Processes()
 : col_record{StatusColumnRecord::create(Status::get_view(), col_names)}
 {
   auto func = sigc::mem_fun(*this, &Processes::on_search_changed);
-  Status::set_signal_handler(func);
+  Status::set_refresh_signal_handler(func);
 
   this->show_all();
 }

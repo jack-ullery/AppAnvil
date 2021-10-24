@@ -27,15 +27,26 @@ void Profiles::refresh(){
   Status::set_status_label_text(" " + std::to_string(num_found) + " matching profiles");
 }
 
+void Profiles::change_status(){
+  //s_row = s_view.get_selection();
+  std::cout << "button works\n" << std::endl;
+}
+
 Profiles::Profiles()
 : col_record{StatusColumnRecord::create(Status::get_view(), col_names)}
 {
   auto func = sigc::mem_fun(*this, &Profiles::on_search_changed);
-  Status::set_signal_handler(func);
+  auto func_2 = sigc::mem_fun(*this, &Profiles::on_apply_button_pressed);
+  Status::set_refresh_signal_handler(func);
+  Status::set_apply_signal_handler(func_2);
 
   this->show_all();
 }
 
 void Profiles::on_search_changed(){
   refresh();
+}
+
+void Profiles::on_apply_button_pressed(){
+  change_status();
 }
