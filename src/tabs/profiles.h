@@ -21,10 +21,12 @@ class Profiles : public Status
   public:
     Profiles();
     void refresh();
+    void change_status();
   
   protected:
     // Signal handlers    
     void on_search_changed();
+    void on_apply_button_pressed();
 
   private:
     const std::vector<std::string> col_names{"Profile", "Status"};

@@ -9,6 +9,8 @@
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/enums.h>
 #include <gtkmm/label.h>
+#include <gtkmm/spinner.h>
+#include <gtkmm/combobox.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/searchentry.h>
@@ -83,7 +85,18 @@ class Status : public Gtk::ScrolledWindow
      * 
      * The signal handler should have the following protoype: `void method_name()`
      */
-    void set_signal_handler(const Glib::SignalProxyProperty::SlotType& func);
+    void set_refresh_signal_handler(const Glib::SignalProxyProperty::SlotType& func);
+
+    /**
+     * @brief Set the method to be called every time the apply button is clicked.
+     * 
+     * @details
+     * Sets the signal handler method to be called every time the apply button is clicked. This
+     * happens when the user clicks the 'Apply' button above the search bar.
+     * 
+     * The signal handler should have the following protoype: `void method_name()`
+     */
+    void set_apply_signal_handler(const Glib::SignalProxyProperty::SlotType& func);
 
     /**
      * @brief Return the TreeView associated with this class.
@@ -97,6 +110,7 @@ class Status : public Gtk::ScrolledWindow
 
     // Container Widgets
     std::shared_ptr<Gtk::TreeView> s_view;
+    std::shared_ptr<Gtk::TreeSelection> s_row;
     std::unique_ptr<Gtk::ScrolledWindow> s_win;
     std::unique_ptr<Gtk::Box> s_box;
 
@@ -106,6 +120,14 @@ class Status : public Gtk::ScrolledWindow
     std::unique_ptr<Gtk::CheckButton> s_match_case;
     std::unique_ptr<Gtk::CheckButton> s_whole_word;
     std::unique_ptr<Gtk::Label>       s_found_label;
+
+    // Widgets related to changing profile status (above search)
+    std::unique_ptr<Gtk::Button>      s_apply_button;
+    std::unique_ptr<Gtk::Spinner>     s_spinner;
+    std::unique_ptr<Gtk::Label>       s_apply_info_text;
+    std::unique_ptr<Gtk::ComboBox>    s_status_selection;
+
+
 
 
     template <typename T_Widget>

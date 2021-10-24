@@ -132,11 +132,16 @@ void Status::set_status_label_text(const std::string& str){
   s_found_label->set_text(str);
 }
 
-void Status::set_signal_handler(const Glib::SignalProxyProperty::SlotType& func){
+void Status::set_refresh_signal_handler(const Glib::SignalProxyProperty::SlotType& func){
   s_search->signal_search_changed().connect(func, true);
   s_use_regex->signal_clicked().connect(func, true);
   s_match_case->signal_clicked().connect(func, true);
   s_whole_word->signal_clicked().connect(func, true);
+}
+
+// for handling the apply button being clicked when an appopriate choice has been made in the drop-down
+void Status::set_apply_signal_handler(const Glib::SignalProxyProperty::SlotType& func){
+  s_apply_button->signal_clicked().connect(func, true);
 }
 
 std::shared_ptr<Gtk::TreeView> Status::get_view(){
@@ -153,7 +158,11 @@ Status::Status()
   s_use_regex{Status::get_widget<Gtk::CheckButton>("s_use_regex", builder)},
   s_match_case{Status::get_widget<Gtk::CheckButton>("s_match_case", builder)},
   s_whole_word{Status::get_widget<Gtk::CheckButton>("s_whole_word", builder)},
-  s_found_label{Status::get_widget<Gtk::Label>("s_found_label", builder)}
+  s_found_label{Status::get_widget<Gtk::Label>("s_found_label", builder)},
+  s_apply_button{Status::get_widget<Gtk::Button>("s_apply_button", builder)},
+  s_spinner{Status::get_widget<Gtk::Spinner>("s_spinner", builder)},
+  s_apply_info_text{Status::get_widget<Gtk::Label>("s_apply_info_text", builder)},
+  s_status_selection{Status::get_widget<Gtk::ComboBox>("s_status_selection", builder)}
 {
   s_win->set_shadow_type(Gtk::ShadowType::SHADOW_NONE);
   s_win->set_policy(Gtk::PolicyType::POLICY_AUTOMATIC, Gtk::PolicyType::POLICY_AUTOMATIC);
