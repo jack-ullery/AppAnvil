@@ -100,9 +100,20 @@ class Status : public Gtk::ScrolledWindow
 
     /**
      * @brief Return the TreeView associated with this class.
+     * 
      * @returns The TreeView data member used by this class.
      */
     std::shared_ptr<Gtk::TreeView> get_view();
+
+    /**
+     * @brief Make widgets related to changing profile status invisible to the user.
+     * 
+     * @details
+     * Removes the widgets associated with changing a profiles status. This cannot be undone.
+     * Widgets that are children of `s_selection_box` will be permanently invisible to the user
+     * for this instance of Status.
+     */
+    void remove_status_selection();
 
   private:
     // GUI Builder to parse UI from xml file
@@ -122,13 +133,11 @@ class Status : public Gtk::ScrolledWindow
     std::unique_ptr<Gtk::Label>       s_found_label;
 
     // Widgets related to changing profile status (above search)
+    std::unique_ptr<Gtk::Box>         s_selection_box;
     std::unique_ptr<Gtk::Button>      s_apply_button;
     std::unique_ptr<Gtk::Spinner>     s_spinner;
     std::unique_ptr<Gtk::Label>       s_apply_info_text;
     std::unique_ptr<Gtk::ComboBox>    s_status_selection;
-
-
-
 
     template <typename T_Widget>
     static std::unique_ptr<T_Widget> get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder>& builder);    

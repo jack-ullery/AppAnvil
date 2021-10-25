@@ -148,6 +148,10 @@ std::shared_ptr<Gtk::TreeView> Status::get_view(){
   return s_view;
 }
 
+void Status::remove_status_selection(){
+  s_box->remove(*s_selection_box);
+  s_selection_box->hide();
+}
 
 Status::Status()
 : builder{Gtk::Builder::create_from_resource("/resources/status.glade")},
@@ -159,6 +163,7 @@ Status::Status()
   s_match_case{Status::get_widget<Gtk::CheckButton>("s_match_case", builder)},
   s_whole_word{Status::get_widget<Gtk::CheckButton>("s_whole_word", builder)},
   s_found_label{Status::get_widget<Gtk::Label>("s_found_label", builder)},
+  s_selection_box{Status::get_widget<Gtk::Box>("s_selection_box", builder)},
   s_apply_button{Status::get_widget<Gtk::Button>("s_apply_button", builder)},
   s_spinner{Status::get_widget<Gtk::Spinner>("s_spinner", builder)},
   s_apply_info_text{Status::get_widget<Gtk::Label>("s_apply_info_text", builder)},
