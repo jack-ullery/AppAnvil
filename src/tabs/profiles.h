@@ -24,9 +24,9 @@ class Profiles : public Status
     void change_status();
   
   protected:
-    // Signal handlers    
     void on_search_changed();
     void on_apply_button_pressed();
+    bool execute_change(const std::string& profile, const std::string& status);
 
   private:
     const std::vector<std::string> col_names{"Profile", "Status"};
