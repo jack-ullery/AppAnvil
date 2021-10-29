@@ -89,9 +89,9 @@
             <property name="can_focus">False</property>
             <property name="margin_start">15</property>
             <property name="margin_end">5</property>
-            <property name="label" translatable="yes">label</property>
-            <property name="ellipsize">end</property>
-            <property name="single_line_mode">True</property>
+            <property name="label" translatable="yes">...</property>
+            <property name="wrap">True</property>
+            <property name="selectable">True</property>
           </object>
           <packing>
             <property name="expand">False</property>

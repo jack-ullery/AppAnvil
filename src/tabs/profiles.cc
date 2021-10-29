@@ -52,6 +52,8 @@ bool Profiles::execute_change(const std::string& profile, const std::string& sta
   if(exit_status != 0){
     std::cout << "Error calling '"<< args[0] <<"'. " << child_error << std::endl;
     child_output = "{\"processes\": {}, \"profiles\": {}";
+  } else {
+    Status::set_apply_label_text(" Changed '" + profile + "' from " + status + " to " + opposite_status.erase(0,3));
   }
 
   return true;
@@ -59,19 +61,23 @@ bool Profiles::execute_change(const std::string& profile, const std::string& sta
 
 void Profiles::change_status(){
   const auto view_obj = Status::get_view();
+  const auto spinner_obj = Status::get_spinner();
+
+  spinner_obj->start();
+
   const auto row_obj = view_obj->get_selection();
   const auto iter = row_obj->get_selected();
   const auto row = *iter;
   const auto path = col_record->get_row_data(row, 0);
   const auto status = col_record->get_row_data(row, 1);
-
-  std::cout << "Row activated: ID=" << path.c_str() << ", Name=" << status.c_str() << std::endl;
   
   if(!execute_change(path, status)) {
     std::cout << "Error changing the status" << std::endl;
   }
 
   refresh();
+
+  spinner_obj->stop();
 }
 
 Profiles::Profiles()
