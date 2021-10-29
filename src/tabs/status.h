@@ -105,6 +105,16 @@ class Status : public Gtk::ScrolledWindow
      */
     std::shared_ptr<Gtk::TreeView> get_view();
 
+    /* BROKEN
+    /**
+     * @brief Return the TreeSelection associated with this class.
+     * 
+     * @returns The TreeSelection data member used by this class.
+     *
+    std::shared_ptr<Gtk::TreeSelection> get_row();
+    */
+
+
     /**
      * @brief Make widgets related to changing profile status invisible to the user.
      * 
@@ -121,7 +131,7 @@ class Status : public Gtk::ScrolledWindow
 
     // Container Widgets
     std::shared_ptr<Gtk::TreeView> s_view;
-    std::shared_ptr<Gtk::TreeSelection> s_row;
+    //std::shared_ptr<Gtk::TreeSelection> s_row;
     std::unique_ptr<Gtk::ScrolledWindow> s_win;
     std::unique_ptr<Gtk::Box> s_box;
 

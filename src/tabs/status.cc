@@ -148,6 +148,12 @@ std::shared_ptr<Gtk::TreeView> Status::get_view(){
   return s_view;
 }
 
+/* This is broken, should pull TreeSelection from s_view instead
+std::shared_ptr<Gtk::TreeSelection> Status::get_row(){
+  return s_row;
+}
+*/
+
 void Status::remove_status_selection(){
   s_box->remove(*s_selection_box);
   s_selection_box->hide();
@@ -156,6 +162,7 @@ void Status::remove_status_selection(){
 Status::Status()
 : builder{Gtk::Builder::create_from_resource("/resources/status.glade")},
   s_view{Status::get_widget<Gtk::TreeView>("s_view", builder)},
+  //s_row{Status::get_widget<Gtk::TreeSelection>("s_row", builder)},
   s_win{Status::get_widget<Gtk::ScrolledWindow>("s_win", builder)},
   s_box{Status::get_widget<Gtk::Box>("s_box", builder)},
   s_search{Status::get_widget<Gtk::SearchEntry>("s_search", builder)},

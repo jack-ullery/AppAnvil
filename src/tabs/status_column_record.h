@@ -67,6 +67,9 @@ class StatusColumnRecord : public Gtk::TreeModel::ColumnRecord
          */
         void set_row_data(const Gtk::TreeRow& row, const uint& index, const std::string& data);
 
+        // I'll do the comment later
+        std::string get_row_data(const Gtk::TreeRow& row, const uint& index);
+
         /**
          * @brief Deletes all rows in the StatusColumnRecord.
          */

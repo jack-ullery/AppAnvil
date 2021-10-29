@@ -28,8 +28,15 @@ void Profiles::refresh(){
 }
 
 void Profiles::change_status(){
-  //s_row = s_view.get_selection();
-  std::cout << "button works\n" << std::endl;
+  const auto view_obj = Status::get_view();
+  const auto row_obj = view_obj->get_selection();
+  const auto iter = row_obj->get_selected();
+  const auto row = *iter;
+  const auto path = col_record->get_row_data(row, 0);
+  const auto status = col_record->get_row_data(row, 1);
+
+  std::cout << "Row activated: ID=" << path.c_str() << ", Name=" << status.c_str() << std::endl;
+  //std::cout << "button works\n" << std::endl;
 }
 
 Profiles::Profiles()
