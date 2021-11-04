@@ -72,11 +72,14 @@ class StatusColumnRecord : public Gtk::TreeModel::ColumnRecord
          */
         void clear();
 
+        // Should probably add a description!
+        // Should certainly add a description!!!
+        void filter_rows(const sigc::slot<bool(const std::string&)>& filter);
+
     private:
         explicit StatusColumnRecord(const std::vector<std::string>& names);
         std::vector<Gtk::TreeModelColumn<std::string>> column;
         Glib::RefPtr<Gtk::TreeStore> store;
-
 };
 
 #endif // TABS_STATUS_COLUMN_RECORD_H

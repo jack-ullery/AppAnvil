@@ -20,12 +20,12 @@ class Profiles : public Status
 {
   public:
     Profiles();
+    void add_data_to_record(std::string data);
     void refresh();
     void change_status();
   
   protected:
-    // Signal handlers    
-    void on_search_changed();
+    // Signal handler
     void on_apply_button_pressed();
 
   private:

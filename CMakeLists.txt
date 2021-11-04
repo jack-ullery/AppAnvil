@@ -8,6 +8,10 @@ set(
   SOURCES
   ${PROJECT_SOURCE_DIR}/main.cc
   ${PROJECT_SOURCE_DIR}/main_window.cc
+  ${PROJECT_SOURCE_DIR}/console_thread.cc
+  ${PROJECT_SOURCE_DIR}/threads/blocking_queue.h
+  ${PROJECT_SOURCE_DIR}/threads/command_caller.cc
+  ${PROJECT_SOURCE_DIR}/threads/dispatcher_middleman.cc
   ${PROJECT_SOURCE_DIR}/tabs/status_column_record.cc
   ${PROJECT_SOURCE_DIR}/tabs/status.cc
   ${PROJECT_SOURCE_DIR}/tabs/profiles.cc
@@ -135,3 +139,4 @@ target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${jsoncpp_DIRS})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC ${GTKMM_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} PUBLIC jsoncpp)
+target_link_libraries(${PROJECT_NAME} PUBLIC pthread)

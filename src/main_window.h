@@ -1,10 +1,10 @@
 #ifndef SRC_MAIN_WINDOW_H
 #define SRC_MAIN_WINDOW_H
 
+#include "console_thread.h"
 #include "tabs/logs.h"
 #include "tabs/processes.h"
 #include "tabs/profiles.h"
-#include "tabs/status.h"
 
 #include <gtkmm/applicationwindow.h>
 #include <gtkmm/box.h>
@@ -46,9 +46,12 @@ class MainWindow : public Gtk::ApplicationWindow
     Gtk::StackSwitcher m_switcher;
 
     // Tabs
-    std::unique_ptr<Profiles> prof;
-    std::unique_ptr<Processes> proc;
-    std::unique_ptr<Logs> logs;
+    std::shared_ptr<Profiles> prof;
+    std::shared_ptr<Processes> proc;
+    std::shared_ptr<Logs> logs;
+
+    // Second thread for calling command line utilities
+    std::shared_ptr<ConsoleThread> console;
 };
 
 #endif // MAIN_WINDOW_H

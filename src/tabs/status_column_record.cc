@@ -5,7 +5,6 @@
 /*
     Public Methods
 */
-
 std::shared_ptr<StatusColumnRecord> StatusColumnRecord::create(const std::shared_ptr<Gtk::TreeView>& view, std::vector<std::string> names){
 
     std::shared_ptr<StatusColumnRecord> record{new StatusColumnRecord(names)};
@@ -38,6 +37,7 @@ Gtk::TreeRow StatusColumnRecord::new_child_row(const Gtk::TreeRow& parent){
     return *(store->append(parent.children()));
 }
 
+// Can delete method: look into `TreeRow::set_value`
 void StatusColumnRecord::set_row_data(const Gtk::TreeRow& row, const uint& index, const std::string& data){
     if(index >= column.size()){
         throw std::out_of_range("Attempting to access invalid column.");
@@ -46,13 +46,28 @@ void StatusColumnRecord::set_row_data(const Gtk::TreeRow& row, const uint& index
     row[this->column[index]] = data;
 }
 
-
 void StatusColumnRecord::clear(){
     store->clear();
 }
 
+void StatusColumnRecord::filter_rows(const sigc::slot<bool(const std::string&)>& filter){
+    auto children = store->children();
+
+    for(auto row = children.begin(); row != children.end(); row++){
+
+        bool should_add = false;
+        for(uint i = 0; i < column.size() && !should_add; i++){
+            std::string value;
+            row->get_value(i, value);
+            should_add |= filter(value);
+        }
+
+        // Need to set row as visible or invisible
+    }
+}
+
 /*
-    Protected Methods
+    Private Methods
 */
 StatusColumnRecord::StatusColumnRecord(const std::vector<std::string>& names)
 {

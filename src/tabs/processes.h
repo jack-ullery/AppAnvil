@@ -18,6 +18,7 @@ class Processes : public Status
 {
   public:
     Processes();
+    void add_data_to_record(std::string confined, std::string unconfined);
     void refresh();
 
   protected:

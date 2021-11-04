@@ -25,39 +25,7 @@ class Status : public Gtk::ScrolledWindow
 {
   public:
     Status();
-
-    static std::string get_status_str();
-
-    /**
-     * @brief Parse the output of `aa-status --json`
-     * 
-     * @details
-     * Parses the output of `pkexec aa-status --json` to get a list of profiles and processes confined by apparmor. 
-     * 
-     * @returns Json::Value the output of aa-status as parsed by jsoncpp
-     */
-    static Json::Value get_status_JSON();
-
-    /**
-     * @brief Return the output of `aa-status --json`
-     * 
-     * @details
-     * Returns the output of `pkexec aa-status --json` to get a list of profiles and processes confined by apparmor. 
-     * 
-     * @returns std::string the raw output of aa-status
-     */
-    static std::string get_logs_str();
-
-    /**
-     * @brief Return the output of `aa-unconfined`
-     * 
-     * @details
-     * Returns the output of `pkexec aa-unconfined` to get a list of processes not confined by apparmor. 
-     * 
-     * @returns std::string the raw output of aa-unconfined
-     */
-    static std::string get_unconfined();
-
+    
   protected:
     /**
      * @brief Decide whether a string should be added to the table
@@ -115,6 +83,9 @@ class Status : public Gtk::ScrolledWindow
      */
     void remove_status_selection();
 
+    // Should probably add a description!
+    static Json::Value parse_JSON(const std::string& raw_json);
+
   private:
     // GUI Builder to parse UI from xml file
     Glib::RefPtr<Gtk::Builder> builder;
@@ -141,7 +112,6 @@ class Status : public Gtk::ScrolledWindow
 
     template <typename T_Widget>
     static std::unique_ptr<T_Widget> get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder>& builder);    
-    static Json::Value parse_JSON(const std::string& raw_json);
     static bool filter(const std::string& str, const std::string& rule, const bool& use_regex, const bool& match_case, const bool& whole_word);
 };
 

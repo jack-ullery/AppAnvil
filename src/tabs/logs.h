@@ -21,17 +21,14 @@ class Logs : public Status
 {
   public:
     Logs();
+    void add_data_to_record(std::string data);
     void refresh();
-  
-  protected:
-    // Signal handlers    
-    void on_search_changed();
-
+    
   private:
     const std::vector<std::string> col_names{"Type", "Operation", "Name", "Pid", "Status"};
     std::shared_ptr<StatusColumnRecord> col_record;
 
-    void add_row_from_line(const std::string& line);
+    static void add_row_from_line(std::shared_ptr<StatusColumnRecord> col_record, const std::string& line);
     static std::string parse_line(const std::string& line, const std::regex& elem);
 };
 

@@ -7,7 +7,8 @@
 MainWindow::MainWindow()
 : prof{new Profiles()},
   proc{new Processes()},
-  logs{new Logs()}
+  logs{new Logs()},
+  console{new ConsoleThread(prof, proc, logs)}
 {
   // Add tabs to the stack pane
   m_stack.add(*prof, "prof", "Profiles");
@@ -46,11 +47,17 @@ bool MainWindow::on_switch(__attribute__ ((unused)) GdkEvent* direction){
   std::string visible_child  = m_stack.get_visible_child_name();
 
   if(visible_child == "prof"){
-    prof->refresh();
+    console->set_state(PROFILE);
+    console->send_refresh_message();
+    // prof->refresh();
   } else if(visible_child == "proc"){
-    proc->refresh();    
+    console->set_state(PROCESS);
+    console->send_refresh_message();
+    // proc->refresh();    
   } else if(visible_child == "logs"){
-    logs->refresh();
+    console->set_state(LOGS);
+    console->send_refresh_message();
+    // logs->refresh();
   }
 
   return false;

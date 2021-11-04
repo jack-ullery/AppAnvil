@@ -2,13 +2,11 @@
 #include "status.h"
 
 #include <giomm.h>
-#include <glibmm.h>
 #include <iostream>
 #include <regex>
 #include <sstream>
 #include <string>
 #include <string>
-#include <vector>
 
 
 template <typename T_Widget>
@@ -71,61 +69,6 @@ Json::Value Status::parse_JSON(const std::string& raw_json){
   }
 
   return root;
-}
-
-std::string Status::get_status_str(){
-  std::vector<std::string> args = {"pkexec", "aa-status","--json"};
-
-  std::string child_output;
-  std::string child_error;
-  int exit_status = 0;
-
-  Glib::spawn_sync("/usr/sbin/", args, Glib::SpawnFlags::SPAWN_DEFAULT, {}, &child_output, &child_error, &exit_status);
-
-  if(exit_status != 0){
-    std::cout << "Error calling '"<< args[0] <<"'. " << child_error << std::endl;
-    child_output = "{\"processes\": {}, \"profiles\": {}";
-  }
-
-  return child_output;
-}
-
-std::string Status::get_unconfined(){
-  std::vector<std::string> args = {"pkexec", "aa-unconfined"};
-
-  std::string child_output;
-  std::string child_error;
-  int exit_status = 0;
-
-  Glib::spawn_sync("/usr/sbin/", args, Glib::SpawnFlags::SPAWN_DEFAULT, {}, &child_output, &child_error, &exit_status);
-
-  if(exit_status != 0){
-    std::cout << "Error calling '"<< args[0] <<"'. " << child_error << std::endl;
-    child_output = "";
-  }
-
-  return child_output;
-}
-
-std::string Status::get_logs_str(){
-  std::vector<std::string> args = {"dmesg"};
-
-  std::string child_output;
-  std::string child_error;
-  int exit_status = 0;
-
-  Glib::spawn_sync("/usr/sbin/", args, Glib::SpawnFlags::SPAWN_DEFAULT, {}, &child_output, &child_error, &exit_status);
-
-  if(exit_status != 0){
-    std::cout << "Error calling '"<< args[0] <<"'. " << child_error << std::endl;
-    child_output = "";
-  }
-
-  return child_output;
-}
-
-Json::Value Status::get_status_JSON(){
-  return parse_JSON(get_status_str());
 }
 
 void Status::set_status_label_text(const std::string& str){
