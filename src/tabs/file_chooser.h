@@ -12,6 +12,7 @@
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treeview.h>
 #include <gtkmm/treeviewcolumn.h>
+#include <gtkmm/filechooserwidget.h>
 #include <memory>
 #include <string>
 #include <vector>
@@ -25,6 +26,15 @@ class FileChooser : public Status
     void change_status();
   
   protected:
+
+    // GUI Builder to parse UI from xml file
+    Glib::RefPtr<Gtk::Builder> builder;
+
+    // Widgets on the tab
+    std::unique_ptr<Gtk::Box> f_box;
+    std::unique_ptr<Gtk::Button> f_button;
+    std::unique_ptr<Gtk::FileChooserWidget> f_chooser;
+
     // Signal handler
     void on_apply_button_pressed();
 

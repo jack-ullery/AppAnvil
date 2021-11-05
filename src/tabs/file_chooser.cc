@@ -37,8 +37,12 @@ void FileChooser::refresh(){
 }
 
 FileChooser::FileChooser()
-: col_record{StatusColumnRecord::create(Status::get_view(), col_names)}
+: builder{Gtk::Builder::create_from_file("./resources.file_chooser.glade")}
 {
+  //get main widgets
+  builder->get_widget<Gtk::Button>("f_button", f_button);
+  builder->get_widget<Gtk::Box>("f_box", f_box);
+  
   auto refresh_func = sigc::mem_fun(*this, &FileChooser::refresh);
   auto apply_func = sigc::mem_fun(*this, &FileChooser::on_apply_button_pressed);
   Status::set_refresh_signal_handler(refresh_func);
