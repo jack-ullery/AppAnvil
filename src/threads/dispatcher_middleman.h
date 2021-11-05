@@ -4,6 +4,7 @@
 #include "../tabs/logs.h"
 #include "../tabs/processes.h"
 #include "../tabs/profiles.h"
+#include "../tabs/file_chooser.h"
 
 #include <glibmm/dispatcher.h>
 #include <mutex>
@@ -17,7 +18,7 @@ class DispatcherMiddleman
 {
   public:
     // Constructor
-    DispatcherMiddleman(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs);
+    DispatcherMiddleman(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs, std::shared_ptr<FileChooser> file_chooser);
 
     // Send methods (called from second thread)
     void update_profiles(std::string confined);
@@ -29,7 +30,8 @@ class DispatcherMiddleman
       NONE,
       PROFILE,
       PROCESS,
-      LOGS
+      LOGS,
+      FILECHOOSER
     };
 
     // Receive method (called from main thread)
@@ -45,6 +47,7 @@ class DispatcherMiddleman
     std::shared_ptr<Profiles> prof;
     std::shared_ptr<Processes> proc;
     std::shared_ptr<Logs> logs;
+    std::shared_ptr<FileChooser> file_chooser;
 
     // Synchronization
     std::mutex mtx;

@@ -3,8 +3,8 @@
 
 #include <iostream>
 
-ConsoleThread::ConsoleThread(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs)
-: dispatch_man(prof, proc, logs)
+ConsoleThread::ConsoleThread(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs, std::shared_ptr<FileChooser> file_chooser)
+: dispatch_man(prof, proc, logs, file_chooser)
 {
   std::lock_guard<std::mutex> lock(state_mtx);
   current_state = PROFILE;
@@ -51,6 +51,12 @@ void ConsoleThread::run_command(){
     {
       std::string logs = CommandCaller::get_logs_str();
       dispatch_man.update_logs(logs);
+    }
+    break;
+    case FILECHOOSER:
+    {
+      std::string status = CommandCaller::get_status_str();
+      dispatch_man.update_profiles(status);
     }
     break;
   }

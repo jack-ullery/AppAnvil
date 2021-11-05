@@ -5,6 +5,7 @@
 #include "tabs/logs.h"
 #include "tabs/processes.h"
 #include "tabs/profiles.h"
+#include "tabs/file_chooser.h"
 
 #include <gtkmm/applicationwindow.h>
 #include <gtkmm/box.h>
@@ -49,6 +50,7 @@ class MainWindow : public Gtk::ApplicationWindow
     std::shared_ptr<Profiles> prof;
     std::shared_ptr<Processes> proc;
     std::shared_ptr<Logs> logs;
+    std::shared_ptr<FileChooser> file_chooser;
 
     // Second thread for calling command line utilities
     std::shared_ptr<ConsoleThread> console;

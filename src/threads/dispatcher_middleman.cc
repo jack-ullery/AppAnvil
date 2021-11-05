@@ -1,13 +1,14 @@
 #include "dispatcher_middleman.h"
 
-DispatcherMiddleman::DispatcherMiddleman(std::shared_ptr<Profiles> prof_arg, std::shared_ptr<Processes> proc_arg, std::shared_ptr<Logs> logs_arg)
+DispatcherMiddleman::DispatcherMiddleman(std::shared_ptr<Profiles> prof_arg, std::shared_ptr<Processes> proc_arg, std::shared_ptr<Logs> logs_arg, std::shared_ptr<FileChooser> file_chooser_arg)
 : dispatch(),
   state(NONE),
   data1(""),
   data2(""),
   prof(prof_arg),
   proc(proc_arg),
-  logs(logs_arg)
+  logs(logs_arg),
+  file_chooser(file_chooser_arg)
 {
   auto function = sigc::mem_fun(*this, &DispatcherMiddleman::handle_signal);
   dispatch.connect(function);
@@ -63,6 +64,9 @@ void DispatcherMiddleman::handle_signal(){
       break;
     case LOGS:
       logs->add_data_to_record(cached_data1);
+      break;
+    case FILECHOOSER:
+      file_chooser->add_data_to_record(cached_data1);
       break;
     case NONE:
       // Do nothing...

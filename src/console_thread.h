@@ -4,6 +4,7 @@
 #include "tabs/logs.h"
 #include "tabs/processes.h"
 #include "tabs/profiles.h"
+#include "tabs/file_chooser.h"
 #include "threads/blocking_queue.h"
 #include "threads/dispatcher_middleman.h"
 
@@ -16,7 +17,8 @@
 enum TabState {
   PROFILE,
   PROCESS,
-  LOGS
+  LOGS,
+  FILECHOOSER
 };
 
 enum Event {
@@ -27,7 +29,7 @@ enum Event {
 class ConsoleThread
 {
   public:
-    ConsoleThread(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs);
+    ConsoleThread(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs, std::shared_ptr<FileChooser> file_chooser);
     ~ConsoleThread();
 
     void set_state(TabState new_state);
