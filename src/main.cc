@@ -17,6 +17,8 @@ void register_resource_bundle(){
 
 int main()
 {
+  std::string foo = Parser::get_perms("usr.bin.firefox");
+
   auto app = Gtk::Application::create("com.github.jack-ullery");
   register_resource_bundle();
 

@@ -5,6 +5,7 @@
 #include "tabs/processes.h"
 #include "tabs/profiles.h"
 #include "tabs/status.h"
+#include "tabs/parser.h"
 
 #include <gtkmm/applicationwindow.h>
 #include <gtkmm/box.h>
