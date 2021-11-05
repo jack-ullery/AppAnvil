@@ -66,7 +66,7 @@ void DispatcherMiddleman::handle_signal(){
       logs->add_data_to_record(cached_data1);
       break;
     case FILECHOOSER:
-      file_chooser->add_data_to_record(cached_data1);
+      //file_chooser->add_data_to_record(cached_data1);
       break;
     case NONE:
       // Do nothing...
