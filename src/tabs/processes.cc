@@ -54,8 +54,7 @@ void Processes::add_data_to_record(std::string confined, std::string unconfined)
 }
 
 void Processes::refresh(){
-  auto filter_fun = sigc::mem_fun(*this, &Processes::filter);
-  col_record->filter_rows(filter_fun);
+  col_record->filter_rows();
 }
 
 Processes::Processes()
@@ -63,6 +62,9 @@ Processes::Processes()
 {
   auto func = sigc::mem_fun(*this, &Processes::refresh);
   Status::set_refresh_signal_handler(func);
+
+  auto filter_fun = sigc::mem_fun(*this, &Processes::filter);
+  col_record->set_visible_func(filter_fun);
 
   this->show_all();
 }

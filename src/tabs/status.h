@@ -15,6 +15,7 @@
 #include <gtkmm/searchentry.h>
 #include <gtkmm/spinner.h>
 #include <gtkmm/treemodelcolumn.h>
+#include <gtkmm/treemodelfilter.h>
 #include <gtkmm/treeview.h>
 #include <gtkmm/treeviewcolumn.h>
 #include <sstream>
@@ -37,7 +38,7 @@ class Status : public Gtk::ScrolledWindow
      *  
      * @returns `true` if the string should be added, `false` if it should not
      */
-    bool filter(const std::string& str);
+    bool filter(const Gtk::TreeModel::iterator& child);
 
     /**
      * @brief Change the text in the label directly above the searchbar.

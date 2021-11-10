@@ -11,8 +11,9 @@ std::shared_ptr<StatusColumnRecord> StatusColumnRecord::create(const std::shared
 
     auto store = Gtk::TreeStore::create(*record);
     record->store = store;
+    record->model_filter = Gtk::TreeModelFilter::create(store);
 
-    view->set_model(store);
+    view->set_model(record->model_filter);
 
     for(uint i = 0; i < names.size(); i++){
         // Add a visible column, and title it using the string from 'names' 
@@ -28,6 +29,11 @@ std::shared_ptr<StatusColumnRecord> StatusColumnRecord::create(const std::shared
 
     return record;
 }
+
+void StatusColumnRecord::set_visible_func(const Gtk::TreeModelFilter::SlotVisible& filter){
+    model_filter->set_visible_func(filter);
+}
+
 
 Gtk::TreeRow StatusColumnRecord::new_row(){
     return *(store->append());
@@ -50,20 +56,8 @@ void StatusColumnRecord::clear(){
     store->clear();
 }
 
-void StatusColumnRecord::filter_rows(const sigc::slot<bool(const std::string&)>& filter){
-    auto children = store->children();
-
-    for(auto row = children.begin(); row != children.end(); row++){
-
-        bool should_add = false;
-        for(uint i = 0; i < column.size() && !should_add; i++){
-            std::string value;
-            row->get_value(i, value);
-            should_add |= filter(value);
-        }
-
-        // Need to set row as visible or invisible
-    }
+void StatusColumnRecord::filter_rows(){
+    model_filter->refilter();
 }
 
 /*

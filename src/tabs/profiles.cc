@@ -31,9 +31,7 @@ void Profiles::change_status(){
 }
 
 void Profiles::refresh(){
-  std::cout << "Refresh called!" << std::endl;
-  auto filter_fun = sigc::mem_fun(*this, &Profiles::filter);
-  col_record->filter_rows(filter_fun);
+  col_record->filter_rows();
 }
 
 Profiles::Profiles()
@@ -43,6 +41,9 @@ Profiles::Profiles()
   auto apply_func = sigc::mem_fun(*this, &Profiles::on_apply_button_pressed);
   Status::set_refresh_signal_handler(refresh_func);
   Status::set_apply_signal_handler(apply_func);
+
+  auto filter_fun = sigc::mem_fun(*this, &Profiles::filter);
+  col_record->set_visible_func(filter_fun);
 
   this->show_all();
 }

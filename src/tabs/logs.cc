@@ -55,8 +55,7 @@ void Logs::add_data_to_record(std::string data){
 }
 
 void Logs::refresh(){
-  auto filter_fun = sigc::mem_fun(*this, &Logs::filter);
-  col_record->filter_rows(filter_fun);
+  col_record->filter_rows();
 }
 
 Logs::Logs()
@@ -64,6 +63,9 @@ Logs::Logs()
 {
   auto func = sigc::mem_fun(*this, &Logs::refresh);
   Status::set_refresh_signal_handler(func);
+
+  auto filter_fun = sigc::mem_fun(*this, &Logs::filter);
+  col_record->set_visible_func(filter_fun);
 
   Status::remove_status_selection();
 
