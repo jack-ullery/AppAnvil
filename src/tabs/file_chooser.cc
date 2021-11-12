@@ -32,11 +32,6 @@ std::unique_ptr<T_Widget> FileChooser::get_widget(Glib::ustring name, const Glib
 //   Status::set_status_label_text(" " + std::to_string(num_found) + " matching filechooser");
 // }
 
-void FileChooser::change_status(){
-  //s_row = s_view.get_selection();
-  std::cout << "button works\n" << std::endl;
-}
-
 // void FileChooser::refresh(){
 //   std::cout << "Refresh called!" << std::endl;
 //   auto filter_fun = sigc::mem_fun(*this, &FileChooser::filter);
@@ -44,25 +39,66 @@ void FileChooser::change_status(){
 // }
 
 FileChooser::FileChooser()
-: builder{Gtk::Builder::create_from_file("./resources.file_chooser.glade")},
+: builder{Gtk::Builder::create_from_file("./resources/file_chooser.glade")},
   f_button{FileChooser::get_widget<Gtk::Button>("f_button", builder)},
   f_box{FileChooser::get_widget<Gtk::Box>("f_box", builder)},
   f_chooser{FileChooser::get_widget<Gtk::FileChooserWidget>("f_chooser", builder)}
 {
   
   // auto refresh_func = sigc::mem_fun(*this, &FileChooser::refresh);
-  // auto apply_func = sigc::mem_fun(*this, &FileChooser::on_apply_button_pressed);
+  //auto apply_func = sigc::mem_fun(*this, &FileChooser::on_apply_button_pressed);
   // Status::set_refresh_signal_handler(refresh_func);
-  // Status::set_apply_signal_handler(apply_func);
+  //Status::set_apply_signal_handler(apply_func);
 
   // f_box->set_shadow_type(Gtk::ShadowType::SHADOW_NONE);
   // f_box->set_policy(Gtk::PolicyType::POLICY_AUTOMATIC, Gtk::PolicyType::POLICY_AUTOMATIC);
+  f_button->signal_clicked().connect(sigc::mem_fun(*this, &FileChooser::on_button_clicked));
   f_box->set_hexpand();
   f_box->set_vexpand();
 
   this->add(*f_box);
 }
 
-void FileChooser::on_apply_button_pressed(){
-  change_status();
+void FileChooser::on_button_clicked(){
+
+  std::string feedback;
+  std::cout << f_chooser->get_filename() << std::endl;
+  loadp(f_chooser->get_filename(), feedback);
+  std::cout << feedback << std::endl;
+}
+
+void FileChooser::loadp(std::string fullFileName, std::string& feedBack){
+
+	const int N = 300;
+
+	std::string fileName;	//name without path
+	fileName = fullFileName.substr(fullFileName.find_last_of("/") + 1);
+
+	std::string scmd = "echo \"123\" | sudo mv " + fullFileName + " /etc/apparmor.d";
+	//const char* cmd1 = scmd.c_str();
+	//system(cmd1);
+	system(scmd.c_str());
+
+	char line[N];
+	FILE *fp;
+
+	scmd = "echo \"123\" | sudo apparmor_parser -r /etc/apparmor.d/" + fileName + " 2>&1";
+	//const char* cmd2 = scmd.c_str();
+	//fp = popen(cmd2, "r");
+	fp = popen(scmd.c_str(), "r");
+
+	//error message
+	std::string fb = "";
+	std::string sl;
+	while(fgets(line, sizeof(line)-1, fp) !=NULL){
+		sl = line;
+		fb += sl;
+	}
+
+
+	feedBack = fb;
+
+
+	pclose(fp);
+
 }

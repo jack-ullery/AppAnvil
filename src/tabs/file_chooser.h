@@ -17,13 +17,12 @@
 #include <string>
 #include <vector>
 
-class FileChooser : public Gtk::Box
+class FileChooser : public Gtk::ScrolledWindow
 {
   public:
     FileChooser();
     //void add_data_to_record(std::string data);
     //void refresh();
-    void change_status();
   
   protected:
 
@@ -36,9 +35,13 @@ class FileChooser : public Gtk::Box
     std::unique_ptr<Gtk::FileChooserWidget> f_chooser;
 
     // Signal handler
-    void on_apply_button_pressed();
+    void on_button_clicked();
+
+    //Function called by signal handler
+    void loadp(std::string fullFileName, std::string& feedBack);
 
   private:
+
     const std::vector<std::string> col_names{"Profile", "Status"};
     std::shared_ptr<StatusColumnRecord> col_record;
 
