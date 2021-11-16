@@ -25,7 +25,7 @@ std::string Logs::parse_line(const std::string& line, const std::regex& elem){
   return m[1];
 }
 
-void Logs::add_row_from_line(std::shared_ptr<StatusColumnRecord> col_record, const std::string& line){
+void Logs::add_row_from_line(const std::shared_ptr<StatusColumnRecord>& col_record, const std::string& line){
   auto row = col_record->new_row();
   col_record->set_row_data(row, 0, parse_line(line, filter_log_type));
   col_record->set_row_data(row, 1, parse_line(line, filter_log_operation)); 
@@ -34,7 +34,7 @@ void Logs::add_row_from_line(std::shared_ptr<StatusColumnRecord> col_record, con
   col_record->set_row_data(row, 4, parse_line(line, filter_log_status)); 
 }
 
-void Logs::add_data_to_record(std::string data){
+void Logs::add_data_to_record(const std::string& data){
   // Delete all the data from col_record
   col_record->clear();
   // Regex to filter logs from dmesg. Could also use as filter_log_regex "audit\\([1234567890:.]*\\)" to get more logs.

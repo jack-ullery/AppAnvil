@@ -20,9 +20,9 @@ class DispatcherMiddleman
     DispatcherMiddleman(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs);
 
     // Send methods (called from second thread)
-    void update_profiles(std::string confined);
-    void update_processes(std::string confined, std::string unconfined);
-    void update_logs(std::string logs);
+    void update_profiles(const std::string& confined);
+    void update_processes(const std::string& confined, const std::string& unconfined);
+    void update_logs(const std::string& logs);
 
   protected:
     enum CallState {

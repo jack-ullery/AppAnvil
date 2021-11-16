@@ -7,7 +7,7 @@
 
 // add_data_to_record() is based on assumptions about the output of aa-status.
 // If those assumptions are incorrect, or aa-status changes, this could crash.
-void Profiles::add_data_to_record(std::string data){
+void Profiles::add_data_to_record(const std::string& data){
   Json::Value root = Status::parse_JSON(data);
   Json::Value profiles = root["profiles"];
 

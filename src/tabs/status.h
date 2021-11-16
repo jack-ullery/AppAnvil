@@ -38,7 +38,7 @@ class Status : public Gtk::ScrolledWindow
      *  
      * @returns `true` if the string should be added, `false` if it should not
      */
-    bool filter(const Gtk::TreeModel::iterator& child);
+    bool filter(const Gtk::TreeModel::iterator& node);
 
     /**
      * @brief Change the text in the label directly above the searchbar.

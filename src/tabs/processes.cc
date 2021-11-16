@@ -10,7 +10,7 @@
 const std::regex filter_unconfined_proc("\\b([1234567890]+) ([^ ]+) (not confined)"); // NOLINT(cert-err58-cpp)
 
 // Need to improve!
-void Processes::add_data_to_record(std::string confined, std::string unconfined){
+void Processes::add_data_to_record(const std::string& confined, const std::string& unconfined){
   Json::Value root = Status::parse_JSON(confined);
   Json::Value processes = root["processes"];
 

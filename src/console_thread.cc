@@ -2,9 +2,10 @@
 #include "threads/command_caller.h"
 
 #include <iostream>
+#include <tuple>
 
 ConsoleThread::ConsoleThread(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs)
-: dispatch_man(prof, proc, logs)
+: dispatch_man(std::move(prof), std::move(proc), std::move(logs))
 {
   std::lock_guard<std::mutex> lock(state_mtx);
   current_state = PROFILE;
@@ -56,7 +57,6 @@ void ConsoleThread::run_command(){
   }
 }
 
-
 Event ConsoleThread::wait_for_message(){
   std::unique_lock<std::mutex> lock(task_ready_mtx);
   while(queue.empty()){
@@ -81,6 +81,11 @@ void ConsoleThread::console_caller(){
         break;
     }
   }
+}
+
+ConsoleThread& ConsoleThread::operator=(ConsoleThread&& other) noexcept{
+  std::ignore = other;
+  return *this;
 }
 
 ConsoleThread::~ConsoleThread(){

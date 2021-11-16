@@ -1,20 +1,19 @@
 #include "dispatcher_middleman.h"
 
 DispatcherMiddleman::DispatcherMiddleman(std::shared_ptr<Profiles> prof_arg, std::shared_ptr<Processes> proc_arg, std::shared_ptr<Logs> logs_arg)
-: dispatch(),
-  state(NONE),
+: state(NONE),
   data1(""),
   data2(""),
-  prof(prof_arg),
-  proc(proc_arg),
-  logs(logs_arg)
+  prof{std::move(prof_arg)},
+  proc{std::move(proc_arg)},
+  logs{std::move(logs_arg)}
 {
   auto function = sigc::mem_fun(*this, &DispatcherMiddleman::handle_signal);
   dispatch.connect(function);
 }
 
 // Send methods (called from second thread)
-void DispatcherMiddleman::update_profiles(std::string confined){
+void DispatcherMiddleman::update_profiles(const std::string& confined){
   std::lock_guard<std::mutex> lock(mtx);
   state = PROFILE;
   data1 = confined;
@@ -22,7 +21,7 @@ void DispatcherMiddleman::update_profiles(std::string confined){
   dispatch.emit();
 }
 
-void DispatcherMiddleman::update_processes(std::string confined, std::string unconfined){
+void DispatcherMiddleman::update_processes(const std::string& confined, const std::string& unconfined){
   std::lock_guard<std::mutex> lock(mtx);
   state = PROCESS;
   data1 = confined;
@@ -30,7 +29,7 @@ void DispatcherMiddleman::update_processes(std::string confined, std::string unc
   dispatch.emit();
 }
 
-void DispatcherMiddleman::update_logs(std::string logs){
+void DispatcherMiddleman::update_logs(const std::string& logs){
   std::lock_guard<std::mutex> lock(mtx);
   state = LOGS;
   data1 = logs;
@@ -41,7 +40,7 @@ void DispatcherMiddleman::update_logs(std::string logs){
 // Receive method (called from main thread)
 void DispatcherMiddleman::handle_signal(){
   // Will need to use these later and we want them declared outside the following scope.
-  CallState cached_state;
+  CallState cached_state = NONE;
   std::string cached_data1;
   std::string cached_data2;
   // Only need the lock in this small scope to retrieve data.

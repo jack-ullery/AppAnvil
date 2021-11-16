@@ -3,6 +3,7 @@
 #include <gtkmm/button.h>
 #include <gtkmm/label.h>
 #include <iostream>
+#include <tuple>
 
 MainWindow::MainWindow()
 : prof{new Profiles()},
@@ -41,9 +42,9 @@ MainWindow::MainWindow()
   this->show_all();
 }
 
-// "__attribute__ ((unused))" is a GCC-specific way to suppress the [-Wunused-parameter] warning
-// We must have 'direction' as a parameter so that it can be the signal handler for m_switcher.signal_event() 
-bool MainWindow::on_switch(__attribute__ ((unused)) GdkEvent* direction){
+bool MainWindow::on_switch(GdkEvent* event){
+  std::ignore = event;
+
   std::string visible_child  = m_stack.get_visible_child_name();
 
   if(visible_child == "prof"){

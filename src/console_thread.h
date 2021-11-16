@@ -8,9 +8,9 @@
 #include "threads/dispatcher_middleman.h"
 
 #include <condition_variable>
+#include <future>
 #include <memory>
 #include <mutex>
-#include <future>
 #include <thread>
 
 enum TabState {
@@ -29,6 +29,14 @@ class ConsoleThread
   public:
     ConsoleThread(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs);
     ~ConsoleThread();
+
+    // Delete the copy-constructor, move constructor, and copy assignment operator
+    ConsoleThread(const ConsoleThread&) = delete;
+    ConsoleThread(const ConsoleThread&&) = delete;
+    ConsoleThread& operator=(const ConsoleThread& other) = delete;
+
+    // Create a move assignment operator
+    ConsoleThread& operator=(ConsoleThread&& other) noexcept;
 
     void set_state(TabState new_state);
     void send_refresh_message();
