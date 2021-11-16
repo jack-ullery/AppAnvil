@@ -8,17 +8,11 @@
 #include <gtkmm/builder.h>
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/combobox.h>
-#include <gtkmm/enums.h>
 #include <gtkmm/label.h>
-#include <gtkmm/liststore.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/searchentry.h>
 #include <gtkmm/spinner.h>
-#include <gtkmm/treemodelcolumn.h>
-#include <gtkmm/treemodelfilter.h>
 #include <gtkmm/treeview.h>
-#include <gtkmm/treeviewcolumn.h>
-#include <sstream>
 
 constexpr auto UNKNOWN_STATUS = "unknown";
 

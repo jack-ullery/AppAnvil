@@ -1,11 +1,9 @@
 #include "jsoncpp/json/json.h"
 #include "status.h"
 
-#include <giomm.h>
 #include <iostream>
 #include <regex>
 #include <sstream>
-#include <string>
 #include <string>
 
 

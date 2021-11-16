@@ -1,7 +1,6 @@
 #ifndef TABS_STATUS_COLUMN_RECORD_H
 #define TABS_STATUS_COLUMN_RECORD_H
 
-#include <gtkmm/treeiter.h>
 #include <gtkmm/treemodel.h>
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treemodelfilter.h>

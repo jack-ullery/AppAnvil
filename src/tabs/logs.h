@@ -3,15 +3,6 @@
 
 #include "status.h"
 
-#include <gtkmm/box.h>
-#include <gtkmm/builder.h>
-#include <gtkmm/enums.h>
-#include <gtkmm/liststore.h>
-#include <gtkmm/scrolledwindow.h>
-#include <gtkmm/searchentry.h>
-#include <gtkmm/treemodelcolumn.h>
-#include <gtkmm/treeview.h>
-#include <gtkmm/treeviewcolumn.h>
 #include <memory>
 #include <regex>
 #include <string>

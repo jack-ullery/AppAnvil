@@ -1,5 +1,4 @@
 #include "status_column_record.h"
-#include <iostream>
 #include <vector>
 
 /*

@@ -7,7 +7,6 @@
 #include "tabs/profiles.h"
 
 #include <gtkmm/applicationwindow.h>
-#include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/headerbar.h>
 #include <gtkmm/stack.h>

@@ -1,8 +1,5 @@
 #include "main_window.h"
 
-#include <gtkmm/button.h>
-#include <gtkmm/label.h>
-#include <iostream>
 #include <tuple>
 
 MainWindow::MainWindow()

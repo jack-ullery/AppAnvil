@@ -2,6 +2,7 @@
 #include "logs.h"
 
 #include <iostream>
+#include <regex>
 #include <string>
 #include <vector>
 

@@ -1,9 +1,6 @@
 #include "jsoncpp/json/json.h"
 #include "processes.h"
 
-#include <gtkmm/enums.h>
-#include <iostream>
-#include <regex>
 #include <string>
 
 // clang-tidy throws [cert-err58-cpp], but it's not a problem in this case, so lets ignore it.
