@@ -11,18 +11,15 @@ void Profiles::add_data_to_record(const std::string& data){
   Json::Value root = Status::parse_JSON(data);
   Json::Value profiles = root["profiles"];
 
-  int num_found = 0;
-
   col_record->clear();
   for(auto prof = profiles.begin(); prof != profiles.end(); prof++){
     std::string key = prof.key().asString();
     auto row = col_record->new_row();
     col_record->set_row_data(row, 0, key);
     col_record->set_row_data(row, 1, profiles.get(key, UNKNOWN_STATUS).asString());
-    num_found++;
   }
 
-  Status::set_status_label_text(" " + std::to_string(num_found) + " matching profiles");
+  refresh();
 }
 
 void Profiles::change_status(){
@@ -31,7 +28,8 @@ void Profiles::change_status(){
 }
 
 void Profiles::refresh(){
-  col_record->filter_rows();
+  uint num_visible = col_record->filter_rows();
+  Status::set_status_label_text(" " + std::to_string(num_visible) + " matching profiles");
 }
 
 Profiles::Profiles()

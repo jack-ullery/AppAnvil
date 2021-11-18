@@ -52,8 +52,17 @@ bool Status::filter(const std::string& str, const std::string& rule, const bool&
 
 bool Status::filter(const Gtk::TreeModel::iterator& node){
   std::string data;
-  node->get_value(0, data);
-  return Status::filter(data, s_search->get_text(), s_use_regex->get_active(), s_match_case->get_active(), s_whole_word->get_active());
+  const uint num_columns = s_view->get_n_columns();
+
+  for(uint i = 0; i < num_columns; i++){
+    node->get_value(i, data);
+    bool re = Status::filter(data, s_search->get_text(), s_use_regex->get_active(), s_match_case->get_active(), s_whole_word->get_active());
+    if(re){
+      return true;
+    }
+  }
+
+  return false;
 }
 
 Json::Value Status::parse_JSON(const std::string& raw_json){

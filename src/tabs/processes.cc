@@ -11,7 +11,6 @@ void Processes::add_data_to_record(const std::string& confined, const std::strin
   Json::Value root = Status::parse_JSON(confined);
   Json::Value processes = root["processes"];
 
-  int num_found = 0;
   col_record->clear();
   for(auto proc = processes.begin(); proc != processes.end(); proc++){
     const std::string& key = proc.key().asString();
@@ -23,8 +22,6 @@ void Processes::add_data_to_record(const std::string& confined, const std::strin
       auto child = col_record->new_child_row(row);
       col_record->set_row_data(child, 0, "pid: " + inst->get("pid", "Unknown").asString() + "\t status: " + inst->get("status", "Unknown").asString());
     }
-  
-    num_found++;
   }
 
   std::stringstream unconfined_results;
@@ -42,16 +39,15 @@ void Processes::add_data_to_record(const std::string& confined, const std::strin
       
       auto child = col_record->new_child_row(row);
       col_record->set_row_data(child, 0, "pid: " + m[1].str() + "\t status: " + "unconfined");
-
-      num_found++;
     }
   }
 
-  Status::set_status_label_text(" " + std::to_string(num_found) + " matching processes");
+  refresh();
 }
 
 void Processes::refresh(){
-  col_record->filter_rows();
+  uint num_visible = col_record->filter_rows();
+  Status::set_status_label_text(" " + std::to_string(num_visible) + " matching processes");
 }
 
 Processes::Processes()

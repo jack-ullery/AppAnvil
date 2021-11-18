@@ -105,6 +105,10 @@ class Status : public Gtk::ScrolledWindow
     std::unique_ptr<Gtk::Label>       s_apply_info_text;
     std::unique_ptr<Gtk::ComboBox>    s_status_selection;
 
+    // Number of visible rows
+    uint num_visible_rows = 0;
+
+    // Misc
     template <typename T_Widget>
     static std::unique_ptr<T_Widget> get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder>& builder);    
     static bool filter(const std::string& str, const std::string& rule, const bool& use_regex, const bool& match_case, const bool& whole_word);

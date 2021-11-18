@@ -38,8 +38,6 @@ void Logs::add_row_from_line(const std::shared_ptr<StatusColumnRecord>& col_reco
 void Logs::add_data_to_record(const std::string& data){
   // Delete all the data from col_record
   col_record->clear();
-  // Regex to filter logs from dmesg. Could also use as filter_log_regex "audit\\([1234567890:.]*\\)" to get more logs.
-  int num_found = 0;
 
   std::stringstream logs;
   logs << data;
@@ -48,15 +46,15 @@ void Logs::add_data_to_record(const std::string& data){
   while(std::getline(logs, line)){
     if(std::regex_search(line, filter_log_regex)){
       add_row_from_line(col_record, line);
-      num_found++;
     }
   }
 
-  Status::set_status_label_text(" " + std::to_string(num_found) + " logs");
+  refresh();
 }
 
 void Logs::refresh(){
-  col_record->filter_rows();
+  uint num_visible = col_record->filter_rows();
+  Status::set_status_label_text(" " + std::to_string(num_visible) + " logs");
 }
 
 Logs::Logs()

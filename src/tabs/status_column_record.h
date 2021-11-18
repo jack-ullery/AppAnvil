@@ -74,15 +74,26 @@ class StatusColumnRecord : public Gtk::TreeModel::ColumnRecord
          */
         void clear();
 
-        // Should probably add a description!
-        // Should certainly add a description!!!
-        void filter_rows();
+        /**
+         * @brief Set the visibility all the rows in the ColumnRecord.
+         * 
+         * @details
+         * Sets the visibility of all the rows in the column record based on the function parameter
+         * of `set_visible_function`. If no valid function was specified through that method, before calling this 
+         * method, then this will have undefined behavior.
+         * 
+         * @returns The number of visible rows.
+         */
+        uint filter_rows();
 
     private:
         explicit StatusColumnRecord(const std::vector<std::string>& names);
         std::vector<Gtk::TreeModelColumn<std::string>> column;
         Glib::RefPtr<Gtk::TreeStore> store;
         Glib::RefPtr<Gtk::TreeModelFilter> model_filter;
+        Gtk::TreeModelFilter::SlotVisible filter_fun;
+
+        static bool default_filter(const Gtk::TreeModel::iterator& node);
 };
 
 #endif // TABS_STATUS_COLUMN_RECORD_H
