@@ -6,7 +6,7 @@ A GUI for the Linux Security Module AppArmor
 * cmake
 * g++ (or another equivalent c++ compiler)
 * libgtkmm-3.0-dev
-* jsoncpp-dev
+* libjsoncpp-dev
 ### Optional
 A GUI builder
 * glade 
@@ -27,9 +27,10 @@ To generate a makefile, and build the project using that makefile:
 $ cmake .
 $ make
 ```
-To run Linters and extra static analysis on source code
+To generate a makefile, build, and run extra static analysis on the source code:
 ```
-$ make ANALYZE
+$ cmake -DANALYZE=TRUE
+$ make
 ```
 
 ## Run
