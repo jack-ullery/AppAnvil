@@ -27,20 +27,27 @@ set(RESOURCE_BUNDLE_OUTPUT ${PROJECT_RESOURCE_DIR}/resource.autogen.c)
 
 # If cmake was compiled with DANALYZE=TRUE
 if(${ANALYZE})
+  message(STATUS "Adding static-analysis tools to build:")
   set(USE_CLANG_TIDY TRUE)
   set(USE_CPPCHECK TRUE)
+  unset(ANALYZE CACHE)
 endif()
 
-find_program(CPPCHECK_EXISTS cppcheck)
-# If clang-tidy exists and we want to use it
-if(${USE_CPPCHECK} AND ${CPPCHECK_EXISTS})
-  set(CMAKE_CXX_CPPCHECK cppcheck --enable=all)
+# If cppcheck exists and we want to use it
+if(${USE_CPPCHECK})
+  message(STATUS "Adding cppcheck to build (not totally working)")
+  # set(CMAKE_CXX_CPPCHECK cppcheck --inline-suppr --enable=all)
+  unset(USE_CPPCHECK CACHE)
 endif()
 
-find_program(CLANG_TIDY_EXISTS clang-tidy)
 # If clang-tidy exists and we want to use it
-if(${USE_CLANG_TIDY} AND ${CLANG_TIDY_EXISTS})
-  set(CMAKE_CXX_CLANG_TIDY clang-tidy;-header_filter=${CMAKE_CURRENT_SOURCE_DIR};-checks=-*,bugprone-*,cert-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,google-*,hicpp-*,linuxkernel-*,llvm-*,llvmlibc-*,misc-*,performance-*,portability-*,readability-*,-llvm-header-guard*,-misc-non-private-member-variables-in-classes*)
+if(${USE_CLANG_TIDY})
+  message(STATUS "Adding clang-tidy to build")
+  set(CMAKE_CXX_CLANG_TIDY clang-tidy;
+    -checks=-*,bugprone-*,cert-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,google-*,hicpp-*,linuxkernel-*,llvm-*,llvmlibc-*,misc-*,performance-*,portability-*,readability-*,-llvm-header-guard*,-misc-non-private-member-variables-in-classes*;
+    -header-filter=.*
+  )
+  unset(USE_CLANG_TIDY CACHE)
 endif()
 
 #### Include GTKmm Libraries ####
