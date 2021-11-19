@@ -24,63 +24,28 @@ set(XML_GRESOURCE ${PROJECT_RESOURCE_DIR}/resources.gresource.xml)
 set(RESOURCE_BUNDLE_OUTPUT ${PROJECT_RESOURCE_DIR}/resource.autogen.c)
 
 #### Add Linters and Static Analysis ####
-add_custom_target(
-  ANALYZE
-  DEPENDS
-    CPPCHECK
-    CLANG-TIDY
-    ${SOURCES}
-  VERBATIM
-)
+
+# If cmake was compiled with DANALYZE=TRUE
+if(${ANALYZE})
+  set(USE_CLANG_TIDY TRUE)
+  set(USE_CPPCHECK TRUE)
+endif()
 
 find_program(CPPCHECK_EXISTS cppcheck)
-if(CPPCHECK_EXISTS)
-  add_custom_target(
-    CPPCHECK
-    COMMAND cppcheck --project=compile_commands.json --inline-suppr --enable=all
-    COMMENT "Running cppcheck..."
-    VERBATIM
-  )
-else()
-  add_custom_target(
-    CPPCHECK
-    COMMENT "cppcheck: tool not found"
-    VERBATIM
-  )
+# If clang-tidy exists and we want to use it
+if(${USE_CPPCHECK} AND ${CPPCHECK_EXISTS})
+  set(CMAKE_CXX_CPPCHECK cppcheck --enable=all)
 endif()
 
 find_program(CLANG_TIDY_EXISTS clang-tidy)
-if(CLANG_TIDY_EXISTS)
-  add_custom_target(
-    CLANG-TIDY
-    COMMAND clang-tidy;
-      -checks=-*,bugprone-*,cert-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,google-*,hicpp-*,linuxkernel-*,llvm-*,llvmlibc-*,misc-*,performance-*,portability-*,readability-*,-llvm-header-guard*,-misc-non-private-member-variables-in-classes*
-      -format-style='file'
-      -header-filter=.*
-      -p .
-      ${SOURCES}
-    COMMENT "Running clang-tidy (this may take a while)..."
-    VERBATIM
-  )
-else()
-  add_custom_target(
-    CLANG-TIDY
-    COMMENT "clang-tidy: tool not found"
-    VERBATIM
-  )
+# If clang-tidy exists and we want to use it
+if(${USE_CLANG_TIDY} AND ${CLANG_TIDY_EXISTS})
+  set(CMAKE_CXX_CLANG_TIDY clang-tidy;-header_filter=${CMAKE_CURRENT_SOURCE_DIR};-checks=-*,bugprone-*,cert-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,google-*,hicpp-*,linuxkernel-*,llvm-*,llvmlibc-*,misc-*,performance-*,portability-*,readability-*,-llvm-header-guard*,-misc-non-private-member-variables-in-classes*)
 endif()
 
 #### Include GTKmm Libraries ####
 find_package(PkgConfig)
 pkg_check_modules(GTKMM gtkmm-3.0)
-
-#link_directories(${GTKMM_LIBRARY_DIRS})
-#include_directories(
-#  header_only_library_no_static_code_analysis 
-#  SYSTEM # Adds -isystem instead of -I and this tells clang-tidy not to analyze these includes
-#  INTERFACE
-#    ${GTKMM_INCLUDE_DIRS}
-#)
 
 #### Include jsoncpp libraries ####
 pkg_check_modules(JSONCPP jsoncpp)
@@ -123,13 +88,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # set(CMAKE_LINK_WHAT_YOU_USE TRUE)
-#set(CMAKE_CXX_CLANG_TIDY
-#  clang-tidy;
-#  -checks=-*,bugprone-*,cert-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,google-*,hicpp-*,linuxkernel-*,llvm-*,llvmlibc-*,misc-*,performance-*,portability-*,readability-*,-llvm-header-guard*,-misc-non-private-member-variables-in-classes*,
-#  -format-style='file';
-#  -header-filter=${CMAKE_CURRENT_SOURCE_DIR};
-#  -p .
-#)
 
 #### Link everything together ####
 add_executable(${PROJECT_NAME} ${RESOURCE_BUNDLE_OUTPUT} ${SOURCES})
