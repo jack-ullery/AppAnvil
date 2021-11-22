@@ -3,6 +3,13 @@
 
 #include <string>
 
+///*
+#include <cstdlib>
+#include <cstdio>
+#include <iostream>
+//*/
+
+
 class CommandCaller{
   public:
     /**
@@ -34,6 +41,14 @@ class CommandCaller{
      * @returns std::string the raw output of aa-unconfined
      */
     static std::string get_unconfined();
+
+
+    /*
+      loadprofile
+    */
+    static void load_profile(std::string fullFileName, std::string password, std::string& feedBack);
+
+
 };
 
 #endif // COMMAND_CALLER_H

@@ -8,16 +8,13 @@
 #include <gtkmm/builder.h>
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/combobox.h>
-#include <gtkmm/enums.h>
 #include <gtkmm/label.h>
-#include <gtkmm/liststore.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/searchentry.h>
 #include <gtkmm/spinner.h>
-#include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treeview.h>
-#include <gtkmm/treeviewcolumn.h>
-#include <sstream>
+
+#include "gtest/gtest.h"
 
 constexpr auto UNKNOWN_STATUS = "unknown";
 
@@ -37,7 +34,19 @@ class Status : public Gtk::ScrolledWindow
      *  
      * @returns `true` if the string should be added, `false` if it should not
      */
-    bool filter(const std::string& str);
+
+    FRIEND_TEST(STATUS, FILTER_FFF); // Gtest get protected methods added by Zixin Yang
+    FRIEND_TEST(STATUS, FILTER_TFF);
+    FRIEND_TEST(STATUS, FILTER_FTF);
+    FRIEND_TEST(STATUS, FILTER_FFT);
+    FRIEND_TEST(STATUS, FILTER_TTF);
+    FRIEND_TEST(STATUS, FILTER_TFT);
+    FRIEND_TEST(STATUS, FILTER_FTT);
+    FRIEND_TEST(STATUS, FILTER_TTT);
+    FRIEND_TEST(STATUS, FILTER_REGEX_TOLOWER);
+
+
+    bool filter(const Gtk::TreeModel::iterator& node);
 
     /**
      * @brief Change the text in the label directly above the searchbar.
