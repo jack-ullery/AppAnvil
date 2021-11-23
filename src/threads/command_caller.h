@@ -3,11 +3,11 @@
 
 #include <string>
 
-///*
+/*
 #include <cstdlib>
 #include <cstdio>
 #include <iostream>
-//*/
+*/
 
 
 class CommandCaller{
@@ -48,6 +48,7 @@ class CommandCaller{
     */
     static void load_profile(std::string fullFileName, std::string password, std::string& feedBack);
 
+    static void disable_profile(std::string profileName, std::string password, std::string& feedBack);
 
 };
 
