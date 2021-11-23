@@ -1,6 +1,11 @@
 #include "parser.h"
 
+
 const std::string WHITESPACE = " \n\r\t\f\v";
+
+// these are all the flags which transition the resource to a subprofile
+// we want to exclude these if we're just listing path + flags as they would be duplicates
+std::array<std::string, 6> a{"Cx", "cx", "Cix", "cix", "CUx", "cux"};
 
 // removes leading whitespace as we're reading a formatted source file
 std::string Parser::ltrim(const std::string &s)
@@ -9,12 +14,28 @@ std::string Parser::ltrim(const std::string &s)
     return (start == std::string::npos) ? "" : s.substr(start);
 }
 
+// parses the path and flags out of the passed string stream and excludes any entries
+// that have one of the six transition-to-subprofile flags (in array 'a')
+std::string Parser::handle_path(std::istringstream * is) {
+	std::string path;
+	std::string flags;
+	std::getline(*is, path, ' ');
+	std::getline(*is, flags, ',');
+	flags = Parser::ltrim(flags);
+	auto it = std::find_if(begin(a), end(a),
+				[&](const std::string& s)
+				{return flags.find(s) != std::string::npos; });
+	if (it != end(a))
+		return "";
+	return "path: " + path + "\tmode: " + flags + '\n';
+}
+
 std::string Parser::get_perms(std::string filename) {
 	std::ifstream fp(filename);
 	if (!fp) {
 		std::cerr << "cannot open profile for parsing\n";
 		return "ERROR";
-  }
+  	}
 
 	// strings for holding tempory file input tokens
 	std::string line;
@@ -49,18 +70,14 @@ std::string Parser::get_perms(std::string filename) {
 			// we have our path to the resource/program with no qualifier (i.e. default 'allow')
 			// append to the string holding all rules with the allow qualifier
 			std::istringstream is(line); // so we can use getline as a tokenizer
-			std::getline(is, path, ' ');
-			std::getline(is, flags, ',');
-			allow_str += "path: " + path + "\tmode: " + Parser::ltrim(flags) + '\n';
+			allow_str += Parser::handle_path(&is);
 			// left in a seperate if statement for any additions that may need to be made later
 			// that would differentiate these from domain sockets that start with @	
 		} else if (line.at(0) == '@') {
 			// we have a UNIX domain socket which is also a path with no qualifier (i.e. default 'allow') 
 			// append to the string holding all rules with the allow qualifier
 			std::istringstream is(line); // so we can use getline as a tokenizer
-			std::getline(is, path, ' ');
-			std::getline(is, flags, ',');
-			allow_str += "path: " + path + "\tmode: " + Parser::ltrim(flags) + '\n';
+			allow_str += Parser::handle_path(&is);
 			// left in a seperate if statement for any additions that may need to be made later
 			// that would differentiate these from regular paths that start with /
 		} else {
@@ -69,22 +86,14 @@ std::string Parser::get_perms(std::string filename) {
 			std::istringstream is(line); // so we can use getline as a tokenizer
 			std::getline(is, token, ' ');
 			if (token == "deny") {
-				std::getline(is, path, ' ');
-				std::getline(is, flags, ',');
-				deny_str += "path: " + path + "\tmode: " + Parser::ltrim(flags) + '\n';
+				deny_str += Parser::handle_path(&is);
 			} else if (token == "audit") {
-				std::getline(is, path, ' ');
-				std::getline(is, flags, ',');
-				audit_str += "path: " + path + "\tmode: " + Parser::ltrim(flags) + '\n';
+				audit_str += Parser::handle_path(&is);
 			} else if (token == "owner") {
-				std::getline(is, path, ' ');
-				std::getline(is, flags, ',');
-				owner_str += "path: " + path + "\tmode: " + Parser::ltrim(flags) + '\n';
+				owner_str += Parser::handle_path(&is);
 			} else if (token == "allow") {
 				// assigned by default but should still check just in case someone explicitly declared it
-				std::getline(is, path, ' ');
-				std::getline(is, flags, ',');
-				allow_str += "path: " + path + "\tmode: " + Parser::ltrim(flags) + '\n';
+				allow_str += Parser::handle_path(&is);
 			}
 		}
 	}

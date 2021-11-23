@@ -156,6 +156,10 @@ std::shared_ptr<Gtk::Spinner> Status::get_spinner(){
   return s_spinner;
 }
 
+Glib::ustring Status::get_selection_text() const {
+  return s_status_selection->get_active_text();
+}
+
 /* This is broken, should pull TreeSelection from s_view instead
 std::shared_ptr<Gtk::TreeSelection> Status::get_row(){
   return s_row;
@@ -182,7 +186,7 @@ Status::Status()
   s_apply_button{Status::get_widget<Gtk::Button>("s_apply_button", builder)},
   s_spinner{Status::get_widget<Gtk::Spinner>("s_spinner", builder)},
   s_apply_info_text{Status::get_widget<Gtk::Label>("s_apply_info_text", builder)},
-  s_status_selection{Status::get_widget<Gtk::ComboBox>("s_status_selection", builder)}
+  s_status_selection{Status::get_widget<Gtk::ComboBoxText>("s_status_selection", builder)}
 {
   s_win->set_shadow_type(Gtk::ShadowType::SHADOW_NONE);
   s_win->set_policy(Gtk::PolicyType::POLICY_AUTOMATIC, Gtk::PolicyType::POLICY_AUTOMATIC);

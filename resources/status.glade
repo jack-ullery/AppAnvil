@@ -2,6 +2,23 @@
 <!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
+  <object class="GtkListStore" id="liststore1">
+    <columns>
+      <!-- column-name Text -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">Enforce</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Complain</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Unconfine</col>
+      </row>
+    </data>
+  </object>
   <object class="GtkBox" id="s_box">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -38,22 +55,26 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
-          <object class="GtkComboBox" id="s_status_selection">
+          <object class="GtkComboBoxText" id="s_status_selection">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="tooltip_text" translatable="yes">Chose an action for the currently selected profile</property>
-            <property name="margin_start">10</property>
-            <property name="margin_end">5</property>
+            <property name="margin_left">10</property>
             <property name="has_entry">True</property>
+            <items>
+              <item id="combo_enforce" translatable="yes">Enforce</item>
+              <item id="combo_complain" translatable="yes">Complain</item>
+              <item id="combo_unconfine" translatable="yes">Disable</item>
+            </items>
             <child internal-child="entry">
               <object class="GtkEntry">
                 <property name="can_focus">False</property>
+                <property name="text" translatable="yes">Enforce</property>
               </object>
             </child>
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="fill">False</property>
+            <property name="fill">True</property>
             <property name="position">0</property>
           </packing>
         </child>
@@ -69,7 +90,7 @@
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">1</property>
+            <property name="position">2</property>
           </packing>
         </child>
         <child>
@@ -80,7 +101,7 @@
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">2</property>
+            <property name="position">3</property>
           </packing>
         </child>
         <child>
@@ -96,7 +117,7 @@
           <packing>
             <property name="expand">False</property>
             <property name="fill">False</property>
-            <property name="position">3</property>
+            <property name="position">4</property>
           </packing>
         </child>
       </object>
