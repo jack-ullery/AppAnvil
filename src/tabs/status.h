@@ -7,7 +7,8 @@
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/checkbutton.h>
-#include <gtkmm/combobox.h>
+#include <gtkmm/comboboxtext.h>
+#include <gtkmm/enums.h>
 #include <gtkmm/label.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/searchentry.h>
@@ -40,6 +41,11 @@ class Status : public Gtk::ScrolledWindow
     void set_status_label_text(const std::string& str);
 
     /**
+     * @brief Change the text in the label next to the Apply button/spinner.
+     */
+    void set_apply_label_text(const std::string& str);
+
+    /**
      * @brief Set the method to be called every time the search area updated.
      * 
      * @details
@@ -69,6 +75,20 @@ class Status : public Gtk::ScrolledWindow
     std::shared_ptr<Gtk::TreeView> get_view();
 
     /**
+     * @brief Return the Spinner associated with this class.
+     * 
+     * @returns The Spinner data member used by this class.
+     */
+    std::shared_ptr<Gtk::Spinner> get_spinner();
+
+    /**
+     * @brief Return the active selection/choice in the dropdown ComboBoxText
+     * 
+     * @returns The string of the dropdown item which is selected.
+     */
+    Glib::ustring get_selection_text() const;
+
+    /**
      * @brief Make widgets related to changing profile status invisible to the user.
      * 
      * @details
@@ -87,7 +107,6 @@ class Status : public Gtk::ScrolledWindow
 
     // Container Widgets
     std::shared_ptr<Gtk::TreeView> s_view;
-    std::shared_ptr<Gtk::TreeSelection> s_row;
     std::unique_ptr<Gtk::ScrolledWindow> s_win;
     std::unique_ptr<Gtk::Box> s_box;
 
@@ -99,11 +118,11 @@ class Status : public Gtk::ScrolledWindow
     std::unique_ptr<Gtk::Label>       s_found_label;
 
     // Widgets related to changing profile status (above search)
-    std::unique_ptr<Gtk::Box>         s_selection_box;
-    std::unique_ptr<Gtk::Button>      s_apply_button;
-    std::unique_ptr<Gtk::Spinner>     s_spinner;
-    std::unique_ptr<Gtk::Label>       s_apply_info_text;
-    std::unique_ptr<Gtk::ComboBox>    s_status_selection;
+    std::unique_ptr<Gtk::Box>             s_selection_box;
+    std::unique_ptr<Gtk::Button>          s_apply_button;
+    std::shared_ptr<Gtk::Spinner>         s_spinner;
+    std::unique_ptr<Gtk::Label>           s_apply_info_text;
+    std::unique_ptr<Gtk::ComboBoxText>    s_status_selection;
 
     // Misc
     template <typename T_Widget>

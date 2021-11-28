@@ -3,9 +3,10 @@
 
 #include "console_thread.h"
 #include "tabs/logs.h"
+#include "tabs/parser.h"
 #include "tabs/processes.h"
 #include "tabs/profiles.h"
-
+#include "tabs/status.h"
 #include <gtkmm/applicationwindow.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/headerbar.h>
