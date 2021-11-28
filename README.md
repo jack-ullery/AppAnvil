@@ -29,7 +29,7 @@ $ make
 ```
 To generate a makefile, build, and run extra static analysis on the source code:
 ```
-$ cmake -DANALYZE=TRUE
+$ cmake -DANALYZE=TRUE .
 $ make
 ```
 
