@@ -1,11 +1,11 @@
 #include "parser.h"
 
 
-const std::string WHITESPACE = " \n\r\t\f\v";
+const std::string WHITESPACE = " \n\r\t\f\v"; // NOLINT(cert-err58-cpp)
 
 // these are all the flags which transition the resource to a subprofile
 // we want to exclude these if we're just listing path + flags as they would be duplicates
-std::array<std::string, 6> a{"Cx", "cx", "Cix", "cix", "CUx", "cux"};
+std::array<std::string, 6> exclude_flags{"Cx", "cx", "Cix", "cix", "CUx", "cux"}; // NOLINT
 
 // removes leading whitespace as we're reading a formatted source file
 std::string Parser::ltrim(const std::string &s)
@@ -16,21 +16,22 @@ std::string Parser::ltrim(const std::string &s)
 
 // parses the path and flags out of the passed string stream and excludes any entries
 // that have one of the six transition-to-subprofile flags (in array 'a')
-std::string Parser::handle_path(std::istringstream * is) {
+std::string Parser::handle_path(std::istringstream *is) {
 	std::string path;
 	std::string flags;
 	std::getline(*is, path, ' ');
 	std::getline(*is, flags, ',');
 	flags = Parser::ltrim(flags);
-	auto it = std::find_if(begin(a), end(a),
+	auto *it = std::find_if(begin(exclude_flags), end(exclude_flags),
 				[&](const std::string& s)
 				{return flags.find(s) != std::string::npos; });
-	if (it != end(a))
+	if (it != end(exclude_flags)) {
 		return "";
+	}
 	return "path: " + path + "\tmode: " + flags + '\n';
 }
 
-std::string Parser::get_perms(std::string filename) {
+std::string Parser::get_perms(const std::string& filename) {
 	std::ifstream fp(filename);
 	if (!fp) {
 		std::cerr << "cannot open profile for parsing\n";
@@ -58,13 +59,13 @@ std::string Parser::get_perms(std::string filename) {
 		// remove leading whitespace such as indentation
 		line = Parser::ltrim(line);
 
-		if (line.size() <= 0) continue;
-		if (line.at(0) == '#') continue;
-		if (line.at(0) == '}') {
+		if (line.empty() || line.at(0) == '#'){
+			// Do nothing
+		}
+		else if (line.at(0) == '}') {
 			// we hit a closing brace, no paths can exist between these braces so skip to the next block
 			// WARNING: this assumes that every closing brace is on it's own new line (seems to be the case so far)
 			std::getline(fp, line, '{');
-			continue;
 		}
 		if (line.at(0) == '/') {
 			// we have our path to the resource/program with no qualifier (i.e. default 'allow')
