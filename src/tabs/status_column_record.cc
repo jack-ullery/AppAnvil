@@ -55,6 +55,15 @@ void StatusColumnRecord::set_row_data(const Gtk::TreeRow& row, const uint& index
     row[this->column[index]] = data;
 }
 
+std::string StatusColumnRecord::get_row_data(const Gtk::TreeRow& row, const uint& index) {
+    if(index >= column.size()){
+        throw std::out_of_range("Attempting to access invalid column.");
+    }
+
+    return row[this->column[index]];
+}
+
+
 void StatusColumnRecord::clear(){
     store->clear();
 }

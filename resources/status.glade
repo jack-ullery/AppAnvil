@@ -1,28 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.38.2 -->
+<!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
+  <object class="GtkListStore" id="liststore1">
+    <columns>
+      <!-- column-name Text -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">Enforce</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Complain</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Unconfine</col>
+      </row>
+    </data>
+  </object>
   <object class="GtkBox" id="s_box">
     <property name="visible">True</property>
-    <property name="can-focus">False</property>
+    <property name="can_focus">False</property>
     <property name="hexpand">True</property>
     <property name="vexpand">True</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkScrolledWindow" id="s_win">
         <property name="visible">True</property>
-        <property name="can-focus">True</property>
+        <property name="can_focus">True</property>
         <property name="hexpand">True</property>
         <property name="vexpand">True</property>
-        <property name="shadow-type">in</property>
+        <property name="shadow_type">in</property>
         <child>
           <object class="GtkTreeView" id="s_view">
             <property name="visible">True</property>
-            <property name="can-focus">True</property>
+            <property name="can_focus">True</property>
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
             <child internal-child="selection">
-              <object class="GtkTreeSelection"/>
+              <object class="GtkTreeSelection" id="s_row"/>
             </child>
           </object>
         </child>
@@ -36,24 +53,28 @@
     <child>
       <object class="GtkBox" id="s_selection_box">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
+        <property name="can_focus">False</property>
         <child>
-          <object class="GtkComboBox" id="s_status_selection">
+          <object class="GtkComboBoxText" id="s_status_selection">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="tooltip-text" translatable="yes">Chose an action for the currently selected profile</property>
-            <property name="margin-start">10</property>
-            <property name="margin-end">5</property>
-            <property name="has-entry">True</property>
+            <property name="can_focus">False</property>
+            <property name="margin_left">10</property>
+            <property name="has_entry">True</property>
+            <items>
+              <item id="combo_enforce" translatable="yes">Enforce</item>
+              <item id="combo_complain" translatable="yes">Complain</item>
+              <item id="combo_unconfine" translatable="yes">Disable</item>
+            </items>
             <child internal-child="entry">
               <object class="GtkEntry">
-                <property name="can-focus">False</property>
+                <property name="can_focus">False</property>
+                <property name="text" translatable="yes">Enforce</property>
               </object>
             </child>
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="fill">False</property>
+            <property name="fill">True</property>
             <property name="position">0</property>
           </packing>
         </child>
@@ -61,21 +82,10 @@
           <object class="GtkButton" id="s_apply_button">
             <property name="label" translatable="yes">Apply</property>
             <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-            <property name="margin-start">5</property>
-            <property name="margin-end">10</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkSpinner" id="s_spinner">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="margin_start">5</property>
+            <property name="margin_end">10</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -84,19 +94,30 @@
           </packing>
         </child>
         <child>
+          <object class="GtkSpinner" id="s_spinner">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">3</property>
+          </packing>
+        </child>
+        <child>
           <object class="GtkLabel" id="s_apply_info_text">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="margin-start">15</property>
-            <property name="margin-end">5</property>
-            <property name="label" translatable="yes">label</property>
-            <property name="ellipsize">end</property>
-            <property name="single-line-mode">True</property>
+            <property name="can_focus">False</property>
+            <property name="margin_start">15</property>
+            <property name="margin_end">5</property>
+            <property name="label" translatable="yes">...</property>
+            <property name="wrap">True</property>
+            <property name="selectable">True</property>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">False</property>
-            <property name="position">3</property>
+            <property name="position">4</property>
           </packing>
         </child>
       </object>
@@ -110,17 +131,17 @@
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
+        <property name="can_focus">False</property>
         <property name="valign">center</property>
-        <property name="margin-start">10</property>
-        <property name="margin-end">10</property>
-        <property name="margin-top">5</property>
+        <property name="margin_start">10</property>
+        <property name="margin_end">10</property>
+        <property name="margin_top">5</property>
         <child>
           <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="margin-start">10</property>
-            <property name="margin-end">5</property>
+            <property name="can_focus">False</property>
+            <property name="margin_start">10</property>
+            <property name="margin_end">5</property>
             <property name="label" translatable="yes">Find:</property>
           </object>
           <packing>
@@ -132,7 +153,7 @@
         <child>
           <object class="GtkLabel" id="s_found_label">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
+            <property name="can_focus">False</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -144,15 +165,15 @@
           <object class="GtkCheckButton" id="s_whole_word">
             <property name="label" translatable="yes">Whole Word</property>
             <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
-            <property name="margin-end">10</property>
-            <property name="draw-indicator">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="margin_end">10</property>
+            <property name="draw_indicator">True</property>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="pack-type">end</property>
+            <property name="pack_type">end</property>
             <property name="position">2</property>
           </packing>
         </child>
@@ -160,14 +181,14 @@
           <object class="GtkCheckButton" id="s_match_case">
             <property name="label" translatable="yes">Match Case</property>
             <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
-            <property name="draw-indicator">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="draw_indicator">True</property>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="pack-type">end</property>
+            <property name="pack_type">end</property>
             <property name="position">3</property>
           </packing>
         </child>
@@ -175,14 +196,14 @@
           <object class="GtkCheckButton" id="s_use_regex">
             <property name="label" translatable="yes">Use Regex</property>
             <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">False</property>
-            <property name="draw-indicator">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="draw_indicator">True</property>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="pack-type">end</property>
+            <property name="pack_type">end</property>
             <property name="position">4</property>
           </packing>
         </child>
@@ -196,14 +217,14 @@
     <child>
       <object class="GtkSearchEntry" id="s_search">
         <property name="visible">True</property>
-        <property name="can-focus">True</property>
-        <property name="margin-start">10</property>
-        <property name="margin-end">10</property>
-        <property name="margin-top">5</property>
-        <property name="margin-bottom">5</property>
-        <property name="primary-icon-name">edit-find-symbolic</property>
-        <property name="primary-icon-activatable">False</property>
-        <property name="primary-icon-sensitive">False</property>
+        <property name="can_focus">True</property>
+        <property name="margin_start">10</property>
+        <property name="margin_end">10</property>
+        <property name="margin_top">5</property>
+        <property name="margin_bottom">5</property>
+        <property name="primary_icon_name">edit-find-symbolic</property>
+        <property name="primary_icon_activatable">False</property>
+        <property name="primary_icon_sensitive">False</property>
       </object>
       <packing>
         <property name="expand">False</property>
