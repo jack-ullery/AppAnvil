@@ -6,9 +6,11 @@
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/enums.h>
+#include <gtkmm/grid.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/searchentry.h>
+#include <gtkmm/textview.h>
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treeview.h>
 #include <gtkmm/treeviewcolumn.h>
@@ -30,9 +32,15 @@ class FileChooser : public Gtk::ScrolledWindow
     Glib::RefPtr<Gtk::Builder> builder;
 
     // Widgets on the tab   
-    std::unique_ptr<Gtk::Button> f_button;
-    std::unique_ptr<Gtk::Box> f_box;
-    std::unique_ptr<Gtk::FileChooserWidget> f_chooser;
+    std::unique_ptr<Gtk::Box> l_box;
+    std::unique_ptr<Gtk::TextView> l_upper_text;
+    std::unique_ptr<Gtk::Grid> l_mid_grid;
+    std::unique_ptr<Gtk::Button> l_filechooser_button;
+    std::unique_ptr<Gtk::Label> l_filechooser_label;
+    std::unique_ptr<Gtk::TextView> l_lower_text;
+    std::unique_ptr<Gtk::Grid> l_lower_grid;
+    std::unique_ptr<Gtk::ComboBox> l_combo_profile_status_chooser;
+    std::unique_ptr<Gtk::Button> l_confirm_button;
 
     // Signal handler
     void on_button_clicked();
