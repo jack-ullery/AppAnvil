@@ -37,7 +37,6 @@ void StatusColumnRecord::set_visible_func(const Gtk::TreeModelFilter::SlotVisibl
     model_filter->set_visible_func(filter);
 }
 
-
 Gtk::TreeRow StatusColumnRecord::new_row(){
     return *(store->append());
 }
@@ -62,7 +61,6 @@ std::string StatusColumnRecord::get_row_data(const Gtk::TreeRow& row, const uint
 
     return row[this->column[index]];
 }
-
 
 void StatusColumnRecord::clear(){
     store->clear();

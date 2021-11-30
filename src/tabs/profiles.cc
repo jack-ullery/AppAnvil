@@ -24,61 +24,22 @@ void Profiles::add_data_to_record(const std::string& data){
   refresh();
 }
 
-bool Profiles::execute_change(const std::string& profile, const std::string& status){
-  std::string new_status; // stores console command based on the potential new status
-  std::string selection = Status::get_selection_text(); // gets the active selection in the dropdown menu
-
-  if (selection == "Enforce" && status != "enforce") {
-    new_status = "aa-enforce";
-  } else if (selection == "Complain" && status != "complain") {
-    new_status = "aa-complain";
-  } else if (selection == "Disable" && status != "disabled") {
-    new_status = "aa-disable";
-  } else {
-    selection[0] = tolower(selection[0]); // for  a e s t h e t i c s 
-    Status::set_apply_label_text("'" + profile + "' already set to " + selection + ".");
-    return true;
-  }
-
-  // command to change the profile to the provided status
-  std::vector<std::string> args = {"sudo", new_status, profile};
-
-  std::string child_output;
-  std::string child_error;
-  int exit_status = 0;
-
-  // executed in commandline, copied from status.cc 
-  Glib::spawn_sync("/usr/sbin/", args, Glib::SpawnFlags::SPAWN_DEFAULT, {}, &child_output, &child_error, &exit_status);
-
-  if(exit_status != 0){
-    std::cout << "Error calling '"<< args[0] <<"'. " << child_error << std::endl;
-    child_output = "{\"processes\": {}, \"profiles\": {}";
-  } else {
-    Status::set_apply_label_text(" Changed '" + profile + "' from " + status + " to " + new_status.erase(0,3));
-  }
-
-  return true;
-}
-
 void Profiles::change_status(){
-  const auto view_obj = Status::get_view();
-  const auto spinner_obj = Status::get_spinner();
+  auto selection = Status::get_view()->get_selection();
+  if(selection->count_selected_rows()==1){
+    auto row = *selection->get_selected();
+    std::string profile_path = col_record->get_row_data(row, 0);
+    std::string old_status = col_record->get_row_data(row, 1);
+    std::string new_status = Status::get_selection_text();
+    // Convert the status strings to lower case.
+    transform(old_status.begin(), old_status.end(), old_status.begin(), ::tolower);
+    transform(new_status.begin(), new_status.end(), new_status.begin(), ::tolower);
 
-  spinner_obj->start();
-
-  const auto row_obj = view_obj->get_selection();
-  const auto iter = row_obj->get_selected();
-  const auto row = *iter;
-  const auto path = col_record->get_row_data(row, 0);
-  const auto status = col_record->get_row_data(row, 1);
-  
-  if(!execute_change(path, status)) { // this is useless at the moment (always true)
-    std::cout << "Error changing the status" << std::endl;
+    this->profile_status_change_fun(profile_path, old_status, new_status);
   }
-
-  refresh();
-
-  spinner_obj->stop();
+  else {
+    Status::set_apply_label_text("Please select a row.");
+  }
 }
 
 void Profiles::refresh(){
@@ -86,20 +47,27 @@ void Profiles::refresh(){
   Status::set_status_label_text(" " + std::to_string(num_visible) + " matching profiles");
 }
 
+void Profiles::default_change_fun(const std::string&, const std::string&, const std::string&){
+  std::cerr << "Warning: No change function signal handler is defined." << std::endl;
+}
+
+void Profiles::set_status_change_signal_handler(sigc::slot<void(std::string, std::string, std::string)> change_fun){
+  profile_status_change_fun = change_fun;
+}
+
 Profiles::Profiles()
 : col_record{StatusColumnRecord::create(Status::get_view(), col_names)}
 {
   auto refresh_func = sigc::mem_fun(*this, &Profiles::refresh);
-  auto apply_func = sigc::mem_fun(*this, &Profiles::on_apply_button_pressed);
+  auto apply_func = sigc::mem_fun(*this, &Profiles::change_status);
   Status::set_refresh_signal_handler(refresh_func);
   Status::set_apply_signal_handler(apply_func);
 
   auto filter_fun = sigc::mem_fun(*this, &Profiles::filter);
   col_record->set_visible_func(filter_fun);
+  
+  sigc::slot<void(std::string, std::string, std::string)> change_fun = sigc::mem_fun(*this, &Profiles::default_change_fun);
+  this->set_status_change_signal_handler(change_fun);
 
   this->show_all();
-}
-
-void Profiles::on_apply_button_pressed(){
-  change_status();
 }

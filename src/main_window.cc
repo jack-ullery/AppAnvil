@@ -21,6 +21,10 @@ MainWindow::MainWindow()
   m_switcher.signal_event().connect(focus, true);
   on_switch(NULL);
 
+  // Connect the profile tab to the `send_status_change` method
+  sigc::slot<void(std::string, std::string, std::string)> change_fun = sigc::mem_fun(*this, &MainWindow::send_status_change);
+  prof->set_status_change_signal_handler(change_fun);
+
   // Set some default properties for titlebar
   m_headerbar.set_custom_title(m_switcher);
   m_headerbar.set_title("AppAnvil");
@@ -39,23 +43,21 @@ MainWindow::MainWindow()
   this->show_all();
 }
 
+void MainWindow::send_status_change(std::string profile, std::string old_status, std::string new_status){
+  console->send_change_profile_status_message(profile, old_status, new_status);
+}
+
 bool MainWindow::on_switch(GdkEvent* event){
   std::ignore = event;
 
   std::string visible_child  = m_stack.get_visible_child_name();
 
   if(visible_child == "prof"){
-    console->set_state(PROFILE);
-    console->send_refresh_message();
-    // prof->refresh();
+    console->send_refresh_message(PROFILE);
   } else if(visible_child == "proc"){
-    console->set_state(PROCESS);
-    console->send_refresh_message();
-    // proc->refresh();    
+    console->send_refresh_message(PROCESS);
   } else if(visible_child == "logs"){
-    console->set_state(LOGS);
-    console->send_refresh_message();
-    // logs->refresh();
+    console->send_refresh_message(LOGS);
   }
 
   return false;

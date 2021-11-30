@@ -23,13 +23,15 @@ class DispatcherMiddleman
     void update_profiles(const std::string& confined);
     void update_processes(const std::string& confined, const std::string& unconfined);
     void update_logs(const std::string& logs);
+    void update_prof_apply_text(const std::string& text);
 
   protected:
     enum CallState {
       NONE,
       PROFILE,
       PROCESS,
-      LOGS
+      LOGS,
+      PROFILES_TEXT
     };
 
     // Receive method (called from main thread)

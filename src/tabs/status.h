@@ -21,7 +21,12 @@ class Status : public Gtk::ScrolledWindow
 {
   public:
     Status();
-    
+
+    /**
+     * @brief Change the text in the label next to the Apply button/spinner.
+     */
+    void set_apply_label_text(const std::string& str);
+
   protected:
     /**
      * @brief Decide whether a string should be added to the table
@@ -39,11 +44,6 @@ class Status : public Gtk::ScrolledWindow
      * @brief Change the text in the label directly above the searchbar.
      */
     void set_status_label_text(const std::string& str);
-
-    /**
-     * @brief Change the text in the label next to the Apply button/spinner.
-     */
-    void set_apply_label_text(const std::string& str);
 
     /**
      * @brief Set the method to be called every time the search area updated.

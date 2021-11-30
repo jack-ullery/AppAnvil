@@ -13,15 +13,17 @@ class Profiles : public Status
     Profiles();
     void add_data_to_record(const std::string& data);
     void refresh();
-    void change_status();
-  
+    void set_status_change_signal_handler(sigc::slot<void(std::string, std::string, std::string)> change_fun);
+
   protected:
     // Signal handlers
     void on_search_changed();
-    void on_apply_button_pressed();
-    bool execute_change(const std::string& profile, const std::string& status);
+    void change_status();
 
   private:
+    void default_change_fun(const std::string&, const std::string&, const std::string&);
+    sigc::slot<void(std::string, std::string, std::string)> profile_status_change_fun;
+
     const std::vector<std::string> col_names{"Profile", "Status"};
     std::shared_ptr<StatusColumnRecord> col_record;
 };
