@@ -1,7 +1,6 @@
 #include "console_thread.h"
 #include "threads/command_caller.h"
 
-#include <cassert>
 #include <iostream>
 #include <tuple>
 
@@ -20,7 +19,7 @@ void ConsoleThread::send_refresh_message(TabState new_state){
   cv.notify_one();
 }
 
-void ConsoleThread::send_change_profile_status_message(std::string profile, std::string old_status, std::string new_status){
+void ConsoleThread::send_change_profile_status_message(const std::string& profile, const std::string& old_status, const std::string& new_status){
   std::unique_lock<std::mutex> lock(task_ready_mtx);
   // Create a message with the state to refresh for, but no data
   Message message(CHANGE_STATUS, OTHER, {profile, old_status, new_status});
@@ -88,7 +87,6 @@ void ConsoleThread::console_caller(){
 
       case CHANGE_STATUS:
       {
-        assert(message.data.size()==3);
         const std::string profile = message.data.at(0);
         const std::string old_status = message.data.at(1);
         const std::string new_status = message.data.at(2);

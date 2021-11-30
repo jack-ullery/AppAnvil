@@ -21,7 +21,8 @@ class Profiles : public Status
     void change_status();
 
   private:
-    void default_change_fun(const std::string&, const std::string&, const std::string&);
+    void default_change_fun(const std::string& a, const std::string& b, const std::string& c);
+
     sigc::slot<void(std::string, std::string, std::string)> profile_status_change_fun;
 
     const std::vector<std::string> col_names{"Profile", "Status"};

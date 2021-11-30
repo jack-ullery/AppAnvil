@@ -83,7 +83,7 @@ std::string CommandCaller::execute_change(const std::string& profile, const std:
 
   if(exit_status != 0){
     return " Error changing the status of '" + profile + "': " + child_error;
-  } else {
-    return " Changed '" + profile + "' from " + old_status + " to " + new_status;
   }
+
+  return " Changed '" + profile + "' from " + old_status + " to " + new_status;
 }

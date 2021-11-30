@@ -36,7 +36,7 @@ class ConsoleThread
     ConsoleThread& operator=(ConsoleThread&& other) noexcept;
 
     void send_refresh_message(TabState new_state);
-    void send_change_profile_status_message(std::string profile, std::string old_status, std::string new_status);
+    void send_change_profile_status_message(const std::string& profile, const std::string& old_status, const std::string& new_status);
     void send_quit_message();
 
     void get_status();
@@ -56,8 +56,8 @@ class ConsoleThread
       std::vector<std::string> data;
 
       Message(Event a, TabState b, std::vector<std::string> c)
-      : event{std::move(a)},
-        state{std::move(b)},
+      : event{a},
+        state{b},
         data{std::move(c)}
         {}
     };

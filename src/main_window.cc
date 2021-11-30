@@ -22,7 +22,7 @@ MainWindow::MainWindow()
   on_switch(NULL);
 
   // Connect the profile tab to the `send_status_change` method
-  sigc::slot<void(std::string, std::string, std::string)> change_fun = sigc::mem_fun(*this, &MainWindow::send_status_change);
+  sigc::slot<void(const std::string&, const std::string&, const std::string&)> change_fun = sigc::mem_fun(*this, &MainWindow::send_status_change);
   prof->set_status_change_signal_handler(change_fun);
 
   // Set some default properties for titlebar
@@ -43,7 +43,7 @@ MainWindow::MainWindow()
   this->show_all();
 }
 
-void MainWindow::send_status_change(std::string profile, std::string old_status, std::string new_status){
+void MainWindow::send_status_change(const std::string& profile, const std::string& old_status, const std::string& new_status){
   console->send_change_profile_status_message(profile, old_status, new_status);
 }
 

@@ -40,7 +40,7 @@ class MainWindow : public Gtk::ApplicationWindow
      */
     bool on_switch(GdkEvent* event);
 
-    void send_status_change(std::string profile, std::string old_status, std::string new_status);
+    void send_status_change(const std::string& profile, const std::string& old_status, const std::string& new_status);
 
   private:
     // GUI Builder to parse UI from xml file

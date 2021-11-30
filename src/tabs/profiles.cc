@@ -5,6 +5,7 @@
 #include <glibmm.h>
 #include <iostream>
 #include <string>
+#include <tuple>
 #include <vector>
 
 // add_data_to_record() is based on assumptions about the output of aa-status.
@@ -47,12 +48,16 @@ void Profiles::refresh(){
   Status::set_status_label_text(" " + std::to_string(num_visible) + " matching profiles");
 }
 
-void Profiles::default_change_fun(const std::string&, const std::string&, const std::string&){
-  std::cerr << "Warning: No change function signal handler is defined." << std::endl;
+void Profiles::default_change_fun(const std::string& a, const std::string& b, const std::string& c){
+  std::ignore = this;
+  std::ignore = a;
+  std::ignore = b;
+  std::ignore = c;
+  std::cerr << "Warning: No signal handler is defined for changing a profile's status." << std::endl;
 }
 
 void Profiles::set_status_change_signal_handler(sigc::slot<void(std::string, std::string, std::string)> change_fun){
-  profile_status_change_fun = change_fun;
+  profile_status_change_fun = std::move(change_fun);
 }
 
 Profiles::Profiles()
