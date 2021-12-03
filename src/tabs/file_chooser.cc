@@ -23,7 +23,7 @@ FileChooser::FileChooser()
   l_filechooser_label{FileChooser::get_widget<Gtk::Label>("l_filechooser_label", builder)},
   l_lower_text{FileChooser::get_widget<Gtk::TextView>("l_lower_text", builder)},
   l_lower_grid{FileChooser::get_widget<Gtk::Grid>("l_lower_grid", builder)},
-  l_combo_profile_status_chooser{FileChooser::get_widget<Gtk::ComboBox>("l_confirm_button", builder)},
+  l_combo_profile_status_chooser{FileChooser::get_widget<Gtk::ComboBoxText>("l_confirm_button", builder)},
   l_confirm_button{FileChooser::get_widget<Gtk::Button>("l_confirm_button", builder)}
   //f_chooser{FileChooser::get_widget<Gtk::FileChooserWidget>("f_chooser", builder)}
 {
@@ -31,7 +31,6 @@ FileChooser::FileChooser()
   //l_button->signal_clicked().connect(sigc::mem_fun(*this, &FileChooser::on_button_clicked));
   l_box->set_hexpand();
   l_box->set_vexpand();
-
   this->add(*l_box);
 }
 

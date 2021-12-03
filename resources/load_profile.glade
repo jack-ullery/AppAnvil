@@ -128,22 +128,6 @@
         <property name="can_focus">False</property>
         <property name="column_homogeneous">True</property>
         <child>
-          <object class="GtkComboBox" id="l_combo_profile_status_chooser">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="has_entry">True</property>
-            <child internal-child="entry">
-              <object class="GtkEntry" id="l_option">
-                <property name="can_focus">False</property>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="left_attach">1</property>
-            <property name="top_attach">0</property>
-          </packing>
-        </child>
-        <child>
           <object class="GtkButton" id="l_confirm_button">
             <property name="label" translatable="yes">Confirm</property>
             <property name="visible">True</property>
@@ -174,6 +158,21 @@
           </object>
           <packing>
             <property name="left_attach">0</property>
+            <property name="top_attach">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkComboBoxText" id="l_combo_profile_status_chooser">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <items>
+              <item id="0" translatable="yes">Enforce</item>
+              <item id="1" translatable="yes">Complain</item>
+              <item id="2" translatable="yes">Disable</item>
+            </items>
+          </object>
+          <packing>
+            <property name="left_attach">1</property>
             <property name="top_attach">0</property>
           </packing>
         </child>

@@ -27,6 +27,28 @@ std::string CommandCaller::get_status_str(){
   return child_output;
 }
 
+//Status must be aa-complain, aa-enforce, or aa-disable
+std::string CommandCaller::set_status(std::string profileName, std::string status){
+  //Command to execute to change the correct profile to the opposite status
+  std::vector<std::string> args = {"pkexec", status, profileName};
+
+  std::string child_output;
+  std::string child_error;
+  int exit_status = 0;
+
+
+  //Executed in commandline, copied from status.cc 
+  Glib::spawn_sync("/usr/sbin/", args, Glib::SpawnFlags::SPAWN_DEFAULT, {}, &child_output, &child_error, &exit_status);
+
+
+  if(exit_status != 0){
+    std::cout << "Error calling '"<< args[0] <<"'. " << child_error << std::endl;
+    child_output = child_error;
+  }
+
+  return child_output;
+}
+
 std::string CommandCaller::get_unconfined(){
   std::vector<std::string> args = {"pkexec", "aa-unconfined"};
 

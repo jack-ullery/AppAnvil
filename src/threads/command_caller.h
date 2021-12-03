@@ -39,6 +39,17 @@ class CommandCaller{
       loadprofile
     */
     static void load_profile(std::string fullFileName, std::string password, std::string& feedBack);
+
+    /**
+     * @brief Sets the given profile to the given status
+     * 
+     * @param profileName- The name of the profile that will be changed. This appears in the 'profiles' tab.
+     * @param status- The status that the profile will be changed to. Can be aa-complain, aa-enforce, and possibly aa-disable
+     *  
+     * 
+     * @returns std::string the raw output of the command. Returns any error messages AppArmor gives
+     */
+    static std::string set_status(std::string profileName, std::string status);
 };
 
 #endif // COMMAND_CALLER_H
