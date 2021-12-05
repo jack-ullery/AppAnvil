@@ -66,8 +66,7 @@ std::string CommandCaller::execute_change(const std::string& profile, const std:
     status_command = "aa-disable";
   } else if (new_status == old_status){
     return "'" + profile + "' already set to " + new_status + ".";
-  }
-  else {
+  } else {
     return "Error: Illegal arguments passed to CommandCaller::execute_change.";
   }
 
