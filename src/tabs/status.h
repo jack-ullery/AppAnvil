@@ -4,6 +4,7 @@
 #include "jsoncpp/json/json.h"
 #include "status_column_record.h"
 
+#include <gtest/gtest.h>
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/checkbutton.h>
@@ -32,6 +33,17 @@ class Status : public Gtk::ScrolledWindow
      *  
      * @returns `true` if the string should be added, `false` if it should not
      */
+
+    FRIEND_TEST(STATUS, FILTER_FFF); // Gtest get protected methods added by Zixin Yang
+    FRIEND_TEST(STATUS, FILTER_TFF);
+    FRIEND_TEST(STATUS, FILTER_FTF);
+    FRIEND_TEST(STATUS, FILTER_FFT);
+    FRIEND_TEST(STATUS, FILTER_TTF);
+    FRIEND_TEST(STATUS, FILTER_TFT);
+    FRIEND_TEST(STATUS, FILTER_FTT);
+    FRIEND_TEST(STATUS, FILTER_TTT);
+    FRIEND_TEST(STATUS, FILTER_REGEX_TOLOWER);
+
     bool filter(const Gtk::TreeModel::iterator& node);
 
     /**

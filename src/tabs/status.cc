@@ -22,6 +22,11 @@ bool Status::filter(const std::string& str, const std::string& rule, const bool&
     // If we don't care about case, convert the filtered string and rule to lower case
     transform(str.begin(), str.end(), new_str.begin(), ::tolower);
     transform(rule.begin(), rule.end(), new_rule.begin(), ::tolower);
+
+    /*if(use_regex&&whole_word){                                                            //regex.toLower() added by Zixin Yang
+      std::cout << new_str+"\n";
+      std::cout << new_rule+"\n";
+    }*/
   }
 
   if(use_regex){

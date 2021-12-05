@@ -1,0 +1,4 @@
+Removing '/usr/bin/certspotter'
+pparmor.d/usr.bin.evolution in /etc/apparmor.d/usr.bin.evolution at line 108: Could not open 'local/usr.bin.evolution'
+Skipping profile in /etc/apparmor.d/disable: usr.bin.firefox
+Skipping profile in /etc/apparmor.d/disable: usr.sbin.rsyslogd
