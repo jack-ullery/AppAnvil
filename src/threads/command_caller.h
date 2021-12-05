@@ -34,6 +34,15 @@ class CommandCaller{
      * @returns std::string the raw output of aa-unconfined
      */
     static std::string get_unconfined();
+
+
+    /*
+      loadprofile
+    */
+    static void load_profile(std::string fullFileName, std::string& feedBack);
+
+    static void disable_profile(std::string profileName, std::string& feedBack);
+
 };
 
 #endif // COMMAND_CALLER_H
