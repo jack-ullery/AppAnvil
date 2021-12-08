@@ -38,7 +38,7 @@ class CommandCaller{
     /*
       loadprofile
     */
-    static void load_profile(std::string fullFileName, std::string password, std::string& feedBack);
+    static std::string load_profile(std::string fullFileName);
 
     /**
      * @brief Sets the given profile to the given status

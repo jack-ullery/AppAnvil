@@ -2,12 +2,12 @@
 <!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
-  <object class="GtkBox" id="f_box">
+  <object class="GtkBox" id="fc_box">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="orientation">vertical</property>
     <child>
-      <object class="GtkFileChooserWidget" id="f_chooser">
+      <object class="GtkFileChooserWidget" id="fc_chooser">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
       </object>
@@ -18,7 +18,7 @@
       </packing>
     </child>
     <child>
-      <object class="GtkButton" id="f_button">
+      <object class="GtkButton" id="fc_button">
         <property name="label" translatable="yes">Choose File</property>
         <property name="visible">True</property>
         <property name="can_focus">True</property>

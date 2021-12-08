@@ -15,7 +15,7 @@
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treeview.h>
 #include <gtkmm/treeviewcolumn.h>
-#include <gtkmm/filechooserwidget.h>
+#include <gtkmm/filechooserdialog.h>
 #include <memory>
 #include <string>
 #include <vector>
@@ -26,6 +26,7 @@ class FileChooser : public Gtk::ScrolledWindow
     FileChooser();
     //void add_data_to_record(std::string data);
     //void refresh();
+
   
   protected:
 
@@ -34,17 +35,22 @@ class FileChooser : public Gtk::ScrolledWindow
 
     // Widgets on the tab   
     std::unique_ptr<Gtk::Box> l_box;
-    std::unique_ptr<Gtk::TextView> l_upper_text;
+    std::unique_ptr<Gtk::Label> l_upper_text;
     std::unique_ptr<Gtk::Grid> l_mid_grid;
     std::unique_ptr<Gtk::Button> l_filechooser_button;
     std::unique_ptr<Gtk::Label> l_filechooser_label;
-    std::unique_ptr<Gtk::TextView> l_lower_text;
+    std::unique_ptr<Gtk::Label> l_lower_text;
     std::unique_ptr<Gtk::Grid> l_lower_grid;
     std::unique_ptr<Gtk::ComboBoxText> l_combo_profile_status_chooser;
     std::unique_ptr<Gtk::Button> l_confirm_button;
 
     // Signal handler
-    void on_button_clicked();
+    void on_fc_button_clicked();
+    void handle_f_diag(int response_id);
+    void on_confirm_clicked();
+
+    //Dialog box
+    std::unique_ptr<Gtk::FileChooserDialog> f_diag;
 
     //Function called by signal handler
     void loadp(std::string fullFileName, std::string& feedBack);

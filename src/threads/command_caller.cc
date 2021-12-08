@@ -29,7 +29,6 @@ std::string CommandCaller::get_status_str(){
 
 //Status must be aa-complain, aa-enforce, or aa-disable
 std::string CommandCaller::set_status(std::string profileName, std::string status){
-  //Command to execute to change the correct profile to the opposite status
   std::vector<std::string> args = {"pkexec", status, profileName};
 
   std::string child_output;
@@ -83,7 +82,7 @@ std::string CommandCaller::get_logs_str(){
   return child_output;
 }
 
-void CommandCaller::load_profile(std::string fullFileName, std::string password, std::string& feedBack){
+std::string CommandCaller::load_profile(std::string fullFileName){
 
 
   std::vector<std::string> args = {"pkexec", "mv", fullFileName, "/etc/apparmor.d"};
@@ -97,9 +96,8 @@ void CommandCaller::load_profile(std::string fullFileName, std::string password,
 
   if(exit_status != 0){
     std::cout << "Error calling '"<< args[0] <<"'. " << child_error << std::endl;
-    feedBack = child_error;
 
-    return;
+    return child_error;
   }
 
 
@@ -115,11 +113,11 @@ void CommandCaller::load_profile(std::string fullFileName, std::string password,
 
   if(exit_status != 0){
     std::cout << "Error calling '"<< args[0] <<"'. " << child_error << std::endl;
-    feedBack = child_error;
 
-    return;
+    return child_error;
   }
 
   //std::cout<<"load_profile ending\n";
+  return fileName;
 
 }
