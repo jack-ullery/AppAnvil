@@ -3,22 +3,15 @@
 
 #include "status.h"
 
-#include <gtkmm/box.h>
-#include <gtkmm/builder.h>
-#include <gtkmm/scrolledwindow.h>
-#include <gtkmm/searchentry.h>
-#include <gtkmm/treemodel.h>
-#include <gtkmm/treemodelcolumn.h>
-#include <gtkmm/treestore.h>
-#include <gtkmm/treeview.h>
 #include <memory>
+#include <regex>
 #include <string>
 
 class Processes : public Status
 {
   public:
     Processes();
-    void add_data_to_record(std::string confined, std::string unconfined);
+    void add_data_to_record(const std::string& confined, const std::string& unconfined);
     void refresh();
 
   protected:

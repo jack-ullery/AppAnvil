@@ -50,6 +50,17 @@ class CommandCaller{
      * @returns std::string the raw output of the command. Returns any error messages AppArmor gives
      */
     static std::string set_status(std::string profileName, std::string status);
+    /**
+     * @brief Change the status of a profile
+     * 
+     * @details
+     * Change the status of a profile from `old_status` to `new_status` using `aa-enforce`, `aa-complain`, or `aa-disable`.
+     * Valid names for variables `old_status` and `new_status` are: "enforce", "complain", "disable".
+     * May eventually want to move from strings to enums.
+     * 
+     * @returns std::string 
+     */
+    static std::string execute_change(const std::string& profile, const std::string& old_status, const std::string& new_status);
 };
 
 #endif // COMMAND_CALLER_H

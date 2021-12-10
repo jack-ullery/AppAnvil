@@ -3,12 +3,13 @@
 
 #include "console_thread.h"
 #include "tabs/logs.h"
+#include "tabs/parser.h"
 #include "tabs/processes.h"
 #include "tabs/profiles.h"
 #include "tabs/file_chooser.h"
 
+#include "tabs/status.h"
 #include <gtkmm/applicationwindow.h>
-#include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/headerbar.h>
 #include <gtkmm/stack.h>
@@ -33,9 +34,15 @@ class MainWindow : public Gtk::ApplicationWindow
   protected:
     //Signal handlers:
     /**
-     * @brief Calls refresh() on the visible tab when the stackswitcher is pressed
+     * @brief Calls refresh() on the visible tab when the stackswitcher is pressed.
+     * 
+     * @details
+     * We must have 'GDKEvent*' as a parameter so that it can be the signal handler for m_switcher.signal_event(). 
+     * However, we never use this parameter.
      */
-    bool on_switch(GdkEvent* direction);
+    bool on_switch(GdkEvent* event);
+
+    void send_status_change(const std::string& profile, const std::string& old_status, const std::string& new_status);
 
   private:
     // GUI Builder to parse UI from xml file

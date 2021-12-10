@@ -2,6 +2,7 @@
 #include "logs.h"
 
 #include <iostream>
+#include <regex>
 #include <string>
 #include <vector>
 
@@ -25,7 +26,7 @@ std::string Logs::parse_line(const std::string& line, const std::regex& elem){
   return m[1];
 }
 
-void Logs::add_row_from_line(std::shared_ptr<StatusColumnRecord> col_record, const std::string& line){
+void Logs::add_row_from_line(const std::shared_ptr<StatusColumnRecord>& col_record, const std::string& line){
   auto row = col_record->new_row();
   col_record->set_row_data(row, 0, parse_line(line, filter_log_type));
   col_record->set_row_data(row, 1, parse_line(line, filter_log_operation)); 
@@ -34,11 +35,9 @@ void Logs::add_row_from_line(std::shared_ptr<StatusColumnRecord> col_record, con
   col_record->set_row_data(row, 4, parse_line(line, filter_log_status)); 
 }
 
-void Logs::add_data_to_record(std::string data){
+void Logs::add_data_to_record(const std::string& data){
   // Delete all the data from col_record
   col_record->clear();
-  // Regex to filter logs from dmesg. Could also use as filter_log_regex "audit\\([1234567890:.]*\\)" to get more logs.
-  int num_found = 0;
 
   std::stringstream logs;
   logs << data;
@@ -47,16 +46,15 @@ void Logs::add_data_to_record(std::string data){
   while(std::getline(logs, line)){
     if(std::regex_search(line, filter_log_regex)){
       add_row_from_line(col_record, line);
-      num_found++;
     }
   }
 
-  Status::set_status_label_text(" " + std::to_string(num_found) + " logs");
+  refresh();
 }
 
 void Logs::refresh(){
-  auto filter_fun = sigc::mem_fun(*this, &Logs::filter);
-  col_record->filter_rows(filter_fun);
+  uint num_visible = col_record->filter_rows();
+  Status::set_status_label_text(" " + std::to_string(num_visible) + " logs");
 }
 
 Logs::Logs()
@@ -64,6 +62,9 @@ Logs::Logs()
 {
   auto func = sigc::mem_fun(*this, &Logs::refresh);
   Status::set_refresh_signal_handler(func);
+
+  auto filter_fun = sigc::mem_fun(*this, &Logs::filter);
+  col_record->set_visible_func(filter_fun);
 
   Status::remove_status_selection();
 

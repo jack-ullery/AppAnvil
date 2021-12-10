@@ -1,8 +1,6 @@
 #include "main_window.h"
 
-#include <gtkmm/button.h>
-#include <gtkmm/label.h>
-#include <iostream>
+#include <tuple>
 
 MainWindow::MainWindow()
 : prof{new Profiles()},
@@ -25,6 +23,10 @@ MainWindow::MainWindow()
   m_switcher.signal_event().connect(focus, true);
   on_switch(NULL);
 
+  // Connect the profile tab to the `send_status_change` method
+  sigc::slot<void(const std::string&, const std::string&, const std::string&)> change_fun = sigc::mem_fun(*this, &MainWindow::send_status_change);
+  prof->set_status_change_signal_handler(change_fun);
+
   // Set some default properties for titlebar
   m_headerbar.set_custom_title(m_switcher);
   m_headerbar.set_title("AppAnvil");
@@ -43,26 +45,24 @@ MainWindow::MainWindow()
   this->show_all();
 }
 
-// "__attribute__ ((unused))" is a GCC-specific way to suppress the [-Wunused-parameter] warning
-// We must have 'direction' as a parameter so that it can be the signal handler for m_switcher.signal_event() 
-bool MainWindow::on_switch(__attribute__ ((unused)) GdkEvent* direction){
+void MainWindow::send_status_change(const std::string& profile, const std::string& old_status, const std::string& new_status){
+  console->send_change_profile_status_message(profile, old_status, new_status);
+}
+
+bool MainWindow::on_switch(GdkEvent* event){
+  std::ignore = event;
+
   std::string visible_child  = m_stack.get_visible_child_name();
 
   if(visible_child == "prof"){
-    console->set_state(PROFILE);
-    console->send_refresh_message();
-    // prof->refresh();
+    console->send_refresh_message(PROFILE);
   } else if(visible_child == "proc"){
-    console->set_state(PROCESS);
-    console->send_refresh_message();
-    // proc->refresh();    
+    console->send_refresh_message(PROCESS);
   } else if(visible_child == "logs"){
-    console->set_state(LOGS);
-    console->send_refresh_message();
+    console->send_refresh_message(LOGS);
     // logs->refresh();
   } else if(visible_child == "file_chooser"){
-    console->set_state(FILECHOOSER);
-    console->send_refresh_message();
+    console->send_refresh_message(FILECHOOSER);
     // logs->refresh();
   }
 

@@ -2,35 +2,41 @@
 #include "threads/command_caller.h"
 
 #include <iostream>
+#include <tuple>
 
 ConsoleThread::ConsoleThread(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs, std::shared_ptr<FileChooser> file_chooser)
-: dispatch_man(prof, proc, logs, file_chooser)
+: dispatch_man(std::move(prof), std::move(proc), std::move(logs), std::move(file_chooser))
 {
-  std::lock_guard<std::mutex> lock(state_mtx);
-  current_state = PROFILE;
-  asynchronous_thread = std::async(std::launch::async, &ConsoleThread::console_caller, this);;
+  asynchronous_thread = std::async(std::launch::async, &ConsoleThread::console_caller, this);
 }
 
-void ConsoleThread::set_state(TabState new_state){
-  std::lock_guard<std::mutex> lock(state_mtx);
-  current_state = new_state;
-}
-
-void ConsoleThread::send_refresh_message(){
+void ConsoleThread::send_refresh_message(TabState new_state){
   std::unique_lock<std::mutex> lock(task_ready_mtx);
-  queue.push(REFRESH);
+  // Create a message with the state to refresh for, but no data
+  Message message(REFRESH, new_state, {});
+  // Send the message to the queue, this lets the other thread know what it should do.
+  queue.push(message);
+  cv.notify_one();
+}
+
+void ConsoleThread::send_change_profile_status_message(const std::string& profile, const std::string& old_status, const std::string& new_status){
+  std::unique_lock<std::mutex> lock(task_ready_mtx);
+  // Create a message with the state to refresh for, but no data
+  Message message(CHANGE_STATUS, OTHER, {profile, old_status, new_status});
+  // Send the message to the queue, this lets the other thread know what it should do.
+  queue.push(message);
   cv.notify_one();
 }
 
 void ConsoleThread::send_quit_message(){
   std::unique_lock<std::mutex> lock(task_ready_mtx);
-  queue.push(QUIT);
+  Message message(QUIT, OTHER, {});
+  queue.push(message);
   cv.notify_one();
 }
 
-void ConsoleThread::run_command(){
-  std::lock_guard<std::mutex> lock(state_mtx);
-  switch (current_state)
+void ConsoleThread::run_command(TabState state){
+  switch (state)
   {
     case PROFILE:
     {
@@ -53,17 +59,22 @@ void ConsoleThread::run_command(){
       dispatch_man.update_logs(logs);
     }
     break;
+
     case FILECHOOSER:
     {
       std::string status = CommandCaller::get_status_str();
       dispatch_man.update_profiles(status);
     }
     break;
+
+
+    case OTHER:
+    // Do nothing.
+    break;
   }
 }
 
-
-Event ConsoleThread::wait_for_message(){
+ConsoleThread::Message ConsoleThread::wait_for_message(){
   std::unique_lock<std::mutex> lock(task_ready_mtx);
   while(queue.empty()){
     cv.condition_variable::wait(lock); // Look into `wait_until`
@@ -75,18 +86,35 @@ Event ConsoleThread::wait_for_message(){
 void ConsoleThread::console_caller(){
   bool shouldContinue = true;
   while(shouldContinue) {
-    auto message = wait_for_message();
-    switch (message)
+    Message message = wait_for_message();
+    switch (message.event)
     {
       case REFRESH:
-        run_command();
-        break;
-      
+        run_command(message.state);
+      break;
+
+      case CHANGE_STATUS:
+      {
+        const std::string profile = message.data.at(0);
+        const std::string old_status = message.data.at(1);
+        const std::string new_status = message.data.at(2);
+        std::string return_message = CommandCaller::execute_change(profile, old_status, new_status);
+        dispatch_man.update_prof_apply_text(return_message);
+        run_command(PROFILE);
+      }
+      break;
+
       case QUIT:
         shouldContinue = false;
-        break;
+      break;
     }
   }
+}
+
+// Move Assignment Operator
+ConsoleThread& ConsoleThread::operator=(ConsoleThread&& other) noexcept{
+  std::ignore = other;
+  return *this;
 }
 
 ConsoleThread::~ConsoleThread(){

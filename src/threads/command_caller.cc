@@ -1,6 +1,6 @@
 #include "command_caller.h"
 
-#include <glibmm.h>
+#include <glibmm/spawn.h>
 #include <iostream>
 #include <vector>
 
@@ -82,11 +82,44 @@ std::string CommandCaller::get_logs_str(){
   return child_output;
 }
 
+
+// Code modified from Pavl-o's fork
+std::string CommandCaller::execute_change(const std::string& profile, const std::string& old_status, const std::string& new_status){
+  std::string status_command;
+  if (new_status == "enforce" && old_status != "enforce") {
+    status_command = "aa-enforce";
+  } else if (new_status == "complain" && old_status != "complain") {
+    status_command = "aa-complain";
+  } else if (new_status == "disable" && old_status != "disabled") {
+    status_command = "aa-disable";
+  } else if (new_status == old_status){
+    return "'" + profile + "' already set to " + new_status + ".";
+  } else {
+    return "Error: Illegal arguments passed to CommandCaller::execute_change.";
+  }
+
+   // executed in commandline, copied from status.cc 
+
+  std::string child_output;
+  std::string child_error;
+  int exit_status = 0;
+  
+  std::vector<std::string> args = {"pkexec", status_command, profile};
+  Glib::spawn_sync("/usr/sbin/", args, Glib::SpawnFlags::SPAWN_DEFAULT, {}, &child_output, &child_error, &exit_status);
+
+  if(exit_status != 0){
+    return " Error changing the status of '" + profile + "': " + child_error;
+  }
+
+  return " Changed '" + profile + "' from " + old_status + " to " + new_status;
+}
+
 std::string CommandCaller::load_profile(std::string fullFileName){
 
 
   std::vector<std::string> args = {"pkexec", "mv", fullFileName, "/etc/apparmor.d"};
   //std::vector<std::string> args = {"echo", password, "|", "sudo", "-S", "mv", fullFileName, "/etc/apparmor.d"};
+  // command to change the profile to the provided status
 
   std::string child_output;
   std::string child_error;
@@ -121,3 +154,4 @@ std::string CommandCaller::load_profile(std::string fullFileName){
   return fileName;
 
 }
+ 
