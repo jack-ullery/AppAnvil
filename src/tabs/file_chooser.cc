@@ -40,43 +40,6 @@ FileChooser::FileChooser()
 
 void FileChooser::on_fc_button_clicked(){
 
-  // std::string feedback;
-  // std::cout << f_chooser->get_filename() << std::endl;
-  // CommandCaller::load_profile(f_chooser->get_filename(), "", feedback);
-  // std::cout << feedback << std::endl;
-  std::cout<< "FC" << std::endl;
-
-  // auto dialog = new Gtk::FileChooserDialog("Please choose a file", Gtk::FileChooser::Action::OPEN);
-  // dialog->set_transient_for(*this);
-  // dialog->set_modal(true);
-  // dialog->signal_response().connect(sigc::bind(
-  // sigc::mem_fun(*this, &ExampleWindow::on_file_dialog_response), dialog));
-
-  // //Add response buttons to the dialog:
-  // dialog->add_button("_Cancel", Gtk::ResponseType::CANCEL);
-  // dialog->add_button("_Open", Gtk::ResponseType::OK);
-
-  // //Add filters, so that only certain file types can be selected:
-
-  // auto filter_text = Gtk::FileFilter::create();
-  // filter_text->set_name("Text files");
-  // filter_text->add_mime_type("text/plain");
-  // dialog->add_filter(filter_text);
-
-  // auto filter_cpp = Gtk::FileFilter::create();
-  // filter_cpp->set_name("C/C++ files");
-  // filter_cpp->add_mime_type("text/x-c");
-  // filter_cpp->add_mime_type("text/x-c++");
-  // filter_cpp->add_mime_type("text/x-c-header");
-  // dialog->add_filter(filter_cpp);
-
-  // auto filter_any = Gtk::FileFilter::create();
-  // filter_any->set_name("Any files");
-  // filter_any->add_pattern("*");
-  // dialog->add_filter(filter_any);
-
-  // //Show the dialog and wait for a user response:
-  // dialog->show();
 
   // Associate the f_diag pointer with a new Dialog
   f_diag.reset(new Gtk::FileChooserDialog("Choose a profile", Gtk::FILE_CHOOSER_ACTION_OPEN));
@@ -101,18 +64,15 @@ void FileChooser::on_confirm_clicked(){
   std::string short_filename = CommandCaller::load_profile(filename);
   if(choice == "Complain"){
 
-    std::cout<< "C" << std::endl;
     CommandCaller::set_status(short_filename, "aa-complain");
 
   } else if(choice == "Enforce"){
 
-    std::cout<< "E" << std::endl;
     CommandCaller::set_status(short_filename, "aa-enforce");
 
 
   } else if(choice == "Disable"){
 
-    std::cout<< "D" << std::endl;
     CommandCaller::set_status(short_filename, "aa-disable");
 
   } else {
