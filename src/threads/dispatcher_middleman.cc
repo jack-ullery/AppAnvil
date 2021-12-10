@@ -1,8 +1,7 @@
 #include "dispatcher_middleman.h"
 
 DispatcherMiddleman::DispatcherMiddleman(std::shared_ptr<Profiles> prof_arg, std::shared_ptr<Processes> proc_arg, std::shared_ptr<Logs> logs_arg, std::shared_ptr<FileChooser> file_chooser_arg)
-: dispatch(),
-  state(NONE),
+: state(NONE),
   data1(""),
   data2(""),
   prof(prof_arg),
@@ -15,7 +14,7 @@ DispatcherMiddleman::DispatcherMiddleman(std::shared_ptr<Profiles> prof_arg, std
 }
 
 // Send methods (called from second thread)
-void DispatcherMiddleman::update_profiles(std::string confined){
+void DispatcherMiddleman::update_profiles(const std::string& confined){
   std::lock_guard<std::mutex> lock(mtx);
   state = PROFILE;
   data1 = confined;
@@ -23,7 +22,7 @@ void DispatcherMiddleman::update_profiles(std::string confined){
   dispatch.emit();
 }
 
-void DispatcherMiddleman::update_processes(std::string confined, std::string unconfined){
+void DispatcherMiddleman::update_processes(const std::string& confined, const std::string& unconfined){
   std::lock_guard<std::mutex> lock(mtx);
   state = PROCESS;
   data1 = confined;
@@ -31,7 +30,7 @@ void DispatcherMiddleman::update_processes(std::string confined, std::string unc
   dispatch.emit();
 }
 
-void DispatcherMiddleman::update_logs(std::string logs){
+void DispatcherMiddleman::update_logs(const std::string& logs){
   std::lock_guard<std::mutex> lock(mtx);
   state = LOGS;
   data1 = logs;
@@ -39,10 +38,18 @@ void DispatcherMiddleman::update_logs(std::string logs){
   dispatch.emit();
 }
 
+void DispatcherMiddleman::update_prof_apply_text(const std::string& text){
+  std::lock_guard<std::mutex> lock(mtx);
+  state = PROFILES_TEXT;
+  data1 = text;
+  data2 = "";
+  dispatch.emit();
+}
+
 // Receive method (called from main thread)
 void DispatcherMiddleman::handle_signal(){
   // Will need to use these later and we want them declared outside the following scope.
-  CallState cached_state;
+  CallState cached_state = NONE;
   std::string cached_data1;
   std::string cached_data2;
   // Only need the lock in this small scope to retrieve data.
@@ -67,6 +74,9 @@ void DispatcherMiddleman::handle_signal(){
       break;
     case FILECHOOSER:
       //file_chooser->add_data_to_record(cached_data1);
+      break;
+    case PROFILES_TEXT:
+      prof->set_apply_label_text(cached_data1);
       break;
     case NONE:
       // Do nothing...

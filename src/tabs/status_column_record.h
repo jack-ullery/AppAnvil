@@ -3,6 +3,7 @@
 
 #include <gtkmm/treemodel.h>
 #include <gtkmm/treemodelcolumn.h>
+#include <gtkmm/treemodelfilter.h>
 #include <gtkmm/treestore.h>
 #include <gtkmm/treeview.h>
 #include <memory>
@@ -27,6 +28,9 @@ class StatusColumnRecord : public Gtk::TreeModel::ColumnRecord
          * @returns std::shared_ptr refrencing a new StatusColumnRecord object.
          */
         static std::shared_ptr<StatusColumnRecord> create(const std::shared_ptr<Gtk::TreeView>& view, std::vector<std::string> names);
+
+        // Should probably add a description.
+        void set_visible_func(const Gtk::TreeModelFilter::SlotVisible& filter);
 
         /**
          * @brief Creates and returns a new TreeRow in the table.
@@ -62,24 +66,37 @@ class StatusColumnRecord : public Gtk::TreeModel::ColumnRecord
          * @param data, The string to put in the column
          * 
          * @throws std::out_of_range, if `index` does not point to a column in our column record
-         * 
-         * @returns A new TreeRow from the table.
          */
         void set_row_data(const Gtk::TreeRow& row, const uint& index, const std::string& data);
+
+        // I'll do the comment later
+        std::string get_row_data(const Gtk::TreeRow& row, const uint& index);
 
         /**
          * @brief Deletes all rows in the StatusColumnRecord.
          */
         void clear();
 
-        // Should probably add a description!
-        // Should certainly add a description!!!
-        void filter_rows(const sigc::slot<bool(const std::string&)>& filter);
+        /**
+         * @brief Set the visibility all the rows in the ColumnRecord.
+         * 
+         * @details
+         * Sets the visibility of all the rows in the column record based on the function parameter
+         * of `set_visible_function`. If no valid function was specified through that method, before calling this 
+         * method, then this will have undefined behavior.
+         * 
+         * @returns The number of visible rows.
+         */
+        uint filter_rows();
 
     private:
         explicit StatusColumnRecord(const std::vector<std::string>& names);
         std::vector<Gtk::TreeModelColumn<std::string>> column;
         Glib::RefPtr<Gtk::TreeStore> store;
+        Glib::RefPtr<Gtk::TreeModelFilter> model_filter;
+        Gtk::TreeModelFilter::SlotVisible filter_fun;
+
+        static bool default_filter(const Gtk::TreeModel::iterator& node);
 };
 
 #endif // TABS_STATUS_COLUMN_RECORD_H

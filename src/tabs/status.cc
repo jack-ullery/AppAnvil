@@ -1,11 +1,9 @@
 #include "jsoncpp/json/json.h"
 #include "status.h"
 
-#include <giomm.h>
 #include <iostream>
 #include <regex>
 #include <sstream>
-#include <string>
 #include <string>
 
 
@@ -52,8 +50,19 @@ bool Status::filter(const std::string& str, const std::string& rule, const bool&
   return new_str.find(new_rule) != std::string::npos;    
 }
 
-bool Status::filter(const std::string& str){
-  return Status::filter(str, s_search->get_text(), s_use_regex->get_active(), s_match_case->get_active(), s_whole_word->get_active());
+bool Status::filter(const Gtk::TreeModel::iterator& node){
+  std::string data;
+  const uint num_columns = s_view->get_n_columns();
+
+  for(uint i = 0; i < num_columns; i++){
+    node->get_value(i, data);
+    bool re = Status::filter(data, s_search->get_text(), s_use_regex->get_active(), s_match_case->get_active(), s_whole_word->get_active());
+    if(re){
+      return true;
+    }
+  }
+
+  return false;
 }
 
 Json::Value Status::parse_JSON(const std::string& raw_json){
@@ -75,6 +84,10 @@ void Status::set_status_label_text(const std::string& str){
   s_found_label->set_text(str);
 }
 
+void Status::set_apply_label_text(const std::string& str){
+  s_apply_info_text->set_text(str);
+}
+
 void Status::set_refresh_signal_handler(const Glib::SignalProxyProperty::SlotType& func){
   s_search->signal_search_changed().connect(func, true);
   s_use_regex->signal_clicked().connect(func, true);
@@ -89,6 +102,14 @@ void Status::set_apply_signal_handler(const Glib::SignalProxyProperty::SlotType&
 
 std::shared_ptr<Gtk::TreeView> Status::get_view(){
   return s_view;
+}
+
+std::shared_ptr<Gtk::Spinner> Status::get_spinner(){
+  return s_spinner;
+}
+
+Glib::ustring Status::get_selection_text() const {
+  return s_status_selection->get_active_text();
 }
 
 void Status::remove_status_selection(){
@@ -110,7 +131,7 @@ Status::Status()
   s_apply_button{Status::get_widget<Gtk::Button>("s_apply_button", builder)},
   s_spinner{Status::get_widget<Gtk::Spinner>("s_spinner", builder)},
   s_apply_info_text{Status::get_widget<Gtk::Label>("s_apply_info_text", builder)},
-  s_status_selection{Status::get_widget<Gtk::ComboBox>("s_status_selection", builder)}
+  s_status_selection{Status::get_widget<Gtk::ComboBoxText>("s_status_selection", builder)}
 {
   s_win->set_shadow_type(Gtk::ShadowType::SHADOW_NONE);
   s_win->set_policy(Gtk::PolicyType::POLICY_AUTOMATIC, Gtk::PolicyType::POLICY_AUTOMATIC);

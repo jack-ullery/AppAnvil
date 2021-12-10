@@ -1,5 +1,7 @@
 #include "status_column_record.h"
-#include <iostream>
+
+#include <gtkmm/box.h>
+#include <tuple>
 #include <vector>
 
 /*
@@ -11,8 +13,9 @@ std::shared_ptr<StatusColumnRecord> StatusColumnRecord::create(const std::shared
 
     auto store = Gtk::TreeStore::create(*record);
     record->store = store;
+    record->model_filter = Gtk::TreeModelFilter::create(store);
 
-    view->set_model(store);
+    view->set_model(record->model_filter);
 
     for(uint i = 0; i < names.size(); i++){
         // Add a visible column, and title it using the string from 'names' 
@@ -27,6 +30,11 @@ std::shared_ptr<StatusColumnRecord> StatusColumnRecord::create(const std::shared
     }
 
     return record;
+}
+
+void StatusColumnRecord::set_visible_func(const Gtk::TreeModelFilter::SlotVisible& filter){
+    filter_fun = filter;
+    model_filter->set_visible_func(filter);
 }
 
 Gtk::TreeRow StatusColumnRecord::new_row(){
@@ -46,34 +54,48 @@ void StatusColumnRecord::set_row_data(const Gtk::TreeRow& row, const uint& index
     row[this->column[index]] = data;
 }
 
+std::string StatusColumnRecord::get_row_data(const Gtk::TreeRow& row, const uint& index) {
+    if(index >= column.size()){
+        throw std::out_of_range("Attempting to access invalid column.");
+    }
+
+    return row[this->column[index]];
+}
+
 void StatusColumnRecord::clear(){
     store->clear();
 }
 
-void StatusColumnRecord::filter_rows(const sigc::slot<bool(const std::string&)>& filter){
+uint StatusColumnRecord::filter_rows(){
+    // Refilter every row in table, deciding wheter they should be visible or not.
+    model_filter->refilter();
+
+    // Count the number of rows that are visible
+    uint num_visible = 0;
     auto children = store->children();
-
     for(auto row = children.begin(); row != children.end(); row++){
-
-        bool should_add = false;
-        for(uint i = 0; i < column.size() && !should_add; i++){
-            std::string value;
-            row->get_value(i, value);
-            should_add |= filter(value);
+        bool visible = filter_fun(row);
+        if(visible){
+            num_visible++;
         }
-
-        // Need to set row as visible or invisible
     }
+    return num_visible;
 }
 
 /*
     Private Methods
 */
 StatusColumnRecord::StatusColumnRecord(const std::vector<std::string>& names)
+: filter_fun{sigc::ptr_fun(&StatusColumnRecord::default_filter)}
 {
     this->column = std::vector<Gtk::TreeModelColumn<std::string>>(names.size());
     for(uint i = 0; i < column.size(); i++){
         column[i] = Gtk::TreeModelColumn<std::string>();
         add(column[i]);
     }
+}
+
+bool StatusColumnRecord::default_filter(const Gtk::TreeModel::iterator& node){
+    std::ignore = node;
+    return true;
 }

@@ -7,17 +7,13 @@
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/checkbutton.h>
-#include <gtkmm/combobox.h>
+#include <gtkmm/comboboxtext.h>
 #include <gtkmm/enums.h>
 #include <gtkmm/label.h>
-#include <gtkmm/liststore.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/searchentry.h>
 #include <gtkmm/spinner.h>
-#include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treeview.h>
-#include <gtkmm/treeviewcolumn.h>
-#include <sstream>
 
 constexpr auto UNKNOWN_STATUS = "unknown";
 
@@ -25,7 +21,12 @@ class Status : public Gtk::ScrolledWindow
 {
   public:
     Status();
-    
+
+    /**
+     * @brief Change the text in the label next to the Apply button/spinner.
+     */
+    void set_apply_label_text(const std::string& str);
+
   protected:
     /**
      * @brief Decide whether a string should be added to the table
@@ -37,7 +38,7 @@ class Status : public Gtk::ScrolledWindow
      *  
      * @returns `true` if the string should be added, `false` if it should not
      */
-    bool filter(const std::string& str);
+    bool filter(const Gtk::TreeModel::iterator& node);
 
     /**
      * @brief Change the text in the label directly above the searchbar.
@@ -74,6 +75,20 @@ class Status : public Gtk::ScrolledWindow
     std::shared_ptr<Gtk::TreeView> get_view();
 
     /**
+     * @brief Return the Spinner associated with this class.
+     * 
+     * @returns The Spinner data member used by this class.
+     */
+    std::shared_ptr<Gtk::Spinner> get_spinner();
+
+    /**
+     * @brief Return the active selection/choice in the dropdown ComboBoxText
+     * 
+     * @returns The string of the dropdown item which is selected.
+     */
+    Glib::ustring get_selection_text() const;
+
+    /**
      * @brief Make widgets related to changing profile status invisible to the user.
      * 
      * @details
@@ -92,7 +107,6 @@ class Status : public Gtk::ScrolledWindow
 
     // Container Widgets
     std::shared_ptr<Gtk::TreeView> s_view;
-    std::shared_ptr<Gtk::TreeSelection> s_row;
     std::unique_ptr<Gtk::ScrolledWindow> s_win;
     std::unique_ptr<Gtk::Box> s_box;
 
@@ -104,12 +118,13 @@ class Status : public Gtk::ScrolledWindow
     std::unique_ptr<Gtk::Label>       s_found_label;
 
     // Widgets related to changing profile status (above search)
-    std::unique_ptr<Gtk::Box>         s_selection_box;
-    std::unique_ptr<Gtk::Button>      s_apply_button;
-    std::unique_ptr<Gtk::Spinner>     s_spinner;
-    std::unique_ptr<Gtk::Label>       s_apply_info_text;
-    std::unique_ptr<Gtk::ComboBox>    s_status_selection;
+    std::unique_ptr<Gtk::Box>             s_selection_box;
+    std::unique_ptr<Gtk::Button>          s_apply_button;
+    std::shared_ptr<Gtk::Spinner>         s_spinner;
+    std::unique_ptr<Gtk::Label>           s_apply_info_text;
+    std::unique_ptr<Gtk::ComboBoxText>    s_status_selection;
 
+    // Misc
     template <typename T_Widget>
     static std::unique_ptr<T_Widget> get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder>& builder);    
     static bool filter(const std::string& str, const std::string& rule, const bool& use_regex, const bool& match_case, const bool& whole_word);
