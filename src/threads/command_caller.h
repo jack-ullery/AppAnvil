@@ -2,6 +2,7 @@
 #define SRC_THREADS_COMMAND_CALLER
 
 #include <string>
+#include <vector>
 
 class CommandCaller{
   public:
@@ -39,10 +40,20 @@ class CommandCaller{
     /*
       loadprofile
     */
-    static void load_profile(std::string fullFileName, std::string& feedBack);
+    static std::string load_profile(std::string fullFileName);
 
-    static void disable_profile(std::string profileName, std::string& feedBack);
+    static std::string disable_profile(std::string profileName);
 
+  protected:
+    struct results{
+      int exit_status;
+      std::string output;
+      std::string error;
+    };
+
+    // Used to call command-line commands from `/usr/sbin` 
+    static results call_command(std::vector<std::string> command);
+    static std::string call_command(std::vector<std::string> command, std::string return_on_error);
 };
 
 #endif // COMMAND_CALLER_H
