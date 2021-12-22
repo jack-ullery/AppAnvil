@@ -7,8 +7,7 @@ A GUI for the Linux Security Module AppArmor
 * g++ (or another equivalent c++ compiler)
 * libgtkmm-3.0-dev
 * libjsoncpp-dev
-* libgtest-dev
-* libgmock-dev
+
 ### Optional
 A GUI builder
 * glade 
@@ -16,6 +15,10 @@ A GUI builder
 Linters and Static Analysis tools used by the Makefile
 * cppcheck
 * clang-tidy
+
+Unit Tests
+* googletest
+* googlemock
 
 ## Compilation Instructions
 

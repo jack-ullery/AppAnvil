@@ -1,14 +1,25 @@
+project(testall)
 cmake_minimum_required (VERSION 3.16.3)
 
-set(PROJECT_NAME testall)
 set(
   UTEST_SOURCES
-  ../src/utest/unittest.cc
+  ./src/test_runner.cc
+  ./src/status.test
+  ./src/threads/blocking_queue.test
+  ./src/threads/command_caller.test
+)
+
+set(
+  PROJECT_SOURCES
+  ../src/threads/blocking_queue.h
   ../src/threads/command_caller.cc
   ../src/tabs/status.cc
 )
 
-project ( ${PROJECT_NAME} ) 
+set(
+  LIB
+  ./lib/gmock-global.h
+)
 
 #====================================
 
@@ -18,7 +29,7 @@ pkg_check_modules(GTKMM gtkmm-3.0)
 #====================================
 
 #add_executable(${PROJECT_NAME} ../src/utest/unittest.cc ../src/threads/command_caller.cc ../src/tabs/status.cc)
-add_executable(${PROJECT_NAME} ${UTEST_SOURCES})
+add_executable(${PROJECT_NAME} ${UTEST_SOURCES} ${PROJECT_SOURCES} ${LIB})
 
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
 
