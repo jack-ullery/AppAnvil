@@ -2,6 +2,7 @@
 #define SRC_THREADS_COMMAND_CALLER
 
 #include <string>
+#include <vector>
 
 class CommandCaller{
   public:
@@ -46,6 +47,32 @@ class CommandCaller{
      * @returns std::string 
      */
     static std::string execute_change(const std::string& profile, const std::string& old_status, const std::string& new_status);
+
+    /*
+      loadprofile
+    */
+    static std::string load_profile(const std::string& fullFileName);
+
+    static std::string disable_profile(const std::string& profileName);
+
+  protected:
+    struct results{
+      int exit_status = 0;
+      std::string output;
+      std::string error;
+    };
+
+    // Used to call command-line commands from `/usr/sbin` 
+    virtual results call_command(const std::vector<std::string>& command);
+    virtual std::string call_command(const std::vector<std::string>& command, const std::string& return_on_error);
+
+    // Dependency Injection: For unit testing
+    static std::string get_status_str(CommandCaller *caller);
+    static std::string get_logs_str(CommandCaller *caller);
+    static std::string get_unconfined(CommandCaller *caller);
+    static std::string load_profile(CommandCaller *caller, const std::string& fullFileName);
+    static std::string disable_profile(CommandCaller *caller, const std::string& profileName);
+    static std::string execute_change(CommandCaller *caller, const std::string& profile, const std::string& old_status, const std::string& new_status);
 };
 
 #endif // COMMAND_CALLER_H
