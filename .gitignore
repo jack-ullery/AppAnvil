@@ -17,5 +17,5 @@ resources/*.glade~
 src/resource.autogen.c
 resources/resource.autogen.c
 
-dist/appanvil
-test/testall
+dist/
+lib/
