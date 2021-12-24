@@ -45,7 +45,7 @@ if(${USE_CLANG_TIDY})
   message(STATUS "Adding clang-tidy to build")
   set(CMAKE_CXX_CLANG_TIDY clang-tidy;
     -checks=-*,bugprone-*,cert-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,google-*,hicpp-*,linuxkernel-*,llvm-*,llvmlibc-*,misc-*,performance-*,portability-*,readability-*,-llvm-header-guard*,-misc-non-private-member-variables-in-classes*;
-    -header-filter=.*
+    -header-filter=./src/.*
   )
   unset(USE_CLANG_TIDY CACHE)
 endif()

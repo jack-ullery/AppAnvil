@@ -18,6 +18,8 @@ pkg_check_modules(GTKMM gtkmm-3.0)
 # set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../dist)
 add_executable(${TEST_NAME} ${TEST_SOURCES})
 
+set_target_properties(${TEST_NAME} PROPERTIES CXX_CLANG_TIDY "")
+
 target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
 
 target_link_libraries(${TEST_NAME} PUBLIC gtest)
