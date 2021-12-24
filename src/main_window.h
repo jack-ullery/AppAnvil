@@ -3,9 +3,10 @@
 
 #include "console_thread.h"
 #include "tabs/logs.h"
+#include "tabs/parser.h"
 #include "tabs/processes.h"
 #include "tabs/profiles.h"
-
+#include "tabs/status.h"
 #include <gtkmm/applicationwindow.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/headerbar.h>
@@ -38,6 +39,8 @@ class MainWindow : public Gtk::ApplicationWindow
      * However, we never use this parameter.
      */
     bool on_switch(GdkEvent* event);
+
+    void send_status_change(const std::string& profile, const std::string& old_status, const std::string& new_status);
 
   private:
     // GUI Builder to parse UI from xml file

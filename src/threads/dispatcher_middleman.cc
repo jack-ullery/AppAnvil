@@ -37,6 +37,14 @@ void DispatcherMiddleman::update_logs(const std::string& logs){
   dispatch.emit();
 }
 
+void DispatcherMiddleman::update_prof_apply_text(const std::string& text){
+  std::lock_guard<std::mutex> lock(mtx);
+  state = PROFILES_TEXT;
+  data1 = text;
+  data2 = "";
+  dispatch.emit();
+}
+
 // Receive method (called from main thread)
 void DispatcherMiddleman::handle_signal(){
   // Will need to use these later and we want them declared outside the following scope.
@@ -62,6 +70,9 @@ void DispatcherMiddleman::handle_signal(){
       break;
     case LOGS:
       logs->add_data_to_record(cached_data1);
+      break;
+    case PROFILES_TEXT:
+      prof->set_apply_label_text(cached_data1);
       break;
     case NONE:
       // Do nothing...

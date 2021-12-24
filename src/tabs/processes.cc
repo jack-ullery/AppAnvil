@@ -59,5 +59,7 @@ Processes::Processes()
   auto filter_fun = sigc::mem_fun(*this, &Processes::filter);
   col_record->set_visible_func(filter_fun);
 
+  Status::remove_status_selection();
+
   this->show_all();
 }

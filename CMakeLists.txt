@@ -17,6 +17,7 @@ set(
   ${PROJECT_SOURCE_DIR}/tabs/profiles.cc
   ${PROJECT_SOURCE_DIR}/tabs/processes.cc
   ${PROJECT_SOURCE_DIR}/tabs/logs.cc
+  ${PROJECT_SOURCE_DIR}/tabs/parser.cc
 )
 
 set(PROJECT_RESOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/resources)
@@ -33,14 +34,14 @@ if(${ANALYZE})
   unset(ANALYZE CACHE)
 endif()
 
-# If cppcheck exists and we want to use it
+# If we want to use cppcheck
 if(${USE_CPPCHECK})
   message(STATUS "Adding cppcheck to build (not totally working)")
   # set(CMAKE_CXX_CPPCHECK cppcheck --inline-suppr --enable=all)
   unset(USE_CPPCHECK CACHE)
 endif()
 
-# If clang-tidy exists and we want to use it
+# If we want to use clang-tidy
 if(${USE_CLANG_TIDY})
   message(STATUS "Adding clang-tidy to build")
   set(CMAKE_CXX_CLANG_TIDY clang-tidy;

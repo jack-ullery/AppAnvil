@@ -12,16 +12,13 @@
 #include <memory>
 #include <mutex>
 #include <thread>
+#include <vector>
 
 enum TabState {
   PROFILE,
   PROCESS,
-  LOGS
-};
-
-enum Event {
-  REFRESH,
-  QUIT
+  LOGS,
+  OTHER
 };
 
 class ConsoleThread
@@ -31,15 +28,15 @@ class ConsoleThread
     ~ConsoleThread();
 
     // Delete the copy-constructor, move constructor, and copy assignment operator
-    ConsoleThread(const ConsoleThread&) = delete;
-    ConsoleThread(const ConsoleThread&&) = delete;
+    ConsoleThread(const ConsoleThread& other) = delete;
+    ConsoleThread(const ConsoleThread&& other) = delete;
     ConsoleThread& operator=(const ConsoleThread& other) = delete;
 
     // Create a move assignment operator
     ConsoleThread& operator=(ConsoleThread&& other) noexcept;
 
-    void set_state(TabState new_state);
-    void send_refresh_message();
+    void send_refresh_message(TabState new_state);
+    void send_change_profile_status_message(const std::string& profile, const std::string& old_status, const std::string& new_status);
     void send_quit_message();
 
     void get_status();
@@ -47,25 +44,41 @@ class ConsoleThread
     void get_logs();
 
   protected:
+    enum Event {
+      REFRESH,
+      CHANGE_STATUS,
+      QUIT
+    };
+
+    struct Message {
+      Event event;
+      TabState state;
+      std::vector<std::string> data;
+
+      Message(Event a, TabState b, std::vector<std::string> c)
+      : event{a},
+        state{b},
+        data{std::move(c)}
+        {}
+    };
+
     void console_caller();
 
   private:
-    Event wait_for_message();
-    void run_command();
+    Message wait_for_message();
+    void run_command(TabState state);
 
     // Representation of the extra thread
     std::future<void> asynchronous_thread;
 
     // Member fields
-    BlockingQueue<Event> queue;
-    TabState current_state;
+    BlockingQueue<Message> queue;
 
     // DispatcherMiddleman used to communicate results with main thread
     DispatcherMiddleman dispatch_man;
 
     // Synchronization Primitives
     std::mutex task_ready_mtx;
-    std::mutex state_mtx;
     std::condition_variable cv;
 };
 

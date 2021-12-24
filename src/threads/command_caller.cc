@@ -75,6 +75,31 @@ std::string CommandCaller::disable_profile(CommandCaller *caller, const std::str
   return "Success: disabling porfile" + profileName;
 }
 
+std::string CommandCaller::execute_change(CommandCaller *caller, const std::string& profile, const std::string& old_status, const std::string& new_status){
+  std::string status_command;
+  if (new_status == "enforce" && old_status != "enforce") {
+    status_command = "aa-enforce";
+  } else if (new_status == "complain" && old_status != "complain") {
+    status_command = "aa-complain";
+  } else if (new_status == "disable" && old_status != "disabled") {
+    status_command = "aa-disable";
+  } else if (new_status == old_status){
+    return "'" + profile + "' already set to " + new_status + ".";
+  } else {
+    return "Error: Illegal arguments passed to CommandCaller::execute_change.";
+  }
+
+  // command to change the profile to the provided status
+  std::vector<std::string> command = {"pkexec", status_command, profile};
+  auto result = caller->call_command(command);
+
+  if(result.exit_status != 0){
+    return " Error changing the status of '" + profile + "': " + result.error;
+  }
+
+  return " Changed '" + profile + "' from " + old_status + " to " + new_status;
+}
+
 // Static public methods
 std::string CommandCaller::get_status_str(){
   CommandCaller caller;
@@ -101,3 +126,7 @@ std::string CommandCaller::disable_profile(const std::string& profileName){
   return disable_profile(&caller, profileName);
 }
 
+std::string CommandCaller::execute_change(const std::string& profile, const std::string& old_status, const std::string& new_status){
+  CommandCaller caller;
+  return execute_change(&caller, profile, old_status, new_status);
+}

@@ -37,7 +37,6 @@ void StatusColumnRecord::set_visible_func(const Gtk::TreeModelFilter::SlotVisibl
     model_filter->set_visible_func(filter);
 }
 
-
 Gtk::TreeRow StatusColumnRecord::new_row(){
     return *(store->append());
 }
@@ -53,6 +52,14 @@ void StatusColumnRecord::set_row_data(const Gtk::TreeRow& row, const uint& index
     }
 
     row[this->column[index]] = data;
+}
+
+std::string StatusColumnRecord::get_row_data(const Gtk::TreeRow& row, const uint& index) {
+    if(index >= column.size()){
+        throw std::out_of_range("Attempting to access invalid column.");
+    }
+
+    return row[this->column[index]];
 }
 
 void StatusColumnRecord::clear(){
