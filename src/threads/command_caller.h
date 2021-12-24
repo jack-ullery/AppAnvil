@@ -40,27 +40,27 @@ class CommandCaller{
     /*
       loadprofile
     */
-    static std::string load_profile(std::string fullFileName);
+    static std::string load_profile(const std::string& fullFileName);
 
-    static std::string disable_profile(std::string profileName);
+    static std::string disable_profile(const std::string& profileName);
 
   protected:
     struct results{
-      int exit_status;
+      int exit_status = 0;
       std::string output;
       std::string error;
     };
 
     // Used to call command-line commands from `/usr/sbin` 
-    virtual results call_command(std::vector<std::string> command);
-    virtual std::string call_command(std::vector<std::string> command, std::string return_on_error);
+    virtual results call_command(const std::vector<std::string>& command);
+    virtual std::string call_command(const std::vector<std::string>& command, const std::string& return_on_error);
 
     // Dependency Injection: For unit testing
     static std::string get_status_str(CommandCaller *caller);
     static std::string get_logs_str(CommandCaller *caller);
     static std::string get_unconfined(CommandCaller *caller);
-    static std::string load_profile(CommandCaller *caller, std::string fullFileName);
-    static std::string disable_profile(CommandCaller *caller, std::string profileName);
+    static std::string load_profile(CommandCaller *caller, const std::string& fullFileName);
+    static std::string disable_profile(CommandCaller *caller, const std::string& profileName);
 };
 
 #endif // COMMAND_CALLER_H

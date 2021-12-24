@@ -4,13 +4,13 @@
 #include <iostream>
 #include <stdexcept>
 
-CommandCaller::results CommandCaller::call_command(std::vector<std::string> command){
+CommandCaller::results CommandCaller::call_command(const std::vector<std::string>& command){
   results result;
   Glib::spawn_sync("/usr/sbin/", command, Glib::SpawnFlags::SPAWN_DEFAULT, {}, &result.output, &result.error, &result.exit_status);
   return result;
 }
 
-std::string CommandCaller::call_command(std::vector<std::string> command, std::string return_on_error){
+std::string CommandCaller::call_command(const std::vector<std::string>& command, const std::string& return_on_error){
   if(command.empty()){
     throw std::invalid_argument("'command' argument must be nonempty.");
   }
@@ -33,17 +33,17 @@ std::string CommandCaller::get_status_str(CommandCaller *caller){
 
 std::string CommandCaller::get_unconfined(CommandCaller *caller){
   std::vector<std::string> command = {"pkexec", "aa-unconfined"};
-  std::string return_on_error = "";
+  std::string return_on_error;
   return caller->call_command(command, return_on_error);
 }
 
 std::string CommandCaller::get_logs_str(CommandCaller *caller){
   std::vector<std::string> command = {"dmesg"};
-  std::string return_on_error = "";
+  std::string return_on_error;
   return caller->call_command(command, return_on_error);
 }
 
-std::string CommandCaller::load_profile(CommandCaller *caller, std::string fullFileName){
+std::string CommandCaller::load_profile(CommandCaller *caller, const std::string& fullFileName){
   std::vector<std::string> command = {"pkexec", "mv", fullFileName, "/etc/apparmor.d"};
   auto result = caller->call_command(command);
 
@@ -52,7 +52,7 @@ std::string CommandCaller::load_profile(CommandCaller *caller, std::string fullF
   }
 
   std::string fileName; //name without path
-  fileName = fullFileName.substr(fullFileName.find_last_of("/") + 1);
+  fileName = fullFileName.substr(fullFileName.find_last_of('/') + 1);
 
   command = {"pkexec", "apparmor_parser", "-r", "/etc/apparmor.d/" + fileName};
   result = caller->call_command(command);
@@ -64,7 +64,7 @@ std::string CommandCaller::load_profile(CommandCaller *caller, std::string fullF
   return "Success: loading porfile" + fileName;
 }
 
-std::string CommandCaller::disable_profile(CommandCaller *caller, std::string profileName){
+std::string CommandCaller::disable_profile(CommandCaller *caller, const std::string& profileName){
   std::vector<std::string> command = {"pkexec", "aa-disable", profileName};
   auto result = caller->call_command(command);
 
@@ -91,12 +91,12 @@ std::string CommandCaller::get_logs_str(){
   return get_logs_str(&caller);
 }
 
-std::string CommandCaller::load_profile(std::string fullFileName){
+std::string CommandCaller::load_profile(const std::string& fullFileName){
   CommandCaller caller;
   return load_profile(&caller, fullFileName);
 }
 
-std::string CommandCaller::disable_profile(std::string profileName){
+std::string CommandCaller::disable_profile(const std::string& profileName){
   CommandCaller caller;
   return disable_profile(&caller, profileName);
 }
