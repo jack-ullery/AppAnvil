@@ -52,8 +52,15 @@ class CommandCaller{
     };
 
     // Used to call command-line commands from `/usr/sbin` 
-    static results call_command(std::vector<std::string> command);
-    static std::string call_command(std::vector<std::string> command, std::string return_on_error);
+    virtual results call_command(std::vector<std::string> command);
+    virtual std::string call_command(std::vector<std::string> command, std::string return_on_error);
+
+    // Dependency Injection: For unit testing
+    static std::string get_status_str(CommandCaller *caller);
+    static std::string get_logs_str(CommandCaller *caller);
+    static std::string get_unconfined(CommandCaller *caller);
+    static std::string load_profile(CommandCaller *caller, std::string fullFileName);
+    static std::string disable_profile(CommandCaller *caller, std::string profileName);
 };
 
 #endif // COMMAND_CALLER_H

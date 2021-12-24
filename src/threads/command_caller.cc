@@ -25,27 +25,27 @@ std::string CommandCaller::call_command(std::vector<std::string> command, std::s
   return result.output;
 }
 
-std::string CommandCaller::get_status_str(){
+std::string CommandCaller::get_status_str(CommandCaller *caller){
   std::vector<std::string> command = {"pkexec", "aa-status","--json"};
   std::string return_on_error = "{\"processes\": {}, \"profiles\": {}";
-  return call_command(command, return_on_error);
+  return caller->call_command(command, return_on_error);
 }
 
-std::string CommandCaller::get_unconfined(){
+std::string CommandCaller::get_unconfined(CommandCaller *caller){
   std::vector<std::string> command = {"pkexec", "aa-unconfined"};
   std::string return_on_error = "";
-  return call_command(command, return_on_error);
+  return caller->call_command(command, return_on_error);
 }
 
-std::string CommandCaller::get_logs_str(){
+std::string CommandCaller::get_logs_str(CommandCaller *caller){
   std::vector<std::string> command = {"dmesg"};
   std::string return_on_error = "";
-  return call_command(command, return_on_error);
+  return caller->call_command(command, return_on_error);
 }
 
-std::string CommandCaller::load_profile(std::string fullFileName){
+std::string CommandCaller::load_profile(CommandCaller *caller, std::string fullFileName){
   std::vector<std::string> command = {"pkexec", "mv", fullFileName, "/etc/apparmor.d"};
-  auto result = call_command(command);
+  auto result = caller->call_command(command);
 
   if(result.exit_status != 0){
     return result.error;
@@ -55,7 +55,7 @@ std::string CommandCaller::load_profile(std::string fullFileName){
   fileName = fullFileName.substr(fullFileName.find_last_of("/") + 1);
 
   command = {"pkexec", "apparmor_parser", "-r", "/etc/apparmor.d/" + fileName};
-  result = call_command(command);
+  result = caller->call_command(command);
 
   if(result.exit_status != 0){
     return result.error;
@@ -64,9 +64,9 @@ std::string CommandCaller::load_profile(std::string fullFileName){
   return "Success: loading porfile" + fileName;
 }
 
-std::string CommandCaller::disable_profile(std::string profileName){
+std::string CommandCaller::disable_profile(CommandCaller *caller, std::string profileName){
   std::vector<std::string> command = {"pkexec", "aa-disable", profileName};
-  auto result = call_command(command);
+  auto result = caller->call_command(command);
 
   if(result.exit_status != 0){
     return result.error;
@@ -74,3 +74,30 @@ std::string CommandCaller::disable_profile(std::string profileName){
 
   return "Success: disabling porfile" + profileName;
 }
+
+// Static public methods
+std::string CommandCaller::get_status_str(){
+  CommandCaller caller;
+  return get_status_str(&caller);
+}
+
+std::string CommandCaller::get_unconfined(){
+  CommandCaller caller;
+  return get_unconfined(&caller);
+}
+
+std::string CommandCaller::get_logs_str(){
+  CommandCaller caller;
+  return get_logs_str(&caller);
+}
+
+std::string CommandCaller::load_profile(std::string fullFileName){
+  CommandCaller caller;
+  return load_profile(&caller, fullFileName);
+}
+
+std::string CommandCaller::disable_profile(std::string profileName){
+  CommandCaller caller;
+  return disable_profile(&caller, profileName);
+}
+
