@@ -1,7 +1,6 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include "../../../src/threads/blocking_queue.h"
-#include "../../lib/gmock-global.h"
 
 using ::testing::AtLeast; 
 
@@ -24,14 +23,3 @@ BLOCKING_QUEUE::BLOCKING_QUEUE()
 :	mtx{new std::mutex()},
 	queue{new BlockingQueue<int>(internal_queue, mtx)}
 {	}
-
-MOCK_GLOBAL_FUNC2(multiply, double(double, double));
-
-TEST_F(BLOCKING_QUEUE, GLOBAL_TEST_EXAMPLE){
-	// EXPECT_CALL(internal_queue, empty())
-    // 	.Times(AtLeast(1));
-	// MOCK_GLOBAL_FUNC2(multiply, double(double, double));
-
-    EXPECT_GLOBAL_CALL(multiply, multiply(1, 2)).Times(1);
-    multiply(1, 2);
-}
