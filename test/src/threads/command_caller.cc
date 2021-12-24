@@ -18,7 +18,7 @@ public:
 	FRIEND_TEST(COMMAND_CALLER, TEST_LOG);
 	FRIEND_TEST(COMMAND_CALLER, TEST_STATUS);
 
-	MOCK_METHOD2(call_command, std::string(std::vector<std::string>, std::string));
+	MOCK_METHOD(std::string, call_command, (const std::vector<std::string>&, const std::string&), (override));
 
 	CommandCallerTest::results result_success = {0, success_str, error_str};
 	CommandCallerTest::results result_error = {1, success_str, error_str};
