@@ -1,3 +1,0 @@
-[submodule "lib/gmock-global"]
-	path = lib/gmock-global
-	url = https://github.com/apriorit/gmock-global.git
