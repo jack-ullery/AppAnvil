@@ -5,6 +5,7 @@ set(
   TEST_SOURCES
   ./src/test_runner.cc
   ./src/status.cc
+  ./src/status_mock.cc
   ./src/threads/command_caller.cc
 )
 
