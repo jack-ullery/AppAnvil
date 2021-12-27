@@ -18,6 +18,9 @@ class DispatcherMiddleman
   public:
     // Constructor
     DispatcherMiddleman(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs);
+    // For unit testing
+    explicit DispatcherMiddleman(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs, 
+                                  std::shared_ptr<Glib::Dispatcher> my_dispatch, std::shared_ptr<std::mutex> my_mtx);
 
     // Send methods (called from second thread)
     void update_profiles(const std::string& confined);
@@ -38,7 +41,7 @@ class DispatcherMiddleman
     void handle_signal();
 
   private:
-    Glib::Dispatcher dispatch;
+    std::shared_ptr<Glib::Dispatcher> dispatch;
 
     CallState state;
     std::string data1;
@@ -49,7 +52,7 @@ class DispatcherMiddleman
     std::shared_ptr<Logs> logs;
 
     // Synchronization
-    std::mutex mtx;
+    std::shared_ptr<std::mutex> mtx;
 };
 
 #endif // SRC_THREADS_DISPATCHER_MIDDLEMAN_H
