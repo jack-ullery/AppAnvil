@@ -4,9 +4,11 @@ cmake_minimum_required (VERSION 3.16.3)
 set(
   TEST_SOURCES
   ./src/test_runner.cc
-  ./src/status.cc
-  ./src/status_mock.cc
+  ./src/tabs/status.cc
+  ./src/tabs/status_mock.cc
+  ./src/tabs/profiles_mock.cc
   ./src/threads/command_caller.cc
+  ./src/threads/dispatcher_middleman.cc
 )
 
 #====================================

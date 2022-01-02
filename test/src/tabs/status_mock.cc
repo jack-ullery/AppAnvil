@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "../../src/tabs/status.h"
+#include "../../../src/tabs/status.h"
 
 class StatusMock : public Status
 {

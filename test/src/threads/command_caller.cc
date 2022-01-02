@@ -15,7 +15,6 @@ protected:
 TEST_F(CommandCallerTest, TEST_STATUS){
 	std::vector<std::string> command = {"pkexec","aa-status","--json"};
 	EXPECT_CALL(tester, call_command(command, _)).Times(1).WillOnce(Return(test_str));
-	EXPECT_CALL(tester, call_command(_)).Times(0);
 
 	std::string output = CommandCallerMock::get_status_str(&tester);
 	EXPECT_EQ(output, test_str);
@@ -24,7 +23,6 @@ TEST_F(CommandCallerTest, TEST_STATUS){
 TEST_F(CommandCallerTest, TEST_LOG){
 	std::vector<std::string> command = {"dmesg"};
 	EXPECT_CALL(tester, call_command(command, _)).Times(1).WillOnce(Return(test_str));
-	EXPECT_CALL(tester, call_command(_)).Times(0);
 
 	std::string output = CommandCallerMock::get_logs_str(&tester);
 	EXPECT_EQ(output, test_str);
@@ -33,7 +31,6 @@ TEST_F(CommandCallerTest, TEST_LOG){
 TEST_F(CommandCallerTest, TEST_UNCONF){
 	std::vector<std::string> command = {"pkexec","aa-unconfined"};
 	EXPECT_CALL(tester, call_command(command, _)).Times(1).WillOnce(Return(test_str));
-	EXPECT_CALL(tester, call_command(_)).Times(0);
 
 	std::string output = CommandCallerMock::get_unconfined(&tester);
 	EXPECT_EQ(output, test_str);
@@ -43,8 +40,6 @@ TEST_F(CommandCallerTest, TEST_CHANGE_STATUS_EE){
 	std::string profile = "profile";
 	std::string old_status = "enforce";
 	std::string new_status = "enforce";
-	EXPECT_CALL(tester, call_command(_, _)).Times(0);
-	EXPECT_CALL(tester, call_command(_)).Times(0);
 
 	std::string output = CommandCallerMock::execute_change(&tester, profile, old_status, new_status);
 	std::string expected_output = "'" + profile + "' already set to " + old_status + ".";
@@ -55,8 +50,6 @@ TEST_F(CommandCallerTest, TEST_CHANGE_STATUS_CC){
 	std::string profile = "profile";
 	std::string old_status = "complain";
 	std::string new_status = "complain";
-	EXPECT_CALL(tester, call_command(_, _)).Times(0);
-	EXPECT_CALL(tester, call_command(_)).Times(0);
 
 	std::string output = CommandCallerMock::execute_change(&tester, profile, old_status, new_status);
 	std::string expected_output = "'" + profile + "' already set to " + old_status + ".";
@@ -67,7 +60,6 @@ TEST_F(CommandCallerTest, TEST_CHANGE_STATUS_EC_SUCCESS){
 	std::string profile = "profile";
 	std::string old_status = "enforce";
 	std::string new_status = "complain";
-	EXPECT_CALL(tester, call_command(_,_)).Times(0);
 	EXPECT_CALL(tester, call_command(_)).WillOnce(Return(tester.result_success));
 
 	std::string output = CommandCallerMock::execute_change(&tester, profile, old_status, new_status);
@@ -79,7 +71,6 @@ TEST_F(CommandCallerTest, TEST_CHANGE_STATUS_CE_FAIL){
 	std::string profile = "profile";
 	std::string old_status = "complain";
 	std::string new_status = "enforce";
-	EXPECT_CALL(tester, call_command(_,_)).Times(0);
 	EXPECT_CALL(tester, call_command(_)).WillOnce(Return(tester.result_error));
 
 	std::string output = CommandCallerMock::execute_change(&tester, profile, old_status, new_status);
