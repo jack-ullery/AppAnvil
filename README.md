@@ -7,10 +7,7 @@ A GUI for the Linux Security Module AppArmor
 * g++ (or another equivalent c++ compiler)
 * libgtkmm-3.0-dev
 * libjsoncpp-dev
-<<<<<<< HEAD
-=======
 * apparmor-utils
->>>>>>> main
 
 ### Optional
 A GUI builder
