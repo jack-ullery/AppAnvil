@@ -8,6 +8,7 @@
 #include "threads/dispatcher_middleman.h"
 
 #include <condition_variable>
+#include <glibmm/dispatcher.h>
 #include <future>
 #include <memory>
 #include <mutex>
@@ -75,7 +76,7 @@ class ConsoleThread
     BlockingQueue<Message> queue;
 
     // DispatcherMiddleman used to communicate results with main thread
-    DispatcherMiddleman dispatch_man;
+    DispatcherMiddleman<Profiles, Processes, Logs, Glib::Dispatcher, std::mutex> dispatch_man;
 
     // Synchronization Primitives
     std::mutex task_ready_mtx;

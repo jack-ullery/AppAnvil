@@ -12,7 +12,7 @@ class Logs : public Status
 {
   public:
     Logs();
-    void add_data_to_record(const std::string& data);
+    virtual void add_data_to_record(const std::string& data);
     void refresh();
     
   private:

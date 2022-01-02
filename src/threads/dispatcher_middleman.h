@@ -1,11 +1,8 @@
 #ifndef SRC_THREADS_DISPATCHER_MIDDLEMAN_H
 #define SRC_THREADS_DISPATCHER_MIDDLEMAN_H
 
-#include "../tabs/logs.h"
-#include "../tabs/processes.h"
-#include "../tabs/profiles.h"
-
 #include <glibmm/dispatcher.h>
+#include <memory>
 #include <mutex>
 
 /**
@@ -13,14 +10,15 @@
  * communication between the second thread and main thread. This is needed to prevent some
  * concurrency errors with the GUI.
  **/
+template <class Profiles, class Processes, class Logs, class Dispatcher, class Mutex>
 class DispatcherMiddleman
 {
   public:
     // Constructor
     DispatcherMiddleman(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs);
     // For unit testing
-    explicit DispatcherMiddleman(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs, 
-                                  std::shared_ptr<Glib::Dispatcher> my_dispatch, std::shared_ptr<std::mutex> my_mtx);
+    explicit DispatcherMiddleman(std::shared_ptr<Dispatcher> disp, std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs, 
+                                  std::shared_ptr<Mutex> my_mtx);
 
     // Send methods (called from second thread)
     void update_profiles(const std::string& confined);
@@ -41,7 +39,7 @@ class DispatcherMiddleman
     void handle_signal();
 
   private:
-    std::shared_ptr<Glib::Dispatcher> dispatch;
+    std::shared_ptr<Dispatcher> dispatch;
 
     CallState state;
     std::string data1;
@@ -52,7 +50,9 @@ class DispatcherMiddleman
     std::shared_ptr<Logs> logs;
 
     // Synchronization
-    std::shared_ptr<std::mutex> mtx;
+    std::shared_ptr<Mutex> mtx;
 };
+
+#include "dispatcher_middleman.inl"
 
 #endif // SRC_THREADS_DISPATCHER_MIDDLEMAN_H
