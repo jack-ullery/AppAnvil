@@ -35,20 +35,26 @@ if(${ANALYZE})
 endif()
 
 # If we want to use cppcheck
-if(${USE_CPPCHECK})
+find_program(CPPCHECK NAMES cppcheck)
+if(${USE_CPPCHECK} AND (NOT ${CPPCHECK} MATCHES "CPPCHECK-NOTFOUND"))
   message(STATUS "Adding cppcheck to build (not totally working)")
   # set(CMAKE_CXX_CPPCHECK cppcheck --inline-suppr --enable=all)
   unset(USE_CPPCHECK CACHE)
+elseif(${USE_CPPCHECK} AND (${CPPCHECK} MATCHES "CPPCHECK-NOTFOUND"))
+  message(WARNING "Could not find cppcheck installation. Please install cppcheck if you want to use it for static analysis.")
 endif()
 
 # If we want to use clang-tidy
-if(${USE_CLANG_TIDY})
+find_program(CLANG_TIDY NAMES clang-tidy)
+if(${USE_CLANG_TIDY} AND (NOT ${CLANG_TIDY} MATCHES "CLANG_TIDY-NOTFOUND"))
   message(STATUS "Adding clang-tidy to build")
   set(CMAKE_CXX_CLANG_TIDY clang-tidy;
     -checks=-*,bugprone-*,cert-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,google-*,hicpp-*,linuxkernel-*,llvm-*,llvmlibc-*,misc-*,performance-*,portability-*,readability-*,-llvm-header-guard*,-misc-non-private-member-variables-in-classes*;
     -header-filter=./src/.*
   )
   unset(USE_CLANG_TIDY CACHE)
+elseif(${USE_CLANG_TIDY} AND (${CLANG_TIDY} MATCHES "CLANG_TIDY-NOTFOUND"))
+  message(WARNING "Could not find clang-tidy installation. Please install clang-tidy if you want to use it for static analysis.")
 endif()
 
 #### Include GTKmm Libraries ####
