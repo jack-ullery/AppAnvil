@@ -8,8 +8,8 @@
 #include "threads/dispatcher_middleman.h"
 
 #include <condition_variable>
-#include <glibmm/dispatcher.h>
 #include <future>
+#include <glibmm/dispatcher.h>
 #include <memory>
 #include <mutex>
 #include <thread>

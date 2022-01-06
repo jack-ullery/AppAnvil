@@ -1,6 +1,7 @@
 #include "status_column_record.h"
 
 #include <gtkmm/box.h>
+#include <gtkmm/treemodelsort.h>
 #include <tuple>
 #include <vector>
 
@@ -13,9 +14,10 @@ std::shared_ptr<StatusColumnRecord> StatusColumnRecord::create(const std::shared
 
     auto store = Gtk::TreeStore::create(*record);
     record->store = store;
+    
     record->model_filter = Gtk::TreeModelFilter::create(store);
-
-    view->set_model(record->model_filter);
+    auto sort_model = Gtk::TreeModelSort::create(record->model_filter);
+    view->set_model(sort_model);
 
     for(uint i = 0; i < names.size(); i++){
         // Add a visible column, and title it using the string from 'names' 
