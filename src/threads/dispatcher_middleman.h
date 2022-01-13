@@ -41,20 +41,20 @@ class DispatcherMiddleman
       std::string arg_1;
       std::string arg_2;
 
-      CallData(CallType a, std::string b)
+      CallData(CallType a, const std::string& b)
       {
         type = a;
         arg_1 = b;
         arg_2 = "";
       }
 
-      CallData(CallType a, std::string b, std::string c)
+      CallData(CallType a, const std::string& b, const std::string& c)
       {
         if(a != PROCESS){
           throw std::invalid_argument("Two argument constructor used, when only one argument expected. `Process` is the only known instance when two arguments are used.");
         }
 
-        this->type = a;
+        this->type = std::move(a);
         this->arg_1 = b;
         this->arg_2 = c;
       }
