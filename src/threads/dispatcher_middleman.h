@@ -1,9 +1,10 @@
 #ifndef SRC_THREADS_DISPATCHER_MIDDLEMAN_H
 #define SRC_THREADS_DISPATCHER_MIDDLEMAN_H
 
+#include "blocking_queue.h"
+
 #include <glibmm/dispatcher.h>
 #include <memory>
-#include <mutex>
 
 /**
  * Class to extend some of the functionality of `Dispatcher` to easier facilitate inter-thread
@@ -27,7 +28,7 @@ class DispatcherMiddleman
     void update_prof_apply_text(const std::string& text);
 
   protected:
-    enum CallState {
+    enum CallType {
       NONE,
       PROFILE,
       PROCESS,
@@ -35,24 +36,46 @@ class DispatcherMiddleman
       PROFILES_TEXT
     };
 
+    struct CallData {
+      CallType type;
+      std::string arg_1;
+      std::string arg_2;
+
+      CallData(CallType a, std::string b)
+      {
+        type = a;
+        arg_1 = b;
+        arg_2 = "";
+      }
+
+      CallData(CallType a, std::string b, std::string c)
+      {
+        if(a != PROCESS){
+          throw std::invalid_argument("Two argument constructor used, when only one argument expected. `Process` is the only known instance when two arguments are used.");
+        }
+
+        this->type = a;
+        this->arg_1 = b;
+        this->arg_2 = c;
+      }
+    };
+
     // Receive method (called from main thread)
     void handle_signal();
 
   private:
+    BlockingQueue<CallData, Mutex> queue;
     std::shared_ptr<Dispatcher> dispatch;
-
-    CallState state;
-    std::string data1;
-    std::string data2;
 
     std::shared_ptr<Profiles> prof;
     std::shared_ptr<Processes> proc;
     std::shared_ptr<Logs> logs;
-
-    // Synchronization
-    std::shared_ptr<Mutex> mtx;
 };
 
+/**
+ * Important Note: Because of how the C++ compiler links code with templates, we need to have implementation
+ * included in the header file
+ **/
 #include "dispatcher_middleman.inl"
 
 #endif // SRC_THREADS_DISPATCHER_MIDDLEMAN_H

@@ -73,7 +73,7 @@ class ConsoleThread
     std::future<void> asynchronous_thread;
 
     // Member fields
-    BlockingQueue<Message> queue;
+    BlockingQueue<Message, std::mutex> queue;
 
     // DispatcherMiddleman used to communicate results with main thread
     DispatcherMiddleman<Profiles, Processes, Logs, Glib::Dispatcher, std::mutex> dispatch_man;
