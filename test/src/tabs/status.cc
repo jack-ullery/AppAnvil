@@ -63,7 +63,6 @@ TEST_F(StatusTest, FILTER_TFT){
 
 	res = StatusMock::filter("abcdEFGH", "[a-z]{7}", true, false, true);
 	EXPECT_FALSE(res);
-
 }
 
 TEST_F(StatusTest, FILTER_FTT){
@@ -86,7 +85,7 @@ TEST_F(StatusTest, FILTER_REGEX_TOLOWER){
 	bool res = StatusMock::filter("abcdefgh ", "\\S{8}", true, true, false);
 	EXPECT_TRUE(res);
 
-	res = StatusMock::filter("abcdefgh ", "\\S{8}", true, false, false);		// regex toLower() cause problem
+	res = StatusMock::filter("abcdefgh ", "\\S{8}", true, false, false);
 	EXPECT_TRUE(res);
 }
 
