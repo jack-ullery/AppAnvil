@@ -26,7 +26,7 @@ class FakeWindow : public Gtk::ApplicationWindow {
     }
 
     // This returns the value of the tests
-    int get_value(){
+    int get_value(){ // NOLINT(readability-make-member-function-const)
       return return_value;
     }
 

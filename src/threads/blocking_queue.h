@@ -3,6 +3,7 @@
 
 #include <deque>
 #include <memory>
+#include <mutex>
 
 template <class T, class Mutex>
 class BlockingQueue
