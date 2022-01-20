@@ -1,0 +1,43 @@
+name: Build & Release
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install Dependencies
+      run: sudo apt-get install libgtkmm-3.0-dev libjsoncpp-dev libgtest-dev libgmock-dev clang-tidy cppcheck xvfb
+    
+    - name: Configure CMake
+      run: cmake .
+
+    - name: Build
+      # Builds the binary any unit tests into the ./dist folder
+      run: make
+
+    - name: Test
+      # Run the unit tests
+      run: xvfb-run --auto-servernum ./dist/appanvil_test
+
+      # Creates pre-release and automatically uploads assets using code from this repository: https://github.com/marvinpinto/action-automatic-releases
+      # I haven't checked the code myself, but I assume there isn't any weird supply chain attack
+    - uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: "latest"
+        prerelease: true
+        title: "Development Build"
+        files: |
+          LICENSE
+          ./dist/appanvil
+ 
