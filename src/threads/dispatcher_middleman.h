@@ -1,10 +1,10 @@
 #ifndef SRC_THREADS_DISPATCHER_MIDDLEMAN_H
 #define SRC_THREADS_DISPATCHER_MIDDLEMAN_H
 
+#include "../tabs/file_chooser.h"
 #include "../tabs/logs.h"
 #include "../tabs/processes.h"
 #include "../tabs/profiles.h"
-#include "../tabs/file_chooser.h"
 
 #include <glibmm/dispatcher.h>
 #include <memory>
@@ -20,7 +20,7 @@ class DispatcherMiddleman
 {
   public:
     // Constructor
-    DispatcherMiddleman(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs, std::shared_ptr<FileChooser> file_chooser);
+    DispatcherMiddleman(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs);
     // For unit testing
     explicit DispatcherMiddleman(std::shared_ptr<Dispatcher> disp, std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs,
                                   std::shared_ptr<Mutex> my_mtx);
@@ -37,7 +37,6 @@ class DispatcherMiddleman
       PROFILE,
       PROCESS,
       LOGS,
-      FILECHOOSER,
       PROFILES_TEXT
     };
 
@@ -54,7 +53,6 @@ class DispatcherMiddleman
     std::shared_ptr<Profiles> prof;
     std::shared_ptr<Processes> proc;
     std::shared_ptr<Logs> logs;
-    std::shared_ptr<FileChooser> file_chooser;
 
     // Synchronization
     std::shared_ptr<Mutex> mtx;

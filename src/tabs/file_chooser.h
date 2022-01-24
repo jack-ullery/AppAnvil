@@ -7,6 +7,7 @@
 #include <gtkmm/builder.h>
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/enums.h>
+#include <gtkmm/filechooserdialog.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/scrolledwindow.h>
@@ -15,7 +16,6 @@
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treeview.h>
 #include <gtkmm/treeviewcolumn.h>
-#include <gtkmm/filechooserdialog.h>
 #include <memory>
 #include <string>
 #include <vector>
@@ -29,7 +29,12 @@ class FileChooser : public Gtk::ScrolledWindow
 
   
   protected:
+    // Signal handler
+    void on_fc_button_clicked();
+    void handle_file_chooser_dialogue(int response_id);
+    void on_confirm_clicked();
 
+  private:
     // GUI Builder to parse UI from xml file
     Glib::RefPtr<Gtk::Builder> builder;
 
@@ -44,18 +49,8 @@ class FileChooser : public Gtk::ScrolledWindow
     std::unique_ptr<Gtk::ComboBoxText> l_combo_profile_status_chooser;
     std::unique_ptr<Gtk::Button> l_confirm_button;
 
-    // Signal handler
-    void on_fc_button_clicked();
-    void handle_f_diag(int response_id);
-    void on_confirm_clicked();
-
     //Dialog box
     std::unique_ptr<Gtk::FileChooserDialog> f_diag;
-
-    //Function called by signal handler
-    void loadp(std::string fullFileName, std::string& feedBack);
-
-  private:
 
     const std::vector<std::string> col_names{"Profile", "Status"};
     std::shared_ptr<StatusColumnRecord> col_record;

@@ -1,11 +1,9 @@
-#include "jsoncpp/json/json.h"
 #include "file_chooser.h"
 #include "../threads/command_caller.h"
 
 #include <iostream>
 #include <string>
 #include <vector>
-
 
 template <typename T_Widget>
 std::unique_ptr<T_Widget> FileChooser::get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder){
@@ -27,8 +25,6 @@ FileChooser::FileChooser()
   l_confirm_button{FileChooser::get_widget<Gtk::Button>("l_confirm_button", builder)}
   //f_chooser{FileChooser::get_widget<Gtk::FileChooserWidget>("f_chooser", builder)}
 {
-  
-  
   l_filechooser_button->signal_clicked().connect(sigc::mem_fun(*this, &FileChooser::on_fc_button_clicked));
   l_confirm_button->signal_clicked().connect(sigc::mem_fun(*this, &FileChooser::on_confirm_clicked));
   l_box->set_hexpand();
@@ -36,22 +32,18 @@ FileChooser::FileChooser()
   this->add(*l_box);
 }
 
-
-
 void FileChooser::on_fc_button_clicked(){
-
-
   // Associate the f_diag pointer with a new Dialog
   f_diag.reset(new Gtk::FileChooserDialog("Choose a profile", Gtk::FILE_CHOOSER_ACTION_OPEN));
   // Close dialog when the OK button is pressed.
-
   f_diag->add_button("Confirm", Gtk::ResponseType::RESPONSE_OK);
-  f_diag->signal_response().connect(sigc::mem_fun(*this, &FileChooser::handle_f_diag));
+  f_diag->signal_response().connect(sigc::mem_fun(*this, &FileChooser::handle_file_chooser_dialogue));
   f_diag->show();
-  
 }
 
-void FileChooser::handle_f_diag(int response_id){
+void FileChooser::handle_file_chooser_dialogue(int response_id){
+  std::ignore = response_id;
+
   auto filename = f_diag->get_file()->get_path();
   l_filechooser_label->set_text(filename);
   f_diag->hide();
@@ -69,5 +61,3 @@ void FileChooser::on_confirm_clicked(){
     CommandCaller::execute_change(short_filename, "enforce", choice_lowercase);
   }
 }
-
-

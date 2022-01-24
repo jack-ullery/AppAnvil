@@ -4,8 +4,8 @@
 #include <iostream>
 #include <tuple>
 
-ConsoleThread::ConsoleThread(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs, std::shared_ptr<FileChooser> file_chooser)
-: dispatch_man(std::move(prof), std::move(proc), std::move(logs), std::move(file_chooser))
+ConsoleThread::ConsoleThread(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs)
+: dispatch_man(std::move(prof), std::move(proc), std::move(logs))
 {
   asynchronous_thread = std::async(std::launch::async, &ConsoleThread::console_caller, this);
 }
@@ -59,14 +59,6 @@ void ConsoleThread::run_command(TabState state){
       dispatch_man.update_logs(logs);
     }
     break;
-
-    case FILECHOOSER:
-    {
-      std::string status = CommandCaller::get_status_str();
-      dispatch_man.update_profiles(status);
-    }
-    break;
-
 
     case OTHER:
     // Do nothing.

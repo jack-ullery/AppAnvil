@@ -7,7 +7,7 @@ MainWindow::MainWindow()
   proc{new Processes()},
   logs{new Logs()},
   file_chooser{new FileChooser()},
-  console{new ConsoleThread(prof, proc, logs, file_chooser)}
+  console{new ConsoleThread(prof, proc, logs)}
 {
   // Add tabs to the stack pane
   m_stack.add(*prof, "prof", "Profiles");
@@ -60,10 +60,6 @@ bool MainWindow::on_switch(GdkEvent* event){
     console->send_refresh_message(PROCESS);
   } else if(visible_child == "logs"){
     console->send_refresh_message(LOGS);
-    // logs->refresh();
-  } else if(visible_child == "file_chooser"){
-    console->send_refresh_message(FILECHOOSER);
-    // logs->refresh();
   }
 
   return false;

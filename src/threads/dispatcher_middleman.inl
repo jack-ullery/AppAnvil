@@ -1,5 +1,5 @@
 template<class Profiles, class Processes, class Logs, class Dispatcher, class Mutex>
-DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::DispatcherMiddleman(std::shared_ptr<Profiles> prof_arg, std::shared_ptr<Processes> proc_arg, std::shared_ptr<Logs> logs_arg, std::shared_ptr<FileChooser> file_chooser_arg)
+DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::DispatcherMiddleman(std::shared_ptr<Profiles> prof_arg, std::shared_ptr<Processes> proc_arg, std::shared_ptr<Logs> logs_arg)
 : dispatch{new Dispatcher()},
   state(NONE),
   data1(""),
@@ -7,7 +7,6 @@ DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::DispatcherMid
   prof{std::move(prof_arg)},
   proc{std::move(proc_arg)},
   logs{std::move(logs_arg)},
-  file_chooser{std::move(file_chooser_arg)},
   mtx{new Mutex()}
 {
   auto function = sigc::mem_fun(*this, &DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::handle_signal);
@@ -90,9 +89,6 @@ void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::handle_s
       break;
     case LOGS:
       logs->add_data_to_record(cached_data1);
-      break;
-    case FILECHOOSER:
-      //file_chooser->add_data_to_record(cached_data1);
       break;
     case PROFILES_TEXT:
       prof->set_apply_label_text(cached_data1);

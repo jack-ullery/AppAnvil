@@ -4,7 +4,6 @@
 #include "tabs/logs.h"
 #include "tabs/processes.h"
 #include "tabs/profiles.h"
-#include "tabs/file_chooser.h"
 #include "threads/blocking_queue.h"
 #include "threads/dispatcher_middleman.h"
 
@@ -20,7 +19,6 @@ enum TabState {
   PROFILE,
   PROCESS,
   LOGS,
-  FILECHOOSER,
   OTHER
 };
 
@@ -28,7 +26,7 @@ enum TabState {
 class ConsoleThread
 {
   public:
-    ConsoleThread(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs, std::shared_ptr<FileChooser> file_chooser);
+    ConsoleThread(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs);
     ~ConsoleThread();
 
     // Delete the copy-constructor, move constructor, and copy assignment operator
