@@ -3,13 +3,13 @@
 
 #include "status.h"
 
-#include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/enums.h>
 #include <gtkmm/filechooserdialog.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/liststore.h>
+#include <gtkmm/notebook.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/searchentry.h>
 #include <gtkmm/textview.h>
@@ -39,13 +39,9 @@ class FileChooser : public Gtk::ScrolledWindow
     Glib::RefPtr<Gtk::Builder> builder;
 
     // Widgets on the tab   
-    std::unique_ptr<Gtk::Box> l_box;
-    std::unique_ptr<Gtk::Label> l_upper_text;
-    std::unique_ptr<Gtk::Grid> l_mid_grid;
+    std::unique_ptr<Gtk::Notebook> l_notebook;
     std::unique_ptr<Gtk::Button> l_filechooser_button;
     std::unique_ptr<Gtk::Label> l_filechooser_label;
-    std::unique_ptr<Gtk::Label> l_lower_text;
-    std::unique_ptr<Gtk::Grid> l_lower_grid;
     std::unique_ptr<Gtk::ComboBoxText> l_combo_profile_status_chooser;
     std::unique_ptr<Gtk::Button> l_confirm_button;
 

@@ -14,22 +14,17 @@ std::unique_ptr<T_Widget> FileChooser::get_widget(Glib::ustring name, const Glib
 
 FileChooser::FileChooser()
 : builder{Gtk::Builder::create_from_file("./resources/load_profile.glade")},
-  l_box{FileChooser::get_widget<Gtk::Box>("l_box", builder)},
-  l_upper_text{FileChooser::get_widget<Gtk::Label>("l_upper_text", builder)},
-  l_mid_grid{FileChooser::get_widget<Gtk::Grid>("l_mid_grid", builder)},
+  l_notebook{FileChooser::get_widget<Gtk::Notebook>("l_notebook", builder)},
   l_filechooser_button{FileChooser::get_widget<Gtk::Button>("l_filechooser_button", builder)},
   l_filechooser_label{FileChooser::get_widget<Gtk::Label>("l_filechooser_label", builder)},
-  l_lower_text{FileChooser::get_widget<Gtk::Label>("l_lower_text", builder)},
-  l_lower_grid{FileChooser::get_widget<Gtk::Grid>("l_lower_grid", builder)},
   l_combo_profile_status_chooser{FileChooser::get_widget<Gtk::ComboBoxText>("l_combo_profile_status_chooser", builder)},
   l_confirm_button{FileChooser::get_widget<Gtk::Button>("l_confirm_button", builder)}
-  //f_chooser{FileChooser::get_widget<Gtk::FileChooserWidget>("f_chooser", builder)}
 {
   l_filechooser_button->signal_clicked().connect(sigc::mem_fun(*this, &FileChooser::on_fc_button_clicked));
   l_confirm_button->signal_clicked().connect(sigc::mem_fun(*this, &FileChooser::on_confirm_clicked));
-  l_box->set_hexpand();
-  l_box->set_vexpand();
-  this->add(*l_box);
+  l_notebook->set_hexpand();
+  l_notebook->set_vexpand();
+  this->add(*l_notebook);
 }
 
 void FileChooser::on_fc_button_clicked(){
