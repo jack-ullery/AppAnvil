@@ -24,10 +24,7 @@ class FileChooser : public Gtk::ScrolledWindow
 {
   public:
     FileChooser();
-    //void add_data_to_record(std::string data);
-    //void refresh();
-
-  
+    
   protected:
     // Signal handler
     void on_fc_button_clicked();

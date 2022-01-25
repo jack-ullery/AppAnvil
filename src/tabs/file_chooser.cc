@@ -29,7 +29,9 @@ FileChooser::FileChooser()
 
 void FileChooser::on_fc_button_clicked(){
   // Associate the f_diag pointer with a new Dialog
-  f_diag.reset(new Gtk::FileChooserDialog("Choose a profile", Gtk::FILE_CHOOSER_ACTION_OPEN));
+  auto *next_f_diag = new Gtk::FileChooserDialog("Choose a profile", Gtk::FILE_CHOOSER_ACTION_OPEN);
+  f_diag.reset(next_f_diag); 
+
   // Close dialog when the OK button is pressed.
   f_diag->add_button("Confirm", Gtk::ResponseType::RESPONSE_OK);
   f_diag->signal_response().connect(sigc::mem_fun(*this, &FileChooser::handle_file_chooser_dialogue));
