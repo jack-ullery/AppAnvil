@@ -4,7 +4,6 @@
 #include "console_thread.h"
 #include "tabs/file_chooser.h"
 #include "tabs/logs.h"
-#include "tabs/parser.h"
 #include "tabs/processes.h"
 #include "tabs/profiles.h"
 

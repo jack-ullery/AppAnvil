@@ -18,24 +18,16 @@ bool Status::filter(const std::string& str, const std::string& rule, const bool&
   std::string new_str = str;
   std::string new_rule = rule;
 
-  if(!match_case){
-    // If we don't care about case, convert the filtered string and rule to lower case
-    transform(str.begin(), str.end(), new_str.begin(), ::tolower);
-    transform(rule.begin(), rule.end(), new_rule.begin(), ::tolower);
-
-    /*if(use_regex&&whole_word){                                                            //regex.toLower() added by Zixin Yang
-      std::cout << new_str+"\n";
-      std::cout << new_rule+"\n";
-    }*/
-  }
-
   if(use_regex){
     try{
+      // Set a flag if we want to ignore case
+      auto flag = (match_case)? (std::regex_constants::collate) : (std::regex_constants::collate | std::regex_constants::icase);
       // Try to parse the regular expression rule.
-      std::regex filter_regex(new_rule);
+      std::regex filter_regex(new_rule, flag);
+
       if(whole_word){
         // Match strings that entirely match the rule
-        return std::regex_match(new_str, filter_regex);
+        return std::regex_match(new_str,filter_regex);
       }
       // Otherwise, match strings that contain a substring that matches the rule
       return std::regex_search(new_str, filter_regex);
@@ -44,6 +36,11 @@ bool Status::filter(const std::string& str, const std::string& rule, const bool&
       // If the regular expression was not valid, return false
       return false;
     }
+  }
+  else if(!match_case){
+    // If we don't care about case and we are not using regex, convert the filtered string and rule to lower case
+    transform(str.begin(), str.end(), new_str.begin(), ::tolower);
+    transform(rule.begin(), rule.end(), new_rule.begin(), ::tolower);
   }
 
   if(whole_word){
