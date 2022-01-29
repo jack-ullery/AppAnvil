@@ -24,63 +24,63 @@ enum TabState {
 
 class ConsoleThread
 {
-  public:
-    ConsoleThread(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs);
-    ~ConsoleThread();
+public:
+  ConsoleThread(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs);
+  ~ConsoleThread();
 
-    // Delete the copy-constructor, move constructor, and copy assignment operator
-    ConsoleThread(const ConsoleThread& other) = delete;
-    ConsoleThread(const ConsoleThread&& other) = delete;
-    ConsoleThread& operator=(const ConsoleThread& other) = delete;
+  // Delete the copy-constructor, move constructor, and copy assignment operator
+  ConsoleThread(const ConsoleThread& other) = delete;
+  ConsoleThread(const ConsoleThread&& other) = delete;
+  ConsoleThread& operator=(const ConsoleThread& other) = delete;
 
-    // Create a move assignment operator
-    ConsoleThread& operator=(ConsoleThread&& other) noexcept;
+  // Create a move assignment operator
+  ConsoleThread& operator=(ConsoleThread&& other) noexcept;
 
-    void send_refresh_message(TabState new_state);
-    void send_change_profile_status_message(const std::string& profile, const std::string& old_status, const std::string& new_status);
-    void send_quit_message();
+  void send_refresh_message(TabState new_state);
+  void send_change_profile_status_message(const std::string& profile, const std::string& old_status, const std::string& new_status);
+  void send_quit_message();
 
-    void get_status();
-    void get_unconfined();
-    void get_logs();
+  void get_status();
+  void get_unconfined();
+  void get_logs();
 
-  protected:
-    enum Event {
-      REFRESH,
-      CHANGE_STATUS,
-      QUIT
-    };
+protected:
+  enum Event {
+    REFRESH,
+    CHANGE_STATUS,
+    QUIT
+  };
 
-    struct Message {
-      Event event;
-      TabState state;
-      std::vector<std::string> data;
+  struct Message {
+    Event event;
+    TabState state;
+    std::vector<std::string> data;
 
-      Message(Event a, TabState b, std::vector<std::string> c)
+    Message(Event a, TabState b, std::vector<std::string> c)
       : event{a},
         state{b},
         data{std::move(c)}
-        {}
-    };
+    {}
+  };
 
-    void console_caller();
+  void console_caller();
 
-  private:
-    Message wait_for_message();
-    void run_command(TabState state);
+private:
+  Message wait_for_message();
+  void run_command(TabState state);
 
-    // Representation of the extra thread
-    std::future<void> asynchronous_thread;
+  // Representation of the extra thread
+  std::future<void> asynchronous_thread;
 
-    // Member fields
-    BlockingQueue<Message, std::mutex> queue;
+  // Member fields
+  BlockingQueue<Message, std::mutex> queue;
 
-    // DispatcherMiddleman used to communicate results with main thread
-    DispatcherMiddleman<Profiles, Processes, Logs, Glib::Dispatcher, std::mutex> dispatch_man;
+  // DispatcherMiddleman used to communicate results with main thread
+  DispatcherMiddleman<Profiles, Processes, Logs, Glib::Dispatcher, std::mutex> dispatch_man;
 
-    // Synchronization Primitives
-    std::mutex task_ready_mtx;
-    std::condition_variable cv;
+  // Synchronization Primitives
+  std::mutex task_ready_mtx;
+  std::condition_variable cv;
 };
 
 #endif // CONSOLE_THREAD_H

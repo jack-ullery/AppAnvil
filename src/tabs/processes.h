@@ -9,18 +9,18 @@
 
 class Processes : public Status
 {
-  public:
-    Processes();
-    virtual void add_data_to_record(const std::string& confined, const std::string& unconfined);
-    void refresh();
+public:
+  Processes();
+  virtual void add_data_to_record(const std::string& confined, const std::string& unconfined);
+  void refresh();
 
-  protected:
-    // Signal handlers    
-    void on_search_changed();
+protected:
+  // Signal handlers
+  void on_search_changed();
 
-  private:
-    const std::vector<std::string> col_names{"Process"};
-    std::shared_ptr<StatusColumnRecord> col_record;
+private:
+  const std::vector<std::string> col_names{"Process"};
+  std::shared_ptr<StatusColumnRecord> col_record;
 };
 
 #endif // TABS_PROCESSES_H

@@ -3,10 +3,10 @@
 #include <tuple>
 
 MainWindow::MainWindow()
-: prof{new Profiles()},
-  proc{new Processes()},
-  logs{new Logs()},
-  console{new ConsoleThread(prof, proc, logs)}
+  : prof{new Profiles()},
+proc{new Processes()},
+logs{new Logs()},
+console{new ConsoleThread(prof, proc, logs)}
 {
   // Add tabs to the stack pane
   m_stack.add(*prof, "prof", "Profiles");
@@ -43,20 +43,22 @@ MainWindow::MainWindow()
   this->show_all();
 }
 
-void MainWindow::send_status_change(const std::string& profile, const std::string& old_status, const std::string& new_status){
+void MainWindow::send_status_change(const std::string& profile, const std::string& old_status, const std::string& new_status)
+{
   console->send_change_profile_status_message(profile, old_status, new_status);
 }
 
-bool MainWindow::on_switch(GdkEvent* event){
+bool MainWindow::on_switch(GdkEvent* event)
+{
   std::ignore = event;
 
   std::string visible_child  = m_stack.get_visible_child_name();
 
-  if(visible_child == "prof"){
+  if(visible_child == "prof") {
     console->send_refresh_message(PROFILE);
-  } else if(visible_child == "proc"){
+  } else if(visible_child == "proc") {
     console->send_refresh_message(PROCESS);
-  } else if(visible_child == "logs"){
+  } else if(visible_child == "logs") {
     console->send_refresh_message(LOGS);
   }
 

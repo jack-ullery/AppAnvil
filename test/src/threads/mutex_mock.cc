@@ -4,6 +4,6 @@
 class MutexMock
 {
 public:
-    MOCK_METHOD(void, lock, ());
-    MOCK_METHOD(void, unlock, ());
+  MOCK_METHOD(void, lock, ());
+  MOCK_METHOD(void, unlock, ());
 };
