@@ -32,6 +32,9 @@ Linters and Static Analysis tools used by the Makefile
 * cppcheck
 * clang-tidy
 
+Code beautifier/formatter
+* astyle
+
 Unit Tests
 * googletest
 * googlemock
@@ -52,6 +55,10 @@ To generate a makefile, build, and run extra static analysis on the source code:
 ```
 $ cmake -DANALYZE=TRUE .
 $ make
+```
+To format code, without building it:
+```
+$ make FORMAT
 ```
 
 # Run
