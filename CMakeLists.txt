@@ -64,6 +64,19 @@ if(${USE_CLANG_TIDY})
   unset(USE_CLANG_TIDY CACHE)
 endif()
 
+# If astyle is downloaded, format all the source code files in ./src and ./test/src
+find_program(ASTYLE NAMES astyle)
+  if(${CLANG_TIDY} STREQUAL "CLANG_TIDY-NOTFOUND")
+    message(WARNING "Could not find astyle installation. Please install astyle if you want to use it to automaticaly format code.")
+  else()
+  message(STATUS "Adding astyle to build")
+
+  add_custom_target(
+    FORMAT
+    COMMAND astyle --style=kr -s2 -f -p -n -r "./src/*.cc,*.h,*.inl" "./test/src/*.cc,*.h,*.inl"
+  )
+endif()
+
 #### Include GTKmm Libraries ####
 find_package(PkgConfig)
 pkg_check_modules(GTKMM gtkmm-3.0)

@@ -16,10 +16,14 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Install Dependencies
-      run: sudo apt-get install libgtkmm-3.0-dev libjsoncpp-dev libgtest-dev libgmock-dev clang-tidy cppcheck xvfb
+      run: sudo apt-get install libgtkmm-3.0-dev libjsoncpp-dev libgtest-dev libgmock-dev clang-tidy cppcheck xvfb astyle
     
     - name: Configure CMake
       run: cmake .
+
+    - name: Format Code
+      # Formats code using astyle
+      run: make FORMAT
 
     - name: Build
       # Builds the binary any unit tests into the ./dist folder
