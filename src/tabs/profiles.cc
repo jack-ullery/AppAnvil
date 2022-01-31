@@ -20,8 +20,8 @@ void Profiles::add_data_to_record(const std::string& data)
   for(auto prof = profiles.begin(); prof != profiles.end(); prof++) {
     std::string key = prof.key().asString();
     auto row = col_record->new_row();
-    col_record->set_row_data(row, 0, key);
-    col_record->set_row_data(row, 1, profiles.get(key, UNKNOWN_STATUS).asString());
+    row->set_value(0, key);
+    row->set_value(1, profiles.get(key, UNKNOWN_STATUS).asString());
   }
 
   refresh();

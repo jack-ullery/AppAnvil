@@ -66,15 +66,34 @@ void ConsoleThread::run_command(TabState state)
   }
 }
 
+std::chrono::time_point<std::chrono::steady_clock> ConsoleThread::get_wait_time_point()
+{
+  auto now = std::chrono::steady_clock::now();
+  auto time_wait = std::chrono::seconds(TIME_WAIT);
+  return now + time_wait;
+}
+
 ConsoleThread::Message ConsoleThread::wait_for_message()
 {
   std::unique_lock<std::mutex> lock(task_ready_mtx);
 
   while(queue.empty()) {
-    cv.condition_variable::wait(lock); // Look into `wait_until`
+    // Wait for 5 seconds for another message
+    // If we do not get a message, we will create one later
+    auto cv_status = cv.condition_variable::wait_until(lock, get_wait_time_point());
+
+    // If we reached our timeout without getting a message, lets create a refresh message and return it
+    if(cv_status == std::cv_status::timeout) {
+      Message message(REFRESH, last_state, {});
+      return message;
+    }
   }
 
-  return queue.pop();
+  // Pop the most recent message from the queue
+  auto message = queue.pop();
+  // Remember the last used state
+  last_state = message.state;
+  return message;
 }
 
 void ConsoleThread::console_caller()

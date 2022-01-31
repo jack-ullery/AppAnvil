@@ -1,6 +1,7 @@
 #ifndef TABS_STATUS_COLUMN_RECORD_H
 #define TABS_STATUS_COLUMN_RECORD_H
 
+#include <cstddef>
 #include <gtkmm/treemodel.h>
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treemodelfilter.h>
@@ -54,26 +55,11 @@ public:
    */
   Gtk::TreeRow new_child_row(const Gtk::TreeRow& parent);
 
-  /**
-   * @brief Sets the string in the specified column of a TreeRow object.
-   *
-   * @details
-   * Sets the `index` column of `row` to be equal to `data`.
-   * Throws an error if `index` is out of bounds (index < 0 or index > number of columns).
-   *
-   * @param row, The row to modify
-   * @param index, The column number to access
-   * @param data, The string to put in the column
-   *
-   * @throws std::out_of_range, if `index` does not point to a column in our column record
-   */
-  void set_row_data(const Gtk::TreeRow& row, const uint& index, const std::string& data);
-
   // I'll do the comment later
   std::string get_row_data(const Gtk::TreeRow& row, const uint& index);
 
   /**
-   * @brief Deletes all rows in the StatusColumnRecord.
+   * @brief Deletes all rows in the StatusColumnRecord, while remembering which row was selected.
    */
   void clear();
 
@@ -91,11 +77,25 @@ public:
 
 private:
   explicit StatusColumnRecord(const std::vector<std::string>& names);
+  void add_strings_to_vector(std::vector<std::string> vec, const Gtk::TreeRow& row);
+  std::vector<std::string> row_to_vector(const Gtk::TreeRow& row);
+
   std::vector<Gtk::TreeModelColumn<std::string>> column;
   Glib::RefPtr<Gtk::TreeStore> store;
   Glib::RefPtr<Gtk::TreeModelFilter> model_filter;
   Gtk::TreeModelFilter::SlotVisible filter_fun;
 
+  std::shared_ptr<Gtk::TreeView> view;
+  std::vector<std::string> last_selected_row;
+
+  /**
+   * @brief Selects the previously selected row before `clear()` was called.
+   *
+   * @details
+   * Selects the first valid row if it matches the row that was previously selected the last time `StatusColumnRecord::clear()` was called.
+   * If either it didn't match any row or `clear()` was never called on this ColumnRecord, then no row is selected.
+   */
+  void reselect_row();
   static bool default_filter(const Gtk::TreeModel::iterator& node);
 };
 

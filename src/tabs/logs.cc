@@ -31,11 +31,11 @@ std::string Logs::parse_line(const std::string& line, const std::regex& elem)
 void Logs::add_row_from_line(const std::shared_ptr<StatusColumnRecord>& col_record, const std::string& line)
 {
   auto row = col_record->new_row();
-  col_record->set_row_data(row, 0, parse_line(line, filter_log_type));
-  col_record->set_row_data(row, 1, parse_line(line, filter_log_operation));
-  col_record->set_row_data(row, 2, parse_line(line, filter_log_name));
-  col_record->set_row_data(row, 3, parse_line(line, filter_log_pid));
-  col_record->set_row_data(row, 4, parse_line(line, filter_log_status));
+  row->set_value(0, parse_line(line, filter_log_type));
+  row->set_value(1, parse_line(line, filter_log_operation));
+  row->set_value(2, parse_line(line, filter_log_name));
+  row->set_value(3, parse_line(line, filter_log_pid));
+  row->set_value(4, parse_line(line, filter_log_status));
 }
 
 void Logs::add_data_to_record(const std::string& data)

@@ -66,6 +66,9 @@ protected:
   void console_caller();
 
 private:
+  static constexpr int TIME_WAIT = 5;
+  static std::chrono::time_point<std::chrono::steady_clock> get_wait_time_point();
+
   Message wait_for_message();
   void run_command(TabState state);
 
@@ -77,6 +80,9 @@ private:
 
   // DispatcherMiddleman used to communicate results with main thread
   DispatcherMiddleman<Profiles, Processes, Logs, Glib::Dispatcher, std::mutex> dispatch_man;
+
+  // Remember last called state so we can refresh this tab every few seconds (default is OTHER)
+  TabState last_state = OTHER;
 
   // Synchronization Primitives
   std::mutex task_ready_mtx;
