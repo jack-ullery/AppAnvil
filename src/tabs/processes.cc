@@ -59,6 +59,8 @@ void Processes::refresh()
 Processes::Processes()
   : col_record{StatusColumnRecord::create(Status::get_view(), col_names)}
 {
+  // Set the Processes::refresh function to be called whenever 
+  // the searchbar and checkboxes are updated
   auto func = sigc::mem_fun(*this, &Processes::refresh);
   Status::set_refresh_signal_handler(func);
 

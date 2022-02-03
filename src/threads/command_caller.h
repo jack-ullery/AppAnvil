@@ -4,6 +4,11 @@
 #include <string>
 #include <vector>
 
+/** 
+  * Calls commands on the terminal to be used by the rest of the program.
+  * This is where AppAnvil actually interfaces with AppArmor. 
+  * Most of these functions are called on the second thread.
+  **/
 class CommandCaller
 {
 public:

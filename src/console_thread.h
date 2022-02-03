@@ -22,6 +22,10 @@ enum TabState {
   OTHER
 };
 
+/**
+ * This class creates a separate thread that the main GUI thread can communicate with.
+ * This second thread asynchronously calls terminal commands and communicates the results with the main thread.
+ **/
 class ConsoleThread
 {
 public:

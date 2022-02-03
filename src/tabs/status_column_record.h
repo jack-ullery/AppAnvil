@@ -28,8 +28,17 @@ public:
    * @returns std::shared_ptr refrencing a new StatusColumnRecord object.
    */
   static std::shared_ptr<StatusColumnRecord> create(const std::shared_ptr<Gtk::TreeView>& view, std::vector<std::string> names);
-
-  // Should probably add a description.
+  
+  /**
+   * @brief Sets the callback function which specifies whether a row should be visible
+   *
+   * @details
+   * Sets the callback function which specifies whether a row should be visible.
+   * Function should return true if row should be visible, or false otherwise.
+   * This is used do decide which rows should be visible.
+   *
+   * @param filter, The callback function to use
+   */
   void set_visible_func(const Gtk::TreeModelFilter::SlotVisible& filter);
 
   /**
@@ -69,7 +78,19 @@ public:
    */
   void set_row_data(const Gtk::TreeRow& row, const uint& index, const std::string& data);
 
-  // I'll do the comment later
+  /**
+   * @brief Gets the string at the specified column of a TreeRow object.
+   *
+   * @details
+   * Gets the `index` column of `row` to be equal to `data`.
+   * Throws an error if `index` is out of bounds (index < 0 or index > number of columns).
+   *
+   * @param row, The row to modify
+   * @param index, The column number to access
+   * @param data, The string to put in the column
+   *
+   * @throws std::out_of_range, if `index` does not point to a column in our column record
+   */
   std::string get_row_data(const Gtk::TreeRow& row, const uint& index);
 
   /**
