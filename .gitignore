@@ -20,3 +20,5 @@ resources/resource.autogen.c
 
 dist/
 lib/
+
+.cache/
