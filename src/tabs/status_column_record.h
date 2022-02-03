@@ -77,12 +77,12 @@ public:
 
 private:
   explicit StatusColumnRecord(const std::vector<std::string>& names);
-  void add_strings_to_vector(std::vector<std::string> vec, const Gtk::TreeRow& row);
   std::vector<std::string> row_to_vector(const Gtk::TreeRow& row);
 
   std::vector<Gtk::TreeModelColumn<std::string>> column;
   Glib::RefPtr<Gtk::TreeStore> store;
-  Glib::RefPtr<Gtk::TreeModelFilter> model_filter;
+  Glib::RefPtr<Gtk::TreeModelFilter> filter_model;
+  Glib::RefPtr<Gtk::TreeModelSort> sort_model;
   Gtk::TreeModelFilter::SlotVisible filter_fun;
 
   std::shared_ptr<Gtk::TreeView> view;
