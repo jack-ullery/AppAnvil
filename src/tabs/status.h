@@ -12,7 +12,6 @@
 #include <gtkmm/label.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/searchentry.h>
-#include <gtkmm/spinner.h>
 #include <gtkmm/treeview.h>
 
 constexpr auto UNKNOWN_STATUS = "unknown";
@@ -79,13 +78,6 @@ protected:
   std::shared_ptr<Gtk::TreeView> get_view();
 
   /**
-   * @brief Return the Spinner associated with this class.
-   *
-   * @returns The Spinner data member used by this class.
-   */
-  std::shared_ptr<Gtk::Spinner> get_spinner();
-
-  /**
    * @brief Return the active selection/choice in the dropdown ComboBoxText
    *
    * @returns The string of the dropdown item which is selected.
@@ -124,7 +116,6 @@ private:
   // Widgets related to changing profile status (above search)
   std::unique_ptr<Gtk::Box>             s_selection_box;
   std::unique_ptr<Gtk::Button>          s_apply_button;
-  std::shared_ptr<Gtk::Spinner>         s_spinner;
   std::unique_ptr<Gtk::Label>           s_apply_info_text;
   std::unique_ptr<Gtk::ComboBoxText>    s_status_selection;
 
