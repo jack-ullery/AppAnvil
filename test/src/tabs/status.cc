@@ -1,6 +1,8 @@
 #include "status_mock.cc"
 
 #include <chrono>
+#include <gtest/gtest.h>
+#include <gtkmm/comboboxtext.h>
 #include <thread>
 
 class StatusTest : public ::testing::Test
@@ -12,6 +14,8 @@ protected:
   StatusTest() {}
   virtual void SetUp() {}
   void click_everything(Gtk::Widget *obj);
+  bool check_label_exists(Gtk::Widget *obj, std::string label_text);
+  void set_combobox_text(Gtk::Widget *obj, std::string combo_text);
 
   StatusMock sm;
 };
@@ -111,7 +115,7 @@ void StatusTest::click_everything(Gtk::Widget *obj)
   // This will also cast CheckButtons which are a type of Button
   Gtk::Button *bu  = dynamic_cast<Gtk::Button*>(obj);
 
-  // If cb is not a nullptr, then it is a Gtk::Button
+  // If bu is not a nullptr, then it is a Gtk::Button
   if(bu) {
     // click the button
     bu->clicked();
@@ -153,3 +157,92 @@ TEST_F(StatusTest, APPLY_SIGNAL_HANDLER)
 
   click_everything(&sm);
 }
+
+// Recursive method to check whether label exists with `label_text`
+bool StatusTest::check_label_exists(Gtk::Widget *obj, std::string label_text)
+{
+  // Attempt to cast the object as a Gtk::Label
+  Gtk::Label *lab  = dynamic_cast<Gtk::Label*>(obj);
+
+  // If cb is not a nullptr, then it is a Gtk::Label
+  if(lab) {
+    // click the button
+    return (lab->get_text().compare(label_text) == 0);
+  }
+
+  // Attempt to cast the object as a Gtk::Container, then enumerate children
+  Gtk::Container *parent = dynamic_cast<Gtk::Container*>(obj);
+
+  // If parent is not a nullptr, then it is a Gtk::Container
+  if(parent) {
+    auto children = parent->get_children();
+
+    for(auto child : children) {
+      bool re = check_label_exists(child, label_text);
+      // If there was a child Gtk::Label with label_text as its text
+      if(re){
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+TEST_F(StatusTest, CHECK_APPLY_LABEL_TEXT)
+{
+  std::string label_text = "arbitrary text for apply label";
+  EXPECT_FALSE(check_label_exists(&sm, label_text));
+  sm.set_apply_label_text(label_text);
+  EXPECT_TRUE(check_label_exists(&sm, label_text));
+}
+
+TEST_F(StatusTest, CHECK_STATUS_LABEL_TEXT)
+{
+  std::string label_text = "arbitrary text for status label";
+  EXPECT_FALSE(check_label_exists(&sm, label_text));
+  sm.set_apply_label_text(label_text);
+  EXPECT_TRUE(check_label_exists(&sm, label_text));
+}
+
+// Recursive method to set change the selection text of all comboboxes
+void StatusTest::set_combobox_text(Gtk::Widget *obj, std::string combo_text)
+{
+  // Attempt to cast the object as a Gtk::Button, then click it
+  // This will also cast CheckButtons which are a type of Button
+  Gtk::ComboBoxText *cb  = dynamic_cast<Gtk::ComboBoxText*>(obj);
+
+  // If cb is not a nullptr, then it is a Gtk::ComboBoxText
+  if(cb) {
+    // click the button
+    cb->set_active_text(combo_text);
+  }
+
+  // Attempt to cast the object as a Gtk::Container, then enumerate children
+  Gtk::Container *parent = dynamic_cast<Gtk::Container*>(obj);
+
+  // If parent is not a nullptr, then it is a Gtk::Container
+  if(parent) {
+    auto children = parent->get_children();
+
+    for(auto child : children) {
+      set_combobox_text(child, combo_text);
+    }
+  }
+}
+
+TEST_F(StatusTest, CHECK_GET_SELECTION_TEXT)
+{
+  std::string text = "Enforce";
+  set_combobox_text(&sm, text);
+  EXPECT_EQ(sm.get_selection_text(), text);
+
+  text = "Complain";
+  set_combobox_text(&sm, text);
+  EXPECT_EQ(sm.get_selection_text(), text);
+
+  text = "Disable";
+  set_combobox_text(&sm, text);
+  EXPECT_EQ(sm.get_selection_text(), text);
+}
+
