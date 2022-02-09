@@ -43,7 +43,7 @@ std::string CommandCaller::get_unconfined(CommandCaller *caller)
 
 std::string CommandCaller::get_logs_str(CommandCaller *caller)
 {
-  std::vector<std::string> command = {"dmesg"};
+  std::vector<std::string> command = {"dmesg", "--ctime"};
   std::string return_on_error;
   return caller->call_command(command, return_on_error);
 }

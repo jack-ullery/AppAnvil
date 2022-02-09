@@ -16,7 +16,7 @@ public:
   void refresh();
 
 private:
-  const std::vector<std::string> col_names{"Type", "Operation", "Name", "Pid", "Status"};
+  const std::vector<std::string> col_names{"Time", "Type", "Operation", "Name", "Pid", "Status"};
   std::shared_ptr<StatusColumnRecord> col_record;
 
   static void add_row_from_line(const std::shared_ptr<StatusColumnRecord>& col_record, const std::string& line);
