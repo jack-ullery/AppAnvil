@@ -8,8 +8,7 @@
 /** 
   * This is a thread safe queue that blocks on a mutex for each operation
   **/
-template <class T, class Mutex>
-class BlockingQueue
+template<class T, class Mutex> class BlockingQueue
 {
 public:
   // Constructor
@@ -25,8 +24,8 @@ public:
 
   // Mutator Methods
   void clear();
-  void push(const T& value);
-  void push_front(const T& value);
+  void push(const T &value);
+  void push_front(const T &value);
   T pop();
 
 private:
