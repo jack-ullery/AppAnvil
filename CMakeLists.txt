@@ -4,6 +4,7 @@ project (appanvil)
 
 #### Set Source Code #####
 set(PROJECT_SOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/src)
+### Sources that need to be built ###
 set(
   SOURCES
   ${PROJECT_SOURCE_DIR}/main.cc
@@ -17,6 +18,22 @@ set(
   ${PROJECT_SOURCE_DIR}/tabs/profiles.cc
   ${PROJECT_SOURCE_DIR}/tabs/processes.cc
   ${PROJECT_SOURCE_DIR}/tabs/logs.cc
+)
+
+### Code that is used by sources that need to be built ###
+# We include this so it can be affected by clang-format
+set(
+  OTHER_SOURCES
+  ${PROJECT_SOURCE_DIR}/main_window.h
+  ${PROJECT_SOURCE_DIR}/console_thread.h
+  ${PROJECT_SOURCE_DIR}/threads/blocking_queue.inl
+  ${PROJECT_SOURCE_DIR}/threads/command_caller.h
+  ${PROJECT_SOURCE_DIR}/threads/dispatcher_middleman.inl
+  ${PROJECT_SOURCE_DIR}/tabs/status_column_record.h
+  ${PROJECT_SOURCE_DIR}/tabs/status.h
+  ${PROJECT_SOURCE_DIR}/tabs/profiles.h
+  ${PROJECT_SOURCE_DIR}/tabs/processes.h
+  ${PROJECT_SOURCE_DIR}/tabs/logs.h
 )
 
 set(PROJECT_RESOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/resources)
@@ -64,17 +81,16 @@ if(${USE_CLANG_TIDY})
   unset(USE_CLANG_TIDY CACHE)
 endif()
 
-# If astyle is downloaded, format all the source code files in ./src and ./test/src
-find_program(ASTYLE NAMES astyle)
-  if(${CLANG_TIDY} STREQUAL "CLANG_TIDY-NOTFOUND")
-    message(WARNING "Could not find astyle installation. Please install astyle if you want to use it to automaticaly format code.")
+# If clang-format is downloaded, format all the source code files in ./src and ./test/src
+find_program(CLANG_FORMAT NAMES clang-format-12)
+  if(${CLANG_FORMAT} STREQUAL "CLANG_FORMAT-NOTFOUND")
+    message(WARNING "Could not find clang-format installation. Please install clang-format-12 if you want to use it to automaticaly format code.")
   else()
-  message(STATUS "Adding astyle to build")
-
-  add_custom_target(
-    FORMAT
-    COMMAND astyle --style=kr -s2 -f -p -n -r "./src/*.cc,*.h,*.inl" "./test/src/*.cc,*.h,*.inl"
-  )
+    message(STATUS "Adding clang-format-12 to build")
+    add_custom_target(
+      FORMAT
+      COMMAND clang-format-12 -style=file -i ${SOURCES} ${OTHER_SOURCES}
+    )
 endif()
 
 #### Include GTKmm Libraries ####

@@ -33,7 +33,7 @@ Linters and Static Analysis tools used by the Makefile
 * clang-tidy
 
 Code beautifier/formatter
-* astyle
+* clang-format
 
 Unit Tests
 * googletest
