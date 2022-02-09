@@ -23,7 +23,7 @@ TEST_F(CommandCallerTest, TEST_STATUS)
 
 TEST_F(CommandCallerTest, TEST_LOG)
 {
-  std::vector<std::string> command = {"dmesg"};
+  std::vector<std::string> command = {"dmesg", "--ctime"};
   EXPECT_CALL(tester, call_command(command, _)).Times(1).WillOnce(Return(test_str));
 
   std::string output = CommandCallerMock::get_logs_str(&tester);
