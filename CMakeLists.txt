@@ -20,20 +20,15 @@ set(
   ${PROJECT_SOURCE_DIR}/tabs/logs.cc
 )
 
-### Code that is used by sources that need to be built ###
+### All the code globbed together for easy formatting ###
 # We include this so it can be affected by clang-format
-set(
-  OTHER_SOURCES
-  ${PROJECT_SOURCE_DIR}/main_window.h
-  ${PROJECT_SOURCE_DIR}/console_thread.h
-  ${PROJECT_SOURCE_DIR}/threads/blocking_queue.inl
-  ${PROJECT_SOURCE_DIR}/threads/command_caller.h
-  ${PROJECT_SOURCE_DIR}/threads/dispatcher_middleman.inl
-  ${PROJECT_SOURCE_DIR}/tabs/status_column_record.h
-  ${PROJECT_SOURCE_DIR}/tabs/status.h
-  ${PROJECT_SOURCE_DIR}/tabs/profiles.h
-  ${PROJECT_SOURCE_DIR}/tabs/processes.h
-  ${PROJECT_SOURCE_DIR}/tabs/logs.h
+file(GLOB_RECURSE FORMAT_SOURCES
+  ${CMAKE_CURRENT_BINARY_DIR}/src/*.cc
+  ${CMAKE_CURRENT_BINARY_DIR}/src/*.h
+  ${CMAKE_CURRENT_BINARY_DIR}/src/*.inl
+  ${CMAKE_CURRENT_BINARY_DIR}/test/src/*.cc
+  ${CMAKE_CURRENT_BINARY_DIR}/test/src/*.h
+  ${CMAKE_CURRENT_BINARY_DIR}/test/src/*.inl
 )
 
 set(PROJECT_RESOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/resources)
@@ -89,7 +84,7 @@ find_program(CLANG_FORMAT NAMES clang-format-12)
     message(STATUS "Adding clang-format-12 to build")
     add_custom_target(
       FORMAT
-      COMMAND clang-format-12 -style=file -i ${SOURCES} ${OTHER_SOURCES}
+      COMMAND clang-format-12 -style=file -i ${FORMAT_SOURCES}
     )
 endif()
 
