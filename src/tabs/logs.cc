@@ -33,7 +33,7 @@ void Logs::add_row_from_line(const std::shared_ptr<StatusColumnRecord> &col_reco
   col_record->set_row_data(row, 2, parse_line(line, filter_log_operation));
   col_record->set_row_data(row, 3, parse_line(line, filter_log_name));
   col_record->set_row_data(row, 4, parse_line(line, filter_log_pid));
-  // col_record->set_row_data(row, 5, parse_line(line, filter_log_status));
+  col_record->set_row_data(row, 5, parse_line(line, filter_log_status));
 }
 
 void Logs::add_data_to_record(const std::string &data)
