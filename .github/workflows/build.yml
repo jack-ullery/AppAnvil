@@ -1,8 +1,6 @@
-name: Build & Release
+name: Build, Format, & Release
 
-on:
-  push:
-    branches: [ main ]
+on: push
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -33,15 +31,15 @@ jobs:
       # Run the unit tests
       run: xvfb-run --auto-servernum ./dist/appanvil_test
 
-      # Creates pre-release and automatically uploads assets using code from this repository: https://github.com/marvinpinto/action-automatic-releases
-      # I haven't checked the code myself, but I assume there isn't any weird supply chain attack
-    - uses: "marvinpinto/action-automatic-releases@latest"
-      with:
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: "latest"
-        prerelease: true
-        title: "Development Build"
-        files: |
-          LICENSE
-          ./dist/appanvil
- 
+    - name: setup git config
+      run: |
+        # setup the username and email for the bot. Using 'GitHub Actions Bot' with no email by default
+        git config user.name "GitHub Actions Bot"
+        git config user.email "<>"
+        
+    - name: commit
+      run: |
+        # Stage the file, commit and push
+        git add ./src/*
+        git commit -m "Format code"
+        git push
