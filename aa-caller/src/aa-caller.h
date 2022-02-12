@@ -1,5 +1,5 @@
-#ifndef SRC_THREADS_COMMAND_CALLER
-#define SRC_THREADS_COMMAND_CALLER
+#ifndef SRC_AA_CALLER
+#define SRC_AA_CALLER
 
 #include <string>
 #include <vector>
@@ -9,7 +9,7 @@
   * This is where AppAnvil actually interfaces with AppArmor. 
   * Most of these functions are called on the second thread.
   **/
-class CommandCaller
+class AppArmorCaller
 {
 public:
   /**
@@ -42,25 +42,6 @@ public:
    */
   static std::string get_unconfined();
 
-  /**
-   * @brief Change the status of a profile
-   *
-   * @details
-   * Change the status of a profile from `old_status` to `new_status` using `aa-enforce`, `aa-complain`, or `aa-disable`.
-   * Valid names for variables `old_status` and `new_status` are: "enforce", "complain", "disable".
-   * May eventually want to move from strings to enums.
-   *
-   * @returns std::string
-   */
-  static std::string execute_change(const std::string& profile, const std::string& old_status, const std::string& new_status);
-
-  /*
-    loadprofile
-  */
-  static std::string load_profile(const std::string& fullFileName);
-
-  static std::string disable_profile(const std::string& profileName);
-
 protected:
   struct results {
     int exit_status = 0;
@@ -73,12 +54,9 @@ protected:
   virtual std::string call_command(const std::vector<std::string>& command, const std::string& return_on_error);
 
   // Dependency Injection: For unit testing
-  static std::string get_status(CommandCaller *caller);
-  static std::string get_logs(CommandCaller *caller);
-  static std::string get_unconfined(CommandCaller *caller);
-  static std::string load_profile(CommandCaller *caller, const std::string& fullFileName);
-  static std::string disable_profile(CommandCaller *caller, const std::string& profileName);
-  static std::string execute_change(CommandCaller *caller, const std::string& profile, const std::string& old_status, const std::string& new_status);
+  static std::string get_status(AppArmorCaller *caller);
+  static std::string get_logs(AppArmorCaller *caller);
+  static std::string get_unconfined(AppArmorCaller *caller);
 };
 
 #endif // COMMAND_CALLER_H
