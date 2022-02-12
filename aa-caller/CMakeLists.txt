@@ -25,3 +25,9 @@ target_include_directories(${CALLER_NAME} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
 
 target_link_libraries(${CALLER_NAME} PUBLIC ${GTKMM_LIBRARIES})
 target_link_libraries(${CALLER_NAME} PUBLIC pthread)
+
+#### Create install target to install binaries  ####
+install(
+  TARGETS ${CALLER_NAME}
+  DESTINATION bin
+)
