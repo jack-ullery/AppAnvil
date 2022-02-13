@@ -27,23 +27,23 @@ std::string CommandCaller::call_command(const std::vector<std::string> &command,
   return result.output;
 }
 
-std::string CommandCaller::get_status_str(CommandCaller *caller)
+std::string CommandCaller::get_status(CommandCaller *caller)
 {
-  std::vector<std::string> command = {"pkexec", "aa-status", "--json"};
-  std::string return_on_error      = "{\"processes\": {}, \"profiles\": {}";
+  std::vector<std::string> command = {"pkexec", "aa-caller", "-s"};
+  std::string return_on_error      = "{\"processes\": {}, \"profiles\": {}}";
   return caller->call_command(command, return_on_error);
 }
 
 std::string CommandCaller::get_unconfined(CommandCaller *caller)
 {
-  std::vector<std::string> command = {"pkexec", "aa-unconfined"};
+  std::vector<std::string> command = {"pkexec", "aa-caller", "-u"};
   std::string return_on_error;
   return caller->call_command(command, return_on_error);
 }
 
-std::string CommandCaller::get_logs_str(CommandCaller *caller)
+std::string CommandCaller::get_logs(CommandCaller *caller)
 {
-  std::vector<std::string> command = {"dmesg", "--ctime"};
+  std::vector<std::string> command = {"pkexec", "aa-caller", "-l"};
   std::string return_on_error;
   return caller->call_command(command, return_on_error);
 }
@@ -111,10 +111,10 @@ std::string CommandCaller::execute_change(CommandCaller *caller, const std::stri
 }
 
 // Static public methods
-std::string CommandCaller::get_status_str()
+std::string CommandCaller::get_status()
 {
   CommandCaller caller;
-  return get_status_str(&caller);
+  return get_status(&caller);
 }
 
 std::string CommandCaller::get_unconfined()
@@ -123,10 +123,10 @@ std::string CommandCaller::get_unconfined()
   return get_unconfined(&caller);
 }
 
-std::string CommandCaller::get_logs_str()
+std::string CommandCaller::get_logs()
 {
   CommandCaller caller;
-  return get_logs_str(&caller);
+  return get_logs(&caller);
 }
 
 std::string CommandCaller::load_profile(const std::string &fullFileName)

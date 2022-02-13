@@ -35,6 +35,8 @@ set(PROJECT_RESOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/resources)
 set(XML_GRESOURCE ${PROJECT_RESOURCE_DIR}/resources.gresource.xml)
 set(RESOURCE_BUNDLE_OUTPUT ${PROJECT_RESOURCE_DIR}/resource.autogen.c)
 
+set(PKEXEC_POLICY ${PROJECT_RESOURCE_DIR}/com.github.jack-ullery.AppAnvil.pkexec.policy)
+
 #### Add Linters and Static Analysis ####
 
 # If cmake was compiled with DANALYZE=TRUE
@@ -146,8 +148,32 @@ target_link_libraries(${LIBRARY_OUTPUT_NAME} PUBLIC ${GTKMM_LIBRARIES})
 target_link_libraries(${LIBRARY_OUTPUT_NAME} PUBLIC jsoncpp)
 target_link_libraries(${LIBRARY_OUTPUT_NAME} PUBLIC pthread)
 
+add_subdirectory(aa-caller)
 add_subdirectory(test)
 
 #### Create the binary to the library ####
 add_executable(${PROJECT_NAME} ./src/main.cc)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${LIBRARY_OUTPUT_NAME})
+
+#### Create install target to install binaries  ####
+install(
+  TARGETS ${PROJECT_NAME}
+  DESTINATION bin
+)
+
+#### Create install target to modify pkexec ####
+install(
+  FILES ${PKEXEC_POLICY}
+  DESTINATION /usr/share/polkit-1/actions/
+)
+
+#### Creating uninstall target (copying code from CMake FAQ) ####
+if(NOT TARGET uninstall)
+  configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+    IMMEDIATE @ONLY)
+
+  add_custom_target(uninstall
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
+endif()
