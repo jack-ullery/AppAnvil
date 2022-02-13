@@ -4,5 +4,5 @@
 class LogsMock
 {
 public:
-  MOCK_METHOD(void, add_data_to_record, (const std::string& data));
+  MOCK_METHOD(void, add_data_to_record, (const std::string &data));
 };
