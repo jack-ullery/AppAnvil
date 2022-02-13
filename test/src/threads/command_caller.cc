@@ -7,7 +7,7 @@ class CommandCallerTest : public ::testing::Test
 {
 protected:
   CommandCallerTest() = default;
-  virtual void SetUp() {}
+  virtual void SetUp() { }
 
   CommandCallerMock tester;
 };
@@ -41,41 +41,41 @@ TEST_F(CommandCallerTest, TEST_UNCONF)
 
 TEST_F(CommandCallerTest, TEST_CHANGE_STATUS_EE)
 {
-  std::string profile = "profile";
+  std::string profile    = "profile";
   std::string old_status = "enforce";
   std::string new_status = "enforce";
 
-  std::string output = CommandCallerMock::execute_change(&tester, profile, old_status, new_status);
+  std::string output          = CommandCallerMock::execute_change(&tester, profile, old_status, new_status);
   std::string expected_output = "'" + profile + "' already set to " + old_status + ".";
   EXPECT_EQ(output, expected_output);
 }
 
 TEST_F(CommandCallerTest, TEST_CHANGE_STATUS_CC)
 {
-  std::string profile = "profile";
+  std::string profile    = "profile";
   std::string old_status = "complain";
   std::string new_status = "complain";
 
-  std::string output = CommandCallerMock::execute_change(&tester, profile, old_status, new_status);
+  std::string output          = CommandCallerMock::execute_change(&tester, profile, old_status, new_status);
   std::string expected_output = "'" + profile + "' already set to " + old_status + ".";
   EXPECT_EQ(output, expected_output);
 }
 
 TEST_F(CommandCallerTest, TEST_CHANGE_STATUS_EC_SUCCESS)
 {
-  std::string profile = "profile";
+  std::string profile    = "profile";
   std::string old_status = "enforce";
   std::string new_status = "complain";
   EXPECT_CALL(tester, call_command(_)).WillOnce(Return(tester.result_success));
 
-  std::string output = CommandCallerMock::execute_change(&tester, profile, old_status, new_status);
+  std::string output          = CommandCallerMock::execute_change(&tester, profile, old_status, new_status);
   std::string expected_output = " Changed '" + profile + "' from " + old_status + " to " + new_status;
   EXPECT_EQ(output, expected_output);
 }
 
 TEST_F(CommandCallerTest, TEST_CHANGE_STATUS_CE_FAIL)
 {
-  std::string profile = "profile";
+  std::string profile    = "profile";
   std::string old_status = "complain";
   std::string new_status = "enforce";
   EXPECT_CALL(tester, call_command(_)).WillOnce(Return(tester.result_error));
@@ -84,5 +84,6 @@ TEST_F(CommandCallerTest, TEST_CHANGE_STATUS_CE_FAIL)
   // expect that the output contains the word "Error" somewhere
   EXPECT_TRUE(output.find("Error") != std::string::npos) << "returned string should contain \"Error\" somewhere.";
   // expect that the output contains the error string from the result somewhere
-  EXPECT_TRUE(output.find(tester.result_error.error) != std::string::npos)  << "returned string should contain the error returned from `call_command`.";
+  EXPECT_TRUE(output.find(tester.result_error.error) != std::string::npos)
+      << "returned string should contain the error returned from `call_command`.";
 }

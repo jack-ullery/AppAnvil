@@ -29,7 +29,7 @@ public:
   }
 
   // This returns the value of the tests
-  int get_value()  // NOLINT(readability-make-member-function-const)
+  int get_value() // NOLINT(readability-make-member-function-const)
   {
     return return_value;
   }
