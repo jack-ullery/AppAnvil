@@ -1,11 +1,12 @@
 #include "console_thread.h"
+
 #include "threads/command_caller.h"
 
 #include <iostream>
 #include <tuple>
 
 ConsoleThread::ConsoleThread(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs)
-  : dispatch_man(std::move(prof), std::move(proc), std::move(logs))
+    : dispatch_man(std::move(prof), std::move(proc), std::move(logs))
 {
   asynchronous_thread = std::async(std::launch::async, &ConsoleThread::console_caller, this);
 }
@@ -20,7 +21,8 @@ void ConsoleThread::send_refresh_message(TabState new_state)
   cv.notify_one();
 }
 
-void ConsoleThread::send_change_profile_status_message(const std::string& profile, const std::string& old_status, const std::string& new_status)
+void ConsoleThread::send_change_profile_status_message(const std::string &profile, const std::string &old_status,
+                                                       const std::string &new_status)
 {
   std::unique_lock<std::mutex> lock(task_ready_mtx);
   // Create a message with the state to refresh for, but no data
@@ -40,25 +42,22 @@ void ConsoleThread::send_quit_message()
 
 void ConsoleThread::run_command(TabState state)
 {
-  switch (state) {
+  switch(state) {
   case PROFILE: {
     std::string status = CommandCaller::get_status();
     dispatch_man.update_profiles(status);
-  }
-  break;
+  } break;
 
   case PROCESS: {
     std::string status = CommandCaller::get_status();
     std::string unconf = CommandCaller::get_unconfined();
     dispatch_man.update_processes(status, unconf);
-  }
-  break;
+  } break;
 
   case LOGS: {
     std::string logs = CommandCaller::get_logs();
     dispatch_man.update_logs(logs);
-  }
-  break;
+  } break;
 
   case OTHER:
     // Do nothing.
@@ -84,20 +83,19 @@ void ConsoleThread::console_caller()
   while(shouldContinue) {
     Message message = wait_for_message();
 
-    switch (message.event) {
+    switch(message.event) {
     case REFRESH:
       run_command(message.state);
       break;
 
     case CHANGE_STATUS: {
-      const std::string profile = message.data.at(0);
+      const std::string profile    = message.data.at(0);
       const std::string old_status = message.data.at(1);
       const std::string new_status = message.data.at(2);
-      std::string return_message = CommandCaller::execute_change(profile, old_status, new_status);
+      std::string return_message   = CommandCaller::execute_change(profile, old_status, new_status);
       dispatch_man.update_prof_apply_text(return_message);
       run_command(PROFILE);
-    }
-    break;
+    } break;
 
     case QUIT:
       shouldContinue = false;
@@ -107,7 +105,7 @@ void ConsoleThread::console_caller()
 }
 
 // Move Assignment Operator
-ConsoleThread& ConsoleThread::operator=(ConsoleThread&& other) noexcept
+ConsoleThread &ConsoleThread::operator=(ConsoleThread &&other) noexcept
 {
   std::ignore = other;
   return *this;

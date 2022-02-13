@@ -52,14 +52,14 @@ public:
    *
    * @returns std::string
    */
-  static std::string execute_change(const std::string& profile, const std::string& old_status, const std::string& new_status);
+  static std::string execute_change(const std::string &profile, const std::string &old_status, const std::string &new_status);
 
   /*
     loadprofile
   */
-  static std::string load_profile(const std::string& fullFileName);
+  static std::string load_profile(const std::string &fullFileName);
 
-  static std::string disable_profile(const std::string& profileName);
+  static std::string disable_profile(const std::string &profileName);
 
 protected:
   struct results {
@@ -69,16 +69,17 @@ protected:
   };
 
   // Used to call command-line commands from `/usr/sbin`
-  virtual results call_command(const std::vector<std::string>& command);
-  virtual std::string call_command(const std::vector<std::string>& command, const std::string& return_on_error);
+  virtual results call_command(const std::vector<std::string> &command);
+  virtual std::string call_command(const std::vector<std::string> &command, const std::string &return_on_error);
 
   // Dependency Injection: For unit testing
   static std::string get_status(CommandCaller *caller);
   static std::string get_logs(CommandCaller *caller);
   static std::string get_unconfined(CommandCaller *caller);
-  static std::string load_profile(CommandCaller *caller, const std::string& fullFileName);
-  static std::string disable_profile(CommandCaller *caller, const std::string& profileName);
-  static std::string execute_change(CommandCaller *caller, const std::string& profile, const std::string& old_status, const std::string& new_status);
+  static std::string load_profile(CommandCaller *caller, const std::string &fullFileName);
+  static std::string disable_profile(CommandCaller *caller, const std::string &profileName);
+  static std::string execute_change(CommandCaller *caller, const std::string &profile, const std::string &old_status,
+                                    const std::string &new_status);
 };
 
 #endif // COMMAND_CALLER_H
