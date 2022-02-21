@@ -1,7 +1,7 @@
+#include "../../../src/tabs/status.h"
+
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-
-#include "../../../src/tabs/status.h"
 
 class StatusMock : public Status
 {
