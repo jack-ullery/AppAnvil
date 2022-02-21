@@ -34,16 +34,9 @@ protected:
     std::string arg_1;
     std::string arg_2;
 
-    CallData(CallType a, const std::string &b)
-    : type(a),
-      arg_1(b),
-      arg_2("")
-    {}
+    CallData(CallType a, const std::string &b) : type(a), arg_1(b), arg_2("") { }
 
-    CallData(CallType a, const std::string &b, const std::string &c)
-    : type(a),
-      arg_1(b),
-      arg_2(c)
+    CallData(CallType a, const std::string &b, const std::string &c) : type(a), arg_1(b), arg_2(c)
     {
       if(a != PROCESS) {
         throw std::invalid_argument("Two argument constructor used, when only one argument expected. `Process` is the only known instance "
