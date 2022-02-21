@@ -54,8 +54,14 @@ if(${USE_CPPCHECK})
   if(${CPPCHECK} STREQUAL "CPPCHECK-NOTFOUND")
     message(WARNING "Could not find cppcheck installation. Please install cppcheck if you want to use it for static analysis.")
   else()
-    message(STATUS "Adding cppcheck to build (not working)")
-    # set(CMAKE_CXX_CPPCHECK cppcheck --inline-suppr --enable=all)
+    message(STATUS "Adding cppcheck to build")
+    set(CMAKE_CXX_CPPCHECK cppcheck
+      --enable=warning,performance,portability,information 
+      --suppress=missingInclude --suppress=unmatchedSuppression --suppress=internalAstError 
+      --quiet
+      --inline-suppr
+      src
+    )
   endif()
 
   unset(USE_CPPCHECK CACHE)
