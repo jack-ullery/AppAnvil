@@ -12,6 +12,10 @@ class Logs : public Status
 {
 public:
   Logs();
+
+  // For unit testing
+  explicit Logs(std::shared_ptr<StatusColumnRecord> col_record);
+
   virtual void add_data_to_record(const std::string &data);
   void refresh();
 

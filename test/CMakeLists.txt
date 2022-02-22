@@ -6,9 +6,9 @@ set(
   ./src/test_runner.cc
   ./src/tabs/status.cc
   ./src/tabs/status_mock.cc
-  ./src/tabs/profiles_mock.cc
   ./src/threads/command_caller.cc
   ./src/threads/dispatcher_middleman.cc
+  ./src/threads/blocking_queue.cc
 )
 
 #====================================

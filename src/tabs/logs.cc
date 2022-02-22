@@ -28,18 +28,12 @@ std::string Logs::parse_line(const std::string &line, const std::regex &elem)
 void Logs::add_row_from_line(const std::shared_ptr<StatusColumnRecord> &col_record, const std::string &line)
 {
   auto row = col_record->new_row();
-  col_record->set_row_data(
-      row, 0, parse_line(line, filter_log_time) + '\t'); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  col_record->set_row_data(row, 1,
-                           parse_line(line, filter_log_type)); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  col_record->set_row_data(
-      row, 2, parse_line(line, filter_log_operation)); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  col_record->set_row_data(row, 3,
-                           parse_line(line, filter_log_name)); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  col_record->set_row_data(row, 4,
-                           parse_line(line, filter_log_pid)); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  col_record->set_row_data(row, 5,
-                           parse_line(line, filter_log_status)); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  col_record->set_row_data(row, 0, parse_line(line, filter_log_time) + '\t');
+  col_record->set_row_data(row, 1, parse_line(line, filter_log_type));
+  col_record->set_row_data(row, 2, parse_line(line, filter_log_operation));
+  col_record->set_row_data(row, 3, parse_line(line, filter_log_name));
+  col_record->set_row_data(row, 4, parse_line(line, filter_log_pid));
+  col_record->set_row_data(row, 5, parse_line(line, filter_log_status));
 }
 
 void Logs::add_data_to_record(const std::string &data)
@@ -78,4 +72,8 @@ Logs::Logs() : col_record{StatusColumnRecord::create(Status::get_view(), col_nam
   Status::remove_status_selection();
 
   this->show_all();
+}
+
+Logs::Logs(std::shared_ptr<StatusColumnRecord> column_record) : col_record{ std::move(column_record) } 
+{
 }

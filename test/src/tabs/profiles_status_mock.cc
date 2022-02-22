@@ -1,7 +1,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-class ProfilesMock
+class ProfilesStatusMock
 {
 public:
   // virtual void add_data_to_record(const std::string& data){};
