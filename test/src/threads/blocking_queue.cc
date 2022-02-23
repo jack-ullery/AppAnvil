@@ -1,5 +1,6 @@
 #include "./blocking_queue_mock.cc"
 #include "./mutex_mock.cc"
+#include "./deque_mock.cc"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -19,7 +20,8 @@ protected:
   const int arg1     = 1;
   const int CAPACITY = 100;
 
-  std::deque<int> my_internal_queue;
+  //std::deque<int> my_internal_queue;
+  DequeMock<int> my_internal_queue;
   std::shared_ptr<MutexMock> mtx_mock;
 
   // Note that I decided to use the int type when creating the tests for the sake of simplicity, however this should probably be changed in the future.
@@ -47,6 +49,8 @@ void BlockingQueueTest::expect_locks(unsigned int num)
 TEST_F(BlockingQueueTest, TEST_FRONT_SINGLE_ELEMENT)
 {
   expect_locks(2);
+  EXPECT_CALL(my_internal_queue, push_back(arg0)).Times(1);
+  EXPECT_CALL(my_internal_queue, front()).Times(1);
   b_queue.push(arg0);
   auto val = b_queue.front();
   EXPECT_EQ(val, arg0) << "front() should return 0 after a single element with value 0 is pushed";
