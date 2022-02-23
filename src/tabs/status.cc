@@ -115,16 +115,15 @@ void Status::remove_status_selection()
 }
 
 Status::Status()
-    : builder{Gtk::Builder::create_from_resource("/resources/status.glade")}, s_view{Status::get_widget<Gtk::TreeView>("s_view", builder)},
-      s_win{Status::get_widget<Gtk::ScrolledWindow>("s_win", builder)}, s_box{Status::get_widget<Gtk::Box>("s_box", builder)},
-      s_search{Status::get_widget<Gtk::SearchEntry>("s_search", builder)}, s_use_regex{Status::get_widget<Gtk::CheckButton>("s_use_regex",
-                                                                                                                            builder)},
-      s_match_case{Status::get_widget<Gtk::CheckButton>("s_match_case", builder)}, s_whole_word{Status::get_widget<Gtk::CheckButton>(
-                                                                                       "s_whole_word", builder)},
-      s_found_label{Status::get_widget<Gtk::Label>("s_found_label", builder)}, s_selection_box{Status::get_widget<Gtk::Box>(
-                                                                                   "s_selection_box", builder)},
-      s_apply_button{Status::get_widget<Gtk::Button>("s_apply_button", builder)}, s_apply_info_text{Status::get_widget<Gtk::Label>(
-                                                                                      "s_apply_info_text", builder)},
+    : builder{Gtk::Builder::create_from_resource("/resources/status.glade")}, 
+      s_view{Status::get_widget<Gtk::TreeView>("s_view", builder)},
+      s_win{Status::get_widget<Gtk::ScrolledWindow>("s_win", builder)}, 
+      s_box{Status::get_widget<Gtk::Box>("s_box", builder)},
+      s_search{Status::get_widget<Gtk::SearchEntry>("s_search", builder)}, 
+      s_use_regex{Status::get_widget<Gtk::CheckButton>("s_use_regex", builder)},
+      s_match_case{Status::get_widget<Gtk::CheckButton>("s_match_case", builder)}, s_whole_word{Status::get_widget<Gtk::CheckButton>("s_whole_word", builder)},
+      s_found_label{Status::get_widget<Gtk::Label>("s_found_label", builder)}, s_selection_box{Status::get_widget<Gtk::Box>("s_selection_box", builder)},
+      s_apply_button{Status::get_widget<Gtk::Button>("s_apply_button", builder)}, s_apply_info_text{Status::get_widget<Gtk::Label>("s_apply_info_text", builder)},
       s_status_selection{Status::get_widget<Gtk::ComboBoxText>("s_status_selection", builder)}
 {
   s_win->set_shadow_type(Gtk::ShadowType::SHADOW_NONE);
