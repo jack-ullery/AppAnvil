@@ -64,7 +64,8 @@ private:
   std::future<void> asynchronous_thread;
 
   // Member fields
-  BlockingQueue<Message, std::mutex> queue;
+  //BlockingQueue<Message, std::mutex> queue;
+  BlockingQueue<Message, std::deque<Message>, std::mutex> queue;
 
   // DispatcherMiddleman used to communicate results with main thread
   DispatcherMiddleman<Profiles, Processes, Logs, Glib::Dispatcher, std::mutex> dispatch_man;

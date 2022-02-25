@@ -3,7 +3,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-template<class T, class Mutex> class BlockingQueueMock : public BlockingQueue<T, Mutex>
+template<class T, class Deque, class Mutex> class BlockingQueueMock : public BlockingQueue<T, Deque, Mutex>
 {
 public:
   FRIEND_TEST(BlockingQueueTest, TEST_FRONT_SINGLE_ELEMENT);
@@ -24,8 +24,8 @@ public:
   FRIEND_TEST(BlockingQueueTest, TEST_POP_SINGLE_ELEMENT);
   FRIEND_TEST(BlockingQueueTest, TEST_POP_MANY_ELEMENTS);
 
-  explicit BlockingQueueMock(std::deque<T> my_internal_queue, std::shared_ptr<Mutex> my_mtx)
-      : BlockingQueue<T, Mutex>(my_internal_queue, my_mtx)
+  explicit BlockingQueueMock(Deque my_internal_queue, std::shared_ptr<Mutex> my_mtx)
+      : BlockingQueue<T, Deque, Mutex>(my_internal_queue, my_mtx)
   {
   }
 };

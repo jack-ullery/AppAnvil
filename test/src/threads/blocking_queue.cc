@@ -29,7 +29,7 @@ protected:
   // resemble the performance environment, the int type should be swapped out for the actual types that are used during runtime.
   // For dispatcher_middleman, the type passed is CallData, which is a struct containing CallType (an enum) and two strings
   // For console_thread, the type passed is Message, which is a struct containing an Event (an enum), a TabState (another enum), and a vector of strings
-  BlockingQueueMock<int, MutexMock> b_queue;
+  BlockingQueueMock<int, DequeMock<int>, MutexMock> b_queue;
 };
 
 // Expect the mutex to be locked and unlocked `num` times
