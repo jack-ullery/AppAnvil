@@ -10,7 +10,7 @@ using ::testing::Sequence;
 class BlockingQueueTest : public ::testing::Test
 {
 protected:
-  BlockingQueueTest() : my_internal_queue(), mtx_mock{new MutexMock()}, b_queue(my_internal_queue, mtx_mock) { }
+  BlockingQueueTest() : my_internal_queue{}, mtx_mock{new MutexMock()}, b_queue(my_internal_queue, mtx_mock) { }
 
   virtual void SetUp() { }
 
@@ -24,11 +24,6 @@ protected:
   DequeMock<int> my_internal_queue;
   std::shared_ptr<MutexMock> mtx_mock;
 
-  // Note that I decided to use the int type when creating the tests for the sake of simplicity, however this should probably be changed in the future.
-  // Blocking queue is utilized by only two other files I think, namely dispatcher_middleman and console_thread. In order to make the tests more closely
-  // resemble the performance environment, the int type should be swapped out for the actual types that are used during runtime.
-  // For dispatcher_middleman, the type passed is CallData, which is a struct containing CallType (an enum) and two strings
-  // For console_thread, the type passed is Message, which is a struct containing an Event (an enum), a TabState (another enum), and a vector of strings
   BlockingQueueMock<int, DequeMock<int>, MutexMock> b_queue;
 };
 

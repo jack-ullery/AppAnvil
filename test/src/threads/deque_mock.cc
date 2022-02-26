@@ -15,5 +15,6 @@ public:
   MOCK_METHOD(T, pop_front, ());
   MOCK_METHOD(T, pop_back, ());
 
-  //DequeMock() { }
+  DequeMock() { }
+  DequeMock(const DequeMock&) { }
 };
