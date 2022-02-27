@@ -41,198 +41,58 @@ void BlockingQueueTest::expect_locks(unsigned int num)
   }
 }
 
-TEST_F(BlockingQueueTest, TEST_FRONT_SINGLE_ELEMENT)
+TEST_F(BlockingQueueTest, TEST_FRONT)
 {
-  expect_locks(2);
-  EXPECT_CALL(my_internal_queue, push_back(arg0)).Times(1);
   EXPECT_CALL(my_internal_queue, front()).Times(1);
-  b_queue.push(arg0);
-  auto val = b_queue.front();
-  EXPECT_EQ(val, arg0) << "front() should return 0 after a single element with value 0 is pushed";
-}
-
-TEST_F(BlockingQueueTest, TEST_FRONT_MANY_ELEMENTS)
-{
-  expect_locks(CAPACITY * 2);
-  for(int i = 0; i < CAPACITY; i++) {
-    b_queue.push(i);
-    auto val = b_queue.front();
-    EXPECT_EQ(val, 0) << "front() should return 0 after " + std::to_string(i + 1) + " elements have been pushed";
-  }
-}
-
-TEST_F(BlockingQueueTest, TEST_BACK_SINGLE_ELEMENT)
-{
-  expect_locks(2);
-  b_queue.push(arg0);
-  auto val = b_queue.back();
-  EXPECT_EQ(val, arg0) << "back() should return 0 after a single element with value 0 is pushed";
-}
-
-TEST_F(BlockingQueueTest, TEST_BACK_MANY_ELEMENTS)
-{
-  expect_locks(CAPACITY * 2);
-  for(int i = 0; i < CAPACITY; i++) {
-    b_queue.push(i);
-    auto val = b_queue.back();
-    EXPECT_EQ(val, i) << "back() should return " + std::to_string(i) + " after " + std::to_string(i + 1) + " elements have been pushed";
-  }
-}
-
-TEST_F(BlockingQueueTest, TEST_SIZE_INITIAL)
-{
   expect_locks(1);
-  int s = b_queue.size();
-  EXPECT_EQ(s, 0) << "size() should return 0 after queue is initialized";
+  b_queue.front();
 }
 
-TEST_F(BlockingQueueTest, TEST_SIZE_AFTER_SINGLE_PUSH_POP)
+TEST_F(BlockingQueueTest, TEST_BACK)
 {
-  expect_locks(4);
-  b_queue.push(arg0);
-  int s = b_queue.size();
-  EXPECT_EQ(s, 1) << "size() should return 1 after a single element has been pushed";
-  b_queue.pop();
-  s = b_queue.size();
-  EXPECT_EQ(s, 0) << "size() should return 0 after a single element has been pushed and popped";
-}
-
-TEST_F(BlockingQueueTest, TEST_SIZE_AFTER_MANY_PUSH_POP)
-{
-  expect_locks(CAPACITY * 4);
-  for(int i = 0; i < CAPACITY; i++) {
-    b_queue.push(i);
-    int s = b_queue.size();
-    EXPECT_EQ(s, i + 1) << "size() should return " + std::to_string(i + 1) + " after " + std::to_string(i + 1) +
-                               " elements have been pushed";
-  }
-  for(int i = 0; i < CAPACITY; i++) {
-    b_queue.pop();
-    int s = b_queue.size();
-    EXPECT_EQ(s, CAPACITY - (i + 1)) << "size() should return " + std::to_string(CAPACITY - (i + 1)) + " after " +
-                                            std::to_string(CAPACITY) + " elements have been pushed and " + std::to_string(i + 1) +
-                                            " elements have been popped";
-  }
-}
-
-TEST_F(BlockingQueueTest, TEST_EMPTY_INITIAL)
-{
+  EXPECT_CALL(my_internal_queue, back()).Times(1);
   expect_locks(1);
-  bool res = b_queue.empty();
-  EXPECT_TRUE(res) << "empty() should return true after deque is initialized";
+  b_queue.back();
 }
 
-TEST_F(BlockingQueueTest, TEST_EMPTY_AFTER_PUSH_BACK_AND_POP)
+TEST_F(BlockingQueueTest, TEST_SIZE)
 {
-  expect_locks(4);
-  b_queue.push(1);
-  bool res = b_queue.empty();
-  EXPECT_FALSE(res) << "empty() should return false after 1 element is pushed to back";
-  b_queue.pop();
-  res = b_queue.empty();
-  EXPECT_TRUE(res) << "empty() should return true after 1 element is pushed to back and 1 element is popped";
+  EXPECT_CALL(my_internal_queue, size()).Times(1);
+  expect_locks(1);
+  b_queue.size();
 }
 
-TEST_F(BlockingQueueTest, TEST_EMPTY_AFTER_PUSH_FRONT_AND_POP)
+TEST_F(BlockingQueueTest, TEST_EMPTY)
 {
-  expect_locks(4);
-  b_queue.push_front(1);
-  bool res = b_queue.empty();
-  EXPECT_FALSE(res) << "empty() should return false after 1 element is pushed to front";
-  b_queue.pop();
-  res = b_queue.empty();
-  EXPECT_TRUE(res) << "empty() should return true after 1 element is pushed to front and 1 element is popped";
+  EXPECT_CALL(my_internal_queue, empty()).Times(1);
+  expect_locks(1);
+  b_queue.empty();
 }
 
-TEST_F(BlockingQueueTest, TEST_EMPTY_AFTER_MULTIPLE_PUSH_POP)
+TEST_F(BlockingQueueTest, TEST_CLEAR)
 {
-  expect_locks(6);
-  b_queue.push_front(1);
-  b_queue.push(2);
-  bool res = b_queue.empty();
-  EXPECT_FALSE(res) << "empty() should return false after 2 elements have been pushed";
-  b_queue.pop();
-  b_queue.pop();
-  res = b_queue.empty();
-  EXPECT_TRUE(res) << "empty() should return true after 2 elements have been pushed and 2 elements have popped";
-}
-
-TEST_F(BlockingQueueTest, TEST_CLEAR_SINGLE_ELEMENT)
-{
-  expect_locks(5);
-  b_queue.push(arg0);
-  int s = b_queue.size();
-  EXPECT_EQ(s, 1) << "size() should return 1 after a single element has been pushed";
+  EXPECT_CALL(my_internal_queue, clear()).Times(1);
+  expect_locks(1);
   b_queue.clear();
-  s = b_queue.size();
-  EXPECT_EQ(s, 0) << "size() should return 0 after clear() has been called on a deque with a single element";
-  bool res = b_queue.empty();
-  EXPECT_TRUE(res) << "empty() should return true after clear() has been called on a deque with a single element";
 }
 
-TEST_F(BlockingQueueTest, TEST_CLEAR_MANY_ELEMENTS)
+TEST_F(BlockingQueueTest, TEST_PUSH)
 {
-  expect_locks(CAPACITY + 4);
-  for(int i = 0; i < CAPACITY; i++) {
-    b_queue.push(i);
-  }
-  int s = b_queue.size();
-  EXPECT_EQ(s, CAPACITY) << "size() should return " + std::to_string(CAPACITY) + " after " + std::to_string(CAPACITY) +
-                                " elements have been pushed";
-  b_queue.clear();
-  s = b_queue.size();
-  EXPECT_EQ(s, 0) << "size() should return 0 after calling clear() on a deque with " + std::to_string(CAPACITY) + " elements";
-  bool res = b_queue.empty();
-  EXPECT_TRUE(res) << "empty() should return true after calling clear() on a deque with " + std::to_string(CAPACITY) + " elements";
+  EXPECT_CALL(my_internal_queue, push_back(arg1)).Times(1);
+  expect_locks(1);
+  b_queue.push(arg1);
 }
 
-TEST_F(BlockingQueueTest, TEST_PUSH_ELEMENT_SEQUENCE)
+TEST_F(BlockingQueueTest, TEST_PUSH_FRONT)
 {
-  int intsToAdd[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-  int arrLength     = sizeof(intsToAdd) / sizeof(intsToAdd[0]);
-  expect_locks(arrLength * 3);
-  for(int i = 0; i < arrLength; i++) {
-    b_queue.push(intsToAdd[i]);
-    int s = b_queue.size();
-    EXPECT_EQ(s, i + 1) << "size() should return " + std::to_string(i + 1) + " after pushing " + std::to_string(i + 1) + " elements";
-    auto val = b_queue.back();
-    EXPECT_EQ(val, intsToAdd[i]) << "back() should return " + std::to_string(intsToAdd[i]) + " after pushing " + std::to_string(i + 1) +
-                                        " elements";
-  }
+  EXPECT_CALL(my_internal_queue, push_front(arg0)).Times(1);
+  expect_locks(1);
+  b_queue.push_front(arg0);
 }
 
-TEST_F(BlockingQueueTest, TEST_PUSH_FRONT_ELEMENT_SEQUENCE)
+TEST_F(BlockingQueueTest, TEST_POP)
 {
-  int intsToAdd[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-  int arrLength     = sizeof(intsToAdd) / sizeof(intsToAdd[0]);
-  expect_locks(arrLength * 3);
-  for(int i = 0; i < arrLength; i++) {
-    b_queue.push_front(intsToAdd[i]);
-    int s = b_queue.size();
-    EXPECT_EQ(s, i + 1) << "size() should return " + std::to_string(i + 1) + " after pushing " + std::to_string(i + 1) + " elements";
-    auto val = b_queue.front();
-    EXPECT_EQ(val, intsToAdd[i]) << "front() should return " + std::to_string(intsToAdd[i]) + " after pushing " + std::to_string(i + 1) +
-                                        " elements";
-  }
-}
-
-TEST_F(BlockingQueueTest, TEST_POP_SINGLE_ELEMENT)
-{
-  expect_locks(2);
-  b_queue.push(arg0);
-  auto val = b_queue.pop();
-  EXPECT_EQ(val, arg0) << "pop() should return 0 when a single element with value 0 has been pushed";
-}
-
-TEST_F(BlockingQueueTest, TEST_POP_MANY_ELEMENTS)
-{
-  expect_locks(CAPACITY * 2);
-  for(int i = 0; i < CAPACITY; i++) {
-    b_queue.push(i);
-  }
-  for(int i = 0; i < CAPACITY; i++) {
-    auto val = b_queue.pop();
-    EXPECT_EQ(val, i) << "pop() should return " + std::to_string(i) + " after pushing " + std::to_string(CAPACITY) +
-                             " elements and popping " + std::to_string(i + 1) + " elements";
-  }
+  EXPECT_CALL(my_internal_queue, pop_front()).Times(1);
+  expect_locks(1);
+  b_queue.pop();
 }
