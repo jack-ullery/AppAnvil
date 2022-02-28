@@ -24,7 +24,7 @@ enum TabState { PROFILE, PROCESS, LOGS, OTHER };
 class ConsoleThread
 {
 public:
-  ConsoleThread(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs);
+  ConsoleThread(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs<StatusColumnRecord>> logs);
   ~ConsoleThread();
 
   // Delete the copy-constructor, move constructor, and copy assignment operator
@@ -68,7 +68,7 @@ private:
   BlockingQueue<Message, std::deque<Message>, std::mutex> queue;
 
   // DispatcherMiddleman used to communicate results with main thread
-  DispatcherMiddleman<Profiles, Processes, Logs, Glib::Dispatcher, std::mutex> dispatch_man;
+  DispatcherMiddleman<Profiles, Processes, Logs<StatusColumnRecord>, Glib::Dispatcher, std::mutex> dispatch_man;
 
   // Synchronization Primitives
   std::mutex task_ready_mtx;
