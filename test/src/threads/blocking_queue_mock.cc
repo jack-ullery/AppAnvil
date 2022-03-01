@@ -15,7 +15,7 @@ public:
   FRIEND_TEST(BlockingQueueTest, TEST_PUSH_FRONT);
   FRIEND_TEST(BlockingQueueTest, TEST_POP);
 
-  explicit BlockingQueueMock(Deque my_internal_queue, std::shared_ptr<Mutex> my_mtx)
+  explicit BlockingQueueMock(std::shared_ptr<Deque> my_internal_queue, std::shared_ptr<Mutex> my_mtx)
       : BlockingQueue<T, Deque, Mutex>(my_internal_queue, my_mtx)
   {
   }

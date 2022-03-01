@@ -1,6 +1,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+// Mock object of Processes class for use in status and dispatcher_middleman tests
 class ProcessesStatusMock
 {
 public:

@@ -14,7 +14,7 @@ DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::DispatcherMid
                                                                                        std::shared_ptr<Processes> proc_arg,
                                                                                        std::shared_ptr<Logs> logs_arg,
                                                                                        std::shared_ptr<Mutex> my_mtx)
-    : queue(std::deque<CallData>(), my_mtx), dispatch{std::move(disp)}, prof{std::move(prof_arg)}, proc{std::move(proc_arg)},
+    : queue(std::make_shared<std::deque<CallData>>(), my_mtx), dispatch{std::move(disp)}, prof{std::move(prof_arg)}, proc{std::move(proc_arg)},
       logs{std::move(logs_arg)}
 {
 }

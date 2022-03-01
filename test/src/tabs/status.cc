@@ -5,6 +5,7 @@
 #include <gtkmm/comboboxtext.h>
 #include <thread>
 
+// Test Fixture for Status class
 class StatusTest : public ::testing::Test
 {
 public:
@@ -246,17 +247,16 @@ TEST_F(StatusTest, CHECK_GET_SELECTION_TEXT)
   EXPECT_EQ(sm.get_selection_text(), text);
 }
 
+// Test for method parse_JSON(...) with an argument that is not in valid JSON format
 TEST_F(StatusTest, PARSE_JSON_INVALID_FORMAT) 
 { 
   std::string raw_json = "";
-  Json::Value res      = sm.parse_JSON(raw_json);
-  ASSERT_TRUE(res.isNull()) << "result of parsing invalid json should be null";
-  EXPECT_EQ(res.type(), Json::ValueType::nullValue) << "ValueType of result should be ValueType.objectValue";
+  EXPECT_THROW(sm.parse_JSON(raw_json), std::invalid_argument);
 }
 
+// Test for method parse_JSON(...) with an argument containing a null value
 TEST_F(StatusTest, PARSE_JSON_NULL_VALUE)
 {
-  // Testing parse_JSON with a null value
   std::string raw_json = "{\"testKey\": null}";
   Json::Value res      = sm.parse_JSON(raw_json);
   ASSERT_FALSE(res.isNull()) << "result of parsing json should not be null";
@@ -265,9 +265,9 @@ TEST_F(StatusTest, PARSE_JSON_NULL_VALUE)
   EXPECT_TRUE(res["testKey"].isNull()) << "value of property testKey should be null";
 }
 
+// Test for method parse_JSON(...) with an argument containing a string value
 TEST_F(StatusTest, PARSE_JSON_STRING_VALUE)
 {
-  // Testing parse_JSON with a string value
   std::string raw_json = "{\"testKey\": \"testString\"}";
   Json::Value res      = sm.parse_JSON(raw_json);
   ASSERT_FALSE(res.isNull()) << "result of parsing json should not be null";
@@ -276,9 +276,9 @@ TEST_F(StatusTest, PARSE_JSON_STRING_VALUE)
   EXPECT_EQ(res["testKey"], "testString") << "value of property testKey should be testString";
 }
 
+// Test for method parse_JSON(...) with an argument containing an int value
 TEST_F(StatusTest, PARSE_JSON_INT_VALUE)
 {
-  // Testing parse_JSON with an int value
   std::string raw_json = "{\"testKey\": 10}";
   Json::Value res      = sm.parse_JSON(raw_json);
   ASSERT_FALSE(res.isNull()) << "result of parsing json should not be null";
@@ -287,9 +287,9 @@ TEST_F(StatusTest, PARSE_JSON_INT_VALUE)
   EXPECT_EQ(res["testKey"], 10) << "value of property testKey should be 10";
 }
 
+// Test for method parse_JSON(...) with an argument containing a real (double) value
 TEST_F(StatusTest, PARSE_JSON_REAL_VALUE)
 {
-  // Testing parse_JSON with a real (double) value
   std::string raw_json = "{\"testKey\": 5.0}";
   Json::Value res      = sm.parse_JSON(raw_json);
   ASSERT_FALSE(res.isNull()) << "result of parsing json should not be null";
@@ -298,9 +298,9 @@ TEST_F(StatusTest, PARSE_JSON_REAL_VALUE)
   EXPECT_EQ(res["testKey"], 5.0) << "value of property testKey should be 5.0";
 }
 
+// Test for method parse_JSON(...) with an argument containing a boolean value
 TEST_F(StatusTest, PARSE_JSON_BOOLEAN_VALUE)
 {
-  // Testing parse_JSON with a boolean value
   std::string raw_json = "{\"testKey\": true}";
   Json::Value res      = sm.parse_JSON(raw_json);
   ASSERT_FALSE(res.isNull()) << "result of parsing json should not be null";
@@ -309,9 +309,9 @@ TEST_F(StatusTest, PARSE_JSON_BOOLEAN_VALUE)
   EXPECT_EQ(res["testKey"], true) << "value of property testKey should be true";
 }
 
+// Test for method parse_JSON(...) with an argument containing an array value
 TEST_F(StatusTest, PARSE_JSON_ARRAY_VALUE)
 {
-  // Testing parse_JSON with an array value
   std::string raw_json = "{\"testKey\": [\"string1\", \"string2\", \"string3\"]}";
   Json::Value res      = sm.parse_JSON(raw_json);
   ASSERT_FALSE(res.isNull()) << "result of parsing json should not be null";
@@ -322,9 +322,9 @@ TEST_F(StatusTest, PARSE_JSON_ARRAY_VALUE)
   EXPECT_EQ(res["testKey"][2], "string3") << "value of third element of property testKey should be string3";
 }
 
+// Test for method parse_JSON(...) with an argument containing an object value
 TEST_F(StatusTest, PARSE_JSON_OBJECT_VALUE)
 {
-  // Testing parse_JSON with an object value
   std::string raw_json = "{\"testKey\": {\"subKey1\": \"string1\", \"subKey2\": 20, \"subKey3\": true}}";
   Json::Value res      = sm.parse_JSON(raw_json);
   ASSERT_FALSE(res.isNull()) << "result of parsing json should not be null";
@@ -335,9 +335,11 @@ TEST_F(StatusTest, PARSE_JSON_OBJECT_VALUE)
   EXPECT_EQ(res["testKey"]["subKey3"], true) << "value of property subKey3 within testKey should be true";
 }
 
+// Test for method parse_JSON(...) with an argument containing a sample snippet of output taken from running
+// 'aa-status --json' in a linux terminal. The passed argument is an example of the types of arguments that the
+// method parse_JSON(...) will receive during actual use
 TEST_F(StatusTest, PARSE_JSON_SAMPLE_INPUT)
 {
-  // Testing parse_JSON with a sample snippet of output taken from running "aa-status --json" in linux terminal
   std::string raw_json =
       "{\"version\" : \"1\", \"profiles\" : {\"/snap/snapd/14978/usr/lib/snapd/snap-confine\" : \"enforce\", \"/usr/bin/evince\" : "
       "\"complain\"}, \"processes\": {\"/usr/sbin/cupsd\" : [ {\"profile\" : \"/usr/sbin/cupsd\", \"pid\" : \"616\", \"status\" : "

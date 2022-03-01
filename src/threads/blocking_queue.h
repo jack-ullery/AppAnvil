@@ -14,8 +14,7 @@ public:
   // Constructor
   BlockingQueue();
   // For unit testing
-  //explicit BlockingQueue(std::deque<T> my_internal_queue, std::shared_ptr<Mutex> my_mtx);
-  explicit BlockingQueue(Deque my_internal_queue, std::shared_ptr<Mutex> my_mtx);
+  explicit BlockingQueue(std::shared_ptr<Deque> my_internal_queue, std::shared_ptr<Mutex> my_mtx);
 
   // Accessor Methods
   T front();
@@ -31,8 +30,7 @@ public:
 
 private:
   // The internal queue that this class acts as a wrapper for
-  //std::deque<T> internal_queue;
-  Deque internal_queue;
+  std::shared_ptr<Deque> internal_queue;
   // A mutex to lock the queue when performing operations
   std::shared_ptr<Mutex> mtx;
 };
