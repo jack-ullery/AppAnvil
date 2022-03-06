@@ -35,15 +35,15 @@ std::string AppArmorCaller::get_status(AppArmorCaller *caller)
 
 std::string AppArmorCaller::get_unconfined(AppArmorCaller *caller)
 {
-  std::vector<std::string> command = {"aa-unconfined"};
-  std::string return_on_error;
+  std::vector<std::string> command = {"ps", "-A", "--format", "pid,ppid,user,context,comm", "--no-header"};
+  std::string return_on_error = "";
   return caller->call_command(command, return_on_error);
 }
 
 std::string AppArmorCaller::get_logs(AppArmorCaller *caller)
 {
   std::vector<std::string> command = {"dmesg", "--ctime"};
-  std::string return_on_error;
+  std::string return_on_error = "";
   return caller->call_command(command, return_on_error);
 }
 

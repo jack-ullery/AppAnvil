@@ -1,52 +1,40 @@
 #include "processes.h"
 
-#include "jsoncpp/json/json.h"
-
 #include <string>
 
 // clang-tidy throws [cert-err58-cpp], but it's not a problem in this case, so lets ignore it.
-const std::regex filter_unconfined_proc("\\b([1234567890]+) ([^ ]+) (not confined)"); // NOLINT(cert-err58-cpp)
+const std::regex unconfined_proc("^\\s*(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(unconfined|\\S+ \\(\\S+\\))\\s+(\\S+)"); // NOLINT(cert-err58-cpp)
 
-// Need to improve!
-void Processes::add_data_to_record(const std::string &confined, const std::string &unconfined)
+void Processes::add_row_from_line(const std::shared_ptr<StatusColumnRecord> &col_record, const std::string &line)
 {
-  Json::Value root      = Status::parse_JSON(confined);
-  Json::Value processes = root["processes"];
+  auto row = col_record->new_row();
 
+  std::smatch match;
+  std::regex_search(line, match, unconfined_proc);
+
+  std::string pid    = match[1]; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  std::string ppid   = match[2]; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  std::string user   = match[3]; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  std::string status = match[4]; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  std::string comm   = match[5]; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
+  col_record->set_row_data(row, 0, comm);   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  col_record->set_row_data(row, 1, user);   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  col_record->set_row_data(row, 2, pid);    // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  col_record->set_row_data(row, 3, status); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+}
+
+void Processes::add_data_to_record(const std::string &unconfined)
+{
+  // Delete all the data from col_record
   col_record->clear();
 
-  for(auto proc = processes.begin(); proc != processes.end(); proc++) {
-    const std::string &key = proc.key().asString();
-    auto row               = col_record->new_row();
-    col_record->set_row_data(row, 0, key);
+  std::stringstream data;
+  data << unconfined;
 
-    Json::Value val = (*proc)[0];
-
-    for(auto inst = proc->begin(); inst != proc->end(); inst++) {
-      auto child = col_record->new_child_row(row);
-      col_record->set_row_data(
-          child, 0, "pid: " + inst->get("pid", "Unknown").asString() + "\t status: " + inst->get("status", "Unknown").asString());
-    }
-  }
-
-  std::stringstream unconfined_results;
   std::string line;
-  unconfined_results << unconfined;
-
-  while(std::getline(unconfined_results, line)) {
-    std::smatch m;
-    bool re = regex_search(line, m, filter_unconfined_proc);
-
-    if(re) {
-      std::string prof_name = m[2].str();
-      std::string pid       = m[1].str();
-
-      auto row = col_record->new_row();
-      col_record->set_row_data(row, 0, m[2].str());
-
-      auto child = col_record->new_child_row(row);
-      col_record->set_row_data(child, 0, "pid: " + m[1].str() + "\t status: " + "unconfined");
-    }
+  while(std::getline(data, line)) {
+    add_row_from_line(col_record, line);
   }
 
   refresh();

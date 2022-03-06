@@ -49,9 +49,8 @@ void ConsoleThread::run_command(TabState state)
   } break;
 
   case PROCESS: {
-    std::string status = CommandCaller::get_status();
     std::string unconf = CommandCaller::get_unconfined();
-    dispatch_man.update_processes(status, unconf);
+    dispatch_man.update_processes(unconf);
   } break;
 
   case LOGS: {
