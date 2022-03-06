@@ -14,25 +14,25 @@ protected:
 
 TEST_F(CommandCallerTest, TEST_STATUS)
 {
-  std::vector<std::string> command = {"pkexec", "aa-status", "--json"};
+  std::vector<std::string> command = {"pkexec", "aa-caller", "-s"};
   EXPECT_CALL(tester, call_command(command, _)).Times(1).WillOnce(Return(test_str));
 
-  std::string output = CommandCallerMock::get_status_str(&tester);
+  std::string output = CommandCallerMock::get_status(&tester);
   EXPECT_EQ(output, test_str);
 }
 
 TEST_F(CommandCallerTest, TEST_LOG)
 {
-  std::vector<std::string> command = {"dmesg", "--ctime"};
+  std::vector<std::string> command = {"pkexec", "aa-caller", "-l"};
   EXPECT_CALL(tester, call_command(command, _)).Times(1).WillOnce(Return(test_str));
 
-  std::string output = CommandCallerMock::get_logs_str(&tester);
+  std::string output = CommandCallerMock::get_logs(&tester);
   EXPECT_EQ(output, test_str);
 }
 
 TEST_F(CommandCallerTest, TEST_UNCONF)
 {
-  std::vector<std::string> command = {"pkexec", "aa-unconfined"};
+  std::vector<std::string> command = {"pkexec", "aa-caller", "-u"};
   EXPECT_CALL(tester, call_command(command, _)).Times(1).WillOnce(Return(test_str));
 
   std::string output = CommandCallerMock::get_unconfined(&tester);

@@ -2,6 +2,7 @@
 <gresources>
   <gresource>
     <file>resources/icon.svg</file>
+    <file>resources/icon.glade</file>
     <file preprocess="xml-stripblanks">resources/status.glade</file>
   </gresource>
 </gresources>

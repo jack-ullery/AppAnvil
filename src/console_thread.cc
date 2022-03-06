@@ -44,18 +44,17 @@ void ConsoleThread::run_command(TabState state)
 {
   switch(state) {
   case PROFILE: {
-    std::string status = CommandCaller::get_status_str();
+    std::string status = CommandCaller::get_status();
     dispatch_man.update_profiles(status);
   } break;
 
   case PROCESS: {
-    std::string status = CommandCaller::get_status_str();
     std::string unconf = CommandCaller::get_unconfined();
-    dispatch_man.update_processes(status, unconf);
+    dispatch_man.update_processes(unconf);
   } break;
 
   case LOGS: {
-    std::string logs = CommandCaller::get_logs_str();
+    std::string logs = CommandCaller::get_logs();
     dispatch_man.update_logs(logs);
   } break;
 

@@ -8,9 +8,6 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-using ::testing::_;
-using ::testing::InvokeWithoutArgs;
-using ::testing::Return;
 using ::testing::Sequence;
 
 class DispatcherMiddlemanTest : public ::testing::Test
@@ -26,10 +23,9 @@ protected:
 
   void expect_locks(unsigned int num);
 
-  std::string profiles_arg   = "string argument for 'profiles.add_data()'";
-  std::string processes_arg1 = "first string argument for 'processes.add_data()'";
-  std::string processes_arg2 = "second string argument for 'processes.add_data()'";
-  std::string logs_arg       = "string argument for 'logs.add_data()'";
+  std::string profiles_arg  = "string argument for 'profiles.add_data()'";
+  std::string processes_arg = "string argument for 'processes.add_data()'";
+  std::string logs_arg      = "string argument for 'logs.add_data()'";
 
   std::shared_ptr<GlibDispatcherMock> disp;
   std::shared_ptr<ProfilesMock> prof;
@@ -70,11 +66,11 @@ TEST_F(DispatcherMiddlemanTest, UPDATE_PROCESSES)
 {
   Sequence main_calls;
   EXPECT_CALL(*disp, emit()).Times(1).InSequence(main_calls);
-  EXPECT_CALL(*proc, add_data_to_record(processes_arg1, processes_arg2)).Times(1).InSequence(main_calls);
+  EXPECT_CALL(*proc, add_data_to_record(processes_arg)).Times(1).InSequence(main_calls);
 
   expect_locks(2);
 
-  dispatch_man.update_processes(processes_arg1, processes_arg2);
+  dispatch_man.update_processes(processes_arg);
   dispatch_man.handle_signal();
 }
 
@@ -95,13 +91,13 @@ TEST_F(DispatcherMiddlemanTest, UPDATE_PROFILES_PROCESSES_SEQUENTIAL)
   EXPECT_CALL(*disp, emit()).Times(2);
 
   EXPECT_CALL(*prof, add_data_to_record(profiles_arg)).Times(1);
-  EXPECT_CALL(*proc, add_data_to_record(processes_arg1, processes_arg2)).Times(1);
+  EXPECT_CALL(*proc, add_data_to_record(processes_arg)).Times(1);
 
   expect_locks(4);
 
   dispatch_man.update_profiles(profiles_arg);
   dispatch_man.handle_signal();
-  dispatch_man.update_processes(processes_arg1, processes_arg2);
+  dispatch_man.update_processes(processes_arg);
   dispatch_man.handle_signal();
 }
 
@@ -110,12 +106,12 @@ TEST_F(DispatcherMiddlemanTest, UPDATE_PROFILES_PROCESSES_INTERLOCKING)
   EXPECT_CALL(*disp, emit()).Times(2);
 
   EXPECT_CALL(*prof, add_data_to_record(profiles_arg)).Times(1);
-  EXPECT_CALL(*proc, add_data_to_record(processes_arg1, processes_arg2)).Times(1);
+  EXPECT_CALL(*proc, add_data_to_record(processes_arg)).Times(1);
 
   expect_locks(4);
 
   dispatch_man.update_profiles(profiles_arg);
-  dispatch_man.update_processes(processes_arg1, processes_arg2);
+  dispatch_man.update_processes(processes_arg);
   dispatch_man.handle_signal();
   dispatch_man.handle_signal();
 }

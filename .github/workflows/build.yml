@@ -1,8 +1,6 @@
-name: Build & Release
+name: Build, Format, & Release
 
-on:
-  push:
-    branches: [ main ]
+on: push
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -16,7 +14,10 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Install Dependencies
-      run: sudo apt-get install libgtkmm-3.0-dev libjsoncpp-dev libgtest-dev libgmock-dev clang-tidy cppcheck xvfb clang-format-12
+      run: |
+        sudo apt-get update
+        sudo apt upgrade
+        sudo apt-get install libgtkmm-3.0-dev libjsoncpp-dev libgtest-dev libgmock-dev clang-tidy cppcheck xvfb clang-format-12
     
     - name: Configure CMake
       run: cmake .
@@ -33,15 +34,19 @@ jobs:
       # Run the unit tests
       run: xvfb-run --auto-servernum ./dist/appanvil_test
 
-      # Creates pre-release and automatically uploads assets using code from this repository: https://github.com/marvinpinto/action-automatic-releases
-      # I haven't checked the code myself, but I assume there isn't any weird supply chain attack
-    - uses: "marvinpinto/action-automatic-releases@latest"
-      with:
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: "latest"
-        prerelease: true
-        title: "Development Build"
-        files: |
-          LICENSE
-          ./dist/appanvil
- 
+    - name: setup git config
+      run: |
+        # setup the username and email for the bot. Using 'GitHub Actions Bot' with no email by default
+        git config user.name "GitHub Actions Bot"
+        git config user.email "<>"
+        
+    - name: commit
+      run: |
+        num_files_changed=$(git diff --numstat | wc -l)
+        if [ $num_files_changed != 0 ]; then 
+          # Stage the changed files, commit and push
+          git add ./src/* ./test/src/* ./aa-caller/src/*;
+          git commit -m "Format code";
+          git push;
+        fi;
+        

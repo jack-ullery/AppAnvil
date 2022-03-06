@@ -20,7 +20,7 @@ public:
    *
    * @returns std::string the raw output of aa-status
    */
-  static std::string get_status_str();
+  static std::string get_status();
 
   /**
    * @brief Return the output of `dmesg`
@@ -30,7 +30,7 @@ public:
    *
    * @returns std::string the raw output of `dmesg`
    */
-  static std::string get_logs_str();
+  static std::string get_logs();
 
   /**
    * @brief Return the output of `aa-unconfined`
@@ -73,8 +73,8 @@ protected:
   virtual std::string call_command(const std::vector<std::string> &command, const std::string &return_on_error);
 
   // Dependency Injection: For unit testing
-  static std::string get_status_str(CommandCaller *caller);
-  static std::string get_logs_str(CommandCaller *caller);
+  static std::string get_status(CommandCaller *caller);
+  static std::string get_logs(CommandCaller *caller);
   static std::string get_unconfined(CommandCaller *caller);
   static std::string load_profile(CommandCaller *caller, const std::string &fullFileName);
   static std::string disable_profile(CommandCaller *caller, const std::string &profileName);
