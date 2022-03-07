@@ -80,7 +80,7 @@ Json::Value Status::parse_JSON(const std::string &raw_json)
   JSONCPP_STRING errs;
 
   if(!parseFromStream(builder, stream, &root, &errs)) {
-    std::cout << errs << std::endl;
+    throw std::invalid_argument(errs + "\nArgument of parse_JSON is not in valid JSON format.");
   }
 
   return root;

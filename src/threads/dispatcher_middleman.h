@@ -40,7 +40,7 @@ protected:
   void handle_signal();
 
 private:
-  BlockingQueue<CallData, Mutex> queue;
+  BlockingQueue<CallData, std::deque<CallData>, Mutex> queue;
   std::shared_ptr<Dispatcher> dispatch;
 
   std::shared_ptr<Profiles> prof;

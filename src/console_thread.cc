@@ -5,7 +5,8 @@
 #include <iostream>
 #include <tuple>
 
-ConsoleThread::ConsoleThread(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs)
+ConsoleThread::ConsoleThread(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc,
+                             std::shared_ptr<Logs<StatusColumnRecord>> logs)
     : dispatch_man(std::move(prof), std::move(proc), std::move(logs))
 {
   asynchronous_thread = std::async(std::launch::async, &ConsoleThread::console_caller, this);
