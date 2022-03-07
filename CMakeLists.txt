@@ -17,7 +17,7 @@ set(
   ${PROJECT_SOURCE_DIR}/tabs/status.cc
   ${PROJECT_SOURCE_DIR}/tabs/profiles.cc
   ${PROJECT_SOURCE_DIR}/tabs/processes.cc
-  ${PROJECT_SOURCE_DIR}/tabs/logs.cc
+  ${PROJECT_SOURCE_DIR}/tabs/logs.h
 )
 
 ### All the code globbed together for easy formatting ###

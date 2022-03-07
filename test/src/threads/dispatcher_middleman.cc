@@ -1,6 +1,6 @@
-#include "../tabs/logs_mock.cc"
-#include "../tabs/processes_mock.cc"
-#include "../tabs/profiles_mock.cc"
+#include "../tabs/logs_status_mock.cc"
+#include "../tabs/processes_status_mock.cc"
+#include "../tabs/profiles_status_mock.cc"
 #include "./dispatcher_middleman_mock.cc"
 #include "./mutex_mock.cc"
 
@@ -8,16 +8,13 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-using ::testing::_;
-using ::testing::InvokeWithoutArgs;
-using ::testing::Return;
 using ::testing::Sequence;
 
 class DispatcherMiddlemanTest : public ::testing::Test
 {
 protected:
   DispatcherMiddlemanTest()
-      : disp{new GlibDispatcherMock()}, prof{new ProfilesMock()}, proc{new ProcessesMock()}, logs{new LogsMock()},
+      : disp{new GlibDispatcherMock()}, prof{new ProfilesStatusMock()}, proc{new ProcessesStatusMock()}, logs{new LogsStatusMock()},
         mtx_mock{new MutexMock()}, dispatch_man(disp, prof, proc, logs, mtx_mock)
   {
   }
@@ -31,12 +28,12 @@ protected:
   std::string logs_arg      = "string argument for 'logs.add_data()'";
 
   std::shared_ptr<GlibDispatcherMock> disp;
-  std::shared_ptr<ProfilesMock> prof;
-  std::shared_ptr<ProcessesMock> proc;
-  std::shared_ptr<LogsMock> logs;
+  std::shared_ptr<ProfilesStatusMock> prof;
+  std::shared_ptr<ProcessesStatusMock> proc;
+  std::shared_ptr<LogsStatusMock> logs;
   std::shared_ptr<MutexMock> mtx_mock;
 
-  DispatcherMiddlemanMock<ProfilesMock, ProcessesMock, LogsMock, GlibDispatcherMock, MutexMock> dispatch_man;
+  DispatcherMiddlemanMock<ProfilesStatusMock, ProcessesStatusMock, LogsStatusMock, GlibDispatcherMock, MutexMock> dispatch_man;
 };
 
 // Expect the mutex to be locked and unlocked `num` times
