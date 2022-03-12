@@ -33,7 +33,7 @@ protected:
 };
 
 // Test for method add_row_from_line(...)
-/* TEST_F(LogsTest, TEST_ADD_ROW_FROM_LINE)
+TEST_F(LogsTest, TEST_ADD_ROW_FROM_LINE)
 {
   EXPECT_CALL(*col_record_mock, new_row()).Times(1);
   EXPECT_CALL(*col_record_mock, set_row_data).Times(6);
@@ -82,4 +82,4 @@ TEST_F(LogsTest, TEST_REFRESH)
   EXPECT_CALL(*col_record_mock, filter_rows()).Times(1);
 
   logs.refresh();
-}*/
+}
