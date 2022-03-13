@@ -42,7 +42,8 @@ std::string AppArmorCaller::get_unconfined(AppArmorCaller *caller)
 
 std::string AppArmorCaller::get_logs(AppArmorCaller *caller)
 {
-  std::vector<std::string> command = {"journalctl", "-b", "_AUDIT_TYPE=1400", "--output=json"};
+  //2004-10-20 00:00:00 marks the release date of ubuntu, no earlier logs should exist
+  std::vector<std::string> command = {"journalctl", "-b", "_AUDIT_TYPE=1400", "--since  \"2004-10-20 00:00:00\"","--output=json"};
   std::string return_on_error = "";
   return caller->call_command(command, return_on_error);
 }
