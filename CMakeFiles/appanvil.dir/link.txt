@@ -1,0 +1,1 @@
+/usr/bin/c++   -Wall -Wextra -g   CMakeFiles/appanvil.dir/src/main.cc.o  -o dist/appanvil  lib/libappanvil_main.a -lgtkmm-3.0 -latkmm-1.6 -lgdkmm-3.0 -lgiomm-2.4 -lpangomm-1.4 -lglibmm-2.4 -lgtk-3 -lgdk-3 -lpangocairo-1.0 -lpango-1.0 -lharfbuzz -latk-1.0 -lcairo-gobject -lgio-2.0 -lcairomm-1.0 -lcairo -lsigc-2.0 -lgdk_pixbuf-2.0 -lgobject-2.0 -lglib-2.0 -ljsoncpp -lpthread 

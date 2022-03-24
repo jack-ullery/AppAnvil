@@ -1,0 +1,4 @@
+# Hashes of file build rules.
+39670156b8ee94813d2d1bc25c9c545f CMakeFiles/FORMAT
+e5d7d6703972e9e77b7039e0e6ebd4c4 CMakeFiles/uninstall
+21daaa8241e6c0425b0dc241d10f9707 resources/resource.autogen.c
