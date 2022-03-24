@@ -14,8 +14,8 @@ DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::DispatcherMid
                                                                                        std::shared_ptr<Processes> proc_arg,
                                                                                        std::shared_ptr<Logs> logs_arg,
                                                                                        std::shared_ptr<Mutex> my_mtx)
-    : queue(std::deque<CallData>(), my_mtx), dispatch{std::move(disp)}, prof{std::move(prof_arg)}, proc{std::move(proc_arg)},
-      logs{std::move(logs_arg)}
+    : queue(std::make_shared<std::deque<CallData>>(), my_mtx), dispatch{std::move(disp)}, prof{std::move(prof_arg)},
+      proc{std::move(proc_arg)}, logs{std::move(logs_arg)}
 {
 }
 
@@ -29,10 +29,9 @@ void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_p
 }
 
 template<class Profiles, class Processes, class Logs, class Dispatcher, class Mutex>
-void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_processes(const std::string &confined,
-                                                                                         const std::string &unconfined)
+void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_processes(const std::string &unconfined)
 {
-  CallData data(PROCESS, confined, unconfined);
+  CallData data(PROCESS, unconfined);
   queue.push(data);
   dispatch->emit();
 }
@@ -66,7 +65,7 @@ void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::handle_s
     break;
 
   case PROCESS:
-    proc->add_data_to_record(data.arg_1, data.arg_2);
+    proc->add_data_to_record(data.arg_1);
     break;
 
   case LOGS:

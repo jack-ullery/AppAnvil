@@ -2,12 +2,16 @@
 
 #include <tuple>
 
-MainWindow::MainWindow() : prof{new Profiles()}, proc{new Processes()}, logs{new Logs()}, console{new ConsoleThread(prof, proc, logs)}
+MainWindow::MainWindow()
+    : prof{new Profiles()}, proc{new Processes()}, logs{new Logs<StatusColumnRecord>()}, about{new About()}, file_chooser{new FileChooser()}, console{new ConsoleThread(prof, proc, logs)}
 {
   // Add tabs to the stack pane
   m_stack.add(*prof, "prof", "Profiles");
   m_stack.add(*proc, "proc", "Processes");
   m_stack.add(*logs, "logs", "Logs");
+  m_stack.add(*file_chooser, "file_chooser", "Load Profile");
+  m_stack.add(*about, "about", "About Me");
+
 
   // Attach the stack to the stack switcher
   m_switcher.set_stack(m_stack);
@@ -29,8 +33,13 @@ MainWindow::MainWindow() : prof{new Profiles()}, proc{new Processes()}, logs{new
   m_headerbar.set_hexpand(true);
   m_headerbar.set_show_close_button(true);
 
+  // Set the icon
+  auto builder         = Gtk::Builder::create_from_resource("/resources/icon.glade");
+  Gtk::Image *icon_ptr = nullptr;
+  builder->get_widget<Gtk::Image>("icon", icon_ptr);
+  this->set_icon(icon_ptr->get_pixbuf());
+
   // Set some default settings for the window
-  this->set_icon_from_file("./resources/icon.svg");
   this->set_default_size(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
   this->add_events(Gdk::EventMask::ENTER_NOTIFY_MASK);
 
@@ -48,6 +57,9 @@ void MainWindow::send_status_change(const std::string &profile, const std::strin
 bool MainWindow::on_switch(GdkEvent *event)
 {
   std::ignore = event;
+  
+  //make sure to clear the success label on the load tab 
+  file_chooser->clearLabel();
 
   std::string visible_child = m_stack.get_visible_child_name();
 

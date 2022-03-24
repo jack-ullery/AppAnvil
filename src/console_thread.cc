@@ -5,7 +5,8 @@
 #include <iostream>
 #include <tuple>
 
-ConsoleThread::ConsoleThread(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs)
+ConsoleThread::ConsoleThread(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc,
+                             std::shared_ptr<Logs<StatusColumnRecord>> logs)
     : dispatch_man(std::move(prof), std::move(proc), std::move(logs))
 {
   asynchronous_thread = std::async(std::launch::async, &ConsoleThread::console_caller, this);
@@ -49,9 +50,8 @@ void ConsoleThread::run_command(TabState state)
   } break;
 
   case PROCESS: {
-    std::string status = CommandCaller::get_status();
     std::string unconf = CommandCaller::get_unconfined();
-    dispatch_man.update_processes(status, unconf);
+    dispatch_man.update_processes(unconf);
   } break;
 
   case LOGS: {
