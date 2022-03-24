@@ -1,8 +1,15 @@
+#include "../../../src/tabs/logs.h"
+
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-class LogsMock
+template<class ColumnRecord> class LogsMock : public Logs<ColumnRecord>
 {
 public:
-  MOCK_METHOD(void, add_data_to_record, (const std::string &data));
+  /*FRIEND_TEST(LogsTabTest, TEST_ADD_ROW_FROM_LINE);
+  FRIEND_TEST(LogsTabTest, TEST_ADD_DATA_TO_RECORD);
+  FRIEND_TEST(LogsTabTest, TEST_PARSE_LINE);
+  FRIEND_TEST(LogsTabTest, TEST_REFRESH);*/
+
+  explicit LogsMock(std::shared_ptr<ColumnRecord> col_record) : Logs<ColumnRecord>(col_record) { }
 };
