@@ -20,8 +20,8 @@ The AppAnvil project aims to create an intuitive graphical interface for monitor
 ## Compile Time
 * cmake
 * g++ (or another equivalent c++ compiler)
-* libgtkmm-3.0-dev
-* libjsoncpp-dev
+* GTKmm (libgtkmm-3.0-dev)
+* JsonCpp (libjsoncpp-dev)
 * apparmor-utils
 
 ## Optional
@@ -36,8 +36,8 @@ Code beautifier/formatter
 * clang-format
 
 Unit Tests
-* googletest
-* googlemock
+* googletest (libgtest-dev)
+* googlemock (libgmock-dev)
 
 # Compilation Instructions
 
