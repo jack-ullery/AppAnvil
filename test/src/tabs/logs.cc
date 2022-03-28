@@ -1,10 +1,12 @@
 #include "logs_mock.cc"
 #include "status_column_record_mock.cc"
+#include "jsoncpp/json/json.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 using ::testing::Sequence;
+using ::testing::_;
 
 // Test Fixture for Logs class
 class LogsTest : public ::testing::Test
@@ -12,68 +14,96 @@ class LogsTest : public ::testing::Test
 protected:
   LogsTest() : col_record_mock{new StatusColumnRecordMock()}, logs(col_record_mock) { }
 
-  virtual void SetUp() { }
 
-  // The below strings were obtained by using the command 'dmesg --ctime | grep "audit: type=1400"' in the terminal, which is how appanvil
-  // gets the log information from vars/logs/kern.log. This is done to test the methods in logs.inl with realistic sample strings and is
-  // necessary for the add_data_to_record method which only calls add_row_to_line when a string that matches filter_regex_log is passed
+  // Some of the sample snippets of information below were taken from the output of running 'journalctl -b "_AUDIT_TYPE=1400" --output=json' 
+  // in the terminal. They are mostly used to verify that information is being formatted correctly in format_log_data and format_timestamp.
+  // A string in valid json format is also necessary to test the functionality of add_row_from_json and add_data_to_record as they will 
+  // throw an exception when trying to parse the json data otherwise.
+  std::string sample_log_data_type      = "\"STATUS\"";
+  std::string sample_log_data_operation = "\"profile_load\"";
+  std::string sample_log_data_status    = "\"unconfined\"";
+  time_t sample_log_data_timestamp      = (time_t) 1648234140;  // Fri Mar 25 14:49:00 2022 (time as of writing tests (Eastern Time))
+  time_t zerotime                       = (time_t) 0;           // Thu Jan 1st 00:00:00 1970 (UTC) (Wed Dec 31 19:00:00 1969 in Eastern Time)
+  std::regex timestamp_regex            = std::regex("\\w{3}\\s{1}\\w{3}\\s{1}\\d{1,2}\\s{1}\\d{2}:\\d{2}:\\d{2}\\s{1}\\d{4}\\t");
+  std::string journalctl_json_snippet   = "{\"_SOURCE_REALTIME_TIMESTAMP\" : \"1648231725959000\",\"_AUDIT_FIELD_APPARMOR\" : \"\\\"STATUS\\\"\","
+                                       "\"_AUDIT_FIELD_OPERATION\" : \"\\\"profile_load\\\"\",\"_AUDIT_FIELD_NAME\" : \"nvidia_modprobe\","
+                                       "\"_PID\" : \"601\",\"_AUDIT_FIELD_PROFILE\" : \"\\\"unconfined\\\"\"}";
 
-  std::string line_arg = "[Sun Feb 27 19:15:47 2022] audit: type=1400 audit(1646007318.315:2): apparmor=\"STATUS\" "
-                         "operation=\"profile_load\" profile=\"unconfined\" name=\"nvidia_modprobe\" pid=561 comm=\"apparmor_parser\"";
-  std::string data_arg =
-      "[Sun Feb 27 19:15:47 2022] audit: type=1400 audit(1646007318.315:3): apparmor=\"STATUS\" operation=\"profile_load\" "
-      "profile=\"unconfined\" name=\"nvidia_modprobe//kmod\" pid=561 comm=\"apparmor_parser\"\n"
-      "[Sun Feb 27 19:15:47 2022] audit: type=1400 audit(1646007318.315:4): apparmor=\"STATUS\" operation=\"profile_load\" "
-      "profile=\"unconfined\" name=\"/usr/bin/man\" pid=560 comm=\"apparmor_parser\"";
-
-  int data_arg_num_lines = 2;
-
+  // Mock objects
   std::shared_ptr<StatusColumnRecordMock> col_record_mock;
   LogsMock<StatusColumnRecordMock> logs;
 };
 
+<<<<<<< Updated upstream
 // Test for method add_row_from_line(...)
 TEST_F(LogsTest, TEST_ADD_ROW_FROM_LINE)
 {
+=======
+// Test for method format_log_data
+TEST_F(LogsTest, TEST_FORMAT_LOG_DATA) 
+{ 
+  std::string formatted_type      = logs.format_log_data(sample_log_data_type);
+  std::string formatted_operation = logs.format_log_data(sample_log_data_operation);
+  std::string formatted_status    = logs.format_log_data(sample_log_data_status);
+
+  EXPECT_EQ(formatted_type, "STATUS") << "error formatting sample type from log data";
+  EXPECT_EQ(formatted_operation, "profile_load") << "error formatting sample operation from log data";
+  EXPECT_EQ(formatted_status, "unconfined") << "error formatting sample status from log data";
+}
+
+// Test for method format_timestamp
+TEST_F(LogsTest, TEST_FORMAT_TIMESTAMP) 
+{ 
+  std::string formatted_timestamp = logs.format_timestamp(sample_log_data_timestamp); 
+  std::string formatted_zerotime = logs.format_timestamp(zerotime);
+
+  bool res = std::regex_match(formatted_timestamp, timestamp_regex);
+  ASSERT_TRUE(res) << "formatted timestamp does not match regex";
+  res = std::regex_match(formatted_zerotime, timestamp_regex);
+  ASSERT_TRUE(res) << "formatted zerotime does not match regex";
+
+  // Note that the expected values are in Eastern Time not in UTC because the timestamp is converted to localtime in format_timestamp
+  EXPECT_EQ(formatted_timestamp, "Fri Mar 25 14:49:00 2022\t") << "error formatting sample timestamp from log data";
+  EXPECT_EQ(formatted_zerotime, "Wed Dec 31 19:00:00 1969\t") << "error formatting zerotime timestamp";
+}
+
+// Test for method add_row_from_json
+TEST_F(LogsTest, TEST_ADD_ROW_FROM_JSON) 
+{ 
+  Json::Value root;
+  Json::CharReaderBuilder builder;
+  JSONCPP_STRING errs;
+  std::stringstream stream;
+  stream << journalctl_json_snippet;
+
+  bool res = parseFromStream(builder, stream, &root, &errs);
+  ASSERT_EQ(res, true) << "failed to parse sample json";
+>>>>>>> Stashed changes
   EXPECT_CALL(*col_record_mock, new_row()).Times(1);
   EXPECT_CALL(*col_record_mock, set_row_data).Times(6);
 
-  logs.add_row_from_line(col_record_mock, line_arg);
+  logs.add_row_from_json(col_record_mock, root);
 }
 
-// Test for method add_data_to_record(...)
-TEST_F(LogsTest, TEST_ADD_DATA_TO_RECORD)
-{
-  Sequence add_row_calls;
+// Test for method add_data_to_record with a valid argument passed
+TEST_F(LogsTest, TEST_ADD_DATA_TO_RECORD_VALID) 
+{ 
   EXPECT_CALL(*col_record_mock, clear()).Times(1);
+  EXPECT_CALL(*col_record_mock, new_row()).Times(1);
+  EXPECT_CALL(*col_record_mock, set_row_data).Times(6);
   EXPECT_CALL(*col_record_mock, filter_rows()).Times(1);
 
-  // add_data_to_record calls add_row_from_line(...) for each line that matches the log regex in the passed string
-  // with the current values of data_arg and data_arg_num_lines, this means the sequence will occur twice
-  for(int i = 0; i < data_arg_num_lines; i++) {
-    EXPECT_CALL(*col_record_mock, new_row()).Times(1).InSequence(add_row_calls);
-    EXPECT_CALL(*col_record_mock, set_row_data).Times(6).InSequence(add_row_calls);
-  }
-
-  logs.add_data_to_record(data_arg);
+  logs.add_data_to_record(journalctl_json_snippet);
 }
 
-// Test for method parse_line(...)
-TEST_F(LogsTest, TEST_PARSE_LINE)
+// Test for method add_data_to_record with an invalid argument passed
+TEST_F(LogsTest, TEST_ADD_DATA_TO_RECORD_INVALID)
 {
-  std::string log_time      = logs.parse_line(line_arg, filter_log_time);
-  std::string log_type      = logs.parse_line(line_arg, filter_log_type);
-  std::string log_operation = logs.parse_line(line_arg, filter_log_operation);
-  std::string log_name      = logs.parse_line(line_arg, filter_log_name);
-  std::string log_pid       = logs.parse_line(line_arg, filter_log_pid);
-  std::string log_status    = logs.parse_line(line_arg, filter_log_status);
-
-  EXPECT_EQ(log_time, "Sun Feb 27 19:15:47 2022") << "error parsing time from line";
-  EXPECT_EQ(log_type, "STATUS") << "error parsing type from line";
-  EXPECT_EQ(log_operation, "profile_load") << "error parsing operation from line";
-  EXPECT_EQ(log_name, "nvidia_modprobe") << "error parsing name from line";
-  EXPECT_EQ(log_pid, "561") << "error parsing pid from line";
-  EXPECT_EQ(log_status, "unconfined") << "error parsing status from line";
+  EXPECT_CALL(*col_record_mock, clear()).Times(1);
+  EXPECT_CALL(*col_record_mock, new_row()).Times(0);
+  EXPECT_CALL(*col_record_mock, set_row_data).Times(0);
+  EXPECT_CALL(*col_record_mock, filter_rows()).Times(0);
+  EXPECT_THROW(logs.add_data_to_record("{test}"), std::invalid_argument);
 }
 
 // Test for method refresh()
@@ -82,4 +112,8 @@ TEST_F(LogsTest, TEST_REFRESH)
   EXPECT_CALL(*col_record_mock, filter_rows()).Times(1);
 
   logs.refresh();
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes
