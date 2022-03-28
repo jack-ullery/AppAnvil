@@ -1,5 +1,5 @@
-template<class ColumnRecord> std::string Logs<ColumnRecord>::format_log_data(std::string &data) 
-{ 
+template<class ColumnRecord> std::string Logs<ColumnRecord>::format_log_data(std::string &data)
+{
   data.erase(std::remove(data.begin(), data.end(), '\"'), data.end());
   return data;
 }

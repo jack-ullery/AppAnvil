@@ -38,7 +38,6 @@ protected:
         : timestamp{a}, type{b}, operation{c}, name{d}, pid{e}, status{f} { }
   };
 
-
 private:
   const std::vector<std::string> col_names{"Time", "Type", "Operation", "Name", "Pid", "Status"};
   std::shared_ptr<ColumnRecord> col_record;
