@@ -1,21 +1,34 @@
-template<class ColumnRecord> std::string Logs<ColumnRecord>::parse_line(const std::string &line, const std::regex &elem)
+template<class ColumnRecord> std::string Logs<ColumnRecord>::format_log_data(std::string &data) 
+{ 
+  data.erase(std::remove(data.begin(), data.end(), '\"'), data.end());
+  return data;
+}
+
+template<class ColumnRecord> std::string Logs<ColumnRecord>::format_timestamp(const time_t &timestamp)
 {
-  std::smatch m;
-  std::regex_search(line, m, elem);
-  return m[1];
+  struct tm *timeInfo;
+  timeInfo               = localtime(&timestamp);
+  std::string timeString = asctime(timeInfo);
+  timeString.erase(std::remove(timeString.begin(), timeString.end(), '\n'), timeString.end());
+  return timeString + '\t';
 }
 
 template<class ColumnRecord>
-void Logs<ColumnRecord>::add_row_from_line(const std::shared_ptr<ColumnRecord> &col_record, const std::string &line)
+void Logs<ColumnRecord>::add_row_from_json(const std::shared_ptr<ColumnRecord> &col_record, const Json::Value &entry)
 {
   auto row = col_record->new_row();
+
+  time_t timestamp = (const time_t) (std::stol(entry["_SOURCE_REALTIME_TIMESTAMP"].asString()) / 1000000);
+  LogData row_data(timestamp, entry["_AUDIT_FIELD_APPARMOR"].asString(), entry["_AUDIT_FIELD_OPERATION"].asString(),
+                   entry["_AUDIT_FIELD_NAME"].asString(), entry["_PID"].asString(), entry["_AUDIT_FIELD_PROFILE"].asString());
+
   // clang-format off
-  col_record->set_row_data(row, 0, parse_line(line, filter_log_time) + '\t'); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  col_record->set_row_data(row, 1, parse_line(line, filter_log_type));        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  col_record->set_row_data(row, 2, parse_line(line, filter_log_operation));   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  col_record->set_row_data(row, 3, parse_line(line, filter_log_name));        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  col_record->set_row_data(row, 4, parse_line(line, filter_log_pid));         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  col_record->set_row_data(row, 5, parse_line(line, filter_log_status));      // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  col_record->set_row_data(row, 0, format_timestamp(row_data.timestamp));   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  col_record->set_row_data(row, 1, format_log_data(row_data.type));         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  col_record->set_row_data(row, 2, format_log_data(row_data.operation));    // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  col_record->set_row_data(row, 3, row_data.name);                          // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  col_record->set_row_data(row, 4, row_data.pid);                           // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  col_record->set_row_data(row, 5, format_log_data(row_data.status));       // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   // clang-format on
 }
 
@@ -25,14 +38,20 @@ template<class ColumnRecord> void Logs<ColumnRecord>::add_data_to_record(const s
   col_record->clear();
 
   std::stringstream logs;
-  logs << data;
-
+  std::istringstream json_data(data);
   std::string line;
+  Json::Value root;
+  Json::CharReaderBuilder builder;
+  JSONCPP_STRING errs;
 
-  while(std::getline(logs, line)) {
-    if(std::regex_search(line, filter_log_regex)) {
-      add_row_from_line(col_record, line);
+  while(std::getline(json_data, line)) {
+    logs << line;
+    if(!parseFromStream(builder, logs, &root, &errs)) {
+      throw std::invalid_argument(errs + "\nArgument of add_data_to_record contains line with invalid JSON format.");
     }
+    add_row_from_json(col_record, root);
+    logs.clear();
+    root.clear();
   }
 
   refresh();

@@ -42,7 +42,8 @@ std::string AppArmorCaller::get_unconfined(AppArmorCaller *caller)
 
 std::string AppArmorCaller::get_logs(AppArmorCaller *caller)
 {
-  std::vector<std::string> command = {"dmesg", "--ctime"};
+  //journalctl _AUDIT_TYPE=1400 --output=json is the terminal command to get all of the essential logs
+  std::vector<std::string> command = {"journalctl", "-r", "_AUDIT_TYPE=1400","--output=json"};
   std::string return_on_error = "";
   return caller->call_command(command, return_on_error);
 }
