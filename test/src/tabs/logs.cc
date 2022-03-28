@@ -34,11 +34,6 @@ protected:
   LogsMock<StatusColumnRecordMock> logs;
 };
 
-<<<<<<< Updated upstream
-// Test for method add_row_from_line(...)
-TEST_F(LogsTest, TEST_ADD_ROW_FROM_LINE)
-{
-=======
 // Test for method format_log_data
 TEST_F(LogsTest, TEST_FORMAT_LOG_DATA) 
 { 
@@ -78,7 +73,6 @@ TEST_F(LogsTest, TEST_ADD_ROW_FROM_JSON)
 
   bool res = parseFromStream(builder, stream, &root, &errs);
   ASSERT_EQ(res, true) << "failed to parse sample json";
->>>>>>> Stashed changes
   EXPECT_CALL(*col_record_mock, new_row()).Times(1);
   EXPECT_CALL(*col_record_mock, set_row_data).Times(6);
 
@@ -112,8 +106,4 @@ TEST_F(LogsTest, TEST_REFRESH)
   EXPECT_CALL(*col_record_mock, filter_rows()).Times(1);
 
   logs.refresh();
-<<<<<<< Updated upstream
 }
-=======
-}
->>>>>>> Stashed changes
