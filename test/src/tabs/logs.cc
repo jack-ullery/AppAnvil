@@ -107,3 +107,4 @@ TEST_F(LogsTest, TEST_REFRESH)
 
   logs.refresh();
 }
+

@@ -35,9 +35,7 @@ protected:
     std::string status;
 
     LogData(time_t a, std::string b, std::string c, std::string d, std::string e, std::string f)
-        : timestamp{a}, type{b}, operation{c}, name{d}, pid{e}, status{f}
-    {
-    }
+        : timestamp{a}, type{b}, operation{c}, name{d}, pid{e}, status{f} { }
   };
 
 private:
