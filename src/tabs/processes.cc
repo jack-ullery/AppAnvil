@@ -12,16 +12,16 @@ void Processes::add_row_from_line(const std::shared_ptr<StatusColumnRecord> &col
   std::smatch match;
   std::regex_search(line, match, unconfined_proc);
 
-  std::string pid    = match[1]; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  std::string ppid   = match[2]; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  std::string user   = match[3]; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  std::string status = match[4]; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  std::string comm   = match[5]; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  unsigned int pid   = stoul(match[1]); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  unsigned int ppid  = stoul(match[2]); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  std::string user   = match[3];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  std::string status = match[4];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  std::string comm   = match[5];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-  col_record->set_row_data(row, 0, comm);   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  col_record->set_row_data(row, 1, user);   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  col_record->set_row_data(row, 2, pid);    // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  col_record->set_row_data(row, 3, status); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row->set_value(0, comm);   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row->set_value(1, user);   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row->set_value(2, pid);    // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row->set_value(3, status); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 }
 
 void Processes::add_data_to_record(const std::string &unconfined)

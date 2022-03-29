@@ -22,7 +22,12 @@ public:
   void refresh();
 
 private:
-  const std::vector<std::string> col_names{"Time", "Type", "Operation", "Name", "Pid", "Status"};
+  const std::vector<ColumnHeader> col_names{ColumnHeader("Time"),
+                                            ColumnHeader("Type"),
+                                            ColumnHeader("Operation"),
+                                            ColumnHeader("Name"),
+                                            ColumnHeader("Pid", ColumnHeader::ColumnType::INT),
+                                            ColumnHeader("Status")};
   std::shared_ptr<ColumnRecord> col_record;
 };
 

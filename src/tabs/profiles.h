@@ -25,7 +25,7 @@ private:
 
   sigc::slot<void(std::string, std::string, std::string)> profile_status_change_fun;
 
-  const std::vector<std::string> col_names{"Profile", "Status"};
+  const std::vector<ColumnHeader> col_names{ColumnHeader("Profile"), ColumnHeader("Status")};
   std::shared_ptr<StatusColumnRecord> col_record;
 };
 
