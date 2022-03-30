@@ -1,17 +1,18 @@
 #include "status_column_record.h"
 
 #include <gtkmm/box.h>
+#include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treemodelsort.h>
+#include <memory>
 #include <tuple>
 #include <vector>
 
 /*
     Public Methods
 */
-std::shared_ptr<StatusColumnRecord> StatusColumnRecord::create(const std::shared_ptr<Gtk::TreeView> &view, std::vector<std::string> names)
+std::shared_ptr<StatusColumnRecord> StatusColumnRecord::create(const std::shared_ptr<Gtk::TreeView> &view, const std::vector<ColumnHeader> &names)
 {
-
-  std::shared_ptr<StatusColumnRecord> record{new StatusColumnRecord(names)};
+  std::shared_ptr<StatusColumnRecord> record{new StatusColumnRecord(view, names)};
 
   auto store    = Gtk::TreeStore::create(*record);
   record->store = store;
@@ -19,18 +20,6 @@ std::shared_ptr<StatusColumnRecord> StatusColumnRecord::create(const std::shared
   record->model_filter = Gtk::TreeModelFilter::create(store);
   auto sort_model      = Gtk::TreeModelSort::create(record->model_filter);
   view->set_model(sort_model);
-
-  for(uint i = 0; i < names.size(); i++) {
-    // Add a visible column, and title it using the string from 'names'
-    view->append_column(names[i], record->column[i]);
-    // Set some default settings for the columns
-    // Note this a Gtk::TreeViewColumn which is different then the Gtk::TreeModelColumn we have as a field in StatusColumnRecord
-    auto *column = view->get_column(i);
-    column->set_reorderable();
-    column->set_resizable();
-    column->set_min_width(MIN_COL_WIDTH);
-    column->set_sort_column(record->column[i]);
-  }
 
   return record;
 }
@@ -44,25 +33,6 @@ void StatusColumnRecord::set_visible_func(const Gtk::TreeModelFilter::SlotVisibl
 Gtk::TreeRow StatusColumnRecord::new_row() { return *(store->append()); }
 
 Gtk::TreeRow StatusColumnRecord::new_child_row(const Gtk::TreeRow &parent) { return *(store->append(parent.children())); }
-
-// Can delete method: look into `TreeRow::set_value`
-void StatusColumnRecord::set_row_data(const Gtk::TreeRow &row, const uint &index, const std::string &data)
-{
-  if(index >= column.size()) {
-    throw std::out_of_range("Attempting to access invalid column.");
-  }
-
-  row[this->column[index]] = data;
-}
-
-std::string StatusColumnRecord::get_row_data(const Gtk::TreeRow &row, const uint &index)
-{
-  if(index >= column.size()) {
-    throw std::out_of_range("Attempting to access invalid column.");
-  }
-
-  return row[this->column[index]];
-}
 
 void StatusColumnRecord::clear() { store->clear(); }
 
@@ -89,14 +59,33 @@ uint StatusColumnRecord::filter_rows()
 /*
     Private Methods
 */
-StatusColumnRecord::StatusColumnRecord(const std::vector<std::string> &names)
+StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, const std::vector<ColumnHeader> &names)
     : filter_fun{sigc::ptr_fun(&StatusColumnRecord::default_filter)}
 {
-  this->column = std::vector<Gtk::TreeModelColumn<std::string>>(names.size());
+  for(uint i = 0; i < names.size(); i++) {
+    std::unique_ptr<Gtk::TreeModelColumnBase> column_base;
 
-  for(uint i = 0; i < column.size(); i++) {
-    column[i] = Gtk::TreeModelColumn<std::string>();
-    add(column[i]);
+    if(names[i].type == ColumnHeader::STRING) {
+      // Add a visible column, and title it using the string from 'names'
+      auto model_column = Gtk::TreeModelColumn<std::string>();
+      add(model_column);
+      view->append_column(names[i].name, model_column);
+      column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
+    } else {
+      // Add a visible column, and title it using the string from 'names'
+      auto model_column = Gtk::TreeModelColumn<unsigned int>();
+      add(model_column);
+      view->append_column(names[i].name, model_column);
+      column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
+    }
+
+    // Set some default settings for the columns
+    // Note this a Gtk::TreeViewColumn which is different then the Gtk::TreeModelColumn which we use earlier
+    auto *column_view = view->get_column(i);
+    column_view->set_reorderable();
+    column_view->set_resizable();
+    column_view->set_min_width(MIN_COL_WIDTH);
+    column_view->set_sort_column(*column_base);
   }
 }
 

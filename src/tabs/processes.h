@@ -21,7 +21,8 @@ protected:
   static void add_row_from_line(const std::shared_ptr<StatusColumnRecord> &col_record, const std::string &line);
 
 private:
-  const std::vector<std::string> col_names{"Process Name", "User", "Pid", "Status"};
+  const std::vector<ColumnHeader> col_names{ColumnHeader("Process Name"), ColumnHeader("User"),
+                                            ColumnHeader("Pid", ColumnHeader::ColumnType::INT), ColumnHeader("Status")};
   std::shared_ptr<StatusColumnRecord> col_record;
 };
 

@@ -21,8 +21,8 @@ void Profiles::add_data_to_record(const std::string &data)
   for(auto prof = profiles.begin(); prof != profiles.end(); prof++) {
     std::string key = prof.key().asString();
     auto row        = col_record->new_row();
-    col_record->set_row_data(row, 0, key);
-    col_record->set_row_data(row, 1, profiles.get(key, UNKNOWN_STATUS).asString());
+    row->set_value(0, key);
+    row->set_value(1, profiles.get(key, UNKNOWN_STATUS).asString());
   }
 
   refresh();
@@ -33,10 +33,15 @@ void Profiles::change_status()
   auto selection = Status::get_view()->get_selection();
 
   if(selection->count_selected_rows() == 1) {
-    auto row                 = *selection->get_selected();
-    std::string profile_path = col_record->get_row_data(row, 0);
-    std::string old_status   = col_record->get_row_data(row, 1);
-    std::string new_status   = Status::get_selection_text();
+    auto row = *selection->get_selected();
+
+    std::string profile_path;
+    std::string old_status;
+    std::string new_status = Status::get_selection_text();
+
+    row->get_value(0, profile_path);
+    row->get_value(1, old_status);
+
     // Convert the status strings to lower case.
     transform(old_status.begin(), old_status.end(), old_status.begin(), ::tolower);
     transform(new_status.begin(), new_status.end(), new_status.begin(), ::tolower);

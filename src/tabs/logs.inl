@@ -23,12 +23,12 @@ void Logs<ColumnRecord>::add_row_from_json(const std::shared_ptr<ColumnRecord> &
                    entry["_AUDIT_FIELD_NAME"].asString(), entry["_PID"].asString(), entry["_AUDIT_FIELD_PROFILE"].asString());
 
   // clang-format off
-  col_record->set_row_data(row, 0, format_timestamp(row_data.timestamp));   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  col_record->set_row_data(row, 1, format_log_data(row_data.type));         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  col_record->set_row_data(row, 2, format_log_data(row_data.operation));    // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  col_record->set_row_data(row, 3, row_data.name);                          // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  col_record->set_row_data(row, 4, row_data.pid);                           // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  col_record->set_row_data(row, 5, format_log_data(row_data.status));       // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row->set_value(0, parse_line(line, filter_log_time) + '\t'); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row->set_value(1, parse_line(line, filter_log_type));        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row->set_value(2, parse_line(line, filter_log_operation));   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row->set_value(3, parse_line(line, filter_log_name));        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row->set_value(4, stoul(parse_line(line, filter_log_pid)));  // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row->set_value(5, parse_line(line, filter_log_status));      // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   // clang-format on
 }
 
