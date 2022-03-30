@@ -5,7 +5,6 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-using ::testing::Sequence;
 using ::testing::_;
 
 // Test Fixture for Logs class
@@ -14,6 +13,7 @@ class LogsTest : public ::testing::Test
 protected:
   LogsTest() : col_record_mock{new StatusColumnRecordMock()}, logs(col_record_mock) { }
 
+  virtual void SetUp() { }
 
   // Some of the sample snippets of information below were taken from the output of running 'journalctl -b "_AUDIT_TYPE=1400" --output=json' 
   // in the terminal. They are mostly used to verify that information is being formatted correctly in format_log_data and format_timestamp.
@@ -41,16 +41,20 @@ TEST_F(LogsTest, TEST_FORMAT_LOG_DATA)
   std::string formatted_operation = logs.format_log_data(sample_log_data_operation);
   std::string formatted_status    = logs.format_log_data(sample_log_data_status);
 
+  ASSERT_TRUE(formatted_type.find('\"') == std::string::npos) << "sample type should not contain quotation marks after formatting";
+  ASSERT_TRUE(formatted_operation.find('\"') == std::string::npos)
+      << "sample operation should not contain quotation marks after formatting";
+  ASSERT_TRUE(formatted_status.find('\"') == std::string::npos) << "sample status should not contain quotation marks after formatting";
   EXPECT_EQ(formatted_type, "STATUS") << "error formatting sample type from log data";
   EXPECT_EQ(formatted_operation, "profile_load") << "error formatting sample operation from log data";
   EXPECT_EQ(formatted_status, "unconfined") << "error formatting sample status from log data";
 }
 
 // Test for method format_timestamp
-TEST_F(LogsTest, TEST_FORMAT_TIMESTAMP) 
-{ 
-  std::string formatted_timestamp = logs.format_timestamp(sample_log_data_timestamp); 
-  std::string formatted_zerotime = logs.format_timestamp(zerotime);
+TEST_F(LogsTest, TEST_FORMAT_TIMESTAMP)
+{
+  std::string formatted_timestamp = logs.format_timestamp(sample_log_data_timestamp);
+  std::string formatted_zerotime  = logs.format_timestamp(zerotime);
 
   bool res = std::regex_match(formatted_timestamp, timestamp_regex);
   ASSERT_TRUE(res) << "formatted timestamp does not match regex";
@@ -72,9 +76,19 @@ TEST_F(LogsTest, TEST_ADD_ROW_FROM_JSON)
   stream << journalctl_json_snippet;
 
   bool res = parseFromStream(builder, stream, &root, &errs);
-  ASSERT_EQ(res, true) << "failed to parse sample json";
+  ASSERT_TRUE(res) << "failed to parse sample json";
   EXPECT_CALL(*col_record_mock, new_row()).Times(1);
-  EXPECT_CALL(*col_record_mock, set_row_data).Times(6);
+
+  const time_t timestamp = std::stol(root["_SOURCE_REALTIME_TIMESTAMP"].asString()) / 1000000;
+  std::string type = root["_AUDIT_FIELD_APPARMOR"].asString();
+  std::string operation = root["_AUDIT_FIELD_OPERATION"].asString();
+  std::string status    = root["_AUDIT_FIELD_PROFILE"].asString();
+  EXPECT_CALL(*col_record_mock, set_row_data(_, 0, logs.format_timestamp(timestamp)));
+  EXPECT_CALL(*col_record_mock, set_row_data(_, 1, logs.format_log_data(type)));
+  EXPECT_CALL(*col_record_mock, set_row_data(_, 2, logs.format_log_data(operation)));
+  EXPECT_CALL(*col_record_mock, set_row_data(_, 3, root["_AUDIT_FIELD_NAME"].asString()));
+  EXPECT_CALL(*col_record_mock, set_row_data(_, 4, root["_PID"].asString()));
+  EXPECT_CALL(*col_record_mock, set_row_data(_, 5, logs.format_log_data(status)));
 
   logs.add_row_from_json(col_record_mock, root);
 }
@@ -107,4 +121,3 @@ TEST_F(LogsTest, TEST_REFRESH)
 
   logs.refresh();
 }
-

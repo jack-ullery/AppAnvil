@@ -15,9 +15,11 @@ template<class ColumnRecord> std::string Logs<ColumnRecord>::format_timestamp(co
 template<class ColumnRecord>
 void Logs<ColumnRecord>::add_row_from_json(const std::shared_ptr<ColumnRecord> &col_record, const Json::Value &entry)
 {
+  // create a new row
   auto row = col_record->new_row();
 
-  time_t timestamp = (const time_t) (std::stol(entry["_SOURCE_REALTIME_TIMESTAMP"].asString()) / 1000000);
+  // getting timestamp from json argument, creating LogData struct from important fields of json
+  const time_t timestamp = (const time_t) (std::stol(entry["_SOURCE_REALTIME_TIMESTAMP"].asString()) / 1000000);
   LogData row_data(timestamp, entry["_AUDIT_FIELD_APPARMOR"].asString(), entry["_AUDIT_FIELD_OPERATION"].asString(),
                    entry["_AUDIT_FIELD_NAME"].asString(), entry["_PID"].asString(), entry["_AUDIT_FIELD_PROFILE"].asString());
 
@@ -36,6 +38,7 @@ template<class ColumnRecord> void Logs<ColumnRecord>::add_data_to_record(const s
   // Delete all the data from col_record
   col_record->clear();
 
+  // declare variables
   std::stringstream logs;
   std::istringstream json_data(data);
   std::string line;
@@ -43,6 +46,7 @@ template<class ColumnRecord> void Logs<ColumnRecord>::add_data_to_record(const s
   Json::CharReaderBuilder builder;
   JSONCPP_STRING errs;
 
+  // gets each log entry (in json format, separated by \n), parses the json, and calls add_row_from_json to add each individual entry
   while(std::getline(json_data, line)) {
     logs << line;
     if(!parseFromStream(builder, logs, &root, &errs)) {
@@ -53,6 +57,7 @@ template<class ColumnRecord> void Logs<ColumnRecord>::add_data_to_record(const s
     root.clear();
   }
 
+  // refresh the display after all logs have been added
   refresh();
 }
 
