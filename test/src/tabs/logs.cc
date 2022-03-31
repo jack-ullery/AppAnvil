@@ -4,13 +4,16 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+using ::testing::_;
+using ::testing::Matcher;
+using ::testing::Return;
 using ::testing::Sequence;
 
 // Test Fixture for Logs class
 class LogsTest : public ::testing::Test
 {
 protected:
-  LogsTest() : col_record_mock{new StatusColumnRecordMock()}, logs(col_record_mock) { }
+  LogsTest() : col_record_mock{new StatusColumnRecordMock()}, row_mock(), logs(col_record_mock) { }
 
   virtual void SetUp() { }
 
@@ -29,14 +32,16 @@ protected:
   int data_arg_num_lines = 2;
 
   std::shared_ptr<StatusColumnRecordMock> col_record_mock;
+  TreeRowMock row_mock;
   LogsMock<StatusColumnRecordMock> logs;
 };
 
 // Test for method add_row_from_line(...)
 TEST_F(LogsTest, TEST_ADD_ROW_FROM_LINE)
 {
-  EXPECT_CALL(*col_record_mock, new_row()).Times(1);
-  EXPECT_CALL(*col_record_mock, set_row_data).Times(6);
+  EXPECT_CALL(*col_record_mock, new_row()).Times(1).WillOnce(Return(&row_mock));
+  EXPECT_CALL(row_mock, set_value(_, Matcher<const std::string &>(_))).Times(5);
+  EXPECT_CALL(row_mock, set_value(_, Matcher<const unsigned long &>(_))).Times(1);
 
   logs.add_row_from_line(col_record_mock, line_arg);
 }
@@ -51,8 +56,10 @@ TEST_F(LogsTest, TEST_ADD_DATA_TO_RECORD)
   // add_data_to_record calls add_row_from_line(...) for each line that matches the log regex in the passed string
   // with the current values of data_arg and data_arg_num_lines, this means the sequence will occur twice
   for(int i = 0; i < data_arg_num_lines; i++) {
-    EXPECT_CALL(*col_record_mock, new_row()).Times(1).InSequence(add_row_calls);
-    EXPECT_CALL(*col_record_mock, set_row_data).Times(6).InSequence(add_row_calls);
+    EXPECT_CALL(*col_record_mock, new_row()).Times(1).InSequence(add_row_calls).WillOnce(Return(&row_mock));
+    EXPECT_CALL(row_mock, set_value(_, Matcher<const std::string &>(_))).Times(4).InSequence(add_row_calls);
+    EXPECT_CALL(row_mock, set_value(_, Matcher<const unsigned long &>(_))).Times(1).InSequence(add_row_calls);
+    EXPECT_CALL(row_mock, set_value(_, Matcher<const std::string &>(_))).Times(1).InSequence(add_row_calls);
   }
 
   logs.add_data_to_record(data_arg);
