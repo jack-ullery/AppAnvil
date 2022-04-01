@@ -7,9 +7,10 @@ template<class ColumnRecord> std::string Logs<ColumnRecord>::format_log_data(std
 template<class ColumnRecord> std::string Logs<ColumnRecord>::format_timestamp(const time_t &timestamp)
 {
   struct tm *timeInfo = localtime(&timestamp);
-  std::string timeString = asctime(timeInfo);
-  timeString.erase(std::remove(timeString.begin(), timeString.end(), '\n'), timeString.end());
-  return timeString + '\t';
+  int bufferSize      = 20;
+  char buffer[bufferSize];
+  strftime(buffer, bufferSize, "%F %T", timeInfo);
+  return std::string(buffer) + '\t';
 }
 
 template<class ColumnRecord>

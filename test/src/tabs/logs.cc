@@ -27,10 +27,17 @@ protected:
   std::string sample_log_data_status    = "\"unconfined\"";
   time_t sample_log_data_timestamp      = (time_t) 1648234140;  // Fri Mar 25 14:49:00 2022 (time as of writing tests (Eastern Time))
   time_t zerotime                       = (time_t) 0;           // Thu Jan 1st 00:00:00 1970 (UTC) (Wed Dec 31 19:00:00 1969 in Eastern Time)
-  std::regex timestamp_regex            = std::regex("\\w{3}\\s{1}\\w{3}\\s{1}\\d{1,2}\\s{1}\\d{2}:\\d{2}:\\d{2}\\s{1}\\d{4}\\t");
+  std::regex timestamp_regex            = std::regex("\\d{4}-\\d{2}-\\d{2}\\s{1}\\d{2}:\\d{2}:\\d{2}\\t");
   std::string journalctl_json_snippet   = "{\"_SOURCE_REALTIME_TIMESTAMP\" : \"1648231725959000\",\"_AUDIT_FIELD_APPARMOR\" : \"\\\"STATUS\\\"\","
                                        "\"_AUDIT_FIELD_OPERATION\" : \"\\\"profile_load\\\"\",\"_AUDIT_FIELD_NAME\" : \"nvidia_modprobe\","
                                        "\"_PID\" : \"601\",\"_AUDIT_FIELD_PROFILE\" : \"\\\"unconfined\\\"\"}";
+  int data_arg_num_lines = 2;
+  std::string data_arg   = "{\"_SOURCE_REALTIME_TIMESTAMP\" : \"1648231725959000\",\"_AUDIT_FIELD_APPARMOR\" : \"\\\"STATUS\\\"\","
+                         "\"_AUDIT_FIELD_OPERATION\" : \"\\\"profile_load\\\"\",\"_AUDIT_FIELD_NAME\" : \"nvidia_modprobe\","
+                         "\"_PID\" : \"601\",\"_AUDIT_FIELD_PROFILE\" : \"\\\"unconfined\\\"\"}\n"
+                         "{\"_SOURCE_REALTIME_TIMESTAMP\" : \"1648231725959000\",\"_AUDIT_FIELD_APPARMOR\" : \"\\\"STATUS\\\"\","
+                         "\"_AUDIT_FIELD_OPERATION\" : \"\\\"profile_load\\\"\",\"_AUDIT_FIELD_NAME\" : \"nvidia_modprobe\","
+                         "\"_PID\" : \"601\",\"_AUDIT_FIELD_PROFILE\" : \"\\\"unconfined\\\"\"}";
 
   // Mock objects
   std::shared_ptr<StatusColumnRecordMock> col_record_mock;
@@ -65,9 +72,9 @@ TEST_F(LogsTest, TEST_FORMAT_TIMESTAMP)
   res = std::regex_match(formatted_zerotime, timestamp_regex);
   ASSERT_TRUE(res) << "formatted zerotime does not match regex";
 
-  // Note that the expected values are in Eastern Time not in UTC because the timestamp is converted to localtime in format_timestamp
-  EXPECT_EQ(formatted_timestamp, "Fri Mar 25 14:49:00 2022\t") << "error formatting sample timestamp from log data";
-  EXPECT_EQ(formatted_zerotime, "Wed Dec 31 19:00:00 1969\t") << "error formatting zerotime timestamp";
+  // Note that the expected values are in Eastern Time and not in UTC because the timestamp is converted to localtime in format_timestamp
+  EXPECT_EQ(formatted_timestamp, "2022-03-25 14:49:00\t") << "error formatting sample timestamp from log data";
+  EXPECT_EQ(formatted_zerotime, "1969-12-31 19:00:00\t") << "error formatting zerotime timestamp";
 }
 
 // Test for method add_row_from_json
@@ -92,11 +99,9 @@ TEST_F(LogsTest, TEST_ADD_ROW_FROM_JSON)
 TEST_F(LogsTest, TEST_ADD_DATA_TO_RECORD_VALID) 
 { 
   EXPECT_CALL(*col_record_mock, clear()).Times(1);
-  EXPECT_CALL(*col_record_mock, new_row()).Times(1);
-  EXPECT_CALL(*col_record_mock, set_row_data).Times(6);
-  EXPECT_CALL(*col_record_mock, filter_rows()).Times(1);
+  Sequence add_row_calls;
 
-  // add_data_to_record calls add_row_from_line(...) for each line that matches the log regex in the passed string
+  // add_data_to_record calls add_row_from_json(...) for each line of the passed json (string)
   // with the current values of data_arg and data_arg_num_lines, this means the sequence will occur twice
   for(int i = 0; i < data_arg_num_lines; i++) {
     EXPECT_CALL(*col_record_mock, new_row()).Times(1).InSequence(add_row_calls).WillOnce(Return(&row_mock));
@@ -104,6 +109,8 @@ TEST_F(LogsTest, TEST_ADD_DATA_TO_RECORD_VALID)
     EXPECT_CALL(row_mock, set_value(_, Matcher<const unsigned long &>(_))).Times(1).InSequence(add_row_calls);
     EXPECT_CALL(row_mock, set_value(_, Matcher<const std::string &>(_))).Times(1).InSequence(add_row_calls);
   }
+
+  EXPECT_CALL(*col_record_mock, filter_rows()).Times(1);
 
   logs.add_data_to_record(data_arg);
 }
@@ -113,7 +120,8 @@ TEST_F(LogsTest, TEST_ADD_DATA_TO_RECORD_INVALID)
 {
   EXPECT_CALL(*col_record_mock, clear()).Times(1);
   EXPECT_CALL(*col_record_mock, new_row()).Times(0);
-  EXPECT_CALL(*col_record_mock, set_row_data).Times(0);
+  EXPECT_CALL(row_mock, set_value(_, Matcher<const std::string &>(_))).Times(0);
+  EXPECT_CALL(row_mock, set_value(_, Matcher<const unsigned long &>(_))).Times(0);
   EXPECT_CALL(*col_record_mock, filter_rows()).Times(0);
   EXPECT_THROW(logs.add_data_to_record("{test}"), std::invalid_argument);
 }
