@@ -10,7 +10,8 @@
 /*
     Public Methods
 */
-std::shared_ptr<StatusColumnRecord> StatusColumnRecord::create(const std::shared_ptr<Gtk::TreeView> &view, const std::vector<ColumnHeader> &names)
+std::shared_ptr<StatusColumnRecord> StatusColumnRecord::create(const std::shared_ptr<Gtk::TreeView> &view,
+                                                               const std::vector<ColumnHeader> &names)
 {
   std::shared_ptr<StatusColumnRecord> record{new StatusColumnRecord(view, names)};
 

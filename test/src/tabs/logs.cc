@@ -6,12 +6,15 @@
 #include <gtest/gtest.h>
 
 using ::testing::_;
+using ::testing::Matcher;
+using ::testing::Return;
+using ::testing::Sequence;
 
 // Test Fixture for Logs class
 class LogsTest : public ::testing::Test
 {
 protected:
-  LogsTest() : col_record_mock{new StatusColumnRecordMock()}, logs(col_record_mock) { }
+  LogsTest() : col_record_mock{new StatusColumnRecordMock()}, row_mock(), logs(col_record_mock) { }
 
   virtual void SetUp() { }
 
@@ -31,6 +34,7 @@ protected:
 
   // Mock objects
   std::shared_ptr<StatusColumnRecordMock> col_record_mock;
+  TreeRowMock row_mock;
   LogsMock<StatusColumnRecordMock> logs;
 };
 
@@ -77,18 +81,9 @@ TEST_F(LogsTest, TEST_ADD_ROW_FROM_JSON)
 
   bool res = parseFromStream(builder, stream, &root, &errs);
   ASSERT_TRUE(res) << "failed to parse sample json";
-  EXPECT_CALL(*col_record_mock, new_row()).Times(1);
-
-  const time_t timestamp = std::stol(root["_SOURCE_REALTIME_TIMESTAMP"].asString()) / 1000000;
-  std::string type = root["_AUDIT_FIELD_APPARMOR"].asString();
-  std::string operation = root["_AUDIT_FIELD_OPERATION"].asString();
-  std::string status    = root["_AUDIT_FIELD_PROFILE"].asString();
-  EXPECT_CALL(*col_record_mock, set_row_data(_, 0, logs.format_timestamp(timestamp)));
-  EXPECT_CALL(*col_record_mock, set_row_data(_, 1, logs.format_log_data(type)));
-  EXPECT_CALL(*col_record_mock, set_row_data(_, 2, logs.format_log_data(operation)));
-  EXPECT_CALL(*col_record_mock, set_row_data(_, 3, root["_AUDIT_FIELD_NAME"].asString()));
-  EXPECT_CALL(*col_record_mock, set_row_data(_, 4, root["_PID"].asString()));
-  EXPECT_CALL(*col_record_mock, set_row_data(_, 5, logs.format_log_data(status)));
+  EXPECT_CALL(*col_record_mock, new_row()).Times(1).WillOnce(Return(&row_mock));
+  EXPECT_CALL(row_mock, set_value(_, Matcher<const std::string &>(_))).Times(5);
+  EXPECT_CALL(row_mock, set_value(_, Matcher<const unsigned long &>(_))).Times(1);
 
   logs.add_row_from_json(col_record_mock, root);
 }
@@ -101,7 +96,16 @@ TEST_F(LogsTest, TEST_ADD_DATA_TO_RECORD_VALID)
   EXPECT_CALL(*col_record_mock, set_row_data).Times(6);
   EXPECT_CALL(*col_record_mock, filter_rows()).Times(1);
 
-  logs.add_data_to_record(journalctl_json_snippet);
+  // add_data_to_record calls add_row_from_line(...) for each line that matches the log regex in the passed string
+  // with the current values of data_arg and data_arg_num_lines, this means the sequence will occur twice
+  for(int i = 0; i < data_arg_num_lines; i++) {
+    EXPECT_CALL(*col_record_mock, new_row()).Times(1).InSequence(add_row_calls).WillOnce(Return(&row_mock));
+    EXPECT_CALL(row_mock, set_value(_, Matcher<const std::string &>(_))).Times(4).InSequence(add_row_calls);
+    EXPECT_CALL(row_mock, set_value(_, Matcher<const unsigned long &>(_))).Times(1).InSequence(add_row_calls);
+    EXPECT_CALL(row_mock, set_value(_, Matcher<const std::string &>(_))).Times(1).InSequence(add_row_calls);
+  }
+
+  logs.add_data_to_record(data_arg);
 }
 
 // Test for method add_data_to_record with an invalid argument passed
