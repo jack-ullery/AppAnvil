@@ -56,14 +56,63 @@ bool Status::filter(const std::string &str, const std::string &rule, const bool 
 bool Status::filter(const Gtk::TreeModel::iterator &node)
 {
   std::string data;
+  unsigned int uintData;
+  bool re;
   const uint num_columns = s_view->get_n_columns();
+  auto treeModel         = s_view->get_model();
 
   for(uint i = 0; i < num_columns; i++) {
-    node->get_value(i, data);
-    bool re = Status::filter(data, s_search->get_text(), s_use_regex->get_active(), s_match_case->get_active(), s_whole_word->get_active());
+    if (treeModel->get_column_type(i) == G_TYPE_STRING) {
+      node->get_value(i, data);
+      re = Status::filter(data, s_search->get_text(), s_use_regex->get_active(), s_match_case->get_active(), s_whole_word->get_active());
+    } else {
+      node->get_value(i, uintData);
+      re = Status::filter(std::to_string(uintData), s_search->get_text(), s_use_regex->get_active(), s_match_case->get_active(), s_whole_word->get_active());
+    }
 
     if(re) {
       return true;
+    }
+  }
+
+  auto children = node->children();
+  if (!children.empty()) {
+    return filter_children(node);
+  }
+
+  return false;
+}
+
+bool Status::filter_children(const Gtk::TreeModel::iterator &node) 
+{
+  std::string data;
+  unsigned int uintData;
+  bool re;
+  const uint num_columns = s_view->get_n_columns();
+  auto treeModel         = s_view->get_model();
+  auto children          = node->children();
+    
+  for(auto iter = children.begin(); iter != children.end(); iter++) {
+    auto row = *iter;
+    for(uint i = 0; i < num_columns; i++) {
+      if(treeModel->get_column_type(i) == G_TYPE_STRING) {
+        row.get_value(i, data);
+        re = Status::filter(data, s_search->get_text(), s_use_regex->get_active(), s_match_case->get_active(), s_whole_word->get_active());
+      } else {
+        row.get_value(i, uintData);
+        re = Status::filter(std::to_string(uintData), s_search->get_text(), s_use_regex->get_active(), s_match_case->get_active(),
+                            s_whole_word->get_active());
+      }
+
+      if(re) {
+        //auto path = treeModel->get_path(row);
+        //s_view->expand_to_path(path);
+        return true;
+      }
+
+      if (!row.children().empty() && filter_children(row)) {
+        return true;
+      }
     }
   }
 

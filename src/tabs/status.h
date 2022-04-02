@@ -28,6 +28,7 @@ public:
 
 protected:
   bool filter(const Gtk::TreeModel::iterator &node);
+  bool filter_children(const Gtk::TreeModel::iterator &node);
 
   /**
    * @brief Decide whether a string should be added to the table
