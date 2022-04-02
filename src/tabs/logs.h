@@ -5,9 +5,9 @@
 #include "status.h"
 
 #include <iomanip>
-#include <iostream>
 #include <memory>
 #include <regex>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -21,7 +21,7 @@ public:
 
   virtual void add_data_to_record(const std::string &data);
   static void add_row_from_json(const std::shared_ptr<ColumnRecord> &col_record, const Json::Value &entry);
-  static std::string format_log_data(std::string &data);
+  static std::string format_log_data(const std::string &data);
   static std::string format_timestamp(const time_t &timestamp);
   void refresh();
 

@@ -1,17 +1,19 @@
-#include <sstream>
-template<class ColumnRecord> std::string Logs<ColumnRecord>::format_log_data(std::string &data)
+
+template<class ColumnRecord> std::string Logs<ColumnRecord>::format_log_data(const std::string &data)
 {
-  data.erase(std::remove(data.begin(), data.end(), '\"'), data.end());
-  return data;
+  const std::regex remove_quotes = std::regex("\\\"(\\S*)\\\"");
+  std::smatch m;
+  std::regex_search(data, m, remove_quotes);
+  return m[1];
 }
 
 template<class ColumnRecord> std::string Logs<ColumnRecord>::format_timestamp(const time_t &timestamp)
 {
   std::stringstream stream;
-  
+
   auto *tm = localtime(&timestamp);
   stream << std::put_time(tm, "%F %T");
-  
+
   return stream.str() + '\t';
 }
 
