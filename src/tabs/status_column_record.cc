@@ -57,6 +57,62 @@ uint StatusColumnRecord::filter_rows()
   return num_visible;
 }
 
+Gtk::TreeRow StatusColumnRecord::get_parent_by_pid(unsigned int pid)
+{
+  Gtk::TreeRow parentRow;
+  auto children = store->children();
+
+  for(auto iter = children.begin(); iter != children.end(); iter++) {
+    unsigned int row_pid;
+    auto row = *iter;
+    row.get_value(2, row_pid);
+    if(row_pid == pid) {
+      return row;
+    }
+    if(!row.children().empty() && pid_exists_in_child(pid, row)) {
+      return get_parent_by_pid(pid, row);
+    }
+  }
+
+  return parentRow;
+}
+
+Gtk::TreeRow StatusColumnRecord::get_parent_by_pid(unsigned int pid, Gtk::TreeRow &parent)
+{
+  Gtk::TreeRow parentRow;
+  auto children = parent->children();
+
+  for(auto iter = children.begin(); iter != children.end(); iter++) {
+    unsigned int row_pid;
+    auto row = *iter;
+    row.get_value(2, row_pid);
+    if(row_pid == pid) {
+      return row;
+    }
+    if(!row.children().empty() && pid_exists_in_child(pid, row)) {
+      return get_parent_by_pid(pid, row);
+    }
+  }
+
+  return parentRow;
+}
+
+bool StatusColumnRecord::pid_exists_in_child(unsigned int pid, Gtk::TreeRow &parent)
+{
+  auto children = parent.children();
+
+  for(auto iter = children.begin(); iter != children.end(); iter++) {
+    unsigned int row_pid;
+    auto row = *iter;
+    row.get_value(2, row_pid);
+    if(row_pid == pid || (!row.children().empty() && pid_exists_in_child(pid, row))) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 /*
     Private Methods
 */
