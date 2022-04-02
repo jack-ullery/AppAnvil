@@ -1,16 +1,20 @@
-template<class ColumnRecord> std::string Logs<ColumnRecord>::format_log_data(std::string &data)
+
+template<class ColumnRecord> std::string Logs<ColumnRecord>::format_log_data(const std::string &data)
 {
-  data.erase(std::remove(data.begin(), data.end(), '\"'), data.end());
-  return data;
+  const std::regex remove_quotes = std::regex("\\\"(\\S*)\\\"");
+  std::smatch m;
+  std::regex_search(data, m, remove_quotes);
+  return m[1];
 }
 
 template<class ColumnRecord> std::string Logs<ColumnRecord>::format_timestamp(const time_t &timestamp)
 {
-  struct tm *timeInfo = localtime(&timestamp);
-  int bufferSize      = 20;
-  char buffer[bufferSize];
-  strftime(buffer, bufferSize, "%F %T", timeInfo);
-  return std::string(buffer) + '\t';
+  std::stringstream stream;
+
+  auto *tm = localtime(&timestamp);
+  stream << std::put_time(tm, "%F %T");
+
+  return stream.str() + '\t';
 }
 
 template<class ColumnRecord>
@@ -20,7 +24,13 @@ void Logs<ColumnRecord>::add_row_from_json(const std::shared_ptr<ColumnRecord> &
   auto row = col_record->new_row();
 
   // getting timestamp from json argument, creating LogData struct from important fields of json
-  const time_t timestamp = (const time_t) (std::stol(entry["_SOURCE_REALTIME_TIMESTAMP"].asString()) / 1000000);
+  const time_t timestamp      = std::stol(entry["_SOURCE_REALTIME_TIMESTAMP"].asString()) / 1000000;
+  const std::string type      = entry["_AUDIT_FIELD_APPARMOR"].asString();
+  const std::string operation = entry["_AUDIT_FIELD_OPERATION"].asString();
+  const std::string name      = entry["_AUDIT_FIELD_NAME"].asString();
+  const std::string pid       = entry["_PID"].asString();
+  const std::string status    = entry["_AUDIT_FIELD_PROFILE"].asString();
+
   LogData row_data(timestamp, entry["_AUDIT_FIELD_APPARMOR"].asString(), entry["_AUDIT_FIELD_OPERATION"].asString(),
                    entry["_AUDIT_FIELD_NAME"].asString(), entry["_PID"].asString(), entry["_AUDIT_FIELD_PROFILE"].asString());
 
