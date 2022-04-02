@@ -4,11 +4,11 @@
 #include "jsoncpp/json/json.h"
 #include "status.h"
 
+#include <iomanip>
 #include <iostream>
 #include <memory>
 #include <regex>
 #include <string>
-#include <time.h>
 #include <vector>
 
 template<class ColumnRecord> class Logs : public Status
@@ -35,7 +35,9 @@ protected:
     std::string status;
 
     LogData(time_t a, std::string b, std::string c, std::string d, std::string e, std::string f)
-        : timestamp{a}, type{b}, operation{c}, name{d}, pid{e}, status{f} { }
+        : timestamp{a}, type{std::move(b)}, operation{std::move(c)}, name{std::move(d)}, pid{std::move(e)}, status{std::move(f)}
+    {
+    }
   };
 
 private:
