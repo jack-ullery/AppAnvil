@@ -54,9 +54,7 @@ You can access log information under the 'Logs' tab.
 
 &lt;b&gt;How do I monitor specific processes?&lt;/b&gt;
 You can monitor processes with profiles under the 'Processes' tab.
-
-
-For more information on AppArmor, visit the documentation: https://gitlab.com/apparmor/apparmor/-/wikis/Documentation</property>
+</property>
         <property name="use_markup">True</property>
       </object>
       <packing>
@@ -66,7 +64,19 @@ For more information on AppArmor, visit the documentation: https://gitlab.com/ap
       </packing>
     </child>
     <child>
-      <placeholder/>
+      <object class="GtkButton" id="link_btn">
+        <property name="label" translatable="yes">For more info click here!</property>
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="receives_default">True</property>
+        <property name="halign">center</property>
+        <property name="valign">baseline</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">1</property>
+      </packing>
     </child>
     <child>
       <placeholder/>
