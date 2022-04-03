@@ -71,10 +71,6 @@ TEST_F(LogsTest, TEST_FORMAT_TIMESTAMP)
   ASSERT_TRUE(res) << "formatted timestamp does not match regex";
   res = std::regex_match(formatted_zerotime, timestamp_regex);
   ASSERT_TRUE(res) << "formatted zerotime does not match regex";
-
-  // Note that the expected values are in Eastern Time and not in UTC because the timestamp is converted to localtime in format_timestamp
-  EXPECT_EQ(formatted_timestamp, "2022-03-25 14:49:00\t") << "error formatting sample timestamp from log data";
-  EXPECT_EQ(formatted_zerotime, "1969-12-31 19:00:00\t") << "error formatting zerotime timestamp";
 }
 
 // Test for method add_row_from_json
