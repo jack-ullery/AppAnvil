@@ -6,8 +6,6 @@
 #include <gtkmm/builder.h>
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/enums.h>
-#include <gtkmm/filechooser.h>
-#include <gtkmm/filechooserdialog.h>
 #include <gtkmm/fixed.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/liststore.h>
@@ -28,9 +26,8 @@ public:
   About();
 
 protected:
-  // Signal handler
-  void on_fc_button_clicked();
-  void handle_file_chooser_dialogue(int response_id);
+  // Signal handler 
+  void set_link_btn_signal_handler(const Glib::SignalProxyProperty::SlotType &func);
   void on_confirm_clicked();
 
 private:
@@ -39,7 +36,7 @@ private:
 
   // Widgets on the tab
   std::unique_ptr<Gtk::Box> a_box;
-  //std::unique_ptr<Gtk::Fixed> a_fixed;
+  std::unique_ptr<Gtk::Button> link_btn;
   std::unique_ptr<Gtk::Label> a_label;
 
   template<typename T_Widget> static std::unique_ptr<T_Widget> get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);
