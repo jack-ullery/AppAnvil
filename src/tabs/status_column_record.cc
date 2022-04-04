@@ -18,7 +18,7 @@ std::shared_ptr<StatusColumnRecord> StatusColumnRecord::create(const std::shared
 
   auto store    = Gtk::TreeStore::create(*record);
   record->store = store;
-  record->view = view;
+  record->view  = view;
 
   record->filter_model = Gtk::TreeModelFilter::create(store);
   auto sort_model      = Gtk::TreeModelSort::create(record->filter_model);
@@ -112,7 +112,7 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
   }
 }
 
-std::vector<std::string> StatusColumnRecord::row_to_vector(const Gtk::TreeRow& row)
+std::vector<std::string> StatusColumnRecord::row_to_vector(const Gtk::TreeRow &row)
 {
   std::vector<std::string> vec;
 
@@ -144,7 +144,7 @@ void StatusColumnRecord::reselect_row()
   }
 }
 
-bool StatusColumnRecord::default_filter(const Gtk::TreeModel::iterator& node)
+bool StatusColumnRecord::default_filter(const Gtk::TreeModel::iterator &node)
 {
   std::ignore = node;
   return true;

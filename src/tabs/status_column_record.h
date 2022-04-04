@@ -103,7 +103,7 @@ private:
    */
   void reselect_row();
 
-  std::vector<std::string> row_to_vector(const Gtk::TreeRow& row);
+  std::vector<std::string> row_to_vector(const Gtk::TreeRow &row);
 
   std::vector<Gtk::TreeModelColumn<std::string>> column;
   Glib::RefPtr<Gtk::TreeStore> store;
@@ -114,7 +114,7 @@ private:
   std::shared_ptr<Gtk::TreeView> view;
   std::vector<std::string> last_selected_row;
 
-  static bool default_filter(const Gtk::TreeModel::iterator& node);
+  static bool default_filter(const Gtk::TreeModel::iterator &node);
 };
 
 #endif // TABS_STATUS_COLUMN_RECORD_H

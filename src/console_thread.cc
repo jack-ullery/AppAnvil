@@ -67,7 +67,7 @@ void ConsoleThread::run_command(TabState state)
 
 std::chrono::time_point<std::chrono::steady_clock> ConsoleThread::get_wait_time_point()
 {
-  auto now = std::chrono::steady_clock::now();
+  auto now       = std::chrono::steady_clock::now();
   auto time_wait = std::chrono::seconds(TIME_WAIT);
   return now + time_wait;
 }
