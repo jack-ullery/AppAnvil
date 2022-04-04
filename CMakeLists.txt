@@ -4,6 +4,7 @@ project (appanvil)
 
 #### Set Source Code #####
 set(PROJECT_SOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/src)
+### Sources that need to be built ###
 set(
   SOURCES
   ${PROJECT_SOURCE_DIR}/main.cc
@@ -16,12 +17,25 @@ set(
   ${PROJECT_SOURCE_DIR}/tabs/status.cc
   ${PROJECT_SOURCE_DIR}/tabs/profiles.cc
   ${PROJECT_SOURCE_DIR}/tabs/processes.cc
-  ${PROJECT_SOURCE_DIR}/tabs/logs.cc
+  ${PROJECT_SOURCE_DIR}/tabs/logs.h
+)
+
+### All the code globbed together for easy formatting ###
+# We include this so it can be affected by clang-format
+file(GLOB_RECURSE FORMAT_SOURCES
+  ${CMAKE_CURRENT_BINARY_DIR}/src/*.cc
+  ${CMAKE_CURRENT_BINARY_DIR}/src/*.h
+  ${CMAKE_CURRENT_BINARY_DIR}/src/*.inl
+  ${CMAKE_CURRENT_BINARY_DIR}/test/src/*.cc
+  ${CMAKE_CURRENT_BINARY_DIR}/test/src/*.h
+  ${CMAKE_CURRENT_BINARY_DIR}/test/src/*.inl
 )
 
 set(PROJECT_RESOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/resources)
 set(XML_GRESOURCE ${PROJECT_RESOURCE_DIR}/resources.gresource.xml)
 set(RESOURCE_BUNDLE_OUTPUT ${PROJECT_RESOURCE_DIR}/resource.autogen.c)
+
+set(PKEXEC_POLICY ${PROJECT_RESOURCE_DIR}/com.github.jack-ullery.AppAnvil.pkexec.policy)
 
 #### Add Linters and Static Analysis ####
 
@@ -40,8 +54,14 @@ if(${USE_CPPCHECK})
   if(${CPPCHECK} STREQUAL "CPPCHECK-NOTFOUND")
     message(WARNING "Could not find cppcheck installation. Please install cppcheck if you want to use it for static analysis.")
   else()
-    message(STATUS "Adding cppcheck to build (not working)")
-    # set(CMAKE_CXX_CPPCHECK cppcheck --inline-suppr --enable=all)
+    message(STATUS "Adding cppcheck to build")
+    set(CMAKE_CXX_CPPCHECK cppcheck
+      --enable=warning,performance,portability,information 
+      --suppress=missingInclude --suppress=unmatchedSuppression --suppress=internalAstError 
+      --quiet
+      --inline-suppr
+      src
+    )
   endif()
 
   unset(USE_CPPCHECK CACHE)
@@ -64,17 +84,16 @@ if(${USE_CLANG_TIDY})
   unset(USE_CLANG_TIDY CACHE)
 endif()
 
-# If astyle is downloaded, format all the source code files in ./src and ./test/src
-find_program(ASTYLE NAMES astyle)
-  if(${CLANG_TIDY} STREQUAL "CLANG_TIDY-NOTFOUND")
-    message(WARNING "Could not find astyle installation. Please install astyle if you want to use it to automaticaly format code.")
+# If clang-format is downloaded, format all the source code files in ./src and ./test/src
+find_program(CLANG_FORMAT NAMES clang-format-12)
+  if(${CLANG_FORMAT} STREQUAL "CLANG_FORMAT-NOTFOUND")
+    message(WARNING "Could not find clang-format installation. Please install clang-format-12 if you want to use it to automaticaly format code.")
   else()
-  message(STATUS "Adding astyle to build")
-
-  add_custom_target(
-    FORMAT
-    COMMAND astyle --style=kr -s2 -f -p -n -r "./src/*.cc,*.h,*.inl" "./test/src/*.cc,*.h,*.inl"
-  )
+    message(STATUS "Adding clang-format-12 to build")
+    add_custom_target(
+      FORMAT
+      COMMAND clang-format-12 -style=file -i ${FORMAT_SOURCES}
+    )
 endif()
 
 #### Include GTKmm Libraries ####
@@ -135,8 +154,32 @@ target_link_libraries(${LIBRARY_OUTPUT_NAME} PUBLIC ${GTKMM_LIBRARIES})
 target_link_libraries(${LIBRARY_OUTPUT_NAME} PUBLIC jsoncpp)
 target_link_libraries(${LIBRARY_OUTPUT_NAME} PUBLIC pthread)
 
+add_subdirectory(aa-caller)
 add_subdirectory(test)
 
 #### Create the binary to the library ####
 add_executable(${PROJECT_NAME} ./src/main.cc)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${LIBRARY_OUTPUT_NAME})
+
+#### Create install target to install binaries  ####
+install(
+  TARGETS ${PROJECT_NAME}
+  DESTINATION bin
+)
+
+#### Create install target to modify pkexec ####
+install(
+  FILES ${PKEXEC_POLICY}
+  DESTINATION /usr/share/polkit-1/actions/
+)
+
+#### Creating uninstall target (copying code from CMake FAQ) ####
+if(NOT TARGET uninstall)
+  configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+    IMMEDIATE @ONLY)
+
+  add_custom_target(uninstall
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
+endif()

@@ -15,29 +15,28 @@
 #include <thread>
 #include <vector>
 
-enum TabState {
-  PROFILE,
-  PROCESS,
-  LOGS,
-  OTHER
-};
+enum TabState { PROFILE, PROCESS, LOGS, OTHER };
 
+/**
+ * This class creates a separate thread that the main GUI thread can communicate with.
+ * This second thread asynchronously calls terminal commands and communicates the results with the main thread.
+ **/
 class ConsoleThread
 {
 public:
-  ConsoleThread(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs);
+  ConsoleThread(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs<StatusColumnRecord>> logs);
   ~ConsoleThread();
 
   // Delete the copy-constructor, move constructor, and copy assignment operator
-  ConsoleThread(const ConsoleThread& other) = delete;
-  ConsoleThread(const ConsoleThread&& other) = delete;
-  ConsoleThread& operator=(const ConsoleThread& other) = delete;
+  ConsoleThread(const ConsoleThread &other)  = delete;
+  ConsoleThread(const ConsoleThread &&other) = delete;
+  ConsoleThread &operator=(const ConsoleThread &other) = delete;
 
   // Create a move assignment operator
-  ConsoleThread& operator=(ConsoleThread&& other) noexcept;
+  ConsoleThread &operator=(ConsoleThread &&other) noexcept;
 
   void send_refresh_message(TabState new_state);
-  void send_change_profile_status_message(const std::string& profile, const std::string& old_status, const std::string& new_status);
+  void send_change_profile_status_message(const std::string &profile, const std::string &old_status, const std::string &new_status);
   void send_quit_message();
 
   void get_status();
@@ -45,22 +44,14 @@ public:
   void get_logs();
 
 protected:
-  enum Event {
-    REFRESH,
-    CHANGE_STATUS,
-    QUIT
-  };
+  enum Event { REFRESH, CHANGE_STATUS, QUIT };
 
   struct Message {
     Event event;
     TabState state;
     std::vector<std::string> data;
 
-    Message(Event a, TabState b, std::vector<std::string> c)
-      : event{a},
-        state{b},
-        data{std::move(c)}
-    {}
+    Message(Event a, TabState b, std::vector<std::string> c) : event{a}, state{b}, data{std::move(c)} { }
   };
 
   void console_caller();
@@ -76,10 +67,10 @@ private:
   std::future<void> asynchronous_thread;
 
   // Member fields
-  BlockingQueue<Message, std::mutex> queue;
+  BlockingQueue<Message, std::deque<Message>, std::mutex> queue;
 
   // DispatcherMiddleman used to communicate results with main thread
-  DispatcherMiddleman<Profiles, Processes, Logs, Glib::Dispatcher, std::mutex> dispatch_man;
+  DispatcherMiddleman<Profiles, Processes, Logs<StatusColumnRecord>, Glib::Dispatcher, std::mutex> dispatch_man;
 
   // Remember last called state so we can refresh this tab every few seconds (default is OTHER)
   TabState last_state = OTHER;

@@ -3,10 +3,7 @@
 #include <tuple>
 
 MainWindow::MainWindow()
-  : prof{new Profiles()},
-proc{new Processes()},
-logs{new Logs()},
-console{new ConsoleThread(prof, proc, logs)}
+    : prof{new Profiles()}, proc{new Processes()}, logs{new Logs<StatusColumnRecord>()}, console{new ConsoleThread(prof, proc, logs)}
 {
   // Add tabs to the stack pane
   m_stack.add(*prof, "prof", "Profiles");
@@ -22,7 +19,8 @@ console{new ConsoleThread(prof, proc, logs)}
   on_switch(NULL);
 
   // Connect the profile tab to the `send_status_change` method
-  sigc::slot<void(const std::string&, const std::string&, const std::string&)> change_fun = sigc::mem_fun(*this, &MainWindow::send_status_change);
+  sigc::slot<void(const std::string &, const std::string &, const std::string &)> change_fun =
+      sigc::mem_fun(*this, &MainWindow::send_status_change);
   prof->set_status_change_signal_handler(change_fun);
 
   // Set some default properties for titlebar
@@ -32,8 +30,13 @@ console{new ConsoleThread(prof, proc, logs)}
   m_headerbar.set_hexpand(true);
   m_headerbar.set_show_close_button(true);
 
+  // Set the icon
+  auto builder         = Gtk::Builder::create_from_resource("/resources/icon.glade");
+  Gtk::Image *icon_ptr = nullptr;
+  builder->get_widget<Gtk::Image>("icon", icon_ptr);
+  this->set_icon(icon_ptr->get_pixbuf());
+
   // Set some default settings for the window
-  this->set_icon_from_file("./resources/icon.svg");
   this->set_default_size(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
   this->add_events(Gdk::EventMask::ENTER_NOTIFY_MASK);
 
@@ -43,16 +46,16 @@ console{new ConsoleThread(prof, proc, logs)}
   this->show_all();
 }
 
-void MainWindow::send_status_change(const std::string& profile, const std::string& old_status, const std::string& new_status)
+void MainWindow::send_status_change(const std::string &profile, const std::string &old_status, const std::string &new_status)
 {
   console->send_change_profile_status_message(profile, old_status, new_status);
 }
 
-bool MainWindow::on_switch(GdkEvent* event)
+bool MainWindow::on_switch(GdkEvent *event)
 {
   std::ignore = event;
 
-  std::string visible_child  = m_stack.get_visible_child_name();
+  std::string visible_child = m_stack.get_visible_child_name();
 
   if(visible_child == "prof") {
     console->send_refresh_message(PROFILE);

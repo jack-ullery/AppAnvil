@@ -1,7 +1,8 @@
 #include "status_column_record.h"
 
 #include <gtkmm/box.h>
-#include <gtkmm/treeiter.h>
+// #include <gtkmm/treeiter.h>
+#include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treemodelsort.h>
 #include <memory>
 #include <tuple>
@@ -10,67 +11,27 @@
 /*
     Public Methods
 */
-std::shared_ptr<StatusColumnRecord> StatusColumnRecord::create(const std::shared_ptr<Gtk::TreeView>& view, std::vector<std::string> names)
+std::shared_ptr<StatusColumnRecord> StatusColumnRecord::create(const std::shared_ptr<Gtk::TreeView> &view,
+                                                               const std::vector<ColumnHeader> &names)
 {
-  std::shared_ptr<StatusColumnRecord> record{new StatusColumnRecord(names)};
+  std::shared_ptr<StatusColumnRecord> record{new StatusColumnRecord(view, names)};
 
-  auto store = Gtk::TreeStore::create(*record);
+  auto store    = Gtk::TreeStore::create(*record);
   record->store = store;
   record->view = view;
 
   record->filter_model = Gtk::TreeModelFilter::create(store);
-  record->sort_model = Gtk::TreeModelSort::create(record->filter_model);
-  view->set_model(record->sort_model);
-
-  for(uint i = 0; i < names.size(); i++) {
-    // Add a visible column, and title it using the string from 'names'
-    view->append_column(names[i], record->column[i]);
-    // Set some default settings for the columns
-    // Note this a Gtk::TreeViewColumn which is different then the Gtk::TreeModelColumn we have as a field in StatusColumnRecord
-    auto *column = view->get_column(i);
-    column->set_reorderable();
-    column->set_resizable();
-    column->set_min_width(MIN_COL_WIDTH);
-    column->set_sort_column(record->column[i]);
-  }
+  auto sort_model      = Gtk::TreeModelSort::create(record->filter_model);
+  view->set_model(sort_model);
 
   return record;
 }
 
-void StatusColumnRecord::set_visible_func(const Gtk::TreeModelFilter::SlotVisible& filter)
+void StatusColumnRecord::set_visible_func(const Gtk::TreeModelFilter::SlotVisible &filter)
 {
   filter_fun = filter;
   filter_model->set_visible_func(filter);
 }
-
-Gtk::TreeRow StatusColumnRecord::new_row()
-{
-  return *(store->append());
-}
-
-Gtk::TreeRow StatusColumnRecord::new_child_row(const Gtk::TreeRow& parent)
-{
-  return *(store->append(parent.children()));
-}
-
-std::string StatusColumnRecord::get_row_data(const Gtk::TreeRow& row, const uint& index)
-{
-  if(index >= column.size()) {
-    throw std::out_of_range("Attempting to access invalid column.");
-  }
-
-  return row[this->column[index]];
-}
-
-std::string to_string(std::vector<std::string> vec)
-{
-  if(vec.empty()) {
-    return "NOTHING";
-  }
-
-  return vec[0];
-}
-
 
 void StatusColumnRecord::clear()
 {
@@ -92,6 +53,9 @@ void StatusColumnRecord::clear()
   // Finally we can clear all the data from the liststore
   store->clear();
 }
+Gtk::TreeRow StatusColumnRecord::new_row() { return *(store->append()); }
+
+Gtk::TreeRow StatusColumnRecord::new_child_row(const Gtk::TreeRow &parent) { return *(store->append(parent.children())); }
 
 uint StatusColumnRecord::filter_rows()
 {
@@ -102,7 +66,7 @@ uint StatusColumnRecord::filter_rows()
 
   // Count the number of rows that are visible
   uint num_visible = 0;
-  auto children = store->children();
+  auto children    = store->children();
 
   for(auto row = children.begin(); row != children.end(); row++) {
     bool visible = filter_fun(row);
@@ -118,14 +82,33 @@ uint StatusColumnRecord::filter_rows()
 /*
     Private Methods
 */
-StatusColumnRecord::StatusColumnRecord(const std::vector<std::string>& names)
-  : filter_fun{sigc::ptr_fun(&StatusColumnRecord::default_filter)}
+StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, const std::vector<ColumnHeader> &names)
+    : filter_fun{sigc::ptr_fun(&StatusColumnRecord::default_filter)}
 {
-  this->column = std::vector<Gtk::TreeModelColumn<std::string>>(names.size());
+  for(uint i = 0; i < names.size(); i++) {
+    std::unique_ptr<Gtk::TreeModelColumnBase> column_base;
 
-  for(uint i = 0; i < column.size(); i++) {
-    column[i] = Gtk::TreeModelColumn<std::string>();
-    add(column[i]);
+    if(names[i].type == ColumnHeader::STRING) {
+      // Add a visible column, and title it using the string from 'names'
+      auto model_column = Gtk::TreeModelColumn<std::string>();
+      add(model_column);
+      view->append_column(names[i].name, model_column);
+      column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
+    } else {
+      // Add a visible column, and title it using the string from 'names'
+      auto model_column = Gtk::TreeModelColumn<unsigned int>();
+      add(model_column);
+      view->append_column(names[i].name, model_column);
+      column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
+    }
+
+    // Set some default settings for the columns
+    // Note this a Gtk::TreeViewColumn which is different then the Gtk::TreeModelColumn which we use earlier
+    auto *column_view = view->get_column(i);
+    column_view->set_reorderable();
+    column_view->set_resizable();
+    column_view->set_min_width(MIN_COL_WIDTH);
+    column_view->set_sort_column(*column_base);
   }
 }
 
@@ -134,7 +117,8 @@ std::vector<std::string> StatusColumnRecord::row_to_vector(const Gtk::TreeRow& r
   std::vector<std::string> vec;
 
   for(uint i = 0; i < this->column.size(); i++) {
-    std::string str = get_row_data(row, i);
+    std::string str;
+    row->get_value(i, str);
     vec.push_back(str);
   }
 

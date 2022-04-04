@@ -11,10 +11,20 @@
 
 constexpr int MIN_COL_WIDTH = 20;
 
+struct ColumnHeader {
+  enum ColumnType { STRING, INT };
+
+  ColumnType type;
+  std::string name;
+
+  ColumnHeader(std::string name, ColumnType type) : type{type}, name{std::move(name)} { }
+
+  explicit ColumnHeader(std::string name) : type{STRING}, name{std::move(name)} { }
+};
+
 class StatusColumnRecord : public Gtk::TreeModel::ColumnRecord
 {
 public:
-
   /**
    * @brief Create a new StatusColumnRecord object.
    *
@@ -28,10 +38,19 @@ public:
    *
    * @returns std::shared_ptr refrencing a new StatusColumnRecord object.
    */
-  static std::shared_ptr<StatusColumnRecord> create(const std::shared_ptr<Gtk::TreeView>& view, std::vector<std::string> names);
+  static std::shared_ptr<StatusColumnRecord> create(const std::shared_ptr<Gtk::TreeView> &view, const std::vector<ColumnHeader> &names);
 
-  // Should probably add a description.
-  void set_visible_func(const Gtk::TreeModelFilter::SlotVisible& filter);
+  /**
+   * @brief Sets the callback function which specifies whether a row should be visible
+   *
+   * @details
+   * Sets the callback function which specifies whether a row should be visible.
+   * Function should return true if row should be visible, or false otherwise.
+   * This is used do decide which rows should be visible.
+   *
+   * @param filter, The callback function to use
+   */
+  void set_visible_func(const Gtk::TreeModelFilter::SlotVisible &filter);
 
   /**
    * @brief Creates and returns a new TreeRow in the table.
@@ -53,10 +72,7 @@ public:
    *
    * @returns A new TreeRow from the table.
    */
-  Gtk::TreeRow new_child_row(const Gtk::TreeRow& parent);
-
-  // I'll do the comment later
-  std::string get_row_data(const Gtk::TreeRow& row, const uint& index);
+  Gtk::TreeRow new_child_row(const Gtk::TreeRow &parent);
 
   /**
    * @brief Deletes all rows in the StatusColumnRecord, while remembering which row was selected.
@@ -76,7 +92,17 @@ public:
   uint filter_rows();
 
 private:
-  explicit StatusColumnRecord(const std::vector<std::string>& names);
+  explicit StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, const std::vector<ColumnHeader> &names);
+
+  /**
+   * @brief Selects the previously selected row before `clear()` was called.
+   *
+   * @details
+   * Selects the first valid row if it matches the row that was previously selected the last time `StatusColumnRecord::clear()` was called.
+   * If either it didn't match any row or `clear()` was never called on this ColumnRecord, then no row is selected.
+   */
+  void reselect_row();
+
   std::vector<std::string> row_to_vector(const Gtk::TreeRow& row);
 
   std::vector<Gtk::TreeModelColumn<std::string>> column;
@@ -88,14 +114,6 @@ private:
   std::shared_ptr<Gtk::TreeView> view;
   std::vector<std::string> last_selected_row;
 
-  /**
-   * @brief Selects the previously selected row before `clear()` was called.
-   *
-   * @details
-   * Selects the first valid row if it matches the row that was previously selected the last time `StatusColumnRecord::clear()` was called.
-   * If either it didn't match any row or `clear()` was never called on this ColumnRecord, then no row is selected.
-   */
-  void reselect_row();
   static bool default_filter(const Gtk::TreeModel::iterator& node);
 };
 

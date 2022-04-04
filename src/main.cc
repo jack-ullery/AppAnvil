@@ -1,5 +1,5 @@
-#include "resource.autogen.c"
 #include "main_window.h"
+#include "resource.autogen.c"
 
 #include <gtkmm/application.h>
 

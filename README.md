@@ -20,8 +20,8 @@ The AppAnvil project aims to create an intuitive graphical interface for monitor
 ## Compile Time
 * cmake
 * g++ (or another equivalent c++ compiler)
-* libgtkmm-3.0-dev
-* libjsoncpp-dev
+* GTKmm (libgtkmm-3.0-dev)
+* JsonCpp (libjsoncpp-dev)
 * apparmor-utils
 
 ## Optional
@@ -32,30 +32,42 @@ Linters and Static Analysis tools used by the Makefile
 * cppcheck
 * clang-tidy
 
+Code beautifier/formatter
+* clang-format
+
 Unit Tests
-* googletest
-* googlemock
+* googletest (libgtest-dev)
+* googlemock (libgmock-dev)
 
 # Compilation Instructions
 
-To modify pkexec's behavior when authenticating calls to some AppArmor utilities.
-```
-sudo cp ./resources/com.github.jack-ullery.AppAnvil.pkexec.policy /usr/share/polkit-1/actions/
-```
-
-To generate a makefile, and build the project using that makefile:
+To generate a makefile, build, and install the project using that makefile:
 ```
 $ cmake .
-$ make
+$ sudo make install
 ```
-To generate a makefile, build, and run extra static analysis on the source code:
+To generate a makefile, build, install, and run extra static analysis on the source code:
 ```
 $ cmake -DANALYZE=TRUE .
-$ make
+$ sudo make install
+```
+To format code, without building it:
+```
+$ make FORMAT
+```
+# Uninstall Instructions
+
+To uninstall AppAnvil binaries and pkexec policy from the system:
+```
+$ sudo make uninstall
 ```
 
 # Run
 To run the resulting binary:
 ```
-$ ./dist/appanvil
+$ appanvil
+```
+To run unit tests (need googletest & googlemock installed):
+```
+$ ./dist/appanvil_test
 ```
