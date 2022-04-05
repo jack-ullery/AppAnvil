@@ -35,7 +35,37 @@ Gtk::TreeRow StatusColumnRecord::new_row() { return *(store->append()); }
 
 Gtk::TreeRow StatusColumnRecord::new_child_row(const Gtk::TreeRow &parent) { return *(store->append(parent.children())); }
 
-void StatusColumnRecord::clear() { store->clear(); }
+void StatusColumnRecord::clear() {
+  // We want to remember the last selected row, so that when data is added, we can select it again if a similar row appears
+  // If a future row has the same string values we treat it the same as this row
+  significant_rows.clear();
+  // Get the currently selected rows (right now the max is one)
+  auto selection = view->get_selection()->get_selected_rows();
+
+  // Add all selected rows to map
+  for(auto path : selection){
+    bool isExpanded = view->row_expanded(path);
+    RowData data(true, isExpanded);
+    significant_rows.insert({path, data});
+  }
+
+  // For each row in the TreeView
+  auto children = store->children();
+  for(auto row : children) {
+    // Get the path
+    Gtk::TreePath path = store->get_path(row);
+    // If the row is expanded, and not contained in the map
+    bool isExpanded = view->row_expanded(path);
+    bool exists = significant_rows.find(path) != significant_rows.end();  
+    if(isExpanded && !exists){
+      // Add data to the map
+      RowData data(false, isExpanded);
+      significant_rows.insert({path, data});
+    }
+  }
+
+  store->clear();  
+}
 
 uint StatusColumnRecord::filter_rows()
 {
@@ -61,7 +91,8 @@ uint StatusColumnRecord::filter_rows()
     Private Methods
 */
 StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, const std::vector<ColumnHeader> &names)
-    : filter_fun{sigc::ptr_fun(&StatusColumnRecord::default_filter)}
+    : view{std::move(view)},
+      filter_fun{sigc::ptr_fun(&StatusColumnRecord::default_filter)}
 {
   for(uint i = 0; i < names.size(); i++) {
     std::unique_ptr<Gtk::TreeModelColumnBase> column_base;

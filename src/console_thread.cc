@@ -1,5 +1,4 @@
 #include "console_thread.h"
-
 #include "threads/command_caller.h"
 
 #include <iostream>
@@ -7,7 +6,7 @@
 
 ConsoleThread::ConsoleThread(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc,
                              std::shared_ptr<Logs<StatusColumnRecord>> logs)
-    : dispatch_man(std::move(prof), std::move(proc), std::move(logs))
+    : last_state{PROFILE}, dispatch_man(std::move(prof), std::move(proc), std::move(logs))
 {
   asynchronous_thread = std::async(std::launch::async, &ConsoleThread::console_caller, this);
 }
@@ -19,6 +18,7 @@ void ConsoleThread::send_refresh_message(TabState new_state)
   Message message(REFRESH, new_state, {});
   // Send the message to the queue, this lets the other thread know what it should do.
   queue.push(message);
+  last_state=new_state;
   cv.notify_one();
 }
 
@@ -65,12 +65,26 @@ void ConsoleThread::run_command(TabState state)
   }
 }
 
+std::chrono::time_point<std::chrono::steady_clock> ConsoleThread::get_wait_time_point()
+{
+  auto now = std::chrono::steady_clock::now();
+  auto time_wait = std::chrono::seconds(5);
+  return now + time_wait;
+}
+
 ConsoleThread::Message ConsoleThread::wait_for_message()
 {
   std::unique_lock<std::mutex> lock(task_ready_mtx);
 
   while(queue.empty()) {
-    cv.condition_variable::wait(lock); // Look into `wait_until`
+    auto cv_status = cv.condition_variable::wait_until(lock, get_wait_time_point()); // Look into `wait_until`
+
+    if(cv_status == std::cv_status::timeout){
+      // Create a message with the state to refresh for, but no data
+      Message message(REFRESH, last_state, {});
+      // Send the message to the queue, this lets the other thread know what it should do.
+      queue.push(message);
+    }
   }
 
   return queue.pop();

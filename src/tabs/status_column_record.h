@@ -6,6 +6,7 @@
 #include <gtkmm/treemodelfilter.h>
 #include <gtkmm/treestore.h>
 #include <gtkmm/treeview.h>
+#include <map>
 #include <memory>
 
 constexpr int MIN_COL_WIDTH = 20;
@@ -91,10 +92,22 @@ public:
   uint filter_rows();
 
 private:
+  struct RowData {
+    const bool isSelected;
+    const bool isExpanded;
+
+    RowData(const bool &isSelectedArg, const bool &isExpandedArg)
+    : isSelected{isSelectedArg},
+      isExpanded{isExpandedArg}
+      { }
+  };
+
   explicit StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, const std::vector<ColumnHeader> &names);
   Glib::RefPtr<Gtk::TreeStore> store;
+  std::shared_ptr<Gtk::TreeView> view;
   Glib::RefPtr<Gtk::TreeModelFilter> model_filter;
   Gtk::TreeModelFilter::SlotVisible filter_fun;
+  std::map<Gtk::TreePath, RowData> significant_rows;
 
   static bool default_filter(const Gtk::TreeModel::iterator &node);
 };

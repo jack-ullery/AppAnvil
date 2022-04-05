@@ -8,6 +8,7 @@
 #include "threads/dispatcher_middleman.h"
 
 #include <condition_variable>
+#include <chrono>
 #include <future>
 #include <glibmm/dispatcher.h>
 #include <memory>
@@ -57,6 +58,7 @@ protected:
   void console_caller();
 
 private:
+  std::chrono::time_point<std::chrono::steady_clock> get_wait_time_point();
   Message wait_for_message();
   void run_command(TabState state);
 
@@ -65,6 +67,7 @@ private:
 
   // Member fields
   BlockingQueue<Message, std::deque<Message>, std::mutex> queue;
+  TabState last_state;
 
   // DispatcherMiddleman used to communicate results with main thread
   DispatcherMiddleman<Profiles, Processes, Logs<StatusColumnRecord>, Glib::Dispatcher, std::mutex> dispatch_man;
