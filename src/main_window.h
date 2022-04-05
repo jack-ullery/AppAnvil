@@ -56,8 +56,8 @@ private:
   std::shared_ptr<Profiles> prof;
   std::shared_ptr<Processes> proc;
   std::shared_ptr<Logs<StatusColumnRecord>> logs;
-  std::shared_ptr<FileChooser> file_chooser;
   std::shared_ptr<About> about;
+  std::shared_ptr<FileChooser> file_chooser;
 
   // Second thread for calling command line utilities
   std::shared_ptr<ConsoleThread> console;
