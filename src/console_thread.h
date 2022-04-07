@@ -7,8 +7,8 @@
 #include "threads/blocking_queue.h"
 #include "threads/dispatcher_middleman.h"
 
-#include <condition_variable>
 #include <chrono>
+#include <condition_variable>
 #include <future>
 #include <glibmm/dispatcher.h>
 #include <memory>

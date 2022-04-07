@@ -1,6 +1,6 @@
+#include "jsoncpp/json/json.h"
 #include "logs_mock.cc"
 #include "status_column_record_mock.cc"
-#include "jsoncpp/json/json.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -18,19 +18,20 @@ protected:
 
   virtual void SetUp() { }
 
-  // Some of the sample snippets of information below were taken from the output of running 'journalctl -b "_AUDIT_TYPE=1400" --output=json' 
+  // Some of the sample snippets of information below were taken from the output of running 'journalctl -b "_AUDIT_TYPE=1400" --output=json'
   // in the terminal. They are mostly used to verify that information is being formatted correctly in format_log_data and format_timestamp.
-  // A string in valid json format is also necessary to test the functionality of add_row_from_json and add_data_to_record as they will 
+  // A string in valid json format is also necessary to test the functionality of add_row_from_json and add_data_to_record as they will
   // throw an exception when trying to parse the json data otherwise.
   std::string sample_log_data_type      = "\"STATUS\"";
   std::string sample_log_data_operation = "\"profile_load\"";
   std::string sample_log_data_status    = "\"unconfined\"";
-  time_t sample_log_data_timestamp      = (time_t) 1648234140;  // Fri Mar 25 14:49:00 2022 (time as of writing tests (Eastern Time))
-  time_t zerotime                       = (time_t) 0;           // Thu Jan 1st 00:00:00 1970 (UTC) (Wed Dec 31 19:00:00 1969 in Eastern Time)
+  time_t sample_log_data_timestamp      = (time_t) 1648234140; // Fri Mar 25 14:49:00 2022 (time as of writing tests (Eastern Time))
+  time_t zerotime                       = (time_t) 0;          // Thu Jan 1st 00:00:00 1970 (UTC) (Wed Dec 31 19:00:00 1969 in Eastern Time)
   std::regex timestamp_regex            = std::regex("\\d{4}-\\d{2}-\\d{2}\\s{1}\\d{2}:\\d{2}:\\d{2}\\t");
-  std::string journalctl_json_snippet   = "{\"_SOURCE_REALTIME_TIMESTAMP\" : \"1648231725959000\",\"_AUDIT_FIELD_APPARMOR\" : \"\\\"STATUS\\\"\","
-                                       "\"_AUDIT_FIELD_OPERATION\" : \"\\\"profile_load\\\"\",\"_AUDIT_FIELD_NAME\" : \"nvidia_modprobe\","
-                                       "\"_PID\" : \"601\",\"_AUDIT_FIELD_PROFILE\" : \"\\\"unconfined\\\"\"}";
+  std::string journalctl_json_snippet =
+      "{\"_SOURCE_REALTIME_TIMESTAMP\" : \"1648231725959000\",\"_AUDIT_FIELD_APPARMOR\" : \"\\\"STATUS\\\"\","
+      "\"_AUDIT_FIELD_OPERATION\" : \"\\\"profile_load\\\"\",\"_AUDIT_FIELD_NAME\" : \"nvidia_modprobe\","
+      "\"_PID\" : \"601\",\"_AUDIT_FIELD_PROFILE\" : \"\\\"unconfined\\\"\"}";
   int data_arg_num_lines = 2;
   std::string data_arg   = "{\"_SOURCE_REALTIME_TIMESTAMP\" : \"1648231725959000\",\"_AUDIT_FIELD_APPARMOR\" : \"\\\"STATUS\\\"\","
                          "\"_AUDIT_FIELD_OPERATION\" : \"\\\"profile_load\\\"\",\"_AUDIT_FIELD_NAME\" : \"nvidia_modprobe\","
@@ -46,8 +47,8 @@ protected:
 };
 
 // Test for method format_log_data
-TEST_F(LogsTest, TEST_FORMAT_LOG_DATA) 
-{ 
+TEST_F(LogsTest, TEST_FORMAT_LOG_DATA)
+{
   std::string formatted_type      = logs.format_log_data(sample_log_data_type);
   std::string formatted_operation = logs.format_log_data(sample_log_data_operation);
   std::string formatted_status    = logs.format_log_data(sample_log_data_status);
@@ -74,8 +75,8 @@ TEST_F(LogsTest, TEST_FORMAT_TIMESTAMP)
 }
 
 // Test for method add_row_from_json
-TEST_F(LogsTest, TEST_ADD_ROW_FROM_JSON) 
-{ 
+TEST_F(LogsTest, TEST_ADD_ROW_FROM_JSON)
+{
   Json::Value root;
   Json::CharReaderBuilder builder;
   JSONCPP_STRING errs;
@@ -92,8 +93,8 @@ TEST_F(LogsTest, TEST_ADD_ROW_FROM_JSON)
 }
 
 // Test for method add_data_to_record with a valid argument passed
-TEST_F(LogsTest, TEST_ADD_DATA_TO_RECORD_VALID) 
-{ 
+TEST_F(LogsTest, TEST_ADD_DATA_TO_RECORD_VALID)
+{
   EXPECT_CALL(*col_record_mock, clear()).Times(1);
   Sequence add_row_calls;
 
