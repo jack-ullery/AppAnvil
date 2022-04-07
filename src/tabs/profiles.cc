@@ -26,6 +26,7 @@ void Profiles::add_data_to_record(const std::string &data)
   }
 
   refresh();
+  col_record->reselect_rows();
 }
 
 void Profiles::change_status()

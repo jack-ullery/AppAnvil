@@ -69,6 +69,7 @@ template<class ColumnRecord> void Logs<ColumnRecord>::add_data_to_record(const s
   }
 
   // refresh the display after all logs have been added
+  col_record->reselect_rows();
   refresh();
 }
 

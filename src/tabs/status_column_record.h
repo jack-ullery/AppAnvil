@@ -91,6 +91,8 @@ public:
    */
   uint filter_rows();
 
+  void reselect_rows();
+
 private:
   struct RowData {
     const bool isSelected;
@@ -105,7 +107,8 @@ private:
   explicit StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, const std::vector<ColumnHeader> &names);
   Glib::RefPtr<Gtk::TreeStore> store;
   std::shared_ptr<Gtk::TreeView> view;
-  Glib::RefPtr<Gtk::TreeModelFilter> model_filter;
+  Glib::RefPtr<Gtk::TreeModelFilter> filter_model;
+  Glib::RefPtr<Gtk::TreeModelSort> sort_model;
   Gtk::TreeModelFilter::SlotVisible filter_fun;
   std::map<Gtk::TreePath, RowData> significant_rows;
 

@@ -37,6 +37,7 @@ void Processes::add_data_to_record(const std::string &unconfined)
     add_row_from_line(col_record, line);
   }
 
+  col_record->reselect_rows();
   refresh();
 }
 

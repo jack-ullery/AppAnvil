@@ -22,4 +22,5 @@ public:
   MOCK_METHOD(TreeRowMock *, new_row, ());
   MOCK_METHOD(void, clear, ());
   MOCK_METHOD(uint, filter_rows, ());
+  MOCK_METHOD(void, reselect_rows, ());
 };

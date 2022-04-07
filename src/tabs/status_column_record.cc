@@ -18,9 +18,9 @@ std::shared_ptr<StatusColumnRecord> StatusColumnRecord::create(const std::shared
   auto store    = Gtk::TreeStore::create(*record);
   record->store = store;
 
-  record->model_filter = Gtk::TreeModelFilter::create(store);
-  auto sort_model      = Gtk::TreeModelSort::create(record->model_filter);
-  view->set_model(sort_model);
+  record->filter_model = Gtk::TreeModelFilter::create(store);
+  record->sort_model   = Gtk::TreeModelSort::create(record->filter_model);
+  view->set_model(record->sort_model);
 
   return record;
 }
@@ -28,7 +28,7 @@ std::shared_ptr<StatusColumnRecord> StatusColumnRecord::create(const std::shared
 void StatusColumnRecord::set_visible_func(const Gtk::TreeModelFilter::SlotVisible &filter)
 {
   filter_fun = filter;
-  model_filter->set_visible_func(filter);
+  filter_model->set_visible_func(filter);
 }
 
 Gtk::TreeRow StatusColumnRecord::new_row() { return *(store->append()); }
@@ -70,7 +70,7 @@ void StatusColumnRecord::clear() {
 uint StatusColumnRecord::filter_rows()
 {
   // Refilter every row in table, deciding wheter they should be visible or not.
-  model_filter->refilter();
+  filter_model->refilter();
 
   // Count the number of rows that are visible
   uint num_visible = 0;
@@ -118,6 +118,33 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
     column_view->set_resizable();
     column_view->set_min_width(MIN_COL_WIDTH);
     column_view->set_sort_column(*column_base);
+  }
+}
+
+void StatusColumnRecord::reselect_rows()
+{
+  // For each row in the TreeView
+  auto children = store->children();
+  for(auto row : children) {
+    // Get the path
+    Gtk::TreePath path = store->get_path(row);
+
+    // If this row has the same data as the previously selected row (when this ColumnRecord was last cleared), then select it
+    auto row_pair = significant_rows.find(path);  
+    if(row_pair != significant_rows.end()) {
+      auto row_data = row_pair->second;
+      
+      // If row was selected
+      if(row_data.isSelected) {
+        auto selection = view->get_selection();
+        selection->select(path);
+      }
+      
+      // If row was expanded
+      if(row_data.isExpanded) {
+        view->expand_to_path(path);
+      }
+    }
   }
 }
 
