@@ -98,10 +98,7 @@ private:
     const bool isSelected;
     const bool isExpanded;
 
-    RowData(const bool &isSelectedArg, const bool &isExpandedArg)
-    : isSelected{isSelectedArg},
-      isExpanded{isExpandedArg}
-      { }
+    RowData(const bool &isSelectedArg, const bool &isExpandedArg) : isSelected{isSelectedArg}, isExpanded{isExpandedArg} { }
   };
 
   explicit StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, const std::vector<ColumnHeader> &names);

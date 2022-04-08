@@ -35,7 +35,8 @@ Gtk::TreeRow StatusColumnRecord::new_row() { return *(store->append()); }
 
 Gtk::TreeRow StatusColumnRecord::new_child_row(const Gtk::TreeRow &parent) { return *(store->append(parent.children())); }
 
-void StatusColumnRecord::clear() {
+void StatusColumnRecord::clear()
+{
   // We want to remember the last selected row, so that when data is added, we can select it again if a similar row appears
   // If a future row has the same string values we treat it the same as this row
   significant_rows.clear();
@@ -56,15 +57,15 @@ void StatusColumnRecord::clear() {
     Gtk::TreePath path = store->get_path(row);
     // If the row is expanded, and not contained in the map
     bool isExpanded = view->row_expanded(path);
-    bool exists = significant_rows.find(path) != significant_rows.end();  
-    if(isExpanded && !exists){
+    bool exists     = significant_rows.find(path) != significant_rows.end();
+    if(isExpanded && !exists) {
       // Add data to the map
       RowData data(false, isExpanded);
       significant_rows.insert({path, data});
     }
   }
 
-  store->clear();  
+  store->clear();
 }
 
 uint StatusColumnRecord::filter_rows()
@@ -91,8 +92,7 @@ uint StatusColumnRecord::filter_rows()
     Private Methods
 */
 StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, const std::vector<ColumnHeader> &names)
-    : view{view},
-      filter_fun{sigc::ptr_fun(&StatusColumnRecord::default_filter)}
+    : view{view}, filter_fun{sigc::ptr_fun(&StatusColumnRecord::default_filter)}
 {
   for(uint i = 0; i < names.size(); i++) {
     std::unique_ptr<Gtk::TreeModelColumnBase> column_base;
@@ -130,16 +130,16 @@ void StatusColumnRecord::reselect_rows()
     Gtk::TreePath path = store->get_path(row);
 
     // If this row has the same data as the previously selected row (when this ColumnRecord was last cleared), then select it
-    auto row_pair = significant_rows.find(path);  
+    auto row_pair = significant_rows.find(path);
     if(row_pair != significant_rows.end()) {
       auto row_data = row_pair->second;
-      
+
       // If row was selected
       if(row_data.isSelected) {
         auto selection = view->get_selection();
         selection->select(path);
       }
-      
+
       // If row was expanded
       if(row_data.isExpanded) {
         view->expand_to_path(path);
