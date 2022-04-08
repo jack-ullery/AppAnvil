@@ -43,7 +43,7 @@ void StatusColumnRecord::clear() {
   auto selection = view->get_selection()->get_selected_rows();
 
   // Add all selected rows to map
-  for(auto path : selection){
+  for(const auto &path : selection){
     bool isExpanded = view->row_expanded(path);
     RowData data(true, isExpanded);
     significant_rows.insert({path, data});
@@ -51,7 +51,7 @@ void StatusColumnRecord::clear() {
 
   // For each row in the TreeView
   auto children = store->children();
-  for(auto row : children) {
+  for(const auto &row : children) {
     // Get the path
     Gtk::TreePath path = store->get_path(row);
     // If the row is expanded, and not contained in the map
@@ -91,7 +91,7 @@ uint StatusColumnRecord::filter_rows()
     Private Methods
 */
 StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, const std::vector<ColumnHeader> &names)
-    : view{std::move(view)},
+    : view{view},
       filter_fun{sigc::ptr_fun(&StatusColumnRecord::default_filter)}
 {
   for(uint i = 0; i < names.size(); i++) {
@@ -125,7 +125,7 @@ void StatusColumnRecord::reselect_rows()
 {
   // For each row in the TreeView
   auto children = store->children();
-  for(auto row : children) {
+  for(const auto &row : children) {
     // Get the path
     Gtk::TreePath path = store->get_path(row);
 

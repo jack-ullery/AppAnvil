@@ -7,8 +7,8 @@
 #include "threads/blocking_queue.h"
 #include "threads/dispatcher_middleman.h"
 
-#include <condition_variable>
 #include <chrono>
+#include <condition_variable>
 #include <future>
 #include <glibmm/dispatcher.h>
 #include <memory>
@@ -58,7 +58,9 @@ protected:
   void console_caller();
 
 private:
-  std::chrono::time_point<std::chrono::steady_clock> get_wait_time_point();
+  static constexpr unsigned int TIME_WAIT = 5;
+  static std::chrono::time_point<std::chrono::steady_clock> get_wait_time_point();
+
   Message wait_for_message();
   void run_command(TabState state);
 

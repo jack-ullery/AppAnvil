@@ -25,8 +25,8 @@ void Profiles::add_data_to_record(const std::string &data)
     row->set_value(1, profiles.get(key, UNKNOWN_STATUS).asString());
   }
 
-  refresh();
   col_record->reselect_rows();
+  refresh();
 }
 
 void Profiles::change_status()
