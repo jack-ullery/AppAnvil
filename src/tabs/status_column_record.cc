@@ -63,7 +63,7 @@ Gtk::TreeRow StatusColumnRecord::get_parent_by_pid(unsigned int pid)
   auto children = store->children();
 
   for(auto iter = children.begin(); iter != children.end(); iter++) {
-    unsigned int row_pid;
+    unsigned int row_pid = 0;
     auto row = *iter;
     row.get_value(2, row_pid);
     if(row_pid == pid) {
@@ -77,13 +77,13 @@ Gtk::TreeRow StatusColumnRecord::get_parent_by_pid(unsigned int pid)
   return parentRow;
 }
 
-Gtk::TreeRow StatusColumnRecord::get_parent_by_pid(unsigned int pid, Gtk::TreeRow &parent)
+Gtk::TreeRow StatusColumnRecord::get_parent_by_pid(unsigned int pid, const Gtk::TreeRow &parent)
 {
   Gtk::TreeRow parentRow;
   auto children = parent->children();
 
   for(auto iter = children.begin(); iter != children.end(); iter++) {
-    unsigned int row_pid;
+    unsigned int row_pid = 0;
     auto row = *iter;
     row.get_value(2, row_pid);
     if(row_pid == pid) {
@@ -97,12 +97,12 @@ Gtk::TreeRow StatusColumnRecord::get_parent_by_pid(unsigned int pid, Gtk::TreeRo
   return parentRow;
 }
 
-bool StatusColumnRecord::pid_exists_in_child(unsigned int pid, Gtk::TreeRow &parent)
+bool StatusColumnRecord::pid_exists_in_child(unsigned int pid, const Gtk::TreeRow &parent)
 {
   auto children = parent.children();
 
   for(auto iter = children.begin(); iter != children.end(); iter++) {
-    unsigned int row_pid;
+    unsigned int row_pid  = 0;
     auto row = *iter;
     row.get_value(2, row_pid);
     if(row_pid == pid || (!row.children().empty() && pid_exists_in_child(pid, row))) {

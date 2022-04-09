@@ -1,12 +1,12 @@
 #ifndef TABS_STATUS_COLUMN_RECORD_H
 #define TABS_STATUS_COLUMN_RECORD_H
 
+#include <gtkmm/treeiter.h>
 #include <gtkmm/treemodel.h>
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treemodelfilter.h>
 #include <gtkmm/treestore.h>
 #include <gtkmm/treeview.h>
-#include <gtkmm/treeiter.h>
 #include <memory>
 
 constexpr int MIN_COL_WIDTH = 20;
@@ -92,8 +92,8 @@ public:
   uint filter_rows();
 
   Gtk::TreeRow get_parent_by_pid(unsigned int pid);
-  Gtk::TreeRow get_parent_by_pid(unsigned int pid, Gtk::TreeRow &parent);
-  bool pid_exists_in_child(unsigned int pid, Gtk::TreeRow &parent);
+  Gtk::TreeRow get_parent_by_pid(unsigned int pid, const Gtk::TreeRow &parent);
+  bool pid_exists_in_child(unsigned int pid, const Gtk::TreeRow &parent);
 
 private:
   explicit StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, const std::vector<ColumnHeader> &names);
