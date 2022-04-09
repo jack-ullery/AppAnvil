@@ -33,6 +33,7 @@ protected:
   void set_search_signal_handler(const Glib::SignalProxyProperty::SlotType &func);
   void on_search_changed();
   std::string get_marked_up_text();
+  std::string get_marked_up_text_lower();
 
 private:
   // GUI Builder to parse UI from xml file

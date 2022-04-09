@@ -51,20 +51,28 @@ void About::set_search_signal_handler(const Glib::SignalProxyProperty::SlotType 
 void About::on_search_changed() 
 {
   std::string label = get_marked_up_text();
+  std::string labelLower = get_marked_up_text_lower();
   std::string search = a_search->get_text();
-
-  if (search.empty() || search == "b" || search == "i" || search == "u") {
+  
+  std::string searchLower = a_search->get_text();
+  //convert string to lower case
+  std::for_each(searchLower.begin(), searchLower.end(), [](char & c){
+    c = ::tolower(c);
+  });
+  
+  if (search.empty() || searchLower == "b" || searchLower == "i" || searchLower == "u") {
     a_label->set_text(label);
     a_label->set_use_markup(true);
     return;
   }
   
-  size_t pos = label.find(search);
+  size_t pos = labelLower.find(searchLower);
   std::string replacement_string = "<span bgcolor=\"yellow\">" + search + "</span>";
 
-  while (pos != std::string::npos) {
-    label.replace(pos, search.size(), replacement_string);
-    pos = label.find(search, pos + replacement_string.size());
+ while (pos != std::string::npos) {
+    label.replace(pos, searchLower.size(), replacement_string);
+    labelLower.replace(pos, searchLower.size(), replacement_string);
+    pos = labelLower.find(searchLower, pos + replacement_string.size());
   }
 
   a_label->set_text(label);
@@ -103,4 +111,37 @@ std::string About::get_marked_up_text() {
         "You can access log information under the 'Logs' tab.\n\n"
         "<b>How do I monitor specific processes?</b>\n"
         "You can monitor processes with existing AppArmor profiles under the 'Processes' tab.";
+}
+
+std::string About::get_marked_up_text_lower() {
+	return "<b>what is appanvil?</b>\n"
+        "appanvil is a graphical user interface (gui) designed to facilitate the use of apparmor.\n\n"
+        "<b>what is apparmor?</b>\n"
+        "apparmor is a linux security module that protects your system from potential threats by imposing mandatory access control (mac).\n"
+        "it allows the user to secure individual applications by defining and restricting what resources an application can access or share.\n\n"
+        "<b>what is a profile?</b>\n"
+        "profiles are the user-defined restrictions for an application. they determine what resources applications can access or share.\n"
+        "one use case for a profile is to block access to sensitive files.\n\n"
+        "<u>profiles are able to run in:</u>\n"
+        "    - complain mode: the profile does not enforce the rules defined but reports any violations to the logs\n"
+        "    - enforce mode: the profile enforces the rules defined\n\n"
+        "you can change the mode of your profile(s) under the 'profile' tab.\n\n"
+        "<b>what information do logs contain?</b>\n"
+        "logs contain information for each apparmor event, which make them useful for debugging.\n\n"
+        "<u>logs contain:</u>\n"
+        "<i>time</i>\n"
+        "    - timestamp of event logged\n"
+        "<i>type</i>\n"
+        "    - denied: an access is denied when a profile in enforce mode violates rules\n"
+        "    - status: an access is allowed, but the access violated rules of a profile in complain mode\n"
+        "<i>operation</i>\n"
+        "    - profile load: load an apparmor profile into the kernel\n"
+        "    - profile replace: replacing current apparmor profile\n"
+        "    - open: attempt to access file\n"
+        "    - rmdir: remove directory of profile\n"
+        "<i>name</i>\n"
+        "    - full path of the executable\n\n"
+        "you can access log information under the 'logs' tab.\n\n"
+        "<b>how do i monitor specific processes?</b>\n"
+        "you can monitor processes with existing apparmor profiles under the 'processes' tab.";
 }
