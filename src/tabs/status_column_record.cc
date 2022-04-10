@@ -100,7 +100,7 @@ Gtk::TreeRow StatusColumnRecord::get_parent_by_pid(unsigned int pid)
 
   for(auto iter = children.begin(); iter != children.end(); iter++) {
     unsigned int row_pid = 0;
-    auto row = *iter;
+    auto row             = *iter;
     row.get_value(2, row_pid);
     if(row_pid == pid) {
       return row;
@@ -120,7 +120,7 @@ Gtk::TreeRow StatusColumnRecord::get_parent_by_pid(unsigned int pid, const Gtk::
 
   for(auto iter = children.begin(); iter != children.end(); iter++) {
     unsigned int row_pid = 0;
-    auto row = *iter;
+    auto row             = *iter;
     row.get_value(2, row_pid);
     if(row_pid == pid) {
       return row;
@@ -138,8 +138,8 @@ bool StatusColumnRecord::pid_exists_in_child(unsigned int pid, const Gtk::TreeRo
   auto children = parent.children();
 
   for(auto iter = children.begin(); iter != children.end(); iter++) {
-    unsigned int row_pid  = 0;
-    auto row = *iter;
+    unsigned int row_pid = 0;
+    auto row             = *iter;
     row.get_value(2, row_pid);
     if(row_pid == pid || (!row.children().empty() && pid_exists_in_child(pid, row))) {
       return true;

@@ -19,7 +19,7 @@ void Processes::add_row_from_line(const std::shared_ptr<StatusColumnRecord> &col
   std::string status = match[4];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   std::string comm   = match[5];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-  if (ppid > 0) {
+  if(ppid > 0) {
     auto parent_row = col_record->get_parent_by_pid(ppid);
     row             = col_record->new_child_row(parent_row);
   } else {
