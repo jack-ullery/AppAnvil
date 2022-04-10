@@ -12,7 +12,7 @@
     Public Methods
 */
 std::shared_ptr<StatusColumnRecord> StatusColumnRecord::create(const std::shared_ptr<Gtk::TreeView> &view,
-                                                               const std::shared_ptr<Gtk::ScrolledWindow> &win, 
+                                                               const std::shared_ptr<Gtk::ScrolledWindow> &win,
                                                                const std::vector<ColumnHeader> &names)
 {
   std::shared_ptr<StatusColumnRecord> record{new StatusColumnRecord(view, win, names)};
@@ -96,10 +96,9 @@ uint StatusColumnRecord::filter_rows()
 /*
     Private Methods
 */
-StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, const std::shared_ptr<Gtk::ScrolledWindow> &win, const std::vector<ColumnHeader> &names)
-    : view{view}, 
-      win{win},
-      filter_fun{sigc::ptr_fun(&StatusColumnRecord::default_filter)}
+StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, const std::shared_ptr<Gtk::ScrolledWindow> &win,
+                                       const std::vector<ColumnHeader> &names)
+    : view{view}, win{win}, filter_fun{sigc::ptr_fun(&StatusColumnRecord::default_filter)}
 {
   for(uint i = 0; i < names.size(); i++) {
     std::unique_ptr<Gtk::TreeModelColumnBase> column_base;
@@ -128,18 +127,20 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
   }
 }
 
-void StatusColumnRecord::remember_scrollbar_position(){
+void StatusColumnRecord::remember_scrollbar_position()
+{
   // Remember last position of the ScrolledBar in the ScrolledWindow our TreeView is a member of
   last_vadjustment_value = win->get_vadjustment()->get_value();
   last_hadjustment_value = win->get_hadjustment()->get_value();
 }
 
-void StatusColumnRecord::reset_scrollbar_position(){
+void StatusColumnRecord::reset_scrollbar_position()
+{
   // Adjust the ScrolledWindow to its previous position
-  while(Gtk::Main::events_pending()){
+  while(Gtk::Main::events_pending()) {
     Gtk::Main::iteration();
   }
-  
+
   win->get_vadjustment()->set_value(last_vadjustment_value);
   win->get_hadjustment()->set_value(last_hadjustment_value);
 }

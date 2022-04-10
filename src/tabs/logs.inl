@@ -84,7 +84,8 @@ template<class ColumnRecord>
 Logs<ColumnRecord>::Logs(std::shared_ptr<ColumnRecord> column_record) : col_record{std::move(column_record)} { }
 
 // For production
-template<class ColumnRecord> Logs<ColumnRecord>::Logs() : col_record{ColumnRecord::create(Status::get_view(), Status::get_window(), col_names)}
+template<class ColumnRecord>
+Logs<ColumnRecord>::Logs() : col_record{ColumnRecord::create(Status::get_view(), Status::get_window(), col_names)}
 {
   auto func = sigc::mem_fun(*this, &Logs::refresh);
   Status::set_refresh_signal_handler(func);

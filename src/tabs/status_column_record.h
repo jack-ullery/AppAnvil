@@ -39,7 +39,9 @@ public:
    *
    * @returns std::shared_ptr refrencing a new StatusColumnRecord object.
    */
-  static std::shared_ptr<StatusColumnRecord> create(const std::shared_ptr<Gtk::TreeView> &view, const std::shared_ptr<Gtk::ScrolledWindow> &win, const std::vector<ColumnHeader> &names);
+  static std::shared_ptr<StatusColumnRecord> create(const std::shared_ptr<Gtk::TreeView> &view,
+                                                    const std::shared_ptr<Gtk::ScrolledWindow> &win,
+                                                    const std::vector<ColumnHeader> &names);
 
   /**
    * @brief Sets the callback function which specifies whether a row should be visible
@@ -102,12 +104,13 @@ private:
     RowData(const bool &isSelectedArg, const bool &isExpandedArg) : isSelected{isSelectedArg}, isExpanded{isExpandedArg} { }
   };
 
-  explicit StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, const std::shared_ptr<Gtk::ScrolledWindow> &win, const std::vector<ColumnHeader> &names);
+  explicit StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, const std::shared_ptr<Gtk::ScrolledWindow> &win,
+                              const std::vector<ColumnHeader> &names);
   Glib::RefPtr<Gtk::TreeStore> store;
   std::shared_ptr<Gtk::TreeView> view;
-  
+
   std::shared_ptr<Gtk::ScrolledWindow> win;
-  
+
   Glib::RefPtr<Gtk::TreeModelFilter> filter_model;
   Glib::RefPtr<Gtk::TreeModelSort> sort_model;
   Gtk::TreeModelFilter::SlotVisible filter_fun;
