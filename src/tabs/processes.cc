@@ -7,7 +7,8 @@ const std::regex unconfined_proc("^\\s*(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(unconfined
 
 void Processes::add_row_from_line(const std::shared_ptr<StatusColumnRecord> &col_record, const std::string &line)
 {
-  auto row = col_record->new_row();
+  //auto row = col_record->new_row();
+  Gtk::TreeRow row;
 
   std::smatch match;
   std::regex_search(line, match, unconfined_proc);
@@ -17,6 +18,13 @@ void Processes::add_row_from_line(const std::shared_ptr<StatusColumnRecord> &col
   std::string user   = match[3];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   std::string status = match[4];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   std::string comm   = match[5];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
+  if (ppid > 0) {
+    auto parent_row = col_record->get_parent_by_pid(ppid);
+    row             = col_record->new_child_row(parent_row);
+  } else {
+    row = col_record->new_row();
+  }
 
   row->set_value(0, comm);   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   row->set_value(1, user);   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

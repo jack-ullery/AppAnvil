@@ -2,6 +2,7 @@
 #define TABS_STATUS_COLUMN_RECORD_H
 
 #include <gtkmm/scrolledwindow.h>
+#include <gtkmm/treeiter.h>
 #include <gtkmm/treemodel.h>
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treemodelfilter.h>
@@ -95,6 +96,9 @@ public:
   uint filter_rows();
 
   void reselect_rows();
+  Gtk::TreeRow get_parent_by_pid(unsigned int pid);
+  Gtk::TreeRow get_parent_by_pid(unsigned int pid, const Gtk::TreeRow &parent);
+  bool pid_exists_in_child(unsigned int pid, const Gtk::TreeRow &parent);
 
 private:
   struct RowData {

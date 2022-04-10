@@ -75,9 +75,6 @@ void StatusColumnRecord::clear()
 
 uint StatusColumnRecord::filter_rows()
 {
-  // Refilter every row in table, deciding wheter they should be visible or not.
-  filter_model->refilter();
-
   // Count the number of rows that are visible
   uint num_visible = 0;
   auto children    = store->children();
@@ -90,7 +87,66 @@ uint StatusColumnRecord::filter_rows()
     }
   }
 
+  // Refilter every row in table, deciding wheter they should be visible or not.
+  filter_model->refilter();
+
   return num_visible;
+}
+
+Gtk::TreeRow StatusColumnRecord::get_parent_by_pid(unsigned int pid)
+{
+  Gtk::TreeRow parentRow;
+  auto children = store->children();
+
+  for(auto iter = children.begin(); iter != children.end(); iter++) {
+    unsigned int row_pid = 0;
+    auto row = *iter;
+    row.get_value(2, row_pid);
+    if(row_pid == pid) {
+      return row;
+    }
+    if(!row.children().empty() && pid_exists_in_child(pid, row)) {
+      return get_parent_by_pid(pid, row);
+    }
+  }
+
+  return parentRow;
+}
+
+Gtk::TreeRow StatusColumnRecord::get_parent_by_pid(unsigned int pid, const Gtk::TreeRow &parent)
+{
+  Gtk::TreeRow parentRow;
+  auto children = parent->children();
+
+  for(auto iter = children.begin(); iter != children.end(); iter++) {
+    unsigned int row_pid = 0;
+    auto row = *iter;
+    row.get_value(2, row_pid);
+    if(row_pid == pid) {
+      return row;
+    }
+    if(!row.children().empty() && pid_exists_in_child(pid, row)) {
+      return get_parent_by_pid(pid, row);
+    }
+  }
+
+  return parentRow;
+}
+
+bool StatusColumnRecord::pid_exists_in_child(unsigned int pid, const Gtk::TreeRow &parent)
+{
+  auto children = parent.children();
+
+  for(auto iter = children.begin(); iter != children.end(); iter++) {
+    unsigned int row_pid  = 0;
+    auto row = *iter;
+    row.get_value(2, row_pid);
+    if(row_pid == pid || (!row.children().empty() && pid_exists_in_child(pid, row))) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 /*

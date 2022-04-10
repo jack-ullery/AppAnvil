@@ -31,8 +31,7 @@ void Logs<ColumnRecord>::add_row_from_json(const std::shared_ptr<ColumnRecord> &
   const std::string pid       = entry["_PID"].asString();
   const std::string status    = entry["_AUDIT_FIELD_PROFILE"].asString();
 
-  LogData row_data(timestamp, entry["_AUDIT_FIELD_APPARMOR"].asString(), entry["_AUDIT_FIELD_OPERATION"].asString(),
-                   entry["_AUDIT_FIELD_NAME"].asString(), entry["_PID"].asString(), entry["_AUDIT_FIELD_PROFILE"].asString());
+  LogData row_data(timestamp, type, operation, name, pid, status);
 
   // clang-format off
   row->set_value(0, format_timestamp(row_data.timestamp));  // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
