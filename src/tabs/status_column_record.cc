@@ -52,20 +52,9 @@ void StatusColumnRecord::clear()
     significant_rows.insert({path, data});
   }
 
-  // For each row in the TreeView
+  // Remember the path of every selected or expanded row in the TreeView
   auto children = store->children();
-  for(const auto &row: children) {
-    // Get the path
-    Gtk::TreePath path = store->get_path(row);
-    // If the row is expanded, and not contained in the map
-    bool isExpanded = view->row_expanded(path);
-    bool exists     = significant_rows.find(path) != significant_rows.end();
-    if(isExpanded && !exists) {
-      // Add data to the map
-      RowData data(false, isExpanded);
-      significant_rows.insert({path, data});
-    }
-  }
+  remember_children_rows(children);
 
   // Remember last position of the ScrolledBar in the ScrolledWindow our TreeView is a member of
   remember_scrollbar_position();
@@ -201,13 +190,27 @@ void StatusColumnRecord::reset_scrollbar_position()
   win->get_hadjustment()->set_value(last_hadjustment_value);
 }
 
-void StatusColumnRecord::reselect_rows()
+void StatusColumnRecord::remember_children_rows(const Gtk::TreeModel::Children &children)
 {
-  // Adjust the ScrolledWindow to its previous position
-  reset_scrollbar_position();
+  for(const auto &row: children) {
+    // Get the path
+    Gtk::TreePath path = store->get_path(row);
+    // If the row is expanded, and not contained in the map
+    bool isExpanded = view->row_expanded(path);
+    bool exists     = significant_rows.find(path) != significant_rows.end();
+    if(isExpanded && !exists) {
+      // Add data to the map
+      RowData data(false, isExpanded);
+      significant_rows.insert({path, data});
+    }
 
-  // For each row in the TreeView
-  auto children = store->children();
+    // Do the same for this row's children
+    remember_children_rows(row.children());
+  }
+}
+
+void StatusColumnRecord::reselect_children_rows(const Gtk::TreeModel::Children &children)
+{
   for(const auto &row: children) {
     // Get the path
     Gtk::TreePath path = store->get_path(row);
@@ -227,8 +230,21 @@ void StatusColumnRecord::reselect_rows()
       if(row_data.isExpanded) {
         view->expand_to_path(path);
       }
+
+      // Do the same for this row's children
+      reselect_children_rows(row.children());
     }
   }
+}
+
+void StatusColumnRecord::reselect_rows()
+{
+  // Reselect/reexpand every row in the TreeView, if it was selected or expanded before
+  auto children = store->children();
+  reselect_children_rows(children);
+
+  // Adjust the ScrolledWindow to its previous position
+  reset_scrollbar_position();
 }
 
 bool StatusColumnRecord::default_filter(const Gtk::TreeModel::iterator &node)

@@ -127,6 +127,9 @@ private:
   void remember_scrollbar_position();
   void reset_scrollbar_position();
 
+  void remember_children_rows(const Gtk::TreeModel::Children &children);
+  void reselect_children_rows(const Gtk::TreeModel::Children &children);
+
   // Unless `set_visible_func` is called, this filter sets every row in the ColumnRecord to be visible when filtered
   static bool default_filter(const Gtk::TreeModel::iterator &node);
 };
