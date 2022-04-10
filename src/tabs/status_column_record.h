@@ -1,6 +1,7 @@
 #ifndef TABS_STATUS_COLUMN_RECORD_H
 #define TABS_STATUS_COLUMN_RECORD_H
 
+#include <gtkmm/scrolledwindow.h>
 #include <gtkmm/treemodel.h>
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treemodelfilter.h>
@@ -38,7 +39,7 @@ public:
    *
    * @returns std::shared_ptr refrencing a new StatusColumnRecord object.
    */
-  static std::shared_ptr<StatusColumnRecord> create(const std::shared_ptr<Gtk::TreeView> &view, const std::vector<ColumnHeader> &names);
+  static std::shared_ptr<StatusColumnRecord> create(const std::shared_ptr<Gtk::TreeView> &view, const std::shared_ptr<Gtk::ScrolledWindow> &win, const std::vector<ColumnHeader> &names);
 
   /**
    * @brief Sets the callback function which specifies whether a row should be visible
@@ -101,14 +102,25 @@ private:
     RowData(const bool &isSelectedArg, const bool &isExpandedArg) : isSelected{isSelectedArg}, isExpanded{isExpandedArg} { }
   };
 
-  explicit StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, const std::vector<ColumnHeader> &names);
+  explicit StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, const std::shared_ptr<Gtk::ScrolledWindow> &win, const std::vector<ColumnHeader> &names);
   Glib::RefPtr<Gtk::TreeStore> store;
   std::shared_ptr<Gtk::TreeView> view;
+  
+  std::shared_ptr<Gtk::ScrolledWindow> win;
+  
   Glib::RefPtr<Gtk::TreeModelFilter> filter_model;
   Glib::RefPtr<Gtk::TreeModelSort> sort_model;
   Gtk::TreeModelFilter::SlotVisible filter_fun;
-  std::map<Gtk::TreePath, RowData> significant_rows;
 
+  // Used when remembering the state of the ColumnRecord when it is reset
+  std::map<Gtk::TreePath, RowData> significant_rows;
+  double last_vadjustment_value = 0;
+  double last_hadjustment_value = 0;
+
+  void remember_scrollbar_position();
+  void reset_scrollbar_position();
+
+  // Unless `set_visible_func` is called, this filter sets every row in the ColumnRecord to be visible when filtered
   static bool default_filter(const Gtk::TreeModel::iterator &node);
 };
 

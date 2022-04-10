@@ -13,6 +13,7 @@
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/searchentry.h>
 #include <gtkmm/treeview.h>
+#include <memory>
 
 constexpr auto UNKNOWN_STATUS = "unknown";
 
@@ -79,6 +80,13 @@ protected:
   std::shared_ptr<Gtk::TreeView> get_view();
 
   /**
+   * @brief Return the ScrolledWindow associated with this class.
+   *
+   * @returns The ScrolledWindow data member used by this class.
+   */
+  std::shared_ptr<Gtk::ScrolledWindow> get_window();
+
+  /**
    * @brief Return the active selection/choice in the dropdown ComboBoxText
    *
    * @returns The string of the dropdown item which is selected.
@@ -104,7 +112,7 @@ private:
 
   // Container Widgets
   std::shared_ptr<Gtk::TreeView> s_view;
-  std::unique_ptr<Gtk::ScrolledWindow> s_win;
+  std::shared_ptr<Gtk::ScrolledWindow> s_win;
   std::unique_ptr<Gtk::Box> s_box;
 
   // Widgets related to searchbar

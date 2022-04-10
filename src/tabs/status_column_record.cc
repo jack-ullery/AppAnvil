@@ -1,6 +1,7 @@
 #include "status_column_record.h"
 
 #include <gtkmm/box.h>
+#include <gtkmm/main.h>
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treemodelsort.h>
 #include <memory>
@@ -11,9 +12,10 @@
     Public Methods
 */
 std::shared_ptr<StatusColumnRecord> StatusColumnRecord::create(const std::shared_ptr<Gtk::TreeView> &view,
+                                                               const std::shared_ptr<Gtk::ScrolledWindow> &win, 
                                                                const std::vector<ColumnHeader> &names)
 {
-  std::shared_ptr<StatusColumnRecord> record{new StatusColumnRecord(view, names)};
+  std::shared_ptr<StatusColumnRecord> record{new StatusColumnRecord(view, win, names)};
 
   auto store    = Gtk::TreeStore::create(*record);
   record->store = store;
@@ -65,6 +67,9 @@ void StatusColumnRecord::clear()
     }
   }
 
+  // Remember last position of the ScrolledBar in the ScrolledWindow our TreeView is a member of
+  remember_scrollbar_position();
+
   store->clear();
 }
 
@@ -91,8 +96,10 @@ uint StatusColumnRecord::filter_rows()
 /*
     Private Methods
 */
-StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, const std::vector<ColumnHeader> &names)
-    : view{view}, filter_fun{sigc::ptr_fun(&StatusColumnRecord::default_filter)}
+StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, const std::shared_ptr<Gtk::ScrolledWindow> &win, const std::vector<ColumnHeader> &names)
+    : view{view}, 
+      win{win},
+      filter_fun{sigc::ptr_fun(&StatusColumnRecord::default_filter)}
 {
   for(uint i = 0; i < names.size(); i++) {
     std::unique_ptr<Gtk::TreeModelColumnBase> column_base;
@@ -121,8 +128,27 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
   }
 }
 
+void StatusColumnRecord::remember_scrollbar_position(){
+  // Remember last position of the ScrolledBar in the ScrolledWindow our TreeView is a member of
+  last_vadjustment_value = win->get_vadjustment()->get_value();
+  last_hadjustment_value = win->get_hadjustment()->get_value();
+}
+
+void StatusColumnRecord::reset_scrollbar_position(){
+  // Adjust the ScrolledWindow to its previous position
+  while(Gtk::Main::events_pending()){
+    Gtk::Main::iteration();
+  }
+  
+  win->get_vadjustment()->set_value(last_vadjustment_value);
+  win->get_hadjustment()->set_value(last_hadjustment_value);
+}
+
 void StatusColumnRecord::reselect_rows()
 {
+  // Adjust the ScrolledWindow to its previous position
+  reset_scrollbar_position();
+
   // For each row in the TreeView
   auto children = store->children();
   for(const auto &row: children) {

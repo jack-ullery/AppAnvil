@@ -73,7 +73,7 @@ void Profiles::set_status_change_signal_handler(sigc::slot<void(std::string, std
   profile_status_change_fun = std::move(change_fun);
 }
 
-Profiles::Profiles() : col_record{StatusColumnRecord::create(Status::get_view(), col_names)}
+Profiles::Profiles() : col_record{StatusColumnRecord::create(Status::get_view(), Status::get_window(), col_names)}
 {
   auto refresh_func = sigc::mem_fun(*this, &Profiles::refresh);
   auto apply_func   = sigc::mem_fun(*this, &Profiles::change_status);

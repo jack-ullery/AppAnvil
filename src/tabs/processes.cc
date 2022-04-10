@@ -47,7 +47,7 @@ void Processes::refresh()
   Status::set_status_label_text(" " + std::to_string(num_visible) + " matching processes");
 }
 
-Processes::Processes() : col_record{StatusColumnRecord::create(Status::get_view(), col_names)}
+Processes::Processes() : col_record{StatusColumnRecord::create(Status::get_view(), Status::get_window(), col_names)}
 {
   // Set the Processes::refresh function to be called whenever
   // the searchbar and checkboxes are updated
