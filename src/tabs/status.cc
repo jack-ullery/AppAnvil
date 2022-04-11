@@ -154,6 +154,8 @@ void Status::set_apply_signal_handler(const Glib::SignalProxyProperty::SlotType 
 
 std::shared_ptr<Gtk::TreeView> Status::get_view() { return s_view; }
 
+std::shared_ptr<Gtk::ScrolledWindow> Status::get_window() { return s_win; }
+
 Glib::ustring Status::get_selection_text() const { return s_status_selection->get_active_text(); }
 
 void Status::remove_status_selection()
