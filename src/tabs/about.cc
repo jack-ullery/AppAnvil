@@ -51,28 +51,28 @@ void About::set_search_signal_handler(const Glib::SignalProxyProperty::SlotType 
 void About::on_search_changed() 
 {
   std::string label = get_marked_up_text();
-  std::string labelLower = get_marked_up_text_lower();
+  std::string label_lower = get_marked_up_text_lower();
   std::string search = a_search->get_text();
   
-  std::string searchLower = a_search->get_text();
-  //convert string to lower case
-  std::for_each(searchLower.begin(), searchLower.end(), [](char & c){
-    c = ::tolower(c);
-  });
+  std::string search_lower = search;
+  std::string replacement_string;
+
+  //convert search to lower case
+  transform(search.begin(), search.end(), search_lower.begin(), ::tolower);
   
-  if (search.empty() || searchLower == "b" || searchLower == "i" || searchLower == "u") {
+  if (search.empty() || search_lower == "b" || search_lower == "i" || search_lower == "u") {
     a_label->set_text(label);
     a_label->set_use_markup(true);
     return;
   }
   
-  size_t pos = labelLower.find(searchLower);
-  std::string replacement_string = "<span bgcolor=\"yellow\">" + search + "</span>";
+  size_t pos = label_lower.find(search_lower);
 
  while (pos != std::string::npos) {
-    label.replace(pos, searchLower.size(), replacement_string);
-    labelLower.replace(pos, searchLower.size(), replacement_string);
-    pos = labelLower.find(searchLower, pos + replacement_string.size());
+    replacement_string = "<span bgcolor=\"yellow\">" + label.substr(pos, search.size()) + "</span>";
+    label.replace(pos, search_lower.size(), replacement_string);
+    label_lower.replace(pos, search_lower.size(), replacement_string);
+    pos = label_lower.find(search_lower, pos + replacement_string.size());
   }
 
   a_label->set_text(label);
