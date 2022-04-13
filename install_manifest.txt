@@ -1,0 +1,3 @@
+/usr/local/bin/aa-caller
+/usr/local/bin/appanvil
+/usr/share/polkit-1/actions/com.github.jack-ullery.AppAnvil.pkexec.policy
