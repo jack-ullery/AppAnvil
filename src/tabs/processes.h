@@ -18,6 +18,8 @@ protected:
   // Signal handlers
   void on_search_changed();
 
+  bool filter_children(const Gtk::TreeModel::iterator &node) override;
+
   static void add_row_from_line(const std::shared_ptr<StatusColumnRecord> &col_record, const std::string &line);
 
 private:

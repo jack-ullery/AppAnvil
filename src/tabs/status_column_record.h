@@ -95,10 +95,66 @@ public:
    */
   uint filter_rows();
 
-  void reselect_rows();
-  Gtk::TreeRow get_parent_by_pid(unsigned int pid);
-  Gtk::TreeRow get_parent_by_pid(unsigned int pid, const Gtk::TreeRow &parent);
+  /**
+   * @brief Recursively counts the number of visible children an iterator (row) has
+   *
+   * @param node, The iterator to a row, whose children are to be counted
+   *
+   * @returns The number of visible children of the passed iterator (row)
+   */
+  uint count_child_rows(const Gtk::TreeModel::iterator &node);
+
+  /**
+   * @brief Gets a TreeRow according to its process id
+   *
+   * @details 
+   * This method searches the top-level rows of the TreeStore for `pid`,
+   * and calls get_row_by_pid(uint, TreeRow) to recursively search all children
+   * for `pid` if it is not found in any top-level row
+   * 
+   * @param pid, The process id to search for
+   *
+   * @returns A TreeRow with a pid that matches `pid`
+   */
+  Gtk::TreeRow get_row_by_pid(unsigned int pid);
+
+  /**
+   * @brief Gets a TreeRow according to its process id
+   *
+   * @details 
+   * This method recursively searches all child rows of `parent`
+   * for `pid`
+   * 
+   * @param pid, The process id to search for
+   * @param parent, The TreeRow whose children are to be searched for `pid`
+   *
+   * @returns A TreeRow with a pid that matches `pid`
+   */
+  Gtk::TreeRow get_row_by_pid(unsigned int pid, const Gtk::TreeRow &parent);
+
+  /**
+   * @brief Gets a pointer to the TreeStore associated with this class
+   *
+   * @returns A pointer to the TreeStore of this class
+   */
+  Glib::RefPtr<Gtk::TreeStore> get_store();
+
+  /**
+   * @brief Searches the children of `parent` for a TreeRow with a pid that matches `pid`
+   *
+   * @details 
+   * This method recursively searches all child rows of `parent`
+   * for `pid`
+   * 
+   * @param pid, The process id to search for
+   * @param parent, The TreeRow whose children are to be searched for `pid`
+   *
+   * @returns `true` if a TreeRow with a pid that matches `pid` was
+   * found in the children of `parent`, `false` otherwise
+   */
   bool pid_exists_in_child(unsigned int pid, const Gtk::TreeRow &parent);
+
+  void reselect_rows();
 
 private:
   struct RowData {

@@ -20,7 +20,7 @@ void Processes::add_row_from_line(const std::shared_ptr<StatusColumnRecord> &col
   std::string comm   = match[5];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
   if(ppid > 0) {
-    auto parent_row = col_record->get_parent_by_pid(ppid);
+    auto parent_row = col_record->get_row_by_pid(ppid);
     row             = col_record->new_child_row(parent_row);
   } else {
     row = col_record->new_row();
@@ -53,6 +53,64 @@ void Processes::refresh()
 {
   uint num_visible = col_record->filter_rows();
   Status::set_status_label_text(" " + std::to_string(num_visible) + " matching processes");
+}
+
+bool Processes::filter_children(const Gtk::TreeModel::iterator &node)
+{
+  std::string data;
+  unsigned int uintData = 0;
+  bool re = false;
+  const uint num_columns = Status::get_view()->get_n_columns();
+  auto treeModel         = Status::get_view()->get_model();
+  auto children          = node->children();
+
+  for(auto iter = children.begin(); iter != children.end(); iter++) {
+    auto row = *iter;
+    for(uint i = 0; i < num_columns; i++) {
+      if(treeModel->get_column_type(i) == COLUMN_TYPE_STRING) {
+        row.get_value(i, data);
+        re = Status::filter(data, Status::get_search()->get_text(), Status::get_use_regex()->get_active(),
+                               Status::get_match_case()->get_active(), Status::get_whole_word()->get_active());
+      } else {
+        row.get_value(i, uintData);
+        re = Status::filter(std::to_string(uintData), Status::get_search()->get_text(), Status::get_use_regex()->get_active(),
+                               Status::get_match_case()->get_active(), Status::get_whole_word()->get_active());
+      }
+
+      if(re) {
+        auto path = col_record->get_store()->get_path(row);
+        Status::get_view()->expand_to_path(path);
+        Status::get_view()->expand_row(path, true);
+        return true;
+      }
+
+      if(!row.children().empty() && filter_children(row)) {
+        return true;
+      }
+    }
+
+    auto parent = node->parent();
+    while(parent) {
+      for(uint i = 0; i < num_columns; i++) {
+        if(treeModel->get_column_type(i) == COLUMN_TYPE_STRING) {
+          parent->get_value(i, data);
+          re = Status::filter(data, Status::get_search()->get_text(), Status::get_use_regex()->get_active(),
+                                 Status::get_match_case()->get_active(), Status::get_whole_word()->get_active());
+        } else {
+          parent->get_value(i, uintData);
+          re = Status::filter(std::to_string(uintData), Status::get_search()->get_text(), Status::get_use_regex()->get_active(),
+                                 Status::get_match_case()->get_active(), Status::get_whole_word()->get_active());
+        }
+
+        if(re) {
+          return true;
+        }
+      }
+      parent = parent->parent();
+    }
+  }
+
+  return false;
 }
 
 Processes::Processes() : col_record{StatusColumnRecord::create(Status::get_view(), Status::get_window(), col_names)}

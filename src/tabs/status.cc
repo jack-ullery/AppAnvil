@@ -81,6 +81,27 @@ bool Status::filter(const Gtk::TreeModel::iterator &node)
     return filter_children(node);
   }
 
+  auto parent = node->parent();
+  while(parent) {
+    for(uint i = 0; i < num_columns; i++) {
+      bool re               = false;
+      unsigned int uintData = 0;
+      if(treeModel->get_column_type(i) == COLUMN_TYPE_STRING) {
+        parent->get_value(i, data);
+        re = Status::filter(data, s_search->get_text(), s_use_regex->get_active(), s_match_case->get_active(), s_whole_word->get_active());
+      } else {
+        parent->get_value(i, uintData);
+        re = Status::filter(std::to_string(uintData), s_search->get_text(), s_use_regex->get_active(), s_match_case->get_active(),
+                            s_whole_word->get_active());
+      }
+
+      if(re) {
+        return true;
+      }
+    }
+    parent = parent->parent();
+  }
+
   return false;
 }
 
@@ -113,6 +134,28 @@ bool Status::filter_children(const Gtk::TreeModel::iterator &node)
         return true;
       }
     }
+
+    auto parent = node->parent();
+    while(parent) {
+      for(uint i = 0; i < num_columns; i++) {
+        bool re               = false;
+        unsigned int uintData = 0;
+        if(treeModel->get_column_type(i) == COLUMN_TYPE_STRING) {
+          parent->get_value(i, data);
+          re =
+              Status::filter(data, s_search->get_text(), s_use_regex->get_active(), s_match_case->get_active(), s_whole_word->get_active());
+        } else {
+          parent->get_value(i, uintData);
+          re = Status::filter(std::to_string(uintData), s_search->get_text(), s_use_regex->get_active(), s_match_case->get_active(),
+                              s_whole_word->get_active());
+        }
+
+        if(re) {
+          return true;
+        }
+      }
+      parent = parent->parent();
+    }
   }
 
   return false;
@@ -133,6 +176,14 @@ Json::Value Status::parse_JSON(const std::string &raw_json)
 
   return root;
 }
+
+std::shared_ptr<Gtk::SearchEntry> Status::get_search() { return s_search; }
+
+std::shared_ptr<Gtk::CheckButton> Status::get_use_regex() { return s_use_regex; }
+
+std::shared_ptr<Gtk::CheckButton> Status::get_match_case() { return s_match_case; }
+
+std::shared_ptr<Gtk::CheckButton> Status::get_whole_word() { return s_whole_word; }
 
 void Status::set_status_label_text(const std::string &str) { s_found_label->set_text(str); }
 
@@ -181,6 +232,7 @@ Status::Status()
   s_win->set_policy(Gtk::PolicyType::POLICY_AUTOMATIC, Gtk::PolicyType::POLICY_AUTOMATIC);
   s_win->set_hexpand();
   s_win->set_vexpand();
+  //s_view->get_selection()->set_mode(Gtk::SELECTION_MULTIPLE);
 
   this->add(*s_box);
 }

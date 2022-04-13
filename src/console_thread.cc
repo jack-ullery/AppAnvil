@@ -19,7 +19,7 @@ void ConsoleThread::send_refresh_message(TabState new_state)
   Message message(REFRESH, new_state, {});
   // Send the message to the queue, this lets the other thread know what it should do.
   queue.push(message);
-  last_state = new_state;
+  //last_state = new_state;
   cv.notify_one();
 }
 
