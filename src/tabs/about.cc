@@ -39,7 +39,7 @@ void About::set_link_btn_signal_handler(const Glib::SignalProxyProperty::SlotTyp
 
 
 void About::on_confirm_clicked(){
-  system("/usr/bin/firefox https://gitlab.com/apparmor/apparmor/-/wikis/Documentation");
+  system("xdg-open https://gitlab.com/apparmor/apparmor/-/wikis/Documentation");
   return;
 }
 
