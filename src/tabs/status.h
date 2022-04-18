@@ -2,7 +2,7 @@
 #define TABS_STATUS_H
 
 #include "jsoncpp/json/json.h"
-#include "status_column_record.h"
+#include "./model/status_column_record.h"
 
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
