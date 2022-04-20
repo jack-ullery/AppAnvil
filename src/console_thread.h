@@ -1,9 +1,10 @@
 #ifndef SRC_CONSOLE_THREAD_H
 #define SRC_CONSOLE_THREAD_H
 
-#include "tabs/logs.h"
-#include "tabs/processes.h"
-#include "tabs/profiles.h"
+#include "tabs/model/status_column_record.h"
+#include "tabs/view/logs.h"
+#include "tabs/view/processes.h"
+#include "tabs/view/profiles.h"
 #include "threads/blocking_queue.h"
 #include "threads/dispatcher_middleman.h"
 

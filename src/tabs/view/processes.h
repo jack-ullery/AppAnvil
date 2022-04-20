@@ -1,6 +1,7 @@
 #ifndef TABS_PROCESSES_H
 #define TABS_PROCESSES_H
 
+#include "../model/status_column_record.h"
 #include "status.h"
 
 #include <memory>

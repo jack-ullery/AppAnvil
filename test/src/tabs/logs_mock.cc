@@ -1,4 +1,4 @@
-#include "../../../src/tabs/logs.h"
+#include "../../../src/tabs/view/logs.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>

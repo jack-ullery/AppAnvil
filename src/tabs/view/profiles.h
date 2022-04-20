@@ -1,6 +1,7 @@
 #ifndef TABS_PROFILES_H
 #define TABS_PROFILES_H
 
+#include "../model/status_column_record.h"
 #include "status.h"
 
 #include <memory>

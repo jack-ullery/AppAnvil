@@ -1,6 +1,8 @@
 #ifndef TABS_STATUS_COLUMN_RECORD_H
 #define TABS_STATUS_COLUMN_RECORD_H
 
+#include "../column_header.h"
+
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/treeiter.h>
 #include <gtkmm/treemodel.h>
@@ -12,17 +14,6 @@
 #include <memory>
 
 constexpr int MIN_COL_WIDTH = 20;
-
-struct ColumnHeader {
-  enum ColumnType { STRING, INT };
-
-  ColumnType type;
-  std::string name;
-
-  ColumnHeader(std::string name, ColumnType type) : type{type}, name{std::move(name)} { }
-
-  explicit ColumnHeader(std::string name) : type{STRING}, name{std::move(name)} { }
-};
 
 class StatusColumnRecord : public Gtk::TreeModel::ColumnRecord
 {

@@ -1,6 +1,7 @@
 #ifndef TABS_LOGS_H
 #define TABS_LOGS_H
 
+#include "../model/status_column_record.h"
 #include "jsoncpp/json/json.h"
 #include "status.h"
 

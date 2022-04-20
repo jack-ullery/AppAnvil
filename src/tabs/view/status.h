@@ -1,7 +1,7 @@
 #ifndef TABS_STATUS_H
 #define TABS_STATUS_H
 
-#include "./model/status_column_record.h"
+#include "../column_header.h"
 #include "jsoncpp/json/json.h"
 
 #include <gtkmm/box.h>

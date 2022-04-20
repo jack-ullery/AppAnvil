@@ -2,10 +2,11 @@
 #define SRC_MAIN_WINDOW_H
 
 #include "console_thread.h"
-#include "tabs/logs.h"
-#include "tabs/processes.h"
-#include "tabs/profiles.h"
-#include "tabs/status.h"
+#include "tabs/model/status_column_record.h"
+#include "tabs/view/logs.h"
+#include "tabs/view/processes.h"
+#include "tabs/view/profiles.h"
+#include "tabs/view/status.h"
 
 #include <gtkmm/applicationwindow.h>
 #include <gtkmm/builder.h>
