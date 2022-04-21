@@ -35,10 +35,4 @@ private:
   std::shared_ptr<Mutex> mtx;
 };
 
-/**
- * Important Note: Because of how the C++ compiler links code with templates, we need to have implementation
- * in the header file
- **/
-#include "blocking_queue.inl"
-
 #endif // SRC_THREADS_BLOCKING_QUEUE_H

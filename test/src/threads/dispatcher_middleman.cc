@@ -1,8 +1,8 @@
-#include "../tabs/logs_status_mock.cc"
-#include "../tabs/processes_status_mock.cc"
-#include "../tabs/profiles_status_mock.cc"
+// #include "../tabs/logs_status_mock.cc"
+// #include "../tabs/processes_status_mock.cc"
+// #include "../tabs/profiles_status_mock.cc"
 #include "./dispatcher_middleman_mock.cc"
-#include "./mutex_mock.cc"
+// #include "./mutex_mock.cc"
 
 #include <future>
 #include <gmock/gmock.h>

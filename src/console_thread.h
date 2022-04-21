@@ -70,7 +70,7 @@ private:
 
   // Member fields
   BlockingQueue<Message, std::deque<Message>, std::mutex> queue;
-  TabState last_state;
+  TabState last_state{PROFILE};
 
   // DispatcherMiddleman used to communicate results with main thread
   DispatcherMiddleman<Profiles, Processes, Logs<StatusColumnRecord>, Glib::Dispatcher, std::mutex> dispatch_man;

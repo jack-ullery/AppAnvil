@@ -1,7 +1,10 @@
-#include "../../../src/threads/blocking_queue.h"
+#include "../../../src/threads/blocking_queue.cc"
+#include "./deque_mock.cc"
+#include "./mutex_mock.cc"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <memory>
 
 template<class T, class Deque, class Mutex> class BlockingQueueMock : public BlockingQueue<T, Deque, Mutex>
 {
@@ -20,3 +23,7 @@ public:
   {
   }
 };
+
+// Used to avoid linker errors
+// For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
+template class BlockingQueue<int, DequeMock<int>, MutexMock>;

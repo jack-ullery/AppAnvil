@@ -48,10 +48,4 @@ private:
   std::shared_ptr<Logs> logs;
 };
 
-/**
- * Important Note: Because of how the C++ compiler links code with templates, we need to have implementation
- * included in the header file
- **/
-#include "dispatcher_middleman.inl"
-
 #endif // SRC_THREADS_DISPATCHER_MIDDLEMAN_H

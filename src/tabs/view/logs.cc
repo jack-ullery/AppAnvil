@@ -1,3 +1,6 @@
+#include "logs.h"
+
+#include "../model/status_column_record.h"
 
 template<class ColumnRecord> std::string Logs<ColumnRecord>::format_log_data(const std::string &data)
 {
@@ -96,3 +99,7 @@ Logs<ColumnRecord>::Logs() : col_record{ColumnRecord::create(Status::get_view(),
 
   this->show_all();
 }
+
+// Used to avoid linker errors
+// For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
+template class Logs<StatusColumnRecord>;

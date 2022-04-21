@@ -1,5 +1,9 @@
+#include "blocking_queue.h"
+
+#include "../console_thread.h"
+
 template<class T, class Deque, class Mutex>
-BlockingQueue<T, Deque, Mutex>::BlockingQueue() : internal_queue{std::make_shared<std::deque<T>>()}, mtx{new Mutex()}
+BlockingQueue<T, Deque, Mutex>::BlockingQueue() : internal_queue{std::make_shared<Deque>()}, mtx{new Mutex()}
 {
 }
 
@@ -60,3 +64,13 @@ template<class T, class Deque, class Mutex> T BlockingQueue<T, Deque, Mutex>::po
   internal_queue->pop_front();
   return value;
 }
+
+// Used to avoid linker errors
+// For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
+template class BlockingQueue<ConsoleThread::Message, std::deque<ConsoleThread::Message>, std::mutex>;
+// This next line is very gross, as I copied it directly from a Linker error. Don't even try to read it.
+template class BlockingQueue<
+    DispatcherMiddleman<Profiles, Processes, Logs<StatusColumnRecord>, Glib::Dispatcher, std::mutex>::CallData,
+    std::deque<DispatcherMiddleman<Profiles, Processes, Logs<StatusColumnRecord>, Glib::Dispatcher, std::mutex>::CallData,
+               std::allocator<DispatcherMiddleman<Profiles, Processes, Logs<StatusColumnRecord>, Glib::Dispatcher, std::mutex>::CallData>>,
+    std::mutex>;

@@ -51,6 +51,4 @@ private:
   std::shared_ptr<ColumnRecord> col_record;
 };
 
-#include "logs.inl"
-
 #endif // TABS_LOGS_H

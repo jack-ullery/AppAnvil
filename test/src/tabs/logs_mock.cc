@@ -1,4 +1,5 @@
-#include "../../../src/tabs/view/logs.h"
+#include "status_column_record_mock.cc"
+#include "../../../src/tabs/view/logs.cc"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -15,3 +16,7 @@ public:
 
   explicit LogsMock(std::shared_ptr<ColumnRecord> col_record) : Logs<ColumnRecord>(col_record) { }
 };
+
+// Used to avoid linker errors
+// For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
+template class Logs<StatusColumnRecordMock>;

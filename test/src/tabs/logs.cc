@@ -1,6 +1,6 @@
 #include "jsoncpp/json/json.h"
 #include "logs_mock.cc"
-#include "status_column_record_mock.cc"
+// #include "status_column_record_mock.cc"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>

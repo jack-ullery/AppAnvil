@@ -1,3 +1,12 @@
+#include "dispatcher_middleman.h"
+
+#include "../tabs/model/status_column_record.h"
+#include "../tabs/view/logs.h"
+#include "../tabs/view/processes.h"
+#include "../tabs/view/profiles.h"
+
+#include <mutex>
+
 template<class Profiles, class Processes, class Logs, class Dispatcher, class Mutex>
 DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::DispatcherMiddleman(std::shared_ptr<Profiles> prof_arg,
                                                                                        std::shared_ptr<Processes> proc_arg,
@@ -81,3 +90,7 @@ void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::handle_s
     break;
   }
 }
+
+// Used to avoid linker errors
+// For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
+template class DispatcherMiddleman<Profiles, Processes, Logs<StatusColumnRecord>, Glib::Dispatcher, std::mutex>;
