@@ -1,5 +1,5 @@
-#include "status_column_record_mock.cc"
 #include "../../../src/tabs/view/logs.cc"
+#include "status_column_record_mock.cc"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
