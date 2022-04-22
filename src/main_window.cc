@@ -3,7 +3,7 @@
 #include <tuple>
 
 MainWindow::MainWindow()
-    : prof{new Profiles()}, proc{new Processes()}, logs{new Logs<StatusColumnRecord>()}, console{new ConsoleThread(prof, proc, logs)}
+    : prof{new Profiles()}, proc{new Processes<StatusColumnRecord>()}, logs{new Logs<StatusColumnRecord>()}, console{new ConsoleThread(prof, proc, logs)}
 {
   // Add tabs to the stack pane
   m_stack.add(*prof, "prof", "Profiles");

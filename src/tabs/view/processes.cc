@@ -1,11 +1,13 @@
 #include "processes.h"
+#include "../model/status_column_record.h"
 
 #include <string>
 
 // clang-tidy throws [cert-err58-cpp], but it's not a problem in this case, so lets ignore it.
 const std::regex unconfined_proc("^\\s*(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(unconfined|\\S+ \\(\\S+\\))\\s+(\\S+)"); // NOLINT(cert-err58-cpp)
 
-void Processes::add_row_from_line(const std::shared_ptr<StatusColumnRecord> &col_record, const std::string &line)
+template<class ColumnRecord> 
+void Processes<ColumnRecord>::add_row_from_line(const std::shared_ptr<ColumnRecord> &col_record, const std::string &line)
 {
   //auto row = col_record->new_row();
   Gtk::TreeRow row;
@@ -32,7 +34,8 @@ void Processes::add_row_from_line(const std::shared_ptr<StatusColumnRecord> &col
   row->set_value(3, status); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 }
 
-void Processes::add_data_to_record(const std::string &unconfined)
+template<class ColumnRecord> 
+void Processes<ColumnRecord>::add_data_to_record(const std::string &unconfined)
 {
   // Delete all the data from col_record
   col_record->clear();
@@ -49,23 +52,29 @@ void Processes::add_data_to_record(const std::string &unconfined)
   refresh();
 }
 
-void Processes::refresh()
+template<class ColumnRecord> 
+void Processes<ColumnRecord>::refresh()
 {
   uint num_visible = col_record->filter_rows();
-  Status::set_status_label_text(" " + std::to_string(num_visible) + " matching processes");
+  Status::set_status_label_text(" " + std::to_string(num_visible) + " matching Processes<ColumnRecord>");
 }
 
-Processes::Processes() : col_record{StatusColumnRecord::create(Status::get_view(), Status::get_window(), col_names)}
+template<class ColumnRecord> 
+Processes<ColumnRecord>::Processes() : col_record{ColumnRecord::create(Status::get_view(), Status::get_window(), col_names)}
 {
-  // Set the Processes::refresh function to be called whenever
+  // Set the Processes<ColumnRecord>::refresh function to be called whenever
   // the searchbar and checkboxes are updated
-  auto func = sigc::mem_fun(*this, &Processes::refresh);
+  auto func = sigc::mem_fun(*this, &Processes<ColumnRecord>::refresh);
   Status::set_refresh_signal_handler(func);
 
-  auto filter_fun = sigc::mem_fun(*this, &Processes::filter);
+  auto filter_fun = sigc::mem_fun(*this, &Processes<ColumnRecord>::filter);
   col_record->set_visible_func(filter_fun);
 
   Status::remove_status_selection();
 
   this->show_all();
 }
+
+// Used to avoid linker errors
+// For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
+template class Processes<StatusColumnRecord>;

@@ -1,5 +1,4 @@
 #include "logs.h"
-
 #include "../model/status_column_record.h"
 
 template<class ColumnRecord> std::string Logs<ColumnRecord>::format_log_data(const std::string &data)

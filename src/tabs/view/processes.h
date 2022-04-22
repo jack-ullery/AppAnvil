@@ -1,14 +1,13 @@
 #ifndef TABS_PROCESSES_H
 #define TABS_PROCESSES_H
 
-#include "../model/status_column_record.h"
 #include "status.h"
 
 #include <memory>
 #include <regex>
 #include <string>
 
-class Processes : public Status
+template<class ColumnRecord> class Processes : public Status
 {
 public:
   Processes();
@@ -19,12 +18,12 @@ protected:
   // Signal handlers
   void on_search_changed();
 
-  static void add_row_from_line(const std::shared_ptr<StatusColumnRecord> &col_record, const std::string &line);
+  static void add_row_from_line(const std::shared_ptr<ColumnRecord> &col_record, const std::string &line);
 
 private:
   const std::vector<ColumnHeader> col_names{ColumnHeader("Process Name"), ColumnHeader("User"),
                                             ColumnHeader("Pid", ColumnHeader::ColumnType::INT), ColumnHeader("Status")};
-  std::shared_ptr<StatusColumnRecord> col_record;
+  std::shared_ptr<ColumnRecord> col_record;
 };
 
 #endif // TABS_PROCESSES_H
