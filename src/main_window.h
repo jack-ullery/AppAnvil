@@ -53,7 +53,7 @@ private:
   Gtk::StackSwitcher m_switcher;
 
   // Tabs
-  std::shared_ptr<Profiles> prof;
+  std::shared_ptr<Profiles<StatusColumnRecord>> prof;
   std::shared_ptr<Processes<StatusColumnRecord>> proc;
   std::shared_ptr<Logs<StatusColumnRecord>> logs;
 

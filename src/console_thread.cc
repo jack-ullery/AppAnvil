@@ -5,7 +5,7 @@
 #include <iostream>
 #include <tuple>
 
-ConsoleThread::ConsoleThread(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes<StatusColumnRecord>> proc,
+ConsoleThread::ConsoleThread(std::shared_ptr<Profiles<StatusColumnRecord>> prof, std::shared_ptr<Processes<StatusColumnRecord>> proc,
                              std::shared_ptr<Logs<StatusColumnRecord>> logs)
     : last_state{PROFILE}, dispatch_man(std::move(prof), std::move(proc), std::move(logs))
 {

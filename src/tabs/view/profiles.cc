@@ -1,4 +1,5 @@
 #include "profiles.h"
+#include "../model/status_column_record.h"
 
 #include "jsoncpp/json/json.h"
 
@@ -11,7 +12,8 @@
 
 // add_data_to_record() is based on assumptions about the output of aa-status.
 // If those assumptions are incorrect, or aa-status changes, this could crash.
-void Profiles::add_data_to_record(const std::string &data)
+template<class ColumnRecord> 
+void Profiles<ColumnRecord>::add_data_to_record(const std::string &data)
 {
   Json::Value root     = Status::parse_JSON(data);
   Json::Value profiles = root["profiles"];
@@ -29,7 +31,8 @@ void Profiles::add_data_to_record(const std::string &data)
   refresh();
 }
 
-void Profiles::change_status()
+template<class ColumnRecord> 
+void Profiles<ColumnRecord>::change_status()
 {
   auto selection = Status::get_view()->get_selection();
 
@@ -53,13 +56,15 @@ void Profiles::change_status()
   }
 }
 
-void Profiles::refresh()
+template<class ColumnRecord> 
+void Profiles<ColumnRecord>::refresh()
 {
   uint num_visible = col_record->filter_rows();
   Status::set_status_label_text(" " + std::to_string(num_visible) + " matching profiles");
 }
 
-void Profiles::default_change_fun(const std::string &a, const std::string &b, const std::string &c)
+template<class ColumnRecord> 
+void Profiles<ColumnRecord>::default_change_fun(const std::string &a, const std::string &b, const std::string &c)
 {
   std::ignore = this;
   std::ignore = a;
@@ -68,12 +73,14 @@ void Profiles::default_change_fun(const std::string &a, const std::string &b, co
   std::cerr << "Warning: No signal handler is defined for changing a profile's status." << std::endl;
 }
 
-void Profiles::set_status_change_signal_handler(sigc::slot<void(std::string, std::string, std::string)> change_fun)
+template<class ColumnRecord> 
+void Profiles<ColumnRecord>::set_status_change_signal_handler(sigc::slot<void(std::string, std::string, std::string)> change_fun)
 {
   profile_status_change_fun = std::move(change_fun);
 }
 
-Profiles::Profiles() : col_record{StatusColumnRecord::create(Status::get_view(), Status::get_window(), col_names)}
+template<class ColumnRecord> 
+Profiles<ColumnRecord>::Profiles() : col_record{ColumnRecord::create(Status::get_view(), Status::get_window(), col_names)}
 {
   auto refresh_func = sigc::mem_fun(*this, &Profiles::refresh);
   auto apply_func   = sigc::mem_fun(*this, &Profiles::change_status);
@@ -88,3 +95,7 @@ Profiles::Profiles() : col_record{StatusColumnRecord::create(Status::get_view(),
 
   this->show_all();
 }
+
+// Used to avoid linker errors
+// For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
+template class Profiles<StatusColumnRecord>;

@@ -70,7 +70,7 @@ template<class T, class Deque, class Mutex> T BlockingQueue<T, Deque, Mutex>::po
 template class BlockingQueue<ConsoleThread::Message, std::deque<ConsoleThread::Message>, std::mutex>;
 // This next line is very gross, as I copied it directly from a Linker error. Don't even try to read it.
 template class BlockingQueue<
-    DispatcherMiddleman<Profiles, Processes<StatusColumnRecord>, Logs<StatusColumnRecord>, Glib::Dispatcher, std::mutex>::CallData,
-    std::deque<DispatcherMiddleman<Profiles, Processes<StatusColumnRecord>, Logs<StatusColumnRecord>, Glib::Dispatcher, std::mutex>::CallData,
-               std::allocator<DispatcherMiddleman<Profiles, Processes<StatusColumnRecord>, Logs<StatusColumnRecord>, Glib::Dispatcher, std::mutex>::CallData>>,
+    DispatcherMiddleman<Profiles<StatusColumnRecord>, Processes<StatusColumnRecord>, Logs<StatusColumnRecord>, Glib::Dispatcher, std::mutex>::CallData,
+    std::deque<DispatcherMiddleman<Profiles<StatusColumnRecord>, Processes<StatusColumnRecord>, Logs<StatusColumnRecord>, Glib::Dispatcher, std::mutex>::CallData,
+    std::allocator<DispatcherMiddleman<Profiles<StatusColumnRecord>, Processes<StatusColumnRecord>, Logs<StatusColumnRecord>, Glib::Dispatcher, std::mutex>::CallData>>,
     std::mutex>;

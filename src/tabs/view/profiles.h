@@ -1,14 +1,13 @@
 #ifndef TABS_PROFILES_H
 #define TABS_PROFILES_H
 
-#include "../model/status_column_record.h"
 #include "status.h"
 
 #include <memory>
 #include <string>
 #include <vector>
 
-class Profiles : public Status
+template<class ColumnRecord> class Profiles : public Status
 {
 public:
   Profiles();
@@ -27,7 +26,7 @@ private:
   sigc::slot<void(std::string, std::string, std::string)> profile_status_change_fun;
 
   const std::vector<ColumnHeader> col_names{ColumnHeader("Profile"), ColumnHeader("Status")};
-  std::shared_ptr<StatusColumnRecord> col_record;
+  std::shared_ptr<ColumnRecord> col_record;
 };
 
 #endif // TABS_PROFILES_H

@@ -56,7 +56,7 @@ template<class ColumnRecord>
 void Processes<ColumnRecord>::refresh()
 {
   uint num_visible = col_record->filter_rows();
-  Status::set_status_label_text(" " + std::to_string(num_visible) + " matching Processes<ColumnRecord>");
+  Status::set_status_label_text(" " + std::to_string(num_visible) + " matching processes");
 }
 
 template<class ColumnRecord> 
