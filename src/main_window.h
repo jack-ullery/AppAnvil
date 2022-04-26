@@ -2,11 +2,13 @@
 #define SRC_MAIN_WINDOW_H
 
 #include "console_thread.h"
+#include "tabs/controller/logs_controller.h"
+#include "tabs/controller/processes_controller.h"
+#include "tabs/controller/profiles_controller.h"
 #include "tabs/model/status_column_record.h"
 #include "tabs/view/logs.h"
 #include "tabs/view/processes.h"
 #include "tabs/view/profiles.h"
-#include "tabs/view/status.h"
 
 #include <gtkmm/applicationwindow.h>
 #include <gtkmm/builder.h>
@@ -44,6 +46,19 @@ protected:
   void send_status_change(const std::string &profile, const std::string &old_status, const std::string &new_status);
 
 private:
+  // Typedeffed classes that we use
+  typedef Profiles<StatusColumnRecord> ProfilesInstance;
+  typedef Processes<StatusColumnRecord> ProcessesInstance;
+  typedef Logs LogsInstance;
+
+  typedef ProfilesController<ProfilesInstance, StatusColumnRecord> ProfilesControllerInstance;
+  typedef ProcessesController<LogsInstance, StatusColumnRecord> ProcessesControllerInstance;
+  typedef LogsController<LogsInstance, StatusColumnRecord> LogsControllerInstance;
+
+  typedef ConsoleThread<ProfilesControllerInstance,
+                        ProcessesControllerInstance,
+                        LogsControllerInstance> ConsoleThreadInstance;
+ 
   // GUI Builder to parse UI from xml file
   Glib::RefPtr<Gtk::Builder> builder;
 
@@ -52,13 +67,18 @@ private:
   Gtk::HeaderBar m_headerbar;
   Gtk::StackSwitcher m_switcher;
 
-  // Tabs
-  std::shared_ptr<Profiles<StatusColumnRecord>> prof;
-  std::shared_ptr<Processes<StatusColumnRecord>> proc;
-  std::shared_ptr<Logs<StatusColumnRecord>> logs;
+  // Controllers
+  std::shared_ptr<ProfilesControllerInstance>  prof_control;
+  std::shared_ptr<ProcessesControllerInstance> proc_control;
+  std::shared_ptr<LogsControllerInstance>      logs_control;
+
+  // // Tabs
+  // std::shared_ptr<ProfilesInstance> prof;
+  // std::shared_ptr<ProcessesInstance> proc;
+  // std::shared_ptr<LogsInstance> logs;
 
   // Second thread for calling command line utilities
-  std::shared_ptr<ConsoleThread> console;
+  std::shared_ptr<ConsoleThreadInstance> console;
 };
 
 #endif // MAIN_WINDOW_H

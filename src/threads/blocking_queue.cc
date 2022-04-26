@@ -67,10 +67,10 @@ template<class T, class Deque, class Mutex> T BlockingQueue<T, Deque, Mutex>::po
 
 // Used to avoid linker errors
 // For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
-template class BlockingQueue<ConsoleThread::Message, std::deque<ConsoleThread::Message>, std::mutex>;
+// template class BlockingQueue<ConsoleThread::Message, std::deque<ConsoleThread::Message>, std::mutex>;
 // This next line is very gross, as I copied it directly from a Linker error. Don't even try to read it.
-template class BlockingQueue<
-    DispatcherMiddleman<Profiles<StatusColumnRecord>, Processes<StatusColumnRecord>, Logs<StatusColumnRecord>, Glib::Dispatcher, std::mutex>::CallData,
-    std::deque<DispatcherMiddleman<Profiles<StatusColumnRecord>, Processes<StatusColumnRecord>, Logs<StatusColumnRecord>, Glib::Dispatcher, std::mutex>::CallData,
-    std::allocator<DispatcherMiddleman<Profiles<StatusColumnRecord>, Processes<StatusColumnRecord>, Logs<StatusColumnRecord>, Glib::Dispatcher, std::mutex>::CallData>>,
-    std::mutex>;
+// template class BlockingQueue<
+//     DispatcherMiddleman<Profiles<StatusColumnRecord>, Processes<StatusColumnRecord>, Logs, Glib::Dispatcher, std::mutex>::CallData,
+//     std::deque<DispatcherMiddleman<Profiles<StatusColumnRecord>, Processes<StatusColumnRecord>, Logs, Glib::Dispatcher, std::mutex>::CallData,
+//     std::allocator<DispatcherMiddleman<Profiles<StatusColumnRecord>, Processes<StatusColumnRecord>, Logs, Glib::Dispatcher, std::mutex>::CallData>>,
+//     std::mutex>;

@@ -1,4 +1,4 @@
-#include "processes.h"
+#include "processes_controller.h"
 #include "../model/status_column_record.h"
 
 #include <string>
@@ -7,7 +7,7 @@
 const std::regex unconfined_proc("^\\s*(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(unconfined|\\S+ \\(\\S+\\))\\s+(\\S+)"); // NOLINT(cert-err58-cpp)
 
 template<class ColumnRecord> 
-void Processes<ColumnRecord>::add_row_from_line(const std::shared_ptr<ColumnRecord> &col_record, const std::string &line)
+void ProcessesController<ColumnRecord>::add_row_from_line(const std::shared_ptr<ColumnRecord> &col_record, const std::string &line)
 {
   //auto row = col_record->new_row();
   Gtk::TreeRow row;
@@ -35,7 +35,7 @@ void Processes<ColumnRecord>::add_row_from_line(const std::shared_ptr<ColumnReco
 }
 
 template<class ColumnRecord> 
-void Processes<ColumnRecord>::add_data_to_record(const std::string &unconfined)
+void ProcessesController<ColumnRecord>::add_data_to_record(const std::string &unconfined)
 {
   // Delete all the data from col_record
   col_record->clear();
@@ -53,28 +53,12 @@ void Processes<ColumnRecord>::add_data_to_record(const std::string &unconfined)
 }
 
 template<class ColumnRecord> 
-void Processes<ColumnRecord>::refresh()
+ProcessesController<ColumnRecord>::ProcessesController() : col_record{ColumnRecord::create(Status::get_view(), Status::get_window(), col_names)}
 {
-  uint num_visible = col_record->filter_rows();
-  Status::set_status_label_text(" " + std::to_string(num_visible) + " matching processes");
-}
-
-template<class ColumnRecord> 
-Processes<ColumnRecord>::Processes() : col_record{ColumnRecord::create(Status::get_view(), Status::get_window(), col_names)}
-{
-  // Set the Processes<ColumnRecord>::refresh function to be called whenever
-  // the searchbar and checkboxes are updated
-  auto func = sigc::mem_fun(*this, &Processes::refresh);
-  Status::set_refresh_signal_handler(func);
-
-  auto filter_fun = sigc::mem_fun(*this, &Processes::filter);
+  auto filter_fun = sigc::mem_fun(*this, &ProcessesController<ColumnRecord>::filter);
   col_record->set_visible_func(filter_fun);
-
-  Status::remove_status_selection();
-
-  this->show_all();
 }
 
 // Used to avoid linker errors
 // For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
-template class Processes<StatusColumnRecord>;
+template class ProcessesController<StatusColumnRecord>;

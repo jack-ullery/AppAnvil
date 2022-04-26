@@ -1,5 +1,5 @@
-#ifndef TABS_STATUS_H
-#define TABS_STATUS_H
+#ifndef TABS_VIEW_STATUS_H
+#define TABS_VIEW_STATUS_H
 
 #include "../column_header.h"
 #include "jsoncpp/json/json.h"
@@ -23,33 +23,30 @@ public:
   Status();
 
   /**
+   * @brief Return the TreeView associated with this class.
+   *
+   * @returns The TreeView data member used by this class.
+   */
+  std::shared_ptr<Gtk::TreeView> get_view();
+
+  /**
+   * @brief Return the ScrolledWindow associated with this class.
+   *
+   * @returns The ScrolledWindow data member used by this class.
+   */
+  std::shared_ptr<Gtk::ScrolledWindow> get_window();
+
+  /**
    * @brief Change the text in the label next to the Apply button/spinner.
    */
   void set_apply_label_text(const std::string &str);
-
-protected:
-  bool filter(const Gtk::TreeModel::iterator &node);
-  bool filter_children(const Gtk::TreeModel::iterator &node);
-
-  /**
-   * @brief Decide whether a string should be added to the table
-   *
-   * @details
-   * Takes a string as input and decides whether it should be added the table.
-   * Uses the text in the searchbar and the state of the checkboxes to determine
-   * whether the string can be added.
-   *
-   * If `use_regex` is true, then the `match_case` will be ignored.
-   *
-   * @returns `true` if the string should be added, `false` if it should not
-   */
-  static bool filter(const std::string &str, const std::string &rule, const bool &use_regex, const bool &match_case,
-                     const bool &whole_word);
 
   /**
    * @brief Change the text in the label directly above the searchbar.
    */
   void set_status_label_text(const std::string &str);
+
+protected:
 
   /**
    * @brief Set the method to be called every time the search area updated.
@@ -74,20 +71,6 @@ protected:
   void set_apply_signal_handler(const Glib::SignalProxyProperty::SlotType &func);
 
   /**
-   * @brief Return the TreeView associated with this class.
-   *
-   * @returns The TreeView data member used by this class.
-   */
-  std::shared_ptr<Gtk::TreeView> get_view();
-
-  /**
-   * @brief Return the ScrolledWindow associated with this class.
-   *
-   * @returns The ScrolledWindow data member used by this class.
-   */
-  std::shared_ptr<Gtk::ScrolledWindow> get_window();
-
-  /**
    * @brief Return the active selection/choice in the dropdown ComboBoxText
    *
    * @returns The string of the dropdown item which is selected.
@@ -103,9 +86,6 @@ protected:
    * for this instance of Status.
    */
   void remove_status_selection();
-
-  // Should probably add a description!
-  static Json::Value parse_JSON(const std::string &raw_json);
 
 private:
   // GUI Builder to parse UI from xml file
@@ -136,4 +116,4 @@ private:
   static constexpr unsigned int COLUMN_TYPE_STRING = G_TYPE_STRING; // NOLINT
 };
 
-#endif // TABS_STATUS_H
+#endif // TABS_VIEW_STATUS_H

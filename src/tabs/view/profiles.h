@@ -24,9 +24,6 @@ private:
   void default_change_fun(const std::string &a, const std::string &b, const std::string &c);
 
   sigc::slot<void(std::string, std::string, std::string)> profile_status_change_fun;
-
-  const std::vector<ColumnHeader> col_names{ColumnHeader("Profile"), ColumnHeader("Status")};
-  std::shared_ptr<ColumnRecord> col_record;
 };
 
 #endif // TABS_PROFILES_H

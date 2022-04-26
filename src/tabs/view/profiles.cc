@@ -80,15 +80,12 @@ void Profiles<ColumnRecord>::set_status_change_signal_handler(sigc::slot<void(st
 }
 
 template<class ColumnRecord> 
-Profiles<ColumnRecord>::Profiles() : col_record{ColumnRecord::create(Status::get_view(), Status::get_window(), col_names)}
+Profiles<ColumnRecord>::Profiles()
 {
   auto refresh_func = sigc::mem_fun(*this, &Profiles::refresh);
   auto apply_func   = sigc::mem_fun(*this, &Profiles::change_status);
   Status::set_refresh_signal_handler(refresh_func);
   Status::set_apply_signal_handler(apply_func);
-
-  auto filter_fun = sigc::mem_fun(*this, &Profiles::filter);
-  col_record->set_visible_func(filter_fun);
 
   sigc::slot<void(std::string, std::string, std::string)> change_fun = sigc::mem_fun(*this, &Profiles::default_change_fun);
   this->set_status_change_signal_handler(change_fun);

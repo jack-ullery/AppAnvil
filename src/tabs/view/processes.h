@@ -1,5 +1,5 @@
-#ifndef TABS_PROCESSES_H
-#define TABS_PROCESSES_H
+#ifndef TABS_VIEW_PROCESSES_H
+#define TABS_VIEW_PROCESSES_H
 
 #include "status.h"
 
@@ -19,11 +19,6 @@ protected:
   void on_search_changed();
 
   static void add_row_from_line(const std::shared_ptr<ColumnRecord> &col_record, const std::string &line);
-
-private:
-  const std::vector<ColumnHeader> col_names{ColumnHeader("Process Name"), ColumnHeader("User"),
-                                            ColumnHeader("Pid", ColumnHeader::ColumnType::INT), ColumnHeader("Status")};
-  std::shared_ptr<ColumnRecord> col_record;
 };
 
-#endif // TABS_PROCESSES_H
+#endif // TABS_VIEW_PROCESSES_H

@@ -2,9 +2,6 @@
 #define SRC_CONSOLE_THREAD_H
 
 #include "tabs/model/status_column_record.h"
-#include "tabs/view/logs.h"
-#include "tabs/view/processes.h"
-#include "tabs/view/profiles.h"
 #include "threads/blocking_queue.h"
 #include "threads/dispatcher_middleman.h"
 
@@ -23,10 +20,11 @@ enum TabState { PROFILE, PROCESS, LOGS, OTHER };
  * This class creates a separate thread that the main GUI thread can communicate with.
  * This second thread asynchronously calls terminal commands and communicates the results with the main thread.
  **/
+template<class ProfilesController, class ProcessesController, class LogsController>
 class ConsoleThread
 {
 public:
-  ConsoleThread(std::shared_ptr<Profiles<StatusColumnRecord>> prof, std::shared_ptr<Processes<StatusColumnRecord>> proc, std::shared_ptr<Logs<StatusColumnRecord>> logs);
+  ConsoleThread(std::shared_ptr<ProfilesController> prof, std::shared_ptr<ProcessesController> proc, std::shared_ptr<LogsController> logs);
   ~ConsoleThread();
 
   // Delete the copy-constructor, move constructor, and copy assignment operator
@@ -73,7 +71,7 @@ private:
   TabState last_state{PROFILE};
 
   // DispatcherMiddleman used to communicate results with main thread
-  DispatcherMiddleman<Profiles<StatusColumnRecord>, Processes<StatusColumnRecord>, Logs<StatusColumnRecord>, Glib::Dispatcher, std::mutex> dispatch_man;
+  DispatcherMiddleman<ProfilesController, ProcessesController, LogsController, Glib::Dispatcher, std::mutex> dispatch_man;
 
   // Synchronization Primitives
   std::mutex task_ready_mtx;
