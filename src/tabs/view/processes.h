@@ -1,6 +1,7 @@
 #ifndef TABS_VIEW_PROCESSES_H
 #define TABS_VIEW_PROCESSES_H
 
+#include "../controller/processes_controller.h"
 #include "status.h"
 
 #include <memory>
@@ -10,14 +11,9 @@
 template<class ColumnRecord> class Processes : public Status
 {
 public:
-  Processes();
-  virtual void add_data_to_record(const std::string &unconfined);
-  void refresh();
+  explicit Processes();
 
 protected:
-  // Signal handlers
-  void on_search_changed();
-
   static void add_row_from_line(const std::shared_ptr<ColumnRecord> &col_record, const std::string &line);
 };
 

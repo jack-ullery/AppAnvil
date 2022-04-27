@@ -16,8 +16,7 @@
 class Logs : public Status
 {
 public:
-  // For production
-  explicit Logs(LogsController<Logs, StatusColumnRecord> control);
+  explicit Logs();
 
 protected:
   struct LogData {

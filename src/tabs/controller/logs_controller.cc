@@ -77,7 +77,7 @@ template<class LogsTab, class ColumnRecord> void LogsController<LogsTab, ColumnR
 template<class LogsTab, class ColumnRecord> void LogsController<LogsTab, ColumnRecord>::refresh()
 {
   uint num_visible = col_record->filter_rows();
-  logs.set_status_label_text(" " + std::to_string(num_visible) + " logs");
+  logs->set_status_label_text(" " + std::to_string(num_visible) + " logs");
 }
 
 // For unit testing
@@ -87,8 +87,12 @@ LogsController<LogsTab, ColumnRecord>::LogsController(std::shared_ptr<ColumnReco
 // For production
 template<class LogsTab, class ColumnRecord>
 LogsController<LogsTab, ColumnRecord>::LogsController()
-  : col_record{ColumnRecord::create(logs.get_view(), logs.get_window(), col_names)}
+  : logs{StatusController<LogsTab>::get_tab()}, 
+    col_record{ColumnRecord::create(logs->get_view(), logs->get_window(), col_names)}
 {
+  auto func = sigc::mem_fun(*this, &LogsController<Logs, StatusColumnRecord>::refresh);
+  logs->set_refresh_signal_handler(func);
+
   auto filter_fun = sigc::mem_fun(*this, &LogsController::filter);
   col_record->set_visible_func(filter_fun);
 }

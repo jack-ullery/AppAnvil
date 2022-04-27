@@ -11,9 +11,13 @@ template<class ProfilesTab, class ColumnRecord> class ProfilesController : publi
 {
 public:
   ProfilesController();
+
   virtual void add_data_to_record(const std::string &data);
+  void refresh();
 
 private:
+  std::shared_ptr<ProfilesTab> prof;
+
   const std::vector<ColumnHeader> col_names{ColumnHeader("Profile"), ColumnHeader("Status")};
   std::shared_ptr<ColumnRecord> col_record;
 };

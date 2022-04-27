@@ -46,7 +46,8 @@ protected:
   void send_status_change(const std::string &profile, const std::string &old_status, const std::string &new_status);
 
 private:
-  // Typedeffed classes that we use
+  // A set of Typedeffed classes, to handle dependency injection
+  // This lowers the amount of repeated <..> symbols
   typedef Profiles<StatusColumnRecord> ProfilesInstance;
   typedef Processes<StatusColumnRecord> ProcessesInstance;
   typedef Logs LogsInstance;

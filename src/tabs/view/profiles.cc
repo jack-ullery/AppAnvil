@@ -10,28 +10,7 @@
 #include <tuple>
 #include <vector>
 
-// add_data_to_record() is based on assumptions about the output of aa-status.
-// If those assumptions are incorrect, or aa-status changes, this could crash.
-template<class ColumnRecord> 
-void Profiles<ColumnRecord>::add_data_to_record(const std::string &data)
-{
-  Json::Value root     = Status::parse_JSON(data);
-  Json::Value profiles = root["profiles"];
-
-  col_record->clear();
-
-  for(auto prof = profiles.begin(); prof != profiles.end(); prof++) {
-    std::string key = prof.key().asString();
-    auto row        = col_record->new_row();
-    row->set_value(0, key);
-    row->set_value(1, profiles.get(key, UNKNOWN_STATUS).asString());
-  }
-
-  col_record->reselect_rows();
-  refresh();
-}
-
-template<class ColumnRecord> 
+template<class ColumnRecord>
 void Profiles<ColumnRecord>::change_status()
 {
   auto selection = Status::get_view()->get_selection();
@@ -57,13 +36,6 @@ void Profiles<ColumnRecord>::change_status()
 }
 
 template<class ColumnRecord> 
-void Profiles<ColumnRecord>::refresh()
-{
-  uint num_visible = col_record->filter_rows();
-  Status::set_status_label_text(" " + std::to_string(num_visible) + " matching profiles");
-}
-
-template<class ColumnRecord> 
 void Profiles<ColumnRecord>::default_change_fun(const std::string &a, const std::string &b, const std::string &c)
 {
   std::ignore = this;
@@ -82,9 +54,7 @@ void Profiles<ColumnRecord>::set_status_change_signal_handler(sigc::slot<void(st
 template<class ColumnRecord> 
 Profiles<ColumnRecord>::Profiles()
 {
-  auto refresh_func = sigc::mem_fun(*this, &Profiles::refresh);
   auto apply_func   = sigc::mem_fun(*this, &Profiles::change_status);
-  Status::set_refresh_signal_handler(refresh_func);
   Status::set_apply_signal_handler(apply_func);
 
   sigc::slot<void(std::string, std::string, std::string)> change_fun = sigc::mem_fun(*this, &Profiles::default_change_fun);

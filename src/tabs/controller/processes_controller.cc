@@ -1,13 +1,15 @@
 #include "processes_controller.h"
 #include "../model/status_column_record.h"
+#include "../view/processes.h"
+#include "status_controller.h"
 
 #include <string>
 
 // clang-tidy throws [cert-err58-cpp], but it's not a problem in this case, so lets ignore it.
 const std::regex unconfined_proc("^\\s*(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(unconfined|\\S+ \\(\\S+\\))\\s+(\\S+)"); // NOLINT(cert-err58-cpp)
 
-template<class ColumnRecord> 
-void ProcessesController<ColumnRecord>::add_row_from_line(const std::shared_ptr<ColumnRecord> &col_record, const std::string &line)
+template<class ProcessesTab, class ColumnRecord> 
+void ProcessesController<ProcessesTab, ColumnRecord>::add_row_from_line(const std::shared_ptr<ColumnRecord> &col_record, const std::string &line)
 {
   //auto row = col_record->new_row();
   Gtk::TreeRow row;
@@ -34,8 +36,9 @@ void ProcessesController<ColumnRecord>::add_row_from_line(const std::shared_ptr<
   row->set_value(3, status); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 }
 
-template<class ColumnRecord> 
-void ProcessesController<ColumnRecord>::add_data_to_record(const std::string &unconfined)
+
+template<class ProcessesTab, class ColumnRecord> 
+void ProcessesController<ProcessesTab, ColumnRecord>::add_data_to_record(const std::string &unconfined)
 {
   // Delete all the data from col_record
   col_record->clear();
@@ -52,13 +55,27 @@ void ProcessesController<ColumnRecord>::add_data_to_record(const std::string &un
   refresh();
 }
 
-template<class ColumnRecord> 
-ProcessesController<ColumnRecord>::ProcessesController() : col_record{ColumnRecord::create(Status::get_view(), Status::get_window(), col_names)}
+template<class ProcessesTab, class ColumnRecord> 
+void ProcessesController<ProcessesTab, ColumnRecord>::refresh()
 {
-  auto filter_fun = sigc::mem_fun(*this, &ProcessesController<ColumnRecord>::filter);
+  uint num_visible = col_record->filter_rows();
+  proc->set_status_label_text(" " + std::to_string(num_visible) + " matching processes");
+}
+
+template<class ProcessesTab, class ColumnRecord> 
+ProcessesController<ProcessesTab, ColumnRecord>::ProcessesController()
+  : proc{StatusController<ProcessesTab>::get_tab()}, 
+    col_record{ColumnRecord::create(proc->get_view(), proc->get_window(), col_names)}
+{
+  // Set the Processes<ColumnRecord>::refresh function to be called whenever
+  // the searchbar and checkboxes are updated
+  auto func = sigc::mem_fun(*this, &ProcessesController<ProcessesTab, ColumnRecord>::refresh);
+  proc->set_refresh_signal_handler(func);
+
+  auto filter_fun = sigc::mem_fun(*this, &ProcessesController<ProcessesTab, ColumnRecord>::filter);
   col_record->set_visible_func(filter_fun);
 }
 
 // Used to avoid linker errors
 // For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
-template class ProcessesController<StatusColumnRecord>;
+template class ProcessesController<Processes<StatusColumnRecord>, StatusColumnRecord>;

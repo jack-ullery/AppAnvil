@@ -46,8 +46,6 @@ public:
    */
   void set_status_label_text(const std::string &str);
 
-protected:
-
   /**
    * @brief Set the method to be called every time the search area updated.
    *
@@ -76,6 +74,8 @@ protected:
    * @returns The string of the dropdown item which is selected.
    */
   Glib::ustring get_selection_text() const;
+
+protected:
 
   /**
    * @brief Make widgets related to changing profile status invisible to the user.

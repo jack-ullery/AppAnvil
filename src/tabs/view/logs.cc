@@ -1,11 +1,8 @@
 #include "logs.h"
 
 // For production
-Logs::Logs(LogsController<Logs, StatusColumnRecord> control)
+Logs::Logs()
 {
-  auto func = sigc::mem_fun(control, &LogsController<Logs, StatusColumnRecord>::refresh);
-  Status::set_refresh_signal_handler(func);
-
   Status::remove_status_selection();
 
   this->show_all();

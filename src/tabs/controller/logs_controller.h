@@ -45,7 +45,7 @@ protected:
   };
 
 private:
-  LogsTab logs;
+  std::shared_ptr<LogsTab> logs;
 
   const std::vector<ColumnHeader> col_names{ColumnHeader("Time"),
                                             ColumnHeader("Type"),
