@@ -1,5 +1,11 @@
 #include "console_thread.h"
-
+#include "tabs/controller/logs_controller.h"
+#include "tabs/controller/processes_controller.h"
+#include "tabs/controller/profiles_controller.h"
+#include "tabs/model/status_column_record.h"
+#include "tabs/view/logs.h"
+#include "tabs/view/processes.h"
+#include "tabs/view/profiles.h"
 #include "threads/command_caller.h"
 
 #include <iostream>
@@ -140,3 +146,5 @@ ConsoleThread<ProfilesController, ProcessesController, LogsController>::~Console
   send_quit_message();
   asynchronous_thread.wait();
 }
+
+template class ConsoleThread<ProfilesController<Profiles<StatusColumnRecord>, StatusColumnRecord>, ProcessesController<Processes<StatusColumnRecord>, StatusColumnRecord>, LogsController<Logs, StatusColumnRecord> >;

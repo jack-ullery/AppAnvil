@@ -19,6 +19,15 @@ public:
 
   std::shared_ptr<Tab> get_tab();
 
+  // Virtual destructor to avoid a warning
+  virtual ~StatusController() = default;
+
+  // Default copy-constructor, move constructor, move assignment operator, and copy assignment operator
+  StatusController(const StatusController<Tab> &other) noexcept = default;
+  StatusController(StatusController<Tab> &&other)      noexcept = default;
+  StatusController &operator=(const StatusController<Tab> &other) noexcept = default;
+  StatusController &operator=(StatusController<Tab> &&other)      noexcept = default;
+
 protected:
   bool filter(const Gtk::TreeModel::iterator &node);
   bool filter_children(const Gtk::TreeModel::iterator &node);
@@ -44,12 +53,6 @@ protected:
 private:
   // The corresponding tab is /tabs/view
   std::shared_ptr<Tab> tab;
-
-  // Widgets related to searchbar
-  std::unique_ptr<Gtk::SearchEntry> s_search;
-  std::unique_ptr<Gtk::CheckButton> s_use_regex;
-  std::unique_ptr<Gtk::CheckButton> s_match_case;
-  std::unique_ptr<Gtk::CheckButton> s_whole_word;
 
   // clang-tidy complains about the `COLUMN_TYPE_STRING` macro, so we assign it here and tell clang-tidy not to look at it
   static constexpr unsigned int COLUMN_TYPE_STRING = G_TYPE_STRING; // NOLINT

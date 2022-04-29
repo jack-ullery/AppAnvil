@@ -40,6 +40,11 @@ void ProfilesController<ProfilesTab, ColumnRecord>::refresh()
   prof->set_status_label_text(" " + std::to_string(num_visible) + " matching profiles");
 }
 
+template<class ProfilesTab, class ColumnRecord> 
+void ProfilesController<ProfilesTab, ColumnRecord>::set_apply_label_text(const std::string &str){
+  prof->set_apply_label_text(str);
+}
+
 
 template<class ProfilesTab, class ColumnRecord> 
 ProfilesController<ProfilesTab, ColumnRecord>::ProfilesController() 

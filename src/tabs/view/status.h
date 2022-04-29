@@ -2,6 +2,7 @@
 #define TABS_VIEW_STATUS_H
 
 #include "../column_header.h"
+#include "../search_info.h"
 #include "jsoncpp/json/json.h"
 
 #include <gtkmm/box.h>
@@ -75,6 +76,8 @@ public:
    */
   Glib::ustring get_selection_text() const;
 
+  SearchInfo get_search_info();
+
 protected:
 
   /**
@@ -110,6 +113,7 @@ private:
   std::unique_ptr<Gtk::ComboBoxText> s_status_selection;
 
   // Misc
+  template<typename T_Widget> static std::shared_ptr<T_Widget> get_widget_shared(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);
   template<typename T_Widget> static std::unique_ptr<T_Widget> get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);
 
   // clang-tidy complains about the `COLUMN_TYPE_STRING` macro, so we assign it here and tell clang-tidy not to look at it

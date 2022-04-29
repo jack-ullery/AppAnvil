@@ -1,6 +1,13 @@
 #include "blocking_queue.h"
 
 #include "../console_thread.h"
+#include "../tabs/controller/logs_controller.h"
+#include "../tabs/controller/processes_controller.h"
+#include "../tabs/controller/profiles_controller.h"
+#include "../tabs/model/status_column_record.h"
+#include "../tabs/view/logs.h"
+#include "../tabs/view/processes.h"
+#include "../tabs/view/profiles.h"
 
 template<class T, class Deque, class Mutex>
 BlockingQueue<T, Deque, Mutex>::BlockingQueue() : internal_queue{std::make_shared<Deque>()}, mtx{new Mutex()}
@@ -67,10 +74,6 @@ template<class T, class Deque, class Mutex> T BlockingQueue<T, Deque, Mutex>::po
 
 // Used to avoid linker errors
 // For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
-// template class BlockingQueue<ConsoleThread::Message, std::deque<ConsoleThread::Message>, std::mutex>;
-// This next line is very gross, as I copied it directly from a Linker error. Don't even try to read it.
-// template class BlockingQueue<
-//     DispatcherMiddleman<Profiles<StatusColumnRecord>, Processes<StatusColumnRecord>, Logs, Glib::Dispatcher, std::mutex>::CallData,
-//     std::deque<DispatcherMiddleman<Profiles<StatusColumnRecord>, Processes<StatusColumnRecord>, Logs, Glib::Dispatcher, std::mutex>::CallData,
-//     std::allocator<DispatcherMiddleman<Profiles<StatusColumnRecord>, Processes<StatusColumnRecord>, Logs, Glib::Dispatcher, std::mutex>::CallData>>,
-//     std::mutex>;
+// These next few lines are very gross, as I copied it directly from a Linker error. Don't even try to read it.
+template class BlockingQueue<ConsoleThread<ProfilesController<Profiles<StatusColumnRecord>, StatusColumnRecord>, ProcessesController<Processes<StatusColumnRecord>, StatusColumnRecord>, LogsController<Logs, StatusColumnRecord> >::Message, std::deque<ConsoleThread<ProfilesController<Profiles<StatusColumnRecord>, StatusColumnRecord>, ProcessesController<Processes<StatusColumnRecord>, StatusColumnRecord>, LogsController<Logs, StatusColumnRecord> >::Message, std::allocator<ConsoleThread<ProfilesController<Profiles<StatusColumnRecord>, StatusColumnRecord>, ProcessesController<Processes<StatusColumnRecord>, StatusColumnRecord>, LogsController<Logs, StatusColumnRecord> >::Message>>, std::mutex>;
+template class BlockingQueue<DispatcherMiddleman<ProfilesController<Profiles<StatusColumnRecord>, StatusColumnRecord>, ProcessesController<Processes<StatusColumnRecord>, StatusColumnRecord>, LogsController<Logs, StatusColumnRecord>, Glib::Dispatcher, std::mutex>::CallData, std::deque<DispatcherMiddleman<ProfilesController<Profiles<StatusColumnRecord>, StatusColumnRecord>, ProcessesController<Processes<StatusColumnRecord>, StatusColumnRecord>, LogsController<Logs, StatusColumnRecord>, Glib::Dispatcher, std::mutex>::CallData, std::allocator<DispatcherMiddleman<ProfilesController<Profiles<StatusColumnRecord>, StatusColumnRecord>, ProcessesController<Processes<StatusColumnRecord>, StatusColumnRecord>, LogsController<Logs, StatusColumnRecord>, Glib::Dispatcher, std::mutex>::CallData> >, std::mutex>;

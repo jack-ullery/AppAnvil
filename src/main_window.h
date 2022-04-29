@@ -53,7 +53,7 @@ private:
   typedef Logs LogsInstance;
 
   typedef ProfilesController<ProfilesInstance, StatusColumnRecord> ProfilesControllerInstance;
-  typedef ProcessesController<LogsInstance, StatusColumnRecord> ProcessesControllerInstance;
+  typedef ProcessesController<ProcessesInstance, StatusColumnRecord> ProcessesControllerInstance;
   typedef LogsController<LogsInstance, StatusColumnRecord> LogsControllerInstance;
 
   typedef ConsoleThread<ProfilesControllerInstance,

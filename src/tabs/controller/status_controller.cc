@@ -1,4 +1,9 @@
 #include "status_controller.h"
+#include "../model/status_column_record.h"
+#include "../search_info.h"
+#include "../view/logs.h"
+#include "../view/processes.h"
+#include "../view/profiles.h"
 
 #include "jsoncpp/json/json.h"
 
@@ -50,56 +55,58 @@ bool StatusController<Tab>::filter(const std::string &str, const std::string &ru
 template<class Tab>
 bool StatusController<Tab>::filter(const Gtk::TreeModel::iterator &node)
 {
-  // std::string data;
-  // const uint num_columns = s_view->get_n_columns();
-  // auto treeModel         = s_view->get_model();
+  std::string data;
+  const uint num_columns = tab->get_view()->get_n_columns();
+  auto treeModel         = tab->get_view()->get_model();
 
-  // for(uint i = 0; i < num_columns; i++) {
-  //   bool re               = false;
-  //   unsigned int uintData = 0;
-  //   if(treeModel->get_column_type(i) == COLUMN_TYPE_STRING) {
-  //     node->get_value(i, data);
-  //     re = StatusController<Tab>::filter(data, s_search->get_text(), s_use_regex->get_active(), s_match_case->get_active(), s_whole_word->get_active());
-  //   } else {
-  //     node->get_value(i, uintData);
-  //     re = StatusController<Tab>::filter(std::to_string(uintData), s_search->get_text(), s_use_regex->get_active(), s_match_case->get_active(),
-  //                         s_whole_word->get_active());
-  //   }
+  for(uint i = 0; i < num_columns; i++) {
+      // SearchInfo info = tab->get_search_info();
+      SearchInfo info("", false, false, false);
+      bool re               = false;
+      unsigned int uintData = 0;
 
-  //   if(re) {
-  //     return true;
-  //   }
-  // }
+    if(treeModel->get_column_type(i) == COLUMN_TYPE_STRING) {
+      node->get_value(i, data);
+      re = StatusController<Tab>::filter(data, info.filter_rule, info.use_regex, info.match_case, info.whole_word);
+    } else {
+      node->get_value(i, uintData);
+      re = StatusController<Tab>::filter(std::to_string(uintData), info.filter_rule, info.use_regex, info.match_case, info.whole_word);
+    }
+
+    if(re) {
+      return true;
+    }
+  }
 
   // auto children = node->children();
   // if(!children.empty()) {
   //   return filter_children(node);
   // }
 
-  // return false;
-  return true;
+  return false;
 }
 
 template<class Tab>
 bool StatusController<Tab>::filter_children(const Gtk::TreeModel::iterator &node)
 {
   // std::string data;
-  // const uint num_columns = s_view->get_n_columns();
-  // auto treeModel         = s_view->get_model();
+  // const uint num_columns = tab->get_view()->get_n_columns();
+  // auto treeModel         = tab->get_view()->get_model();
   // auto children          = node->children();
 
   // for(auto iter = children.begin(); iter != children.end(); iter++) {
   //   auto row = *iter;
   //   for(uint i = 0; i < num_columns; i++) {
+  //     SearchInfo info = tab->get_search_info();
   //     bool re               = false;
   //     unsigned int uintData = 0;
+
   //     if(treeModel->get_column_type(i) == COLUMN_TYPE_STRING) {
   //       row.get_value(i, data);
-  //       re = StatusController<Tab>::filter(data, s_search->get_text(), s_use_regex->get_active(), s_match_case->get_active(), s_whole_word->get_active());
+  //       re = StatusController<Tab>::filter(data, info.filter_rule, info.use_regex, info.match_case, info.whole_word);
   //     } else {
   //       row.get_value(i, uintData);
-  //       re = StatusController<Tab>::filter(std::to_string(uintData), s_search->get_text(), s_use_regex->get_active(), s_match_case->get_active(),
-  //                           s_whole_word->get_active());
+  //       re = StatusController<Tab>::filter(std::to_string(uintData), info.filter_rule, info.use_regex, info.match_case, info.whole_word);
   //     }
 
   //     if(re) {
@@ -112,8 +119,7 @@ bool StatusController<Tab>::filter_children(const Gtk::TreeModel::iterator &node
   //   }
   // }
 
-  // return false;
-  return true;
+  return false;
 }
 
 template<class Tab>
@@ -142,3 +148,7 @@ template<class Tab>
 std::shared_ptr<Tab> StatusController<Tab>::get_tab(){
   return tab;
 }
+
+template class StatusController<Profiles<StatusColumnRecord>>;
+template class StatusController<Processes<StatusColumnRecord>>;
+template class StatusController<Logs>;

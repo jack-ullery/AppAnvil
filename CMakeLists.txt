@@ -14,6 +14,10 @@ set(
   ${PROJECT_SOURCE_DIR}/threads/command_caller.cc
   ${PROJECT_SOURCE_DIR}/threads/dispatcher_middleman.cc
   ${PROJECT_SOURCE_DIR}/tabs/model/status_column_record.cc
+  ${PROJECT_SOURCE_DIR}/tabs/controller/status_controller.cc
+  ${PROJECT_SOURCE_DIR}/tabs/controller/profiles_controller.cc
+  ${PROJECT_SOURCE_DIR}/tabs/controller/processes_controller.cc
+  ${PROJECT_SOURCE_DIR}/tabs/controller/logs_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/status.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/profiles.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/processes.cc
@@ -155,7 +159,7 @@ target_link_libraries(${LIBRARY_OUTPUT_NAME} PUBLIC jsoncpp)
 target_link_libraries(${LIBRARY_OUTPUT_NAME} PUBLIC pthread)
 
 add_subdirectory(aa-caller)
-add_subdirectory(test)
+############################################# add_subdirectory(test)
 
 #### Create the binary to the library ####
 add_executable(${PROJECT_NAME} ./src/main.cc)
