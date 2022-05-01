@@ -1,6 +1,5 @@
 #include "jsoncpp/json/json.h"
-#include "logs_mock.cc"
-// #include "status_column_record_mock.cc"
+#include "logs_controller_test.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -43,7 +42,7 @@ protected:
   // Mock objects
   std::shared_ptr<StatusColumnRecordMock> col_record_mock;
   TreeRowMock row_mock;
-  LogsMock<StatusColumnRecordMock> logs;
+  LogsControllerChild logs;
 };
 
 // Test for method format_log_data

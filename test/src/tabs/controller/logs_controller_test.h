@@ -1,10 +1,12 @@
-#include "../../../src/tabs/view/logs.cc"
-#include "status_column_record_mock.cc"
+#include "../../../../src/tabs/controller/logs_controller.cc"
+#include "../../../../src/tabs/controller/status_controller.cc"
+#include "../model/status_column_record_mock.h"
+#include "../view/logs_mock.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-template<class ColumnRecord> class LogsMock : public Logs<ColumnRecord>
+class LogsControllerChild : public LogsController<LogsMock, StatusColumnRecordMock>
 {
 public:
   FRIEND_TEST(LogsTest, TEST_FORMAT_LOG_DATA);
@@ -14,9 +16,9 @@ public:
   FRIEND_TEST(LogsTest, TEST_ADD_DATA_TO_RECORD_INVALID);
   FRIEND_TEST(LogsTest, TEST_REFRESH);
 
-  explicit LogsMock(std::shared_ptr<ColumnRecord> col_record) : Logs<ColumnRecord>(col_record) { }
+  explicit LogsControllerChild(std::shared_ptr<StatusColumnRecordMock> col_record) : LogsController(col_record) { }
 };
 
 // Used to avoid linker errors
 // For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
-template class Logs<StatusColumnRecordMock>;
+template class StatusController<LogsMock>;

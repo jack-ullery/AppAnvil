@@ -159,7 +159,7 @@ target_link_libraries(${LIBRARY_OUTPUT_NAME} PUBLIC jsoncpp)
 target_link_libraries(${LIBRARY_OUTPUT_NAME} PUBLIC pthread)
 
 add_subdirectory(aa-caller)
-############################################# add_subdirectory(test)
+add_subdirectory(test)
 
 #### Create the binary to the library ####
 add_executable(${PROJECT_NAME} ./src/main.cc)
