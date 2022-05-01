@@ -29,22 +29,33 @@ public:
   StatusController &operator=(StatusController<Tab> &&other)      noexcept = default;
 
 protected:
-  bool filter(const Gtk::TreeModel::iterator &node);
-  bool filter_children(const Gtk::TreeModel::iterator &node);
-
   /**
-   * @brief Decide whether a string should be added to the table
+   * @brief Decide whether a TreeRow should be visible
    *
    * @details
-   * Takes a string as input and decides whether it should be added the table.
+   * Takes a pointer to a TreeRow as input and decides whether it should be visible.
    * Uses the text in the searchbar and the state of the checkboxes to determine
-   * whether the string can be added.
+   * whether the TreeRow can be shown.
    *
    * If `use_regex` is true, then the `match_case` will be ignored.
    *
-   * @returns `true` if the string should be added, `false` if it should not
+   * @returns `true` if the TreeRow should be shown, `false` if it should not
    */
-  static bool filter(const std::string &str, const std::string &rule, const bool &use_regex, const bool &match_case,
+  bool filter(const Gtk::TreeModel::iterator &node);
+
+  /**
+   * @brief Decide whether a string should be visible
+   *
+   * @details
+   * Takes a string from the column of a row as input and decides whether it should be visible.
+   * Uses the text in the searchbar and the state of the checkboxes to determine
+   * whether the string can be shown.
+   *
+   * If `use_regex` is true, then the `match_case` will be ignored.
+   *
+   * @returns `true` if the string should be shown, `false` if it should not
+   */
+  static bool should_filter(const std::string &str, const std::string &rule, const bool &use_regex, const bool &match_case,
                      const bool &whole_word);
 
   // Should probably add a description!

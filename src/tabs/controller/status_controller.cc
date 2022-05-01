@@ -13,7 +13,7 @@
 #include <string>
 
 template<class Tab>
-bool StatusController<Tab>::filter(const std::string &str, const std::string &rule, const bool &use_regex, const bool &match_case, const bool &whole_word)
+bool StatusController<Tab>::should_filter(const std::string &str, const std::string &rule, const bool &use_regex, const bool &match_case, const bool &whole_word)
 {
   std::string new_str  = str;
   std::string new_rule = rule;
@@ -55,69 +55,39 @@ bool StatusController<Tab>::filter(const std::string &str, const std::string &ru
 template<class Tab>
 bool StatusController<Tab>::filter(const Gtk::TreeModel::iterator &node)
 {
-  std::string data;
   const uint num_columns = tab->get_view()->get_n_columns();
   auto treeModel         = tab->get_view()->get_model();
+  SearchInfo info        = tab->get_search_info();
 
+  // If one column of the tree row has a string that matches the pattern, then make this node visible
   for(uint i = 0; i < num_columns; i++) {
-      // SearchInfo info = tab->get_search_info();
-      SearchInfo info("", false, false, false);
-      bool re               = false;
-      unsigned int uintData = 0;
+    bool re               = false;
 
     if(treeModel->get_column_type(i) == COLUMN_TYPE_STRING) {
+      // If the column is a string, see whether it matches the pattern
+      std::string data;
       node->get_value(i, data);
-      re = StatusController<Tab>::filter(data, info.filter_rule, info.use_regex, info.match_case, info.whole_word);
+      re = StatusController<Tab>::should_filter(data, info.filter_rule, info.use_regex, info.match_case, info.whole_word);
     } else {
-      node->get_value(i, uintData);
-      re = StatusController<Tab>::filter(std::to_string(uintData), info.filter_rule, info.use_regex, info.match_case, info.whole_word);
+      // If the column is an int, convert it to a string and see whether it matches the pattern
+      // We initialize this uint to avoid a warning, this value will be overwritten by the following line
+      unsigned int data = 0;
+      node->get_value(i, data);
+      re = StatusController<Tab>::should_filter(std::to_string(data), info.filter_rule, info.use_regex, info.match_case, info.whole_word);
     }
 
+    // If the data in this column should be visible, show the entire row
     if(re) {
       return true;
     }
   }
 
-  // auto children = node->children();
-  // if(!children.empty()) {
-  //   return filter_children(node);
-  // }
-
-  return false;
-}
-
-template<class Tab>
-bool StatusController<Tab>::filter_children(const Gtk::TreeModel::iterator &node)
-{
-  // std::string data;
-  // const uint num_columns = tab->get_view()->get_n_columns();
-  // auto treeModel         = tab->get_view()->get_model();
-  // auto children          = node->children();
-
-  // for(auto iter = children.begin(); iter != children.end(); iter++) {
-  //   auto row = *iter;
-  //   for(uint i = 0; i < num_columns; i++) {
-  //     SearchInfo info = tab->get_search_info();
-  //     bool re               = false;
-  //     unsigned int uintData = 0;
-
-  //     if(treeModel->get_column_type(i) == COLUMN_TYPE_STRING) {
-  //       row.get_value(i, data);
-  //       re = StatusController<Tab>::filter(data, info.filter_rule, info.use_regex, info.match_case, info.whole_word);
-  //     } else {
-  //       row.get_value(i, uintData);
-  //       re = StatusController<Tab>::filter(std::to_string(uintData), info.filter_rule, info.use_regex, info.match_case, info.whole_word);
-  //     }
-
-  //     if(re) {
-  //       return true;
-  //     }
-
-  //     if(!row.children().empty() && filter_children(row)) {
-  //       return true;
-  //     }
-  //   }
-  // }
+  // Search the children and determine whether or not they should be visible
+  // For efficiency: we should use a more complex data structure, or do memoization
+  auto children = node->children();
+  for(auto child = children.begin(); child != children.end(); child++) {
+    return filter(child);
+  }
 
   return false;
 }

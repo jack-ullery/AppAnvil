@@ -91,6 +91,6 @@ void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::handle_s
   }
 }
 
-// // Used to avoid linker errors
-// // For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
+// Used to avoid linker errors
+// For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
 template class DispatcherMiddleman<ProfilesController<Profiles<StatusColumnRecord>, StatusColumnRecord>, ProcessesController<Processes<StatusColumnRecord>, StatusColumnRecord>, LogsController<Logs, StatusColumnRecord>, Glib::Dispatcher, std::mutex>;
