@@ -147,4 +147,4 @@ ConsoleThread<ProfilesController, ProcessesController, LogsController>::~Console
   asynchronous_thread.wait();
 }
 
-template class ConsoleThread<ProfilesController<Profiles<StatusColumnRecord>, StatusColumnRecord>, ProcessesController<Processes<StatusColumnRecord>, StatusColumnRecord>, LogsController<Logs, StatusColumnRecord> >;
+template class ConsoleThread<ProfilesController<Profiles, StatusColumnRecord>, ProcessesController<Processes, StatusColumnRecord>, LogsController<Logs, StatusColumnRecord> >;

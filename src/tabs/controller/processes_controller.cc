@@ -78,4 +78,4 @@ ProcessesController<ProcessesTab, ColumnRecord>::ProcessesController()
 
 // Used to avoid linker errors
 // For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
-template class ProcessesController<Processes<StatusColumnRecord>, StatusColumnRecord>;
+template class ProcessesController<Processes, StatusColumnRecord>;

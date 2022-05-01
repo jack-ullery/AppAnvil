@@ -10,8 +10,7 @@
 #include <tuple>
 #include <vector>
 
-template<class ColumnRecord>
-void Profiles<ColumnRecord>::change_status()
+void Profiles::change_status()
 {
   auto selection = Status::get_view()->get_selection();
 
@@ -35,8 +34,7 @@ void Profiles<ColumnRecord>::change_status()
   }
 }
 
-template<class ColumnRecord> 
-void Profiles<ColumnRecord>::default_change_fun(const std::string &a, const std::string &b, const std::string &c)
+void Profiles::default_change_fun(const std::string &a, const std::string &b, const std::string &c)
 {
   std::ignore = this;
   std::ignore = a;
@@ -45,14 +43,12 @@ void Profiles<ColumnRecord>::default_change_fun(const std::string &a, const std:
   std::cerr << "Warning: No signal handler is defined for changing a profile's status." << std::endl;
 }
 
-template<class ColumnRecord> 
-void Profiles<ColumnRecord>::set_status_change_signal_handler(sigc::slot<void(std::string, std::string, std::string)> change_fun)
+void Profiles::set_status_change_signal_handler(sigc::slot<void(std::string, std::string, std::string)> change_fun)
 {
   profile_status_change_fun = std::move(change_fun);
 }
 
-template<class ColumnRecord> 
-Profiles<ColumnRecord>::Profiles()
+Profiles::Profiles()
 {
   auto apply_func   = sigc::mem_fun(*this, &Profiles::change_status);
   Status::set_apply_signal_handler(apply_func);
@@ -62,7 +58,3 @@ Profiles<ColumnRecord>::Profiles()
 
   this->show_all();
 }
-
-// Used to avoid linker errors
-// For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
-template class Profiles<StatusColumnRecord>;

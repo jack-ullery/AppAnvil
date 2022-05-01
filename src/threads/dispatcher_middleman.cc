@@ -1,5 +1,8 @@
 #include "dispatcher_middleman.h"
 
+#include "../tabs/controller/logs_controller.h"
+#include "../tabs/controller/processes_controller.h"
+#include "../tabs/controller/profiles_controller.h"
 #include "../tabs/model/status_column_record.h"
 #include "../tabs/view/logs.h"
 #include "../tabs/view/processes.h"
@@ -93,4 +96,4 @@ void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::handle_s
 
 // Used to avoid linker errors
 // For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
-template class DispatcherMiddleman<ProfilesController<Profiles<StatusColumnRecord>, StatusColumnRecord>, ProcessesController<Processes<StatusColumnRecord>, StatusColumnRecord>, LogsController<Logs, StatusColumnRecord>, Glib::Dispatcher, std::mutex>;
+template class DispatcherMiddleman<ProfilesController<Profiles, StatusColumnRecord>, ProcessesController<Processes, StatusColumnRecord>, LogsController<Logs, StatusColumnRecord>, Glib::Dispatcher, std::mutex>;

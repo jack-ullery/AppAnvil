@@ -60,4 +60,4 @@ ProfilesController<ProfilesTab, ColumnRecord>::ProfilesController()
 
 // Used to avoid linker errors
 // For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
-template class ProfilesController<Profiles<StatusColumnRecord>, StatusColumnRecord>;
+template class ProfilesController<Profiles, StatusColumnRecord>;

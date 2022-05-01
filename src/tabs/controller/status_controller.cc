@@ -61,7 +61,7 @@ bool StatusController<Tab>::filter(const Gtk::TreeModel::iterator &node)
 
   // If one column of the tree row has a string that matches the pattern, then make this node visible
   for(uint i = 0; i < num_columns; i++) {
-    bool re               = false;
+    bool re  = false;
 
     if(treeModel->get_column_type(i) == COLUMN_TYPE_STRING) {
       // If the column is a string, see whether it matches the pattern
@@ -119,6 +119,6 @@ std::shared_ptr<Tab> StatusController<Tab>::get_tab(){
   return tab;
 }
 
-template class StatusController<Profiles<StatusColumnRecord>>;
-template class StatusController<Processes<StatusColumnRecord>>;
+template class StatusController<Profiles>;
+template class StatusController<Processes>;
 template class StatusController<Logs>;

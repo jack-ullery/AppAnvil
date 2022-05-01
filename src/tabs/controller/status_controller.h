@@ -17,6 +17,8 @@ class StatusController
 public:
   StatusController();
 
+  // Returns the Tab that this controller communicates with
+  // This tab will be some GTKmm widget from /src/tabs/view
   std::shared_ptr<Tab> get_tab();
 
   // Virtual destructor to avoid a warning
