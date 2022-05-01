@@ -86,7 +86,11 @@ bool StatusController<Tab>::filter(const Gtk::TreeModel::iterator &node)
   // For efficiency: we should use a more complex data structure, or do memoization
   auto children = node->children();
   for(auto child = children.begin(); child != children.end(); child++) {
-    return filter(child);
+    bool re = filter(child);
+    // If a child of this row is visible, make this row visible
+    if(re){
+      return true;
+    }
   }
 
   return false;

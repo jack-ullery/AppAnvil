@@ -11,7 +11,6 @@ const std::regex unconfined_proc("^\\s*(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(unconfined
 template<class ProcessesTab, class ColumnRecord> 
 void ProcessesController<ProcessesTab, ColumnRecord>::add_row_from_line(const std::shared_ptr<ColumnRecord> &col_record, const std::string &line)
 {
-  //auto row = col_record->new_row();
   Gtk::TreeRow row;
 
   std::smatch match;
