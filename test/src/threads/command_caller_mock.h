@@ -1,3 +1,6 @@
+#ifndef TEST_SRC_THREADS_COMMAND_CALLER_MOCK_H
+#define TEST_SRC_THREADS_COMMAND_CALLER_MOCK_H
+
 #include "../../../src/threads/command_caller.h"
 
 #include <gmock/gmock.h>
@@ -26,3 +29,5 @@ public:
   CommandCallerMock::results result_success = {0, success_str, error_str};
   CommandCallerMock::results result_error   = {1, success_str, error_str};
 };
+
+#endif

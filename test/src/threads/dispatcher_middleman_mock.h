@@ -1,9 +1,9 @@
 #include "../../../src/threads/dispatcher_middleman.cc"
-#include "../tabs/logs_status_mock.cc"
-#include "../tabs/processes_status_mock.cc"
-#include "../tabs/profiles_status_mock.cc"
-#include "blocking_queue_mock.cc"
-// #include "mutex_mock.cc"
+#include "../tabs/controller/logs_controller_mock.h"
+#include "../tabs/controller/processes_controller_mock.h"
+#include "../tabs/controller/profiles_controller_mock.h"
+#include "blocking_queue_mock.h"
+#include "mutex_mock.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -34,10 +34,10 @@ public:
 
 // Used to avoid linker errors
 // For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
-template class DispatcherMiddleman<ProfilesStatusMock, ProcessesStatusMock, LogsStatusMock, GlibDispatcherMock, MutexMock>;
+template class DispatcherMiddleman<ProfilesStatusMock, ProcessesStatusMock, LogsControllerMock, GlibDispatcherMock, MutexMock>;
 template class BlockingQueue<
-    DispatcherMiddleman<ProfilesStatusMock, ProcessesStatusMock, LogsStatusMock, GlibDispatcherMock, MutexMock>::CallData,
-    std::deque<DispatcherMiddleman<ProfilesStatusMock, ProcessesStatusMock, LogsStatusMock, GlibDispatcherMock, MutexMock>::CallData,
+    DispatcherMiddleman<ProfilesStatusMock, ProcessesStatusMock, LogsControllerMock, GlibDispatcherMock, MutexMock>::CallData,
+    std::deque<DispatcherMiddleman<ProfilesStatusMock, ProcessesStatusMock, LogsControllerMock, GlibDispatcherMock, MutexMock>::CallData,
                std::allocator<
-                   DispatcherMiddleman<ProfilesStatusMock, ProcessesStatusMock, LogsStatusMock, GlibDispatcherMock, MutexMock>::CallData>>,
+                   DispatcherMiddleman<ProfilesStatusMock, ProcessesStatusMock, LogsControllerMock, GlibDispatcherMock, MutexMock>::CallData>>,
     MutexMock>;

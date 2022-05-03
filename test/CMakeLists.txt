@@ -7,9 +7,9 @@ set(
   ./src/tabs/controller/logs_controller_test.cc
   #./src/tabs/status.cc
   #./src/tabs/status_mock.cc
-  #./src/threads/command_caller.cc
-  #./src/threads/dispatcher_middleman.cc
-  #./src/threads/blocking_queue.cc
+  ./src/threads/command_caller.cc
+  ./src/threads/dispatcher_middleman.cc
+  ./src/threads/blocking_queue.cc
 )
 
 #====================================

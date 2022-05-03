@@ -1,6 +1,9 @@
+#ifndef TEST_SRC_THREADS_BLOCKING_QUEUE_MOCK_H
+#define TEST_SRC_THREADS_BLOCKING_QUEUE_MOCK_H
+
 #include "../../../src/threads/blocking_queue.cc"
-#include "./deque_mock.cc"
-#include "./mutex_mock.cc"
+#include "deque_mock.h"
+#include "mutex_mock.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -27,3 +30,5 @@ public:
 // Used to avoid linker errors
 // For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
 template class BlockingQueue<int, DequeMock<int>, MutexMock>;
+
+#endif

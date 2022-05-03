@@ -1,6 +1,6 @@
-#include "./blocking_queue_mock.cc"
-// #include "./deque_mock.cc"
-// #include "./mutex_mock.cc"
+#include "blocking_queue_mock.h"
+#include "deque_mock.h"
+#include "mutex_mock.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>

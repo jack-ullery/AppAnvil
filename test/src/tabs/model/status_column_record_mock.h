@@ -1,3 +1,6 @@
+#ifndef TEST_SRC_TABS_MODEL_STATUS_COLUMN_RECORD_MOCK_TEST_H
+#define TEST_SRC_TABS_MODEL_STATUS_COLUMN_RECORD_MOCK_TEST_H
+
 #include "../../../../src/tabs/column_header.h"
 
 #include <gmock/gmock.h>
@@ -36,3 +39,5 @@ public:
   MOCK_METHOD(uint, filter_rows, ());
   MOCK_METHOD(void, reselect_rows, ());
 };
+
+#endif

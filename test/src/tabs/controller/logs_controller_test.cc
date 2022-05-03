@@ -1,10 +1,13 @@
 #include "jsoncpp/json/json.h"
 #include "logs_controller_test.h"
 
+#include <gmock/gmock-matchers.h>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <string>
 
 using ::testing::_;
+using ::testing::HasSubstr;
 using ::testing::Matcher;
 using ::testing::Return;
 using ::testing::Sequence;
@@ -13,9 +16,12 @@ using ::testing::Sequence;
 class LogsTest : public ::testing::Test
 {
 protected:
-  LogsTest() : col_record_mock{new StatusColumnRecordMock()}, row_mock(), logs(col_record_mock) { }
-
-  virtual void SetUp() { }
+  LogsTest() 
+  : col_record_mock{new StatusColumnRecordMock()}, 
+    row_mock{new TreeRowMock()}, 
+    logs_view{new LogsMock()},
+    logs_controller{new LogsControllerChild(col_record_mock, logs_view)}
+  { }
 
   // Some of the sample snippets of information below were taken from the output of running 'journalctl -b "_AUDIT_TYPE=1400" --output=json'
   // in the terminal. They are mostly used to verify that information is being formatted correctly in format_log_data and format_timestamp.
@@ -41,16 +47,17 @@ protected:
 
   // Mock objects
   std::shared_ptr<StatusColumnRecordMock> col_record_mock;
-  TreeRowMock row_mock;
-  LogsControllerChild logs;
+  std::shared_ptr<TreeRowMock> row_mock;
+  std::shared_ptr<LogsMock> logs_view;
+  std::shared_ptr<LogsControllerChild> logs_controller;
 };
 
 // Test for method format_log_data
 TEST_F(LogsTest, TEST_FORMAT_LOG_DATA)
 {
-  std::string formatted_type      = logs.format_log_data(sample_log_data_type);
-  std::string formatted_operation = logs.format_log_data(sample_log_data_operation);
-  std::string formatted_status    = logs.format_log_data(sample_log_data_status);
+  std::string formatted_type      = logs_controller->format_log_data(sample_log_data_type);
+  std::string formatted_operation = logs_controller->format_log_data(sample_log_data_operation);
+  std::string formatted_status    = logs_controller->format_log_data(sample_log_data_status);
 
   ASSERT_TRUE(formatted_type.find('\"') == std::string::npos) << "sample type should not contain quotation marks after formatting";
   ASSERT_TRUE(formatted_operation.find('\"') == std::string::npos)
@@ -64,8 +71,8 @@ TEST_F(LogsTest, TEST_FORMAT_LOG_DATA)
 // Test for method format_timestamp
 TEST_F(LogsTest, TEST_FORMAT_TIMESTAMP)
 {
-  std::string formatted_timestamp = logs.format_timestamp(sample_log_data_timestamp);
-  std::string formatted_zerotime  = logs.format_timestamp(zerotime);
+  std::string formatted_timestamp = logs_controller->format_timestamp(sample_log_data_timestamp);
+  std::string formatted_zerotime  = logs_controller->format_timestamp(zerotime);
 
   bool res = std::regex_match(formatted_timestamp, timestamp_regex);
   ASSERT_TRUE(res) << "formatted timestamp does not match regex";
@@ -84,11 +91,11 @@ TEST_F(LogsTest, TEST_ADD_ROW_FROM_JSON)
 
   bool res = parseFromStream(builder, stream, &root, &errs);
   ASSERT_TRUE(res) << "failed to parse sample json";
-  EXPECT_CALL(*col_record_mock, new_row()).Times(1).WillOnce(Return(&row_mock));
-  EXPECT_CALL(row_mock, set_value(_, Matcher<const std::string &>(_))).Times(5);
-  EXPECT_CALL(row_mock, set_value(_, Matcher<const unsigned long &>(_))).Times(1);
+  EXPECT_CALL(*col_record_mock, new_row()).Times(1).WillOnce(Return(row_mock.get()));
+  EXPECT_CALL(*row_mock, set_value(_, Matcher<const std::string &>(_))).Times(5);
+  EXPECT_CALL(*row_mock, set_value(_, Matcher<const unsigned long &>(_))).Times(1);
 
-  logs.add_row_from_json(col_record_mock, root);
+  logs_controller->add_row_from_json(col_record_mock, root);
 }
 
 // Test for method add_data_to_record with a valid argument passed
@@ -100,15 +107,16 @@ TEST_F(LogsTest, TEST_ADD_DATA_TO_RECORD_VALID)
   // add_data_to_record calls add_row_from_json(...) for each line of the passed json (string)
   // with the current values of data_arg and data_arg_num_lines, this means the sequence will occur twice
   for(int i = 0; i < data_arg_num_lines; i++) {
-    EXPECT_CALL(*col_record_mock, new_row()).Times(1).InSequence(add_row_calls).WillOnce(Return(&row_mock));
-    EXPECT_CALL(row_mock, set_value(_, Matcher<const std::string &>(_))).Times(4).InSequence(add_row_calls);
-    EXPECT_CALL(row_mock, set_value(_, Matcher<const unsigned long &>(_))).Times(1).InSequence(add_row_calls);
-    EXPECT_CALL(row_mock, set_value(_, Matcher<const std::string &>(_))).Times(1).InSequence(add_row_calls);
+    EXPECT_CALL(*col_record_mock, new_row()).Times(1).InSequence(add_row_calls).WillOnce(Return(row_mock.get()));
+    EXPECT_CALL(*row_mock, set_value(_, Matcher<const std::string &>(_))).Times(4).InSequence(add_row_calls);
+    EXPECT_CALL(*row_mock, set_value(_, Matcher<const unsigned long &>(_))).Times(1).InSequence(add_row_calls);
+    EXPECT_CALL(*row_mock, set_value(_, Matcher<const std::string &>(_))).Times(1).InSequence(add_row_calls);
   }
 
   EXPECT_CALL(*col_record_mock, filter_rows()).Times(1);
+  EXPECT_CALL(*col_record_mock, reselect_rows()).Times(1);
 
-  logs.add_data_to_record(data_arg);
+  logs_controller->add_data_to_record(data_arg);
 }
 
 // Test for method add_data_to_record with an invalid argument passed
@@ -116,16 +124,20 @@ TEST_F(LogsTest, TEST_ADD_DATA_TO_RECORD_INVALID)
 {
   EXPECT_CALL(*col_record_mock, clear()).Times(1);
   EXPECT_CALL(*col_record_mock, new_row()).Times(0);
-  EXPECT_CALL(row_mock, set_value(_, Matcher<const std::string &>(_))).Times(0);
-  EXPECT_CALL(row_mock, set_value(_, Matcher<const unsigned long &>(_))).Times(0);
+  EXPECT_CALL(*row_mock, set_value(_, Matcher<const std::string &>(_))).Times(0);
+  EXPECT_CALL(*row_mock, set_value(_, Matcher<const unsigned long &>(_))).Times(0);
   EXPECT_CALL(*col_record_mock, filter_rows()).Times(0);
-  EXPECT_THROW(logs.add_data_to_record("{test}"), std::invalid_argument);
+  EXPECT_THROW(logs_controller->add_data_to_record("{test}"), std::invalid_argument);
 }
 
 // Test for method refresh()
 TEST_F(LogsTest, TEST_REFRESH)
 {
-  EXPECT_CALL(*col_record_mock, filter_rows()).Times(1);
+  unsigned int arbitrary_num = 1234;
+  std::string arbitrary_num_str = std::to_string(1234);
 
-  logs.refresh();
+  EXPECT_CALL(*col_record_mock, filter_rows()).Times(1).WillOnce(Return(arbitrary_num));
+  EXPECT_CALL(*logs_view, set_status_label_text(HasSubstr(arbitrary_num_str))).Times(1);
+  
+  logs_controller->refresh();
 }

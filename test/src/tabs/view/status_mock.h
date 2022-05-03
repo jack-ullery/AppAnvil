@@ -1,3 +1,6 @@
+#ifndef TEST_SRC_TABS_VIEW_STATUS_MOCK_H
+#define TEST_SRC_TABS_VIEW_STATUS_MOCK_H
+
 #include "../../../../src/tabs/search_info.h"
 
 #include <gmock/gmock.h>
@@ -18,3 +21,5 @@ class StatusMock
         MOCK_METHOD(Glib::ustring, get_selection_text, ());
         MOCK_METHOD(SearchInfo, get_search_info, ());
 };
+
+#endif

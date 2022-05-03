@@ -71,6 +71,7 @@ template<class LogsTab, class ColumnRecord> void LogsController<LogsTab, ColumnR
   }
 
   // refresh the display after all logs have been added
+  col_record->filter_rows();
   col_record->reselect_rows();
 }
 
@@ -82,7 +83,10 @@ template<class LogsTab, class ColumnRecord> void LogsController<LogsTab, ColumnR
 
 // For unit testing
 template<class LogsTab, class ColumnRecord>
-LogsController<LogsTab, ColumnRecord>::LogsController(std::shared_ptr<ColumnRecord> column_record) : col_record{std::move(column_record)} { }
+LogsController<LogsTab, ColumnRecord>::LogsController(std::shared_ptr<ColumnRecord> column_record, std::shared_ptr<LogsTab> logs) 
+  : logs{std::move(logs)},
+    col_record{std::move(column_record)}  
+  { }
 
 // For production
 template<class LogsTab, class ColumnRecord>

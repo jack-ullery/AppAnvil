@@ -18,15 +18,13 @@ public:
   // For production
   explicit LogsController();
   // For unit testing
-  explicit LogsController(std::shared_ptr<ColumnRecord> column_record);
+  explicit LogsController(std::shared_ptr<ColumnRecord> column_record, std::shared_ptr<LogsTab> logs);
 
   virtual void add_data_to_record(const std::string &data);
   static void add_row_from_json(const std::shared_ptr<ColumnRecord> &col_record, const Json::Value &entry);
   static std::string format_log_data(const std::string &data);
   static std::string format_timestamp(const time_t &timestamp);
-
   unsigned int num_visible_rows(); 
-
   void refresh();
 
 protected:

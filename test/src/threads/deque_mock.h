@@ -1,3 +1,6 @@
+#ifndef TEST_SRC_THREADS_DEQUEUE_MOCK_H
+#define TEST_SRC_THREADS_DEQUEUE_MOCK_H
+
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
@@ -16,3 +19,5 @@ public:
   DequeMock() { }
   DequeMock(const DequeMock &) { }
 };
+
+#endif
