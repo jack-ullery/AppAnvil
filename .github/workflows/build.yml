@@ -34,19 +34,19 @@ jobs:
       # Run the unit tests
       run: xvfb-run --auto-servernum ./dist/appanvil_test
 
-    - name: setup git config
-      run: |
-        # setup the username and email for the bot. Using 'GitHub Actions Bot' with no email by default
-        git config user.name "GitHub Actions Bot"
-        git config user.email "<>"
-        
-    - name: commit
-      run: |
-        num_files_changed=$(git diff --numstat | wc -l)
-        if [ $num_files_changed != 0 ]; then 
-          # Stage the changed files, commit and push
-          git add ./src/* ./test/src/* ./aa-caller/src/*;
-          git commit -m "Format code";
-          git push;
-        fi;
+    #- name: setup git config
+    #  run: |
+    #    # setup the username and email for the bot. Using 'GitHub Actions Bot' with no email by default
+    #    git config user.name "GitHub Actions Bot"
+    #    git config user.email "<>"
+    #    
+    #- name: commit
+    #  run: |
+    #    num_files_changed=$(git diff --numstat | wc -l)
+    #    if [ $num_files_changed != 0 ]; then 
+    #      # Stage the changed files, commit and push
+    #      git add ./src/* ./test/src/* ./aa-caller/src/*;
+    #      git commit -m "Format code";
+    #      git push;
+    #    fi;
         
