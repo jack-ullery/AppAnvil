@@ -5,8 +5,8 @@ set(
   TEST_SOURCES
   ./src/test_runner.cc
   ./src/tabs/controller/logs_controller_test.cc
-  #./src/tabs/status.cc
-  #./src/tabs/status_mock.cc
+  ./src/tabs/controller/status_controller_test.cc
+  ./src/tabs/view/status_test.cc
   ./src/threads/command_caller.cc
   ./src/threads/dispatcher_middleman.cc
   ./src/threads/blocking_queue.cc

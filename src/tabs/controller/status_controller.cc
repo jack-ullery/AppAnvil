@@ -119,6 +119,11 @@ StatusController<Tab>::StatusController()
 { }
 
 template<class Tab>
+StatusController<Tab>::StatusController(std::shared_ptr<Tab> tab)
+: tab{tab}
+{ }
+
+template<class Tab>
 std::shared_ptr<Tab> StatusController<Tab>::get_tab(){
   return tab;
 }

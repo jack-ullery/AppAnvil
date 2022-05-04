@@ -45,7 +45,6 @@ void DispatcherMiddlemanTest::expect_locks(unsigned int num)
 
   for(unsigned int i = 0; i < num; i++) {
     EXPECT_CALL(*mtx_mock, lock()).Times(1).InSequence(lock_calls);
-
     EXPECT_CALL(*mtx_mock, unlock()).Times(1).InSequence(lock_calls);
   }
 }

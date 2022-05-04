@@ -15,7 +15,10 @@ template<class Tab>
 class StatusController
 {
 public:
+  // For production
   StatusController();
+  // For unit testing
+  explicit StatusController(std::shared_ptr<Tab> tab);
 
   // Returns the Tab that this controller communicates with
   // This tab will be some GTKmm widget from /src/tabs/view
