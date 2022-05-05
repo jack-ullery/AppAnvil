@@ -1,8 +1,8 @@
-#include "../tabs/logs_status_mock.cc"
-#include "../tabs/processes_status_mock.cc"
-#include "../tabs/profiles_status_mock.cc"
-#include "./dispatcher_middleman_mock.cc"
-#include "./mutex_mock.cc"
+#include "../tabs/controller/logs_controller_mock.h"
+#include "../tabs/controller/processes_controller_mock.h"
+#include "../tabs/controller/profiles_controller_mock.h"
+#include "dispatcher_middleman_mock.h"
+#include "mutex_mock.h"
 
 #include <future>
 #include <gmock/gmock.h>
@@ -14,7 +14,7 @@ class DispatcherMiddlemanTest : public ::testing::Test
 {
 protected:
   DispatcherMiddlemanTest()
-      : disp{new GlibDispatcherMock()}, prof{new ProfilesStatusMock()}, proc{new ProcessesStatusMock()}, logs{new LogsStatusMock()},
+      : disp{new GlibDispatcherMock()}, prof{new ProfilesStatusMock()}, proc{new ProcessesStatusMock()}, logs{new LogsControllerMock()},
         mtx_mock{new MutexMock()}, dispatch_man(disp, prof, proc, logs, mtx_mock)
   {
   }
@@ -30,10 +30,10 @@ protected:
   std::shared_ptr<GlibDispatcherMock> disp;
   std::shared_ptr<ProfilesStatusMock> prof;
   std::shared_ptr<ProcessesStatusMock> proc;
-  std::shared_ptr<LogsStatusMock> logs;
+  std::shared_ptr<LogsControllerMock> logs;
   std::shared_ptr<MutexMock> mtx_mock;
 
-  DispatcherMiddlemanMock<ProfilesStatusMock, ProcessesStatusMock, LogsStatusMock, GlibDispatcherMock, MutexMock> dispatch_man;
+  DispatcherMiddlemanMock<ProfilesStatusMock, ProcessesStatusMock, LogsControllerMock, GlibDispatcherMock, MutexMock> dispatch_man;
 };
 
 // Expect the mutex to be locked and unlocked `num` times
@@ -45,7 +45,6 @@ void DispatcherMiddlemanTest::expect_locks(unsigned int num)
 
   for(unsigned int i = 0; i < num; i++) {
     EXPECT_CALL(*mtx_mock, lock()).Times(1).InSequence(lock_calls);
-
     EXPECT_CALL(*mtx_mock, unlock()).Times(1).InSequence(lock_calls);
   }
 }

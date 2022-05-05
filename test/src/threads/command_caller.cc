@@ -1,4 +1,4 @@
-#include "command_caller_mock.cc"
+#include "command_caller_mock.h"
 
 using ::testing::_;
 using ::testing::Return;

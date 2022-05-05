@@ -3,12 +3,15 @@
 #include <tuple>
 
 MainWindow::MainWindow()
-    : prof{new Profiles()}, proc{new Processes()}, logs{new Logs<StatusColumnRecord>()}, console{new ConsoleThread(prof, proc, logs)}
+    : prof_control{new ProfilesControllerInstance()}, 
+      proc_control{new ProcessesControllerInstance()}, 
+      logs_control{new LogsControllerInstance()}, 
+      console{new ConsoleThreadInstance(prof_control, proc_control, logs_control)}
 {
   // Add tabs to the stack pane
-  m_stack.add(*prof, "prof", "Profiles");
-  m_stack.add(*proc, "proc", "Processes");
-  m_stack.add(*logs, "logs", "Logs");
+  m_stack.add(*(prof_control->get_tab()), "prof", "Profiles");
+  m_stack.add(*(proc_control->get_tab()), "proc", "Processes");
+  m_stack.add(*(logs_control->get_tab()), "logs", "Logs");
 
   // Attach the stack to the stack switcher
   m_switcher.set_stack(m_stack);
@@ -21,7 +24,7 @@ MainWindow::MainWindow()
   // Connect the profile tab to the `send_status_change` method
   sigc::slot<void(const std::string &, const std::string &, const std::string &)> change_fun =
       sigc::mem_fun(*this, &MainWindow::send_status_change);
-  prof->set_status_change_signal_handler(change_fun);
+  prof_control->get_tab()->set_status_change_signal_handler(change_fun);
 
   // Set some default properties for titlebar
   m_headerbar.set_custom_title(m_switcher);
