@@ -9,6 +9,9 @@ MainWindow::MainWindow()
   m_stack.add(*prof, "prof", "Profiles");
   m_stack.add(*proc, "proc", "Processes");
   m_stack.add(*logs, "logs", "Logs");
+  m_stack.add(*file_chooser, "file_chooser", "Load Profile");
+  m_stack.add(*about, "about", "About Me");
+
 
   // Attach the stack to the stack switcher
   m_switcher.set_stack(m_stack);
@@ -54,6 +57,9 @@ void MainWindow::send_status_change(const std::string &profile, const std::strin
 bool MainWindow::on_switch(GdkEvent *event)
 {
   std::ignore = event;
+  
+  //make sure to clear the success label on the load tab 
+  file_chooser->clearLabel();
 
   std::string visible_child = m_stack.get_visible_child_name();
 

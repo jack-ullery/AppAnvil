@@ -18,6 +18,8 @@ set(
   ${PROJECT_SOURCE_DIR}/tabs/profiles.cc
   ${PROJECT_SOURCE_DIR}/tabs/processes.cc
   ${PROJECT_SOURCE_DIR}/tabs/logs.h
+  ${PROJECT_SOURCE_DIR}/tabs/file_chooser.cc
+  ${PROJECT_SOURCE_DIR}/tabs/about.cc
 )
 
 ### All the code globbed together for easy formatting ###

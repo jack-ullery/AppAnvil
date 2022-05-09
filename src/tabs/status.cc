@@ -70,7 +70,7 @@ bool Status::filter(const Gtk::TreeModel::iterator &node)
       re = Status::filter(std::to_string(uintData), s_search->get_text(), s_use_regex->get_active(), s_match_case->get_active(),
                           s_whole_word->get_active());
     }
-
+    
     if(re) {
       return true;
     }

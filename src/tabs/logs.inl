@@ -1,4 +1,3 @@
-
 template<class ColumnRecord> std::string Logs<ColumnRecord>::format_log_data(const std::string &data)
 {
   const std::regex remove_quotes = std::regex("\\\"(\\S*)\\\"");
