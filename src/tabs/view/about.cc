@@ -1,7 +1,5 @@
 #include "about.h"
 
-#include "../threads/command_caller.h"
-
 #include <iostream>
 #include <string>
 #include <vector>
@@ -14,16 +12,15 @@ template<typename T_Widget> std::unique_ptr<T_Widget> About::get_widget(Glib::us
 }
 
 About::About()
-    : builder{Gtk::Builder::create_from_file("./resources/about.glade")}, a_box{About::get_widget<Gtk::Box>("a_box", builder)},
-    a_win{About::get_widget<Gtk::ScrolledWindow>("a_win", builder)}, a_view{About::get_widget<Gtk::Viewport>("a_view", builder)},
-    a_label{About::get_widget<Gtk::Label>("a_label", builder)}, a_box_hz{About::get_widget<Gtk::Box>("a_box_hz", builder)},
-    link_btn{About::get_widget<Gtk::Button>("link_btn", builder)}, a_search{About::get_widget<Gtk::SearchEntry>("a_search", builder)}
+    : builder{Gtk::Builder::create_from_file("./resources/about.glade")}, 
+      a_box{About::get_widget<Gtk::Box>("a_box", builder)},
+      a_label{About::get_widget<Gtk::Label>("a_label", builder)},
+      a_search{About::get_widget<Gtk::SearchEntry>("a_search", builder)}
 
 {
-  auto button_func = sigc::mem_fun(*this, &About::on_confirm_clicked);
-  set_link_btn_signal_handler(button_func);
   auto search_func = sigc::mem_fun(*this, &About::on_search_changed);
   set_search_signal_handler(search_func);
+
   a_label->set_text(get_marked_up_text());
   a_label->set_use_markup(true);
   a_box->set_hexpand();
@@ -31,18 +28,6 @@ About::About()
 
   this->add(*a_box);
 }
-
-
-void About::set_link_btn_signal_handler(const Glib::SignalProxyProperty::SlotType &func){
-  link_btn->signal_clicked().connect(func, true);
-}
-
-
-void About::on_confirm_clicked(){
-  // system("/usr/bin/firefox https://gitlab.com/apparmor/apparmor/-/wikis/Documentation");
-  return;
-}
-
 
 void About::set_search_signal_handler(const Glib::SignalProxyProperty::SlotType &func) {
   a_search->signal_search_changed().connect(func, true);

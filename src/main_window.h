@@ -2,12 +2,12 @@
 #define SRC_MAIN_WINDOW_H
 
 #include "console_thread.h"
-#include "tabs/about.h"
 #include "tabs/controller/logs_controller.h"
 #include "tabs/controller/processes_controller.h"
 #include "tabs/controller/profiles_controller.h"
 #include "tabs/file_chooser.h"
 #include "tabs/model/status_column_record.h"
+#include "tabs/view/about.h"
 #include "tabs/view/logs.h"
 #include "tabs/view/processes.h"
 #include "tabs/view/profiles.h"
@@ -70,6 +70,8 @@ private:
   std::shared_ptr<ProfilesControllerInstance>  prof_control;
   std::shared_ptr<ProcessesControllerInstance> proc_control;
   std::shared_ptr<LogsControllerInstance>      logs_control;
+  
+  // Tabs (Without Controller)
   std::shared_ptr<FileChooser>                 file_chooser;
   std::shared_ptr<About>                       about;
 

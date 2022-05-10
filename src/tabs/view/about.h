@@ -1,7 +1,7 @@
 #ifndef TABS_ABOUT_H
 #define TABS_ABOUT_H
 
-#include "view/status.h"
+#include "status.h"
 
 #include <gtkmm/builder.h>
 #include <gtkmm/comboboxtext.h>
@@ -27,9 +27,7 @@ public:
   About();
 
 protected:
-  // Signal handler 
-  void set_link_btn_signal_handler(const Glib::SignalProxyProperty::SlotType &func);
-  void on_confirm_clicked();
+  // Signal handlers
   void set_search_signal_handler(const Glib::SignalProxyProperty::SlotType &func);
   void on_search_changed();
   std::string get_marked_up_text();
@@ -41,11 +39,7 @@ private:
 
   // Widgets on the tab
   std::unique_ptr<Gtk::Box> a_box;
-  std::unique_ptr<Gtk::ScrolledWindow> a_win;
-  std::unique_ptr<Gtk::Viewport> a_view;
   std::unique_ptr<Gtk::Label> a_label;
-  std::unique_ptr<Gtk::Box> a_box_hz;
-  std::unique_ptr<Gtk::Button> link_btn;
   std::unique_ptr<Gtk::SearchEntry> a_search;
 
   template<typename T_Widget> static std::unique_ptr<T_Widget> get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);
