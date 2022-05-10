@@ -1,10 +1,20 @@
 #include "main_window.h"
+#include "tabs/file_chooser.h"
 
+#include <bits/types/FILE.h>
 #include <tuple>
+#include <iostream>
 
 MainWindow::MainWindow()
-    : prof{new Profiles()}, proc{new Processes()}, logs{new Logs<StatusColumnRecord>()}, console{new ConsoleThread(prof, proc, logs)}
+    : prof{new Profiles()}, 
+      proc{new Processes()}, 
+      logs{new Logs<StatusColumnRecord>()}, 
+      file_chooser{new FileChooser()}, 
+      about{new About()}, 
+      console{new ConsoleThread(prof, proc, logs)}
 {
+  std::cout << "LOADED BOYS" << std::endl;
+
   // Add tabs to the stack pane
   m_stack.add(*prof, "prof", "Profiles");
   m_stack.add(*proc, "proc", "Processes");
@@ -12,6 +22,7 @@ MainWindow::MainWindow()
   m_stack.add(*file_chooser, "file_chooser", "Load Profile");
   m_stack.add(*about, "about", "About Me");
 
+  std::cout << "LOADED TOYS" << std::endl;
 
   // Attach the stack to the stack switcher
   m_switcher.set_stack(m_stack);
@@ -25,6 +36,8 @@ MainWindow::MainWindow()
   sigc::slot<void(const std::string &, const std::string &, const std::string &)> change_fun =
       sigc::mem_fun(*this, &MainWindow::send_status_change);
   prof->set_status_change_signal_handler(change_fun);
+
+  std::cout << "LOADED NOISE" << std::endl;
 
   // Set some default properties for titlebar
   m_headerbar.set_custom_title(m_switcher);
