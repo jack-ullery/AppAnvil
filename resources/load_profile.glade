@@ -10,56 +10,19 @@
       <object class="GtkLabel">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="margin_left">10</property>
+        <property name="margin_right">10</property>
+        <property name="margin_top">20</property>
+        <property name="margin_bottom">5</property>
         <property name="label" translatable="yes">Please select the profile you wish to add</property>
         <attributes>
-          <attribute name="font-desc" value="Sans Bold 15"/>
+          <attribute name="weight" value="heavy"/>
         </attributes>
       </object>
       <packing>
         <property name="expand">False</property>
         <property name="fill">True</property>
         <property name="position">0</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkGrid">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-          </object>
-          <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-          </object>
-          <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-          </object>
-          <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">0</property>
-          </packing>
-        </child>
-      </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">1</property>
       </packing>
     </child>
     <child>
@@ -75,7 +38,8 @@
             <property name="can_focus">False</property>
             <property name="label" translatable="yes">Profile:</property>
             <attributes>
-              <attribute name="font-desc" value="Sans Bold 12"/>
+              <attribute name="weight" value="medium"/>
+              <attribute name="scale" value="1"/>
             </attributes>
           </object>
           <packing>
@@ -109,88 +73,6 @@
         <property name="expand">False</property>
         <property name="fill">True</property>
         <property name="position">2</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkGrid">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="halign">center</property>
-        <property name="column_homogeneous">True</property>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Status:</property>
-            <attributes>
-              <attribute name="font-desc" value="Sans Bold 12"/>
-            </attributes>
-          </object>
-          <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkComboBoxText" id="l_combo_profile_status_chooser">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <items>
-              <item id="0" translatable="yes">Enforce</item>
-              <item id="1" translatable="yes">Complain</item>
-              <item id="2" translatable="yes">Disable</item>
-            </items>
-          </object>
-          <packing>
-            <property name="left_attach">1</property>
-            <property name="top_attach">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-          </object>
-          <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-          </object>
-          <packing>
-            <property name="left_attach">1</property>
-            <property name="top_attach">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-          </object>
-          <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-          </object>
-          <packing>
-            <property name="left_attach">1</property>
-            <property name="top_attach">2</property>
-          </packing>
-        </child>
-      </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">3</property>
       </packing>
     </child>
     <child>

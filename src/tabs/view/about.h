@@ -1,5 +1,5 @@
-#ifndef TABS_ABOUT_H
-#define TABS_ABOUT_H
+#ifndef TABS_VIEW_ABOUT_H
+#define TABS_VIEW_ABOUT_H
 
 #include "status.h"
 
@@ -45,4 +45,4 @@ private:
   template<typename T_Widget> static std::unique_ptr<T_Widget> get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);
 };
 
-#endif // TABS_ABOUT_H
+#endif // TABS_VIEW_ABOUT_H

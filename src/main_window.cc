@@ -1,7 +1,5 @@
 #include "main_window.h"
-#include "tabs/file_chooser.h"
 
-#include <bits/types/FILE.h>
 #include <tuple>
 #include <iostream>
 
@@ -9,7 +7,7 @@ MainWindow::MainWindow()
     : prof_control{new ProfilesControllerInstance()}, 
       proc_control{new ProcessesControllerInstance()}, 
       logs_control{new LogsControllerInstance()}, 
-      file_chooser{new FileChooser()}, 
+      file_chooser_control{new FileChooserControllerInstance()}, 
       about{new About()}, 
       console{new ConsoleThreadInstance(prof_control, proc_control, logs_control)}
 {
@@ -17,7 +15,7 @@ MainWindow::MainWindow()
   m_stack.add(*(prof_control->get_tab()), "prof", "Profiles");
   m_stack.add(*(proc_control->get_tab()), "proc", "Processes");
   m_stack.add(*(logs_control->get_tab()), "logs", "Logs");
-  m_stack.add(*file_chooser, "file_chooser", "Load Profile");
+  m_stack.add(*(file_chooser_control->get_tab()), "file_chooser", "Load Profile");
   m_stack.add(*about, "about", "About Me");
 
   // Attach the stack to the stack switcher
@@ -65,8 +63,8 @@ bool MainWindow::on_switch(GdkEvent *event)
 {
   std::ignore = event;
   
-  //make sure to clear the success label on the load tab 
-  file_chooser->clearLabel();
+  // Make sure to clear the label on the load-profiles tab 
+  file_chooser_control->clearLabel();
 
   std::string visible_child = m_stack.get_visible_child_name();
 
