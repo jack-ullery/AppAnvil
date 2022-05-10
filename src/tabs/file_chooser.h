@@ -1,13 +1,14 @@
 #ifndef TABS_FILECHOOSER_H
 #define TABS_FILECHOOSER_H
 
-#include "status.h"
+#include "model/status_column_record.h"
+#include "view/status.h"
 
 #include <gtkmm/builder.h>
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/enums.h>
-#include <gtkmm/filechooserdialog.h>
 #include <gtkmm/filechooser.h>
+#include <gtkmm/filechooserdialog.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/notebook.h>

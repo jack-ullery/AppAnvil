@@ -2,12 +2,16 @@
 #define SRC_MAIN_WINDOW_H
 
 #include "console_thread.h"
-#include "tabs/file_chooser.h"
-#include "tabs/logs.h"
-#include "tabs/processes.h"
-#include "tabs/profiles.h"
-#include "tabs/status.h"
 #include "tabs/about.h"
+#include "tabs/controller/logs_controller.h"
+#include "tabs/controller/processes_controller.h"
+#include "tabs/controller/profiles_controller.h"
+#include "tabs/file_chooser.h"
+#include "tabs/model/status_column_record.h"
+#include "tabs/view/logs.h"
+#include "tabs/view/processes.h"
+#include "tabs/view/profiles.h"
+
 #include <gtkmm/applicationwindow.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/headerbar.h>
@@ -44,6 +48,16 @@ protected:
   void send_status_change(const std::string &profile, const std::string &old_status, const std::string &new_status);
 
 private:
+  // A set of Typedeffed classes, to handle dependency injection
+  // This lowers the amount of repeated <..> symbols
+  typedef ProfilesController<Profiles, StatusColumnRecord> ProfilesControllerInstance;
+  typedef ProcessesController<Processes, StatusColumnRecord> ProcessesControllerInstance;
+  typedef LogsController<Logs, StatusColumnRecord> LogsControllerInstance;
+
+  typedef ConsoleThread<ProfilesControllerInstance,
+                        ProcessesControllerInstance,
+                        LogsControllerInstance> ConsoleThreadInstance;
+ 
   // GUI Builder to parse UI from xml file
   Glib::RefPtr<Gtk::Builder> builder;
 
@@ -52,15 +66,15 @@ private:
   Gtk::HeaderBar m_headerbar;
   Gtk::StackSwitcher m_switcher;
 
-  // Tabs
-  std::shared_ptr<Profiles> prof;
-  std::shared_ptr<Processes> proc;
-  std::shared_ptr<Logs<StatusColumnRecord>> logs;
-  std::shared_ptr<FileChooser> file_chooser;
-  std::shared_ptr<About> about;
+  // Controllers
+  std::shared_ptr<ProfilesControllerInstance>  prof_control;
+  std::shared_ptr<ProcessesControllerInstance> proc_control;
+  std::shared_ptr<LogsControllerInstance>      logs_control;
+  std::shared_ptr<FileChooser>                 file_chooser;
+  std::shared_ptr<About>                       about;
 
   // Second thread for calling command line utilities
-  std::shared_ptr<ConsoleThread> console;
+  std::shared_ptr<ConsoleThreadInstance> console;
 };
 
 #endif // MAIN_WINDOW_H

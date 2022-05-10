@@ -10,14 +10,18 @@ set(
   ${PROJECT_SOURCE_DIR}/main.cc
   ${PROJECT_SOURCE_DIR}/main_window.cc
   ${PROJECT_SOURCE_DIR}/console_thread.cc
-  ${PROJECT_SOURCE_DIR}/threads/blocking_queue.h
+  ${PROJECT_SOURCE_DIR}/threads/blocking_queue.cc
   ${PROJECT_SOURCE_DIR}/threads/command_caller.cc
-  ${PROJECT_SOURCE_DIR}/threads/dispatcher_middleman.h
-  ${PROJECT_SOURCE_DIR}/tabs/status_column_record.cc
-  ${PROJECT_SOURCE_DIR}/tabs/status.cc
-  ${PROJECT_SOURCE_DIR}/tabs/profiles.cc
-  ${PROJECT_SOURCE_DIR}/tabs/processes.cc
-  ${PROJECT_SOURCE_DIR}/tabs/logs.h
+  ${PROJECT_SOURCE_DIR}/threads/dispatcher_middleman.cc
+  ${PROJECT_SOURCE_DIR}/tabs/model/status_column_record.cc
+  ${PROJECT_SOURCE_DIR}/tabs/controller/status_controller.cc
+  ${PROJECT_SOURCE_DIR}/tabs/controller/profiles_controller.cc
+  ${PROJECT_SOURCE_DIR}/tabs/controller/processes_controller.cc
+  ${PROJECT_SOURCE_DIR}/tabs/controller/logs_controller.cc
+  ${PROJECT_SOURCE_DIR}/tabs/view/status.cc
+  ${PROJECT_SOURCE_DIR}/tabs/view/profiles.cc
+  ${PROJECT_SOURCE_DIR}/tabs/view/processes.cc
+  ${PROJECT_SOURCE_DIR}/tabs/view/logs.cc
   ${PROJECT_SOURCE_DIR}/tabs/file_chooser.cc
   ${PROJECT_SOURCE_DIR}/tabs/about.cc
 )

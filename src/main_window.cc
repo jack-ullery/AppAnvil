@@ -6,23 +6,19 @@
 #include <iostream>
 
 MainWindow::MainWindow()
-    : prof{new Profiles()}, 
-      proc{new Processes()}, 
-      logs{new Logs<StatusColumnRecord>()}, 
+    : prof_control{new ProfilesControllerInstance()}, 
+      proc_control{new ProcessesControllerInstance()}, 
+      logs_control{new LogsControllerInstance()}, 
       file_chooser{new FileChooser()}, 
       about{new About()}, 
-      console{new ConsoleThread(prof, proc, logs)}
+      console{new ConsoleThreadInstance(prof_control, proc_control, logs_control)}
 {
-  std::cout << "LOADED BOYS" << std::endl;
-
   // Add tabs to the stack pane
-  m_stack.add(*prof, "prof", "Profiles");
-  m_stack.add(*proc, "proc", "Processes");
-  m_stack.add(*logs, "logs", "Logs");
+  m_stack.add(*(prof_control->get_tab()), "prof", "Profiles");
+  m_stack.add(*(proc_control->get_tab()), "proc", "Processes");
+  m_stack.add(*(logs_control->get_tab()), "logs", "Logs");
   m_stack.add(*file_chooser, "file_chooser", "Load Profile");
   m_stack.add(*about, "about", "About Me");
-
-  std::cout << "LOADED TOYS" << std::endl;
 
   // Attach the stack to the stack switcher
   m_switcher.set_stack(m_stack);
@@ -35,9 +31,7 @@ MainWindow::MainWindow()
   // Connect the profile tab to the `send_status_change` method
   sigc::slot<void(const std::string &, const std::string &, const std::string &)> change_fun =
       sigc::mem_fun(*this, &MainWindow::send_status_change);
-  prof->set_status_change_signal_handler(change_fun);
-
-  std::cout << "LOADED NOISE" << std::endl;
+  prof_control->get_tab()->set_status_change_signal_handler(change_fun);
 
   // Set some default properties for titlebar
   m_headerbar.set_custom_title(m_switcher);

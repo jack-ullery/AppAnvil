@@ -1,7 +1,7 @@
 #ifndef TABS_ABOUT_H
 #define TABS_ABOUT_H
 
-#include "status.h"
+#include "view/status.h"
 
 #include <gtkmm/builder.h>
 #include <gtkmm/comboboxtext.h>
