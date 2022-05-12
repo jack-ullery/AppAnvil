@@ -17,8 +17,9 @@
 #include <gtkmm/stackswitcher.h>
 #include <memory>
 
-constexpr int DEFAULT_WINDOW_WIDTH  = 800;
-constexpr int DEFAULT_WINDOW_HEIGHT = 500;
+// Using the golden ratio
+constexpr int DEFAULT_WINDOW_WIDTH  = 1200;
+constexpr int DEFAULT_WINDOW_HEIGHT = 742;
 
 class MainWindow : public Gtk::ApplicationWindow
 {
