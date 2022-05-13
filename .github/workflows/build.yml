@@ -30,6 +30,13 @@ jobs:
       # Builds the binary any unit tests into the ./dist folder
       run: make
 
+    - name: Upload Binaries as Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: dist
+        path: ./dist
+        if-no-files-found: error
+
   test:
     runs-on: ubuntu-latest
     needs: [build]
@@ -37,6 +44,14 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Install Dependencies
+    - name: Download Binary Artifacts
+      uses: actions/download-artifact@v3.0.0
+      with:
+        # Artifact name
+        name: dist
+        # Destination path
+        path: ./dist
+
+    - name: Test
       # Run the unit tests
       run: xvfb-run --auto-servernum ./dist/appanvil_test
