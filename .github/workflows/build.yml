@@ -17,7 +17,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt upgrade
-        sudo apt-get install libgtkmm-3.0-dev libjsoncpp-dev libgtest-dev libgmock-dev clang-tidy cppcheck xvfb clang-format-12
+        sudo apt-get install libgtkmm-3.0-dev libjsoncpp-dev libgtest-dev libgmock-dev clang-tidy cppcheck clang-format-12
     
     - name: Configure CMake
       run: cmake .
@@ -44,15 +44,18 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt upgrade
+        sudo apt-get install xvfb
+
     - name: Download Binary Artifacts
       uses: actions/download-artifact@master
       with:
         name: dist
         path: dist
         if-no-files-found: error
-
-    - name: List
-      run: ls ./dist
 
     - name: Test
       # Run the unit tests
