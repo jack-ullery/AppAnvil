@@ -58,4 +58,4 @@ jobs:
 
     - name: Test
       # Run the unit tests
-      run: xvfb-run --auto-servernum ./dist/appanvil_test
+      run: sudo xvfb-run --auto-servernum ./dist/appanvil_test
