@@ -7,39 +7,39 @@ env:
   BUILD_TYPE: Release
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+#   build:
+#     runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v2
+#     steps:
+#     - uses: actions/checkout@v2
 
-    - name: Install Dependencies
-      run: |
-        sudo apt-get update
-        sudo apt upgrade
-        sudo apt-get install libgtkmm-3.0-dev libjsoncpp-dev libgtest-dev libgmock-dev clang-tidy cppcheck xvfb clang-format-12
+#     - name: Install Dependencies
+#       run: |
+#         sudo apt-get update
+#         sudo apt upgrade
+#         sudo apt-get install libgtkmm-3.0-dev libjsoncpp-dev libgtest-dev libgmock-dev clang-tidy cppcheck xvfb clang-format-12
     
-    - name: Configure CMake
-      run: cmake .
+#     - name: Configure CMake
+#       run: cmake .
 
-    - name: Format Code
-      # Formats code using clang-format-12
-      run: make FORMAT
+#     - name: Format Code
+#       # Formats code using clang-format-12
+#       run: make FORMAT
 
-    - name: Build
-      # Builds the binary any unit tests into the ./dist folder
-      run: make
+#     - name: Build
+#       # Builds the binary any unit tests into the ./dist folder
+#       run: make
 
-    - name: Upload Binaries as Artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: dist
-        path: ./dist
-        if-no-files-found: error
+#     - name: Upload Binaries as Artifacts
+#       uses: actions/upload-artifact@v3
+#       with:
+#         name: dist
+#         path: ./dist
+#         if-no-files-found: error
 
   test:
     runs-on: ubuntu-latest
-    needs: [build]
+#     needs: [build]
 
     steps:
     - uses: actions/checkout@v2
@@ -51,6 +51,9 @@ jobs:
         name: dist
         # Destination path
         path: ./dist
+
+    - name: List
+      run: ls ./dist
 
     - name: Test
       # Run the unit tests
