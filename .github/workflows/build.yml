@@ -15,9 +15,9 @@ jobs:
 
     - name: Install Dependencies
       run: |
-        sudo apt-get update
-        sudo apt upgrade
-        sudo apt-get install libgtkmm-3.0-dev libjsoncpp-dev libgtest-dev libgmock-dev clang-tidy cppcheck clang-format-12
+        sudo apt-get update 2> /dev/null
+        sudo apt upgrade 2> /dev/null
+        sudo apt-get install libgtkmm-3.0-dev libjsoncpp-dev libgtest-dev libgmock-dev clang-tidy cppcheck clang-format-12 2> /dev/null
     
     - name: Configure CMake
       run: cmake .
@@ -46,16 +46,15 @@ jobs:
 
     - name: Install Dependencies
       run: |
-        sudo apt-get update
-        sudo apt upgrade
-        sudo apt-get install xvfb
+        sudo apt-get update 2> /dev/null
+        sudo apt upgrade 2> /dev/null
+        sudo apt-get install xvfb 2> /dev/null
 
     - name: Download Binary Artifacts
       uses: actions/download-artifact@master
       with:
         name: dist
         path: dist
-        if-no-files-found: error
 
     - name: Test
       # Run the unit tests
