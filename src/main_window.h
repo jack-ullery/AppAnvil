@@ -37,6 +37,15 @@ public:
 
 protected:
   //Signal handlers:
+
+  /**
+   * @brief Makes the 'About' page visible whenever toggled.
+   * 
+   * @details
+   * Hides the stack and stack switcher, when showing the 'About' page
+   */
+  bool on_toggle();
+
   /**
    * @brief Calls refresh() on the visible tab when the stackswitcher is pressed.
    *
@@ -64,9 +73,11 @@ private:
   Glib::RefPtr<Gtk::Builder> builder;
 
   // Member widgets:
-  Gtk::Stack m_stack;
+  Gtk::Stack m_top_stack;
+  Gtk::Stack m_tab_stack;
   Gtk::HeaderBar m_headerbar;
   Gtk::StackSwitcher m_switcher;
+  Gtk::ToggleButton m_about_button;
 
   // Controllers
   std::shared_ptr<ProfilesControllerInstance>    prof_control;
@@ -75,7 +86,7 @@ private:
   std::shared_ptr<FileChooserControllerInstance> file_chooser_control;
   
   // Tab (Without Controller)
-  std::shared_ptr<About>                       about;
+  std::shared_ptr<About> about;
 
   // Second thread for calling command line utilities
   std::shared_ptr<ConsoleThreadInstance> console;
