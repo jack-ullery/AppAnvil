@@ -9,31 +9,39 @@
     <property name="vexpand">True</property>
     <property name="orientation">vertical</property>
     <child>
-      <object class="GtkScrolledWindow" id="a_win">
+      <object class="GtkScrolledWindow">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
+        <property name="hexpand">True</property>
+        <property name="vexpand">True</property>
         <property name="shadow_type">in</property>
         <child>
-          <object class="GtkViewport" id="a_view">
+          <object class="GtkViewport">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="halign">start</property>
+            <property name="valign">start</property>
             <child>
               <object class="GtkLabel" id="a_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="halign">start</property>
+                <property name="valign">start</property>
                 <property name="margin_left">10</property>
                 <property name="margin_right">10</property>
                 <property name="margin_top">10</property>
                 <property name="margin_bottom">10</property>
+                <property name="hexpand">False</property>
+                <property name="vexpand">False</property>
                 <property name="label" translatable="yes">&lt;b&gt;What is AppAnvil?&lt;/b&gt;
 AppAnvil is a graphical user interface (GUI) designed to facilitate the use of AppArmor.
 
 &lt;b&gt;What is AppArmor?&lt;/b&gt;
-AppArmor is a Linux security module that protects your system from potential threats by imposing Mandatory Access Control (MAC).
-It allows the user to secure individual applications by defining and restricting what resources an application can access or share.
+AppArmor is a Linux security module that protects your system from potential threats by imposing Mandatory Access Control (MAC). It allows the user to secure individual applications by defining and restricting what resources an application can access or share.
 
 &lt;b&gt;What is a profile?&lt;/b&gt;
-Profiles are the user-defined restrictions for an application. They determine what resources applications can access or share.
+Profiles are the user-defined restrictions for an application. They determine what resources applications can access or share. 
+
 One use case for a profile is to block access to sensitive files.
 
 &lt;u&gt;Profiles are able to run in:&lt;/u&gt;
@@ -64,6 +72,9 @@ You can access log information under the 'Logs' tab.
 &lt;b&gt;How do I monitor specific processes?&lt;/b&gt;
 You can monitor processes with existing AppArmor profiles under the 'Processes' tab.</property>
                 <property name="use_markup">True</property>
+                <property name="wrap">True</property>
+                <property name="wrap_mode">word-char</property>
+                <property name="selectable">True</property>
               </object>
             </child>
           </object>
