@@ -36,6 +36,8 @@ MainWindow::MainWindow()
   auto togggle_fun = sigc::mem_fun(*this, &MainWindow::on_toggle);
   m_about_button.signal_toggled().connect(togggle_fun, true);
 
+  // Add the main page and the about page to the top stack
+  // This stack controls whether the 'About' page is visible, or the main application 
   m_top_stack.add(m_tab_stack, "main_page");
   m_top_stack.add(*about, "about_page");
 
@@ -75,10 +77,12 @@ bool MainWindow::on_toggle()
   if(is_active){
     m_switcher.hide();
     m_top_stack.set_visible_child("about_page");
+    m_about_button.set_label("Return to application");
   }
   else {
     m_switcher.show();
     m_top_stack.set_visible_child("main_page");
+    m_about_button.set_label("About");
   }
 
   return false;
