@@ -1,7 +1,6 @@
 #include "main_window.h"
 
 #include <tuple>
-#include <iostream>
 
 MainWindow::MainWindow()
     : prof_control{new ProfilesControllerInstance()},

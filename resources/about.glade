@@ -26,21 +26,21 @@
                 <property name="margin_top">10</property>
                 <property name="margin_bottom">10</property>
                 <property name="label" translatable="yes">&lt;b&gt;What is AppAnvil?&lt;/b&gt;
-AppAnvil is a GUI designed to facilitate the use of AppArmor.
+AppAnvil is a graphical user interface (GUI) designed to facilitate the use of AppArmor.
 
 &lt;b&gt;What is AppArmor?&lt;/b&gt;
-AppArmor is a Linux kernel security module that protects the operating system and applications from potential threats or attacks.
-It allows the user to restrict access to processes and applications by limiting the read and write functionalities to the network and file system.
-AppArmor's added memory access control (MAC) functionality enables these restrictions to be imposed by profiles that contain access control rules.
+AppArmor is a Linux security module that protects your system from potential threats by imposing Mandatory Access Control (MAC).
+It allows the user to secure individual applications by defining and restricting what resources an application can access or share.
 
 &lt;b&gt;What is a profile?&lt;/b&gt;
-Profiles are the tools used by AppArmor to protect your system.One use case for a profile is to block access to sensitive files.
+Profiles are the user-defined restrictions for an application. They determine what resources applications can access or share.
+One use case for a profile is to block access to sensitive files.
 
 &lt;u&gt;Profiles are able to run in:&lt;/u&gt;
-    - Complain mode: the respective profile does not enforce the rules defined but reports any violations to logs
-    - Enforce mode: the respective profile enforces the rules defined
+    - Complain mode: the profile does not enforce the rules defined but reports any violations to the logs
+    - Enforce mode: the profile enforces the rules defined
 
-You can select, then change the mode of your profile under the 'Profile' tab.
+You can change the mode of your profile(s) under the 'Profile' tab.
 
 &lt;b&gt;What information do logs contain?&lt;/b&gt;
 Logs contain information for each AppArmor event, which make them useful for debugging.
@@ -58,11 +58,11 @@ Logs contain information for each AppArmor event, which make them useful for deb
     - rmdir: remove directory of profile
 &lt;i&gt;Name&lt;/i&gt;
     - Full path of the executable
-
+    
 You can access log information under the 'Logs' tab.
 
 &lt;b&gt;How do I monitor specific processes?&lt;/b&gt;
-You can monitor processes with profiles under the 'Processes' tab.</property>
+You can monitor processes with existing AppArmor profiles under the 'Processes' tab.</property>
                 <property name="use_markup">True</property>
               </object>
             </child>

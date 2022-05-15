@@ -1,8 +1,8 @@
 #include "file_chooser_controller.h"
-#include "../view/file_chooser.h"
 #include "../../threads/command_caller.h"
+#include "../view/file_chooser.h"
 
-// TODO: Need to make asynchronous eventually, there should be no direct calls to CommandCaller
+// TODO(apparmor): Need to make asynchronous eventually, there should be no direct calls to CommandCaller
 template<class FileChooserTab>
 void FileChooserController<FileChooserTab>::on_confirm_clicked()
 {
@@ -14,8 +14,7 @@ void FileChooserController<FileChooserTab>::on_confirm_clicked()
   	auto filename = file->get_path(); 
 	  std::string short_filename = CommandCaller::load_profile(filename);
 
-    // TODO: Add error handling, when the profile is not correctly formatted
-
+    // TODO(apparmor): Add error handling, when the profile is not correctly formatted
 	  fc->set_label_text("Done");
 	}
   else {
