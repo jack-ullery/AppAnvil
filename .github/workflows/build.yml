@@ -1,4 +1,4 @@
-name: Build, Format, & Release
+name: Build & Test
 
 on: push
 
@@ -15,9 +15,9 @@ jobs:
 
     - name: Install Dependencies
       run: |
-        sudo apt-get update
-        sudo apt upgrade
-        sudo apt-get install libgtkmm-3.0-dev libjsoncpp-dev libgtest-dev libgmock-dev clang-tidy cppcheck xvfb clang-format-12
+        sudo apt-get update 1> /dev/null
+        sudo apt upgrade 1> /dev/null
+        sudo apt-get install libgtkmm-3.0-dev libjsoncpp-dev libgtest-dev libgmock-dev clang-tidy cppcheck clang-format-12 1> /dev/null
     
     - name: Configure CMake
       run: cmake .
@@ -30,23 +30,35 @@ jobs:
       # Builds the binary any unit tests into the ./dist folder
       run: make
 
+    - name: Upload Binaries as Artifacts
+      uses: actions/upload-artifact@master
+      with:
+        name: dist
+        path: dist
+        if-no-files-found: error
+
+  test:
+    runs-on: ubuntu-latest
+    needs: [build]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update 1> /dev/null
+        sudo apt upgrade 1> /dev/null
+        sudo apt-get install xvfb libgtkmm-3.0-dev libjsoncpp-dev 1> /dev/null
+
+    - name: Download Binary Artifacts
+      uses: actions/download-artifact@master
+      with:
+        name: dist
+        path: dist
+
+    - name: Make Tests Executable
+      run: chmod +x ./dist/appanvil_test
+
     - name: Test
       # Run the unit tests
       run: xvfb-run --auto-servernum ./dist/appanvil_test
-
-    #- name: setup git config
-    #  run: |
-    #    # setup the username and email for the bot. Using 'GitHub Actions Bot' with no email by default
-    #    git config user.name "GitHub Actions Bot"
-    #    git config user.email "<>"
-    #    
-    #- name: commit
-    #  run: |
-    #    num_files_changed=$(git diff --numstat | wc -l)
-    #    if [ $num_files_changed != 0 ]; then 
-    #      # Stage the changed files, commit and push
-    #      git add ./src/* ./test/src/* ./aa-caller/src/*;
-    #      git commit -m "Format code";
-    #      git push;
-    #    fi;
-        
