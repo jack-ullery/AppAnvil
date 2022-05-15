@@ -76,7 +76,7 @@ You can monitor processes with profiles under the 'Processes' tab.</property>
       </packing>
     </child>
     <child>
-      <object class="GtkBox" id="a_box_hz">
+      <object class="GtkBox" id="a_searchbox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
@@ -96,9 +96,6 @@ You can monitor processes with profiles under the 'Processes' tab.</property>
             <property name="fill">True</property>
             <property name="position">0</property>
           </packing>
-        </child>
-        <child>
-          <placeholder/>
         </child>
       </object>
       <packing>

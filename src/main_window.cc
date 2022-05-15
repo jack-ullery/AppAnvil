@@ -33,8 +33,14 @@ MainWindow::MainWindow()
   // Configure settings related to the 'About' button
   m_about_button.set_label("About");
 
-  auto togggle_fun = sigc::mem_fun(*this, &MainWindow::on_toggle);
-  m_about_button.signal_toggled().connect(togggle_fun, true);
+  auto about_togggle_fun = sigc::mem_fun(*this, &MainWindow::on_about_toggle);
+  m_about_button.signal_toggled().connect(about_togggle_fun, true);
+
+  // Configure settings related to 'Search' button
+  m_search_button.set_image_from_icon_name("edit-find-symbolic");
+
+  auto search_togggle_fun = sigc::mem_fun(*this, &MainWindow::on_search_toggle);
+  m_search_button.signal_toggled().connect(search_togggle_fun, true);
 
   // Add the main page and the about page to the top stack
   // This stack controls whether the 'About' page is visible, or the main application 
@@ -43,7 +49,9 @@ MainWindow::MainWindow()
 
   // Set some default properties for titlebar
   m_headerbar.set_custom_title(m_switcher);
+  m_headerbar.pack_end(m_search_button);
   m_headerbar.pack_end(m_about_button);
+
   m_headerbar.set_title("AppAnvil");
   m_headerbar.set_subtitle("GUI for AppArmor");
   m_headerbar.set_hexpand(true);
@@ -63,6 +71,9 @@ MainWindow::MainWindow()
   this->set_titlebar(m_headerbar);
   this->add(m_top_stack);
   this->show_all();
+
+  // Hide all tabs with a searchbar
+  on_search_toggle();
 }
 
 void MainWindow::send_status_change(const std::string &profile, const std::string &old_status, const std::string &new_status)
@@ -70,7 +81,7 @@ void MainWindow::send_status_change(const std::string &profile, const std::strin
   console->send_change_profile_status_message(profile, old_status, new_status);
 }
 
-bool MainWindow::on_toggle()
+bool MainWindow::on_about_toggle()
 {
   bool is_active = m_about_button.get_active();
 
@@ -85,6 +96,27 @@ bool MainWindow::on_toggle()
     m_about_button.set_label("About");
   }
 
+  handle_search_button_visiblity();
+  return false;
+}
+
+bool MainWindow::on_search_toggle()
+{
+  bool is_active = m_search_button.get_active();
+
+  if(is_active){
+    prof_control->get_tab()->show_searchbar();
+    proc_control->get_tab()->show_searchbar();
+    logs_control->get_tab()->show_searchbar();
+    about->show_searchbar();
+  }
+  else {
+    prof_control->get_tab()->hide_searchbar();
+    proc_control->get_tab()->hide_searchbar();
+    logs_control->get_tab()->hide_searchbar();
+    about->hide_searchbar();
+  }
+
   return false;
 }
 
@@ -96,7 +128,6 @@ bool MainWindow::on_switch(GdkEvent *event)
   file_chooser_control->clearLabel();
 
   std::string visible_child = m_tab_stack.get_visible_child_name();
-
   if(visible_child == "prof") {
     console->send_refresh_message(PROFILE);
   } else if(visible_child == "proc") {
@@ -105,5 +136,18 @@ bool MainWindow::on_switch(GdkEvent *event)
     console->send_refresh_message(LOGS);
   }
 
+  handle_search_button_visiblity();
   return false;
+}
+
+void MainWindow::handle_search_button_visiblity()
+{
+  bool about_is_active = m_about_button.get_active();
+  std::string visible_child = m_tab_stack.get_visible_child_name();
+
+  if(visible_child == "file_chooser" && !about_is_active) {
+    m_search_button.hide();
+  } else {
+    m_search_button.show();
+  }
 }

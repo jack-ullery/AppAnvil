@@ -44,7 +44,12 @@ protected:
    * @details
    * Hides the stack and stack switcher, when showing the 'About' page
    */
-  bool on_toggle();
+  bool on_about_toggle();
+
+  /**
+   * @brief Makes the searchbar visible, on each tab, whenever toggled.
+   */
+  bool on_search_toggle();
 
   /**
    * @brief Calls refresh() on the visible tab when the stackswitcher is pressed.
@@ -78,6 +83,7 @@ private:
   Gtk::HeaderBar m_headerbar;
   Gtk::StackSwitcher m_switcher;
   Gtk::ToggleButton m_about_button;
+  Gtk::ToggleButton m_search_button;
 
   // Controllers
   std::shared_ptr<ProfilesControllerInstance>    prof_control;
@@ -90,6 +96,9 @@ private:
 
   // Second thread for calling command line utilities
   std::shared_ptr<ConsoleThreadInstance> console;
+
+  // Controls whether a the 'Search' button is visible
+  void handle_search_button_visiblity();
 };
 
 #endif // MAIN_WINDOW_H

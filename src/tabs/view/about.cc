@@ -15,6 +15,7 @@ About::About()
     : builder{Gtk::Builder::create_from_file("./resources/about.glade")}, 
       a_box{About::get_widget<Gtk::Box>("a_box", builder)},
       a_label{About::get_widget<Gtk::Label>("a_label", builder)},
+      a_searchbox{About::get_widget<Gtk::Box>("a_searchbox", builder)},
       a_search{About::get_widget<Gtk::SearchEntry>("a_search", builder)}
 
 {
@@ -27,6 +28,16 @@ About::About()
   a_box->set_vexpand();
 
   this->add(*a_box);
+}
+
+void About::hide_searchbar()
+{
+  a_searchbox->hide();
+}
+
+void About::show_searchbar()
+{
+  a_searchbox->show();
 }
 
 void About::set_search_signal_handler(const Glib::SignalProxyProperty::SlotType &func) {

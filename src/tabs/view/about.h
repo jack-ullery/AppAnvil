@@ -26,6 +26,9 @@ class About : public Gtk::ScrolledWindow
 public:
   About();
 
+  void hide_searchbar();
+  void show_searchbar();
+
 protected:
   // Signal handlers
   void set_search_signal_handler(const Glib::SignalProxyProperty::SlotType &func);
@@ -40,6 +43,7 @@ private:
   // Widgets on the tab
   std::unique_ptr<Gtk::Box> a_box;
   std::unique_ptr<Gtk::Label> a_label;
+  std::unique_ptr<Gtk::Box> a_searchbox;
   std::unique_ptr<Gtk::SearchEntry> a_search;
 
   template<typename T_Widget> static std::unique_ptr<T_Widget> get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);

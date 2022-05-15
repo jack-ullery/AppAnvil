@@ -78,6 +78,10 @@ public:
 
   SearchInfo get_search_info();
 
+  void hide_searchbar();
+
+  void show_searchbar();
+
 protected:
 
   /**
@@ -100,6 +104,7 @@ private:
   std::unique_ptr<Gtk::Box> s_box;
 
   // Widgets related to searchbar
+  std::unique_ptr<Gtk::Box> s_searchbox;
   std::unique_ptr<Gtk::SearchEntry> s_search;
   std::unique_ptr<Gtk::CheckButton> s_use_regex;
   std::unique_ptr<Gtk::CheckButton> s_match_case;
