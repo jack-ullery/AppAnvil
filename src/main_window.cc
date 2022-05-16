@@ -25,8 +25,7 @@ MainWindow::MainWindow()
   on_switch(NULL);
 
   // Connect the profile tab to the `send_status_change` method
-  sigc::slot<void(const std::string &, const std::string &, const std::string &)> change_fun =
-      sigc::mem_fun(*this, &MainWindow::send_status_change);
+  auto change_fun = sigc::mem_fun(*this, &MainWindow::send_status_change);
   prof_control->get_tab()->set_status_change_signal_handler(change_fun);
 
   // Configure settings related to the 'About' button
@@ -80,7 +79,7 @@ void MainWindow::send_status_change(const std::string &profile, const std::strin
   console->send_change_profile_status_message(profile, old_status, new_status);
 }
 
-bool MainWindow::on_about_toggle()
+void MainWindow::on_about_toggle()
 {
   bool is_active = m_about_button.get_active();
 
@@ -96,10 +95,9 @@ bool MainWindow::on_about_toggle()
   }
 
   handle_search_button_visiblity();
-  return false;
 }
 
-bool MainWindow::on_search_toggle()
+void MainWindow::on_search_toggle()
 {
   bool is_active = m_search_button.get_active();
 
@@ -115,8 +113,6 @@ bool MainWindow::on_search_toggle()
     logs_control->get_tab()->hide_searchbar();
     about->hide_searchbar();
   }
-
-  return false;
 }
 
 bool MainWindow::on_switch(GdkEvent *event)

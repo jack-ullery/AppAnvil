@@ -45,12 +45,12 @@ protected:
    * @details
    * Hides the stack and stack switcher, when showing the 'About' page
    */
-  bool on_about_toggle();
+  void on_about_toggle();
 
   /**
    * @brief Makes the searchbar visible, on each tab, whenever toggled.
    */
-  bool on_search_toggle();
+  void on_search_toggle();
 
   /**
    * @brief Calls refresh() on the visible tab when the stackswitcher is pressed.
