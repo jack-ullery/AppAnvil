@@ -18,10 +18,13 @@ set(
   ${PROJECT_SOURCE_DIR}/tabs/controller/profiles_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/controller/processes_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/controller/logs_controller.cc
+  ${PROJECT_SOURCE_DIR}/tabs/controller/file_chooser_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/status.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/profiles.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/processes.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/logs.cc
+  ${PROJECT_SOURCE_DIR}/tabs/view/file_chooser.cc
+  ${PROJECT_SOURCE_DIR}/tabs/view/about.cc
 )
 
 ### All the code globbed together for easy formatting ###

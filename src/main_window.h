@@ -2,10 +2,13 @@
 #define SRC_MAIN_WINDOW_H
 
 #include "console_thread.h"
+#include "tabs/controller/file_chooser_controller.h"
 #include "tabs/controller/logs_controller.h"
 #include "tabs/controller/processes_controller.h"
 #include "tabs/controller/profiles_controller.h"
 #include "tabs/model/status_column_record.h"
+#include "tabs/view/about.h"
+#include "tabs/view/file_chooser.h"
 #include "tabs/view/logs.h"
 #include "tabs/view/processes.h"
 #include "tabs/view/profiles.h"
@@ -35,6 +38,20 @@ public:
 
 protected:
   //Signal handlers:
+
+  /**
+   * @brief Makes the 'About' page visible whenever toggled.
+   * 
+   * @details
+   * Hides the stack and stack switcher, when showing the 'About' page
+   */
+  void on_about_toggle();
+
+  /**
+   * @brief Makes the searchbar visible, on each tab, whenever toggled.
+   */
+  void on_search_toggle();
+
   /**
    * @brief Calls refresh() on the visible tab when the stackswitcher is pressed.
    *
@@ -52,6 +69,7 @@ private:
   typedef ProfilesController<Profiles, StatusColumnRecord> ProfilesControllerInstance;
   typedef ProcessesController<Processes, StatusColumnRecord> ProcessesControllerInstance;
   typedef LogsController<Logs, StatusColumnRecord> LogsControllerInstance;
+  typedef FileChooserController<FileChooser> FileChooserControllerInstance;
 
   typedef ConsoleThread<ProfilesControllerInstance,
                         ProcessesControllerInstance,
@@ -61,22 +79,27 @@ private:
   Glib::RefPtr<Gtk::Builder> builder;
 
   // Member widgets:
-  Gtk::Stack m_stack;
+  Gtk::Stack m_top_stack;
+  Gtk::Stack m_tab_stack;
   Gtk::HeaderBar m_headerbar;
   Gtk::StackSwitcher m_switcher;
+  Gtk::ToggleButton m_about_button;
+  Gtk::ToggleButton m_search_button;
 
   // Controllers
-  std::shared_ptr<ProfilesControllerInstance>  prof_control;
-  std::shared_ptr<ProcessesControllerInstance> proc_control;
-  std::shared_ptr<LogsControllerInstance>      logs_control;
-
-  // // Tabs
-  // std::shared_ptr<ProfilesInstance> prof;
-  // std::shared_ptr<ProcessesInstance> proc;
-  // std::shared_ptr<LogsInstance> logs;
+  std::shared_ptr<ProfilesControllerInstance>    prof_control;
+  std::shared_ptr<ProcessesControllerInstance>   proc_control;
+  std::shared_ptr<LogsControllerInstance>        logs_control;
+  std::shared_ptr<FileChooserControllerInstance> file_chooser_control;
+  
+  // Tab (Without Controller)
+  std::shared_ptr<About> about;
 
   // Second thread for calling command line utilities
   std::shared_ptr<ConsoleThreadInstance> console;
+
+  // Controls whether a the 'Search' button is visible
+  void handle_search_button_visiblity();
 };
 
 #endif // MAIN_WINDOW_H

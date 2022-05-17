@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.22.2 -->
+<interface>
+  <requires lib="gtk+" version="3.20"/>
+  <object class="GtkBox" id="a_box">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="hexpand">True</property>
+    <property name="vexpand">True</property>
+    <property name="orientation">vertical</property>
+    <child>
+      <object class="GtkScrolledWindow">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="hexpand">True</property>
+        <property name="vexpand">True</property>
+        <property name="shadow_type">in</property>
+        <child>
+          <object class="GtkViewport">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="halign">start</property>
+            <property name="valign">start</property>
+            <child>
+              <object class="GtkLabel" id="a_label">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="halign">start</property>
+                <property name="valign">start</property>
+                <property name="margin_left">10</property>
+                <property name="margin_right">10</property>
+                <property name="margin_top">10</property>
+                <property name="margin_bottom">10</property>
+                <property name="hexpand">False</property>
+                <property name="vexpand">False</property>
+                <property name="label" translatable="yes">&lt;b&gt;What is AppAnvil?&lt;/b&gt;
+AppAnvil is a graphical user interface (GUI) designed to facilitate the use of AppArmor.
+
+&lt;b&gt;What is AppArmor?&lt;/b&gt;
+AppArmor is a Linux security module that protects your system from potential threats by imposing Mandatory Access Control (MAC). It allows the user to secure individual applications by defining and restricting what resources an application can access or share.
+
+&lt;b&gt;What is a profile?&lt;/b&gt;
+Profiles are the user-defined restrictions for an application. They determine what resources applications can access or share. 
+
+One use case for a profile is to block access to sensitive files.
+
+&lt;u&gt;Profiles are able to run in:&lt;/u&gt;
+    - Complain mode: the profile does not enforce the rules defined but reports any violations to the logs
+    - Enforce mode: the profile enforces the rules defined
+
+You can change the mode of your profile(s) under the 'Profile' tab.
+
+&lt;b&gt;What information do logs contain?&lt;/b&gt;
+Logs contain information for each AppArmor event, which make them useful for debugging.
+
+&lt;u&gt;Logs contain:&lt;/u&gt;
+&lt;i&gt;Time&lt;/i&gt;
+    - Timestamp of event logged
+&lt;i&gt;Type&lt;/i&gt;
+    - DENIED: an access is denied when a profile in enforce mode violates rules
+    - STATUS: an access is allowed, but the access violated rules of a profile in complain mode
+&lt;i&gt;Operation&lt;/i&gt;
+    - Profile load: load an AppArmor profile into the kernel
+    - Profile Replace: replacing current AppArmor profile
+    - Open: attempt to access file
+    - rmdir: remove directory of profile
+&lt;i&gt;Name&lt;/i&gt;
+    - Full path of the executable
+    
+You can access log information under the 'Logs' tab.
+
+&lt;b&gt;How do I monitor specific processes?&lt;/b&gt;
+You can monitor processes with existing AppArmor profiles under the 'Processes' tab.</property>
+                <property name="use_markup">True</property>
+                <property name="wrap">True</property>
+                <property name="wrap_mode">word-char</property>
+                <property name="selectable">True</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">True</property>
+        <property name="fill">True</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkBox" id="a_searchbox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <child>
+          <object class="GtkSearchEntry" id="a_search">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="margin_left">10</property>
+            <property name="margin_right">5</property>
+            <property name="margin_top">5</property>
+            <property name="margin_bottom">5</property>
+            <property name="primary_icon_name">edit-find-symbolic</property>
+            <property name="primary_icon_activatable">False</property>
+            <property name="primary_icon_sensitive">False</property>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">1</property>
+      </packing>
+    </child>
+  </object>
+</interface>
