@@ -40,6 +40,14 @@ protected:
   //Signal handlers:
 
   /**
+   * @brief Untoggles the button that controls the 'About' page.
+   * 
+   * @details
+   * This function is used as a signal handler in the 'About' page
+   */
+  void untoggle_about();
+
+  /**
    * @brief Makes the 'About' page visible whenever toggled.
    * 
    * @details

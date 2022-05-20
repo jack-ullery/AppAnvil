@@ -1,5 +1,7 @@
 #include "main_window.h"
 
+#include <gtkmm/button.h>
+#include <gtkmm/togglebutton.h>
 #include <tuple>
 
 MainWindow::MainWindow()
@@ -31,8 +33,12 @@ MainWindow::MainWindow()
   // Configure settings related to the 'About' button
   m_about_button.set_image_from_icon_name("dialog-question");
 
-  auto about_togggle_fun = sigc::mem_fun(*this, &MainWindow::on_about_toggle);
-  m_about_button.signal_toggled().connect(about_togggle_fun, true);
+  auto about_toggle_fun = sigc::mem_fun(*this, &MainWindow::on_about_toggle);
+  m_about_button.signal_toggled().connect(about_toggle_fun, true);
+
+  // Click the about toggle button (m_about_button), whenever somebody presses the bottom button on the about page
+  auto activate_about_toggle_fun = sigc::mem_fun(*this, &MainWindow::untoggle_about);
+  about->set_return_signal_handler(activate_about_toggle_fun);
 
   // Configure settings related to 'Search' button
   m_search_button.set_image_from_icon_name("edit-find-symbolic");
@@ -56,7 +62,7 @@ MainWindow::MainWindow()
   m_headerbar.set_show_close_button(true);
 
   // Set the icon
-  auto builder         = Gtk::Builder::create_from_resource("/resources/icon.glade");
+  auto builder = Gtk::Builder::create_from_resource("/resources/icon.glade");
   Gtk::Image *icon_ptr = nullptr;
   builder->get_widget<Gtk::Image>("icon", icon_ptr);
   this->set_icon(icon_ptr->get_pixbuf());
@@ -98,6 +104,10 @@ void MainWindow::on_about_toggle()
   }
 
   handle_search_button_visiblity();
+}
+
+void MainWindow::untoggle_about(){
+  m_about_button.set_active(false);
 }
 
 void MainWindow::on_search_toggle()

@@ -16,6 +16,7 @@ About::About()
       a_label{About::get_widget<Gtk::Label>("a_label", builder)},
       a_searchbox{About::get_widget<Gtk::Box>("a_searchbox", builder)},
       a_search{About::get_widget<Gtk::SearchEntry>("a_search", builder)},
+      a_return_button{About::get_widget<Gtk::Button>("a_return_button", builder)},
       description{a_label->get_label()}
 {
   auto search_func = sigc::mem_fun(*this, &About::on_search_changed);
@@ -36,6 +37,10 @@ void About::hide_searchbar()
 void About::show_searchbar()
 {
   a_searchbox->show();
+}
+
+void About::set_return_signal_handler(const Glib::SignalProxy<void>::SlotType &func){
+  a_return_button->signal_clicked().connect(func, true);
 }
 
 void About::set_search_signal_handler(const Glib::SignalProxyProperty::SlotType &func) {
