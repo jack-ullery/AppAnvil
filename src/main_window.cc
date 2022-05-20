@@ -29,7 +29,7 @@ MainWindow::MainWindow()
   prof_control->get_tab()->set_status_change_signal_handler(change_fun);
 
   // Configure settings related to the 'About' button
-  m_about_button.set_label("About");
+  m_about_button.set_image_from_icon_name("dialog-question");
 
   auto about_togggle_fun = sigc::mem_fun(*this, &MainWindow::on_about_toggle);
   m_about_button.signal_toggled().connect(about_togggle_fun, true);
@@ -47,8 +47,8 @@ MainWindow::MainWindow()
 
   // Set some default properties for titlebar
   m_headerbar.set_custom_title(m_switcher);
-  m_headerbar.pack_end(m_search_button);
   m_headerbar.pack_end(m_about_button);
+  m_headerbar.pack_end(m_search_button);
 
   m_headerbar.set_title("AppAnvil");
   m_headerbar.set_subtitle("GUI for AppArmor");
@@ -87,11 +87,14 @@ void MainWindow::on_about_toggle()
     m_switcher.hide();
     m_top_stack.set_visible_child("about_page");
     m_about_button.set_label("Return to application");
+    m_about_button.set_always_show_image(false);
   }
   else {
     m_switcher.show();
     m_top_stack.set_visible_child("main_page");
-    m_about_button.set_label("About");
+    m_about_button.set_label("");
+    m_about_button.set_image_from_icon_name("dialog-question");
+    m_about_button.set_always_show_image(true);
   }
 
   handle_search_button_visiblity();
