@@ -17,12 +17,14 @@ By default, AppArmor doesn’t do very much, running silently in the background.
 The AppAnvil project aims to create an intuitive graphical interface for monitoring and configuring AppArmor. In particular, we want it to be easy to monitor and deploy profiles, change a profile’s permissions, and to parse system logs.
 
 # Dependencies
-## Compile Time
-* cmake
-* g++ (or another equivalent c++ compiler)
+## Run Time
 * GTKmm (libgtkmm-3.0-dev)
 * JsonCpp (libjsoncpp-dev)
 * apparmor-utils
+
+## Compile Time
+* cmake
+* g++ (or another equivalent c++ compiler)
 
 ## Optional
 A GUI builder
