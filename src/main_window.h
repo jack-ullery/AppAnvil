@@ -2,15 +2,15 @@
 #define SRC_MAIN_WINDOW_H
 
 #include "console_thread.h"
-#include "tabs/controller/profile_loader_controller.h"
 #include "tabs/controller/logs_controller.h"
 #include "tabs/controller/processes_controller.h"
+#include "tabs/controller/profile_loader_controller.h"
 #include "tabs/controller/profiles_controller.h"
 #include "tabs/model/status_column_record.h"
 #include "tabs/view/help.h"
-#include "tabs/view/profile_loader.h"
 #include "tabs/view/logs.h"
 #include "tabs/view/processes.h"
+#include "tabs/view/profile_loader.h"
 #include "tabs/view/profiles.h"
 
 #include <gtkmm/applicationwindow.h>
