@@ -5,6 +5,6 @@
     <file>resources/icon.glade</file>
     <file preprocess="xml-stripblanks">resources/load_profile.glade</file>
     <file preprocess="xml-stripblanks">resources/status.glade</file>
-    <file preprocess="xml-stripblanks">resources/about.glade</file>
+    <file preprocess="xml-stripblanks">resources/help.glade</file>
   </gresource>
 </gresources>

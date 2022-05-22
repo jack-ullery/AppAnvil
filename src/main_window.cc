@@ -9,7 +9,7 @@ MainWindow::MainWindow()
       proc_control{new ProcessesControllerInstance()},
       logs_control{new LogsControllerInstance()},
       file_chooser_control{new FileChooserControllerInstance()},
-      about{new About()},
+      help{new Help()},
       console{new ConsoleThreadInstance(prof_control, proc_control, logs_control)}
 {
   // Add tabs to the stack pane
@@ -30,15 +30,15 @@ MainWindow::MainWindow()
   auto change_fun = sigc::mem_fun(*this, &MainWindow::send_status_change);
   prof_control->get_tab()->set_status_change_signal_handler(change_fun);
 
-  // Configure settings related to the 'About' button
-  m_about_button.set_image_from_icon_name("dialog-question");
+  // Configure settings related to the 'Help' button
+  m_help_button.set_image_from_icon_name("dialog-question");
 
-  auto about_toggle_fun = sigc::mem_fun(*this, &MainWindow::on_about_toggle);
-  m_about_button.signal_toggled().connect(about_toggle_fun, true);
+  auto help_toggle_fun = sigc::mem_fun(*this, &MainWindow::on_help_toggle);
+  m_help_button.signal_toggled().connect(help_toggle_fun, true);
 
-  // Click the about toggle button (m_about_button), whenever somebody presses the bottom button on the about page
-  auto activate_about_toggle_fun = sigc::mem_fun(*this, &MainWindow::untoggle_about);
-  about->set_return_signal_handler(activate_about_toggle_fun);
+  // Click the help toggle button (m_help_button), whenever somebody presses the bottom button on the help page
+  auto activate_help_toggle_fun = sigc::mem_fun(*this, &MainWindow::untoggle_help);
+  help->set_return_signal_handler(activate_help_toggle_fun);
 
   // Configure settings related to 'Search' button
   m_search_button.set_image_from_icon_name("edit-find-symbolic");
@@ -46,14 +46,14 @@ MainWindow::MainWindow()
   auto search_togggle_fun = sigc::mem_fun(*this, &MainWindow::on_search_toggle);
   m_search_button.signal_toggled().connect(search_togggle_fun, true);
 
-  // Add the main page and the about page to the top stack
-  // This stack controls whether the 'About' page is visible, or the main application 
+  // Add the main page and the help page to the top stack
+  // This stack controls whether the 'Help' page is visible, or the main application 
   m_top_stack.add(m_tab_stack, "main_page");
-  m_top_stack.add(*about, "about_page");
+  m_top_stack.add(*help, "help_page");
 
   // Set some default properties for titlebar
   m_headerbar.set_custom_title(m_switcher);
-  m_headerbar.pack_end(m_about_button);
+  m_headerbar.pack_end(m_help_button);
   m_headerbar.pack_end(m_search_button);
 
   m_headerbar.set_title("AppAnvil");
@@ -85,29 +85,29 @@ void MainWindow::send_status_change(const std::string &profile, const std::strin
   console->send_change_profile_status_message(profile, old_status, new_status);
 }
 
-void MainWindow::on_about_toggle()
+void MainWindow::on_help_toggle()
 {
-  bool is_active = m_about_button.get_active();
+  bool is_active = m_help_button.get_active();
 
   if(is_active){
     m_switcher.hide();
-    m_top_stack.set_visible_child("about_page");
-    m_about_button.set_label("Return to application");
-    m_about_button.set_always_show_image(false);
+    m_top_stack.set_visible_child("help_page");
+    m_help_button.set_label("Return to application");
+    m_help_button.set_always_show_image(false);
   }
   else {
     m_switcher.show();
     m_top_stack.set_visible_child("main_page");
-    m_about_button.set_label("");
-    m_about_button.set_image_from_icon_name("dialog-question");
-    m_about_button.set_always_show_image(true);
+    m_help_button.set_label("");
+    m_help_button.set_image_from_icon_name("dialog-question");
+    m_help_button.set_always_show_image(true);
   }
 
   handle_search_button_visiblity();
 }
 
-void MainWindow::untoggle_about(){
-  m_about_button.set_active(false);
+void MainWindow::untoggle_help(){
+  m_help_button.set_active(false);
 }
 
 void MainWindow::on_search_toggle()
@@ -118,13 +118,13 @@ void MainWindow::on_search_toggle()
     prof_control->get_tab()->show_searchbar();
     proc_control->get_tab()->show_searchbar();
     logs_control->get_tab()->show_searchbar();
-    about->show_searchbar();
+    help->show_searchbar();
   }
   else {
     prof_control->get_tab()->hide_searchbar();
     proc_control->get_tab()->hide_searchbar();
     logs_control->get_tab()->hide_searchbar();
-    about->hide_searchbar();
+    help->hide_searchbar();
   }
 }
 
@@ -150,10 +150,10 @@ bool MainWindow::on_switch(GdkEvent *event)
 
 void MainWindow::handle_search_button_visiblity()
 {
-  bool about_is_active = m_about_button.get_active();
+  bool help_is_active = m_help_button.get_active();
   std::string visible_child = m_tab_stack.get_visible_child_name();
 
-  if(visible_child == "file_chooser" && !about_is_active) {
+  if(visible_child == "file_chooser" && !help_is_active) {
     m_search_button.hide();
   } else {
     m_search_button.show();

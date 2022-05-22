@@ -2,7 +2,7 @@
 <!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
-  <object class="GtkBox" id="a_box">
+  <object class="GtkBox" id="h_box">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="hexpand">True</property>
@@ -22,7 +22,7 @@
             <property name="halign">start</property>
             <property name="valign">start</property>
             <child>
-              <object class="GtkLabel" id="a_label">
+              <object class="GtkLabel" id="h_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="halign">start</property>
@@ -87,11 +87,11 @@ You can monitor processes with existing AppArmor profiles under the 'Processes' 
       </packing>
     </child>
     <child>
-      <object class="GtkBox" id="a_searchbox">
+      <object class="GtkBox" id="h_searchbox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
-          <object class="GtkSearchEntry" id="a_search">
+          <object class="GtkSearchEntry" id="h_search">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="margin_left">10</property>
@@ -119,7 +119,7 @@ You can monitor processes with existing AppArmor profiles under the 'Processes' 
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
-          <object class="GtkButton" id="a_return_button">
+          <object class="GtkButton" id="h_return_button">
             <property name="label" translatable="yes">Return to main application</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>

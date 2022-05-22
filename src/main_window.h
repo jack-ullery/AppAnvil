@@ -7,7 +7,7 @@
 #include "tabs/controller/processes_controller.h"
 #include "tabs/controller/profiles_controller.h"
 #include "tabs/model/status_column_record.h"
-#include "tabs/view/about.h"
+#include "tabs/view/help.h"
 #include "tabs/view/file_chooser.h"
 #include "tabs/view/logs.h"
 #include "tabs/view/processes.h"
@@ -40,20 +40,20 @@ protected:
   //Signal handlers:
 
   /**
-   * @brief Untoggles the button that controls the 'About' page.
+   * @brief Untoggles the button that controls the 'Help' page.
    * 
    * @details
-   * This function is used as a signal handler in the 'About' page
+   * This function is used as a signal handler in the 'Help' page
    */
-  void untoggle_about();
+  void untoggle_help();
 
   /**
-   * @brief Makes the 'About' page visible whenever toggled.
+   * @brief Makes the 'Help' page visible whenever toggled.
    * 
    * @details
-   * Hides the stack and stack switcher, when showing the 'About' page
+   * Hides the stack and stack switcher, when showing the 'Help' page
    */
-  void on_about_toggle();
+  void on_help_toggle();
 
   /**
    * @brief Makes the searchbar visible, on each tab, whenever toggled.
@@ -91,7 +91,7 @@ private:
   Gtk::Stack m_tab_stack;
   Gtk::HeaderBar m_headerbar;
   Gtk::StackSwitcher m_switcher;
-  Gtk::ToggleButton m_about_button;
+  Gtk::ToggleButton m_help_button;
   Gtk::ToggleButton m_search_button;
 
   // Controllers
@@ -101,7 +101,7 @@ private:
   std::shared_ptr<FileChooserControllerInstance> file_chooser_control;
   
   // Tab (Without Controller)
-  std::shared_ptr<About> about;
+  std::shared_ptr<Help> help;
 
   // Second thread for calling command line utilities
   std::shared_ptr<ConsoleThreadInstance> console;

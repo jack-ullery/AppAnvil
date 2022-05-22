@@ -24,7 +24,7 @@ set(
   ${PROJECT_SOURCE_DIR}/tabs/view/processes.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/logs.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/file_chooser.cc
-  ${PROJECT_SOURCE_DIR}/tabs/view/about.cc
+  ${PROJECT_SOURCE_DIR}/tabs/view/help.cc
 )
 
 ### All the code globbed together for easy formatting ###
