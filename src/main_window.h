@@ -2,15 +2,15 @@
 #define SRC_MAIN_WINDOW_H
 
 #include "console_thread.h"
-#include "tabs/controller/file_chooser_controller.h"
 #include "tabs/controller/logs_controller.h"
 #include "tabs/controller/processes_controller.h"
+#include "tabs/controller/profile_loader_controller.h"
 #include "tabs/controller/profiles_controller.h"
 #include "tabs/model/status_column_record.h"
-#include "tabs/view/about.h"
-#include "tabs/view/file_chooser.h"
+#include "tabs/view/help.h"
 #include "tabs/view/logs.h"
 #include "tabs/view/processes.h"
+#include "tabs/view/profile_loader.h"
 #include "tabs/view/profiles.h"
 
 #include <gtkmm/applicationwindow.h>
@@ -40,12 +40,20 @@ protected:
   //Signal handlers:
 
   /**
-   * @brief Makes the 'About' page visible whenever toggled.
+   * @brief Untoggles the button that controls the 'Help' page.
    * 
    * @details
-   * Hides the stack and stack switcher, when showing the 'About' page
+   * This function is used as a signal handler in the 'Help' page
    */
-  void on_about_toggle();
+  void untoggle_help();
+
+  /**
+   * @brief Makes the 'Help' page visible whenever toggled.
+   * 
+   * @details
+   * Hides the stack and stack switcher, when showing the 'Help' page
+   */
+  void on_help_toggle();
 
   /**
    * @brief Makes the searchbar visible, on each tab, whenever toggled.
@@ -69,7 +77,7 @@ private:
   typedef ProfilesController<Profiles, StatusColumnRecord> ProfilesControllerInstance;
   typedef ProcessesController<Processes, StatusColumnRecord> ProcessesControllerInstance;
   typedef LogsController<Logs, StatusColumnRecord> LogsControllerInstance;
-  typedef FileChooserController<FileChooser> FileChooserControllerInstance;
+  typedef ProfileLoaderController<ProfileLoader> ProfileLoaderControllerInstance;
 
   typedef ConsoleThread<ProfilesControllerInstance,
                         ProcessesControllerInstance,
@@ -83,17 +91,17 @@ private:
   Gtk::Stack m_tab_stack;
   Gtk::HeaderBar m_headerbar;
   Gtk::StackSwitcher m_switcher;
-  Gtk::ToggleButton m_about_button;
+  Gtk::ToggleButton m_help_button;
   Gtk::ToggleButton m_search_button;
 
   // Controllers
   std::shared_ptr<ProfilesControllerInstance>    prof_control;
   std::shared_ptr<ProcessesControllerInstance>   proc_control;
   std::shared_ptr<LogsControllerInstance>        logs_control;
-  std::shared_ptr<FileChooserControllerInstance> file_chooser_control;
+  std::shared_ptr<ProfileLoaderControllerInstance> profile_loader_control;
   
   // Tab (Without Controller)
-  std::shared_ptr<About> about;
+  std::shared_ptr<Help> help;
 
   // Second thread for calling command line utilities
   std::shared_ptr<ConsoleThreadInstance> console;

@@ -1,5 +1,5 @@
-#ifndef TABS_CONTROLLER_FILECHOOSER_CONTROLLER_H
-#define TABS_CONTROLLER_FILECHOOSER_CONTROLLER_H
+#ifndef TABS_CONTROLLER_PROFILELOADER_CONTROLLER_H
+#define TABS_CONTROLLER_PROFILELOADER_CONTROLLER_H
 
 #include <gtkmm/builder.h>
 #include <gtkmm/comboboxtext.h>
@@ -19,22 +19,22 @@
 #include <string>
 #include <vector>
 
-template<class FileChooserTab>
-class FileChooserController : public Gtk::ScrolledWindow
+template<class ProfileLoaderTab>
+class ProfileLoaderController : public Gtk::ScrolledWindow
 {
   public:
-    FileChooserController();
+    ProfileLoaderController();
     void clearLabel();
 
     // Returns the Tab that this controller communicates with
-    std::shared_ptr<FileChooserTab> get_tab();
+    std::shared_ptr<ProfileLoaderTab> get_tab();
 
   protected:
     // Signal handler
     void on_confirm_clicked();
 
   private:
-      std::shared_ptr<FileChooserTab> fc;
+      std::shared_ptr<ProfileLoaderTab> fc;
 };
 
-#endif // TABS_CONTROLLER_FILECHOOSER_CONTROLLER_H
+#endif // TABS_CONTROLLER_PROFILELOADER_CONTROLLER_H
