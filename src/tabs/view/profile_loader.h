@@ -1,5 +1,5 @@
-#ifndef TABS_FILECHOOSER_H
-#define TABS_FILECHOOSER_H
+#ifndef TABS_PROFILELOADER_H
+#define TABS_PROFILELOADER_H
 
 #include <gtkmm/builder.h>
 #include <gtkmm/enums.h>
@@ -11,10 +11,10 @@
 #include <string>
 #include <vector>
 
-class FileChooser : public Gtk::ScrolledWindow
+class ProfileLoader : public Gtk::ScrolledWindow
 {
   public:
-    FileChooser();
+    ProfileLoader();
 
     void set_label_text(const std::string &str);
     Glib::RefPtr<Gio::File> get_file();

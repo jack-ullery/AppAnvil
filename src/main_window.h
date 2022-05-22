@@ -2,13 +2,13 @@
 #define SRC_MAIN_WINDOW_H
 
 #include "console_thread.h"
-#include "tabs/controller/file_chooser_controller.h"
+#include "tabs/controller/profile_loader_controller.h"
 #include "tabs/controller/logs_controller.h"
 #include "tabs/controller/processes_controller.h"
 #include "tabs/controller/profiles_controller.h"
 #include "tabs/model/status_column_record.h"
 #include "tabs/view/help.h"
-#include "tabs/view/file_chooser.h"
+#include "tabs/view/profile_loader.h"
 #include "tabs/view/logs.h"
 #include "tabs/view/processes.h"
 #include "tabs/view/profiles.h"
@@ -77,7 +77,7 @@ private:
   typedef ProfilesController<Profiles, StatusColumnRecord> ProfilesControllerInstance;
   typedef ProcessesController<Processes, StatusColumnRecord> ProcessesControllerInstance;
   typedef LogsController<Logs, StatusColumnRecord> LogsControllerInstance;
-  typedef FileChooserController<FileChooser> FileChooserControllerInstance;
+  typedef ProfileLoaderController<ProfileLoader> ProfileLoaderControllerInstance;
 
   typedef ConsoleThread<ProfilesControllerInstance,
                         ProcessesControllerInstance,
@@ -98,7 +98,7 @@ private:
   std::shared_ptr<ProfilesControllerInstance>    prof_control;
   std::shared_ptr<ProcessesControllerInstance>   proc_control;
   std::shared_ptr<LogsControllerInstance>        logs_control;
-  std::shared_ptr<FileChooserControllerInstance> file_chooser_control;
+  std::shared_ptr<ProfileLoaderControllerInstance> profile_loader_control;
   
   // Tab (Without Controller)
   std::shared_ptr<Help> help;

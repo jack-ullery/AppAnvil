@@ -1,10 +1,10 @@
-#include "file_chooser_controller.h"
+#include "profile_loader_controller.h"
 #include "../../threads/command_caller.h"
-#include "../view/file_chooser.h"
+#include "../view/profile_loader.h"
 
 // TODO(apparmor): Need to make asynchronous eventually, there should be no direct calls to CommandCaller
-template<class FileChooserTab>
-void FileChooserController<FileChooserTab>::on_confirm_clicked()
+template<class ProfileLoaderTab>
+void ProfileLoaderController<ProfileLoaderTab>::on_confirm_clicked()
 {
   // In production-code, this is a `Glib::RefPtr<Gio::File>`
   auto file = fc->get_file();
@@ -22,24 +22,24 @@ void FileChooserController<FileChooserTab>::on_confirm_clicked()
   }
 }
 
-template<class FileChooserTab>
-void FileChooserController<FileChooserTab>::clearLabel(){
+template<class ProfileLoaderTab>
+void ProfileLoaderController<ProfileLoaderTab>::clearLabel(){
   fc->set_label_text("");
 }
 
-template<class FileChooserTab>
-std::shared_ptr<FileChooserTab> FileChooserController<FileChooserTab>::get_tab()
+template<class ProfileLoaderTab>
+std::shared_ptr<ProfileLoaderTab> ProfileLoaderController<ProfileLoaderTab>::get_tab()
 {
   return fc;
 }
 
-template<class FileChooserTab>
-FileChooserController<FileChooserTab>::FileChooserController()
-  : fc{new FileChooserTab()}
+template<class ProfileLoaderTab>
+ProfileLoaderController<ProfileLoaderTab>::ProfileLoaderController()
+  : fc{new ProfileLoaderTab()}
 {
-  auto button_func = sigc::mem_fun(*this, &FileChooserController::on_confirm_clicked);
+  auto button_func = sigc::mem_fun(*this, &ProfileLoaderController::on_confirm_clicked);
   fc->set_l_button_signal_handler(button_func);
 }
 
 // Used to avoid linker errors
-template class FileChooserController<FileChooser>;
+template class ProfileLoaderController<ProfileLoader>;
