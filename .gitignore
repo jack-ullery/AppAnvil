@@ -11,6 +11,11 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 
+CPackConfig.cmake
+CPackSourceConfig.cmake
+_CPack_Packages/
+*.deb
+
 .cache/
 .vscode/
 build/
