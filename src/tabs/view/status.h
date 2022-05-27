@@ -5,6 +5,7 @@
 #include "../search_info.h"
 #include "jsoncpp/json/json.h"
 
+#include <glibmm/refptr.h>
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/checkbutton.h>
@@ -38,11 +39,6 @@ public:
   std::shared_ptr<Gtk::ScrolledWindow> get_window();
 
   /**
-   * @brief Change the text in the label next to the Apply button/spinner.
-   */
-  void set_apply_label_text(const std::string &str);
-
-  /**
    * @brief Change the text in the label directly above the searchbar.
    */
   void set_status_label_text(const std::string &str);
@@ -58,24 +54,6 @@ public:
    */
   void set_refresh_signal_handler(const Glib::SignalProxyProperty::SlotType &func);
 
-  /**
-   * @brief Set the method to be called every time the apply button is clicked.
-   *
-   * @details
-   * Sets the signal handler method to be called every time the apply button is clicked. This
-   * happens when the user clicks the 'Apply' button above the search bar.
-   *
-   * The signal handler should have the following protoype: `void method_name()`
-   */
-  void set_apply_signal_handler(const Glib::SignalProxyProperty::SlotType &func);
-
-  /**
-   * @brief Return the active selection/choice in the dropdown ComboBoxText
-   *
-   * @returns The string of the dropdown item which is selected.
-   */
-  Glib::ustring get_selection_text() const;
-
   SearchInfo get_search_info();
 
   void hide_searchbar();
@@ -83,16 +61,9 @@ public:
   void show_searchbar();
 
 protected:
+  Status(const std::string& glade_resource);
 
-  /**
-   * @brief Make widgets related to changing profile status invisible to the user.
-   *
-   * @details
-   * Removes the widgets associated with changing a profiles status. This cannot be undone.
-   * Widgets that are children of `s_selection_box` will be permanently invisible to the user
-   * for this instance of Status.
-   */
-  void remove_status_selection();
+  Glib::RefPtr<Gtk::Builder> get_builder();
 
 private:
   // GUI Builder to parse UI from xml file
@@ -110,12 +81,6 @@ private:
   std::unique_ptr<Gtk::CheckButton> s_match_case;
   std::unique_ptr<Gtk::CheckButton> s_whole_word;
   std::unique_ptr<Gtk::Label> s_found_label;
-
-  // Widgets related to changing profile status (above search)
-  std::unique_ptr<Gtk::Box> s_selection_box;
-  std::unique_ptr<Gtk::Button> s_apply_button;
-  std::unique_ptr<Gtk::Label> s_apply_info_text;
-  std::unique_ptr<Gtk::ComboBoxText> s_status_selection;
 
   // Misc
   template<typename T_Widget> static std::shared_ptr<T_Widget> get_widget_shared(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);

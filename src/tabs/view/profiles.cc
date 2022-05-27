@@ -2,6 +2,7 @@
 #include "../model/status_column_record.h"
 
 #include "jsoncpp/json/json.h"
+#include "status.h"
 
 #include <giomm.h>
 #include <glibmm.h>
@@ -9,6 +10,13 @@
 #include <string>
 #include <tuple>
 #include <vector>
+
+template<typename T_Widget> std::shared_ptr<T_Widget> Profiles::get_widget_shared(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder)
+{
+  T_Widget *raw_addr = nullptr;
+  builder->get_widget<T_Widget>(name, raw_addr);
+  return std::shared_ptr<T_Widget>(raw_addr);
+}
 
 void Profiles::change_status()
 {
@@ -19,7 +27,8 @@ void Profiles::change_status()
 
     std::string profile_path;
     std::string old_status;
-    std::string new_status = Status::get_selection_text();
+    // Get the status that we intend to switch to
+    std::string new_status = p_status_selection->get_active_text();
 
     row->get_value(0, profile_path);
     row->get_value(1, old_status);
@@ -30,17 +39,8 @@ void Profiles::change_status()
 
     this->profile_status_change_fun(profile_path, old_status, new_status);
   } else {
-    Status::set_apply_label_text("Please select a row.");
+    p_apply_info_text->set_text("Please select a row.");
   }
-}
-
-void Profiles::default_change_fun(const std::string &a, const std::string &b, const std::string &c)
-{
-  std::ignore = this;
-  std::ignore = a;
-  std::ignore = b;
-  std::ignore = c;
-  std::cerr << "Warning: No signal handler is defined for changing a profile's status." << std::endl;
 }
 
 void Profiles::set_status_change_signal_handler(sigc::slot<void(std::string, std::string, std::string)> change_fun)
@@ -48,13 +48,20 @@ void Profiles::set_status_change_signal_handler(sigc::slot<void(std::string, std
   profile_status_change_fun = std::move(change_fun);
 }
 
-Profiles::Profiles()
-{
-  auto apply_func   = sigc::mem_fun(*this, &Profiles::change_status);
-  Status::set_apply_signal_handler(apply_func);
+void Profiles::set_apply_label_text(const std::string &str) {
+  p_apply_info_text->set_text(str);
+}
 
-  sigc::slot<void(std::string, std::string, std::string)> change_fun = sigc::mem_fun(*this, &Profiles::default_change_fun);
-  this->set_status_change_signal_handler(change_fun);
+Profiles::Profiles()
+    : Status("/resources/profile.glade"),
+      builder{Status::get_builder()},
+      p_status_selection{get_widget_shared<Gtk::ComboBoxText>("p_status_selection", builder)},
+      p_apply_button{get_widget_shared<Gtk::Button>("p_apply_button", builder)},
+      p_apply_info_text{get_widget_shared<Gtk::Label>("p_apply_info_text", builder)}
+{
+  // Set the function to be called when the apply button is pressed
+  auto change_fun = sigc::mem_fun(*this, &Profiles::change_status);
+  p_apply_button->signal_clicked().connect(change_fun, true);
 
   this->show_all();
 }

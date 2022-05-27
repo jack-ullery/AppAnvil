@@ -9,66 +9,58 @@
     <property name="vexpand">True</property>
     <property name="orientation">vertical</property>
     <child>
-      <object class="GtkBox" id="s_main">
+      <object class="GtkBox">
         <property name="width_request">0</property>
         <property name="height_request">217</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
-          <object class="GtkBox" id="s_box2">
-            <property name="width_request">305</property>
-            <property name="height_request">189</property>
+          <object class="GtkScrolledWindow" id="s_win">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="orientation">vertical</property>
+            <property name="can_focus">True</property>
+            <property name="hexpand">True</property>
+            <property name="vexpand">True</property>
+            <property name="shadow_type">in</property>
             <child>
-              <object class="GtkScrolledWindow" id="s_win">
-                <property name="height_request">220</property>
+              <object class="GtkTreeView" id="s_view">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="shadow_type">in</property>
-                <child>
-                  <object class="GtkTreeView" id="s_view">
-                    <property name="width_request">12</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <child internal-child="selection">
-                      <object class="GtkTreeSelection"/>
-                    </child>
-                  </object>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
+                <child internal-child="selection">
+                  <object class="GtkTreeSelection"/>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
             </child>
           </object>
           <packing>
-            <property name="expand">False</property>
+            <property name="expand">True</property>
             <property name="fill">True</property>
             <property name="position">0</property>
           </packing>
         </child>
         <child>
-          <object class="GtkBox" id="s_box3">
+          <object class="GtkBox">
             <property name="width_request">169</property>
             <property name="height_request">-1</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="vexpand">True</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkScrolledWindow" id="s_stat">
                 <property name="height_request">106</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
                 <property name="shadow_type">in</property>
                 <child>
                   <object class="GtkTreeView" id="s_viewstat">
                     <property name="height_request">10</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="vexpand">True</property>
                     <child internal-child="selection">
                       <object class="GtkTreeSelection"/>
                     </child>
@@ -79,28 +71,6 @@
                 <property name="expand">False</property>
                 <property name="fill">True</property>
                 <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkScrolledWindow" id="s_perm">
-                <property name="height_request">114</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="shadow_type">in</property>
-                <child>
-                  <object class="GtkTreeView" id="s_viewperm">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <child internal-child="selection">
-                      <object class="GtkTreeSelection"/>
-                    </child>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
               </packing>
             </child>
           </object>
@@ -118,11 +88,13 @@
       </packing>
     </child>
     <child>
-      <object class="GtkBox" id="s_selection_box">
+      <object class="GtkBox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="margin_left">10</property>
+        <property name="margin_right">10</property>
         <child>
-          <object class="GtkComboBoxText" id="s_status_selection">
+          <object class="GtkComboBoxText" id="p_status_selection">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="margin_start">10</property>
@@ -146,7 +118,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkButton" id="s_apply_button">
+          <object class="GtkButton" id="p_apply_button">
             <property name="label" translatable="yes">Apply</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
@@ -161,7 +133,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkLabel" id="s_apply_info_text">
+          <object class="GtkLabel" id="p_apply_info_text">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="margin_start">15</property>
@@ -187,14 +159,14 @@
       <object class="GtkBox" id="s_searchbox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="margin_left">10</property>
+        <property name="margin_right">10</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="valign">center</property>
-            <property name="margin_left">10</property>
-            <property name="margin_right">10</property>
             <property name="margin_start">10</property>
             <property name="margin_end">10</property>
             <property name="margin_top">5</property>
@@ -283,8 +255,6 @@
           <object class="GtkSearchEntry" id="s_search">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="margin_left">10</property>
-            <property name="margin_right">10</property>
             <property name="margin_start">10</property>
             <property name="margin_end">10</property>
             <property name="margin_top">5</property>
