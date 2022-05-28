@@ -21,6 +21,9 @@ public:
    */
   void set_apply_label_text(const std::string &str);
 
+protected:
+  void on_row_activated(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column);
+  void handle_profile_selected();
 
 private:
   std::shared_ptr<ProfilesTab> prof;

@@ -76,6 +76,9 @@ MainWindow::MainWindow()
   this->add(m_top_stack);
   this->show_all();
 
+  // Hide the side info in the Profiles Tab
+  prof_control->get_tab()->hide_profile_info();
+
   // Hide all tabs with a searchbar
   on_search_toggle();
 }

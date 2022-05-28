@@ -5,12 +5,32 @@
 #include "jsoncpp/json/json.h"
 #include "status_controller.h"
 
+#include <cstddef>
 #include <giomm.h>
 #include <glibmm.h>
-#include <iostream>
 #include <string>
 #include <tuple>
 #include <vector>
+
+template<class ProfilesTab, class ColumnRecord> 
+void ProfilesController<ProfilesTab, ColumnRecord>::on_row_activated(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column){
+  // Ignore unused parameters
+  std::ignore=path;
+  std::ignore=column;
+
+  handle_profile_selected();
+}
+
+template<class ProfilesTab, class ColumnRecord> 
+void ProfilesController<ProfilesTab, ColumnRecord>::handle_profile_selected(){
+  // Check if there is any row selected
+  auto row_selected = prof->get_view()->get_selection()->count_selected_rows() == 1;
+
+  if(row_selected){
+    prof->show_profile_info();
+    prof->set_selected_profile_information("Not implemented yet!", "Not implemented yet!", "Not implemented yet!");
+  }
+}
 
 // add_data_to_record() is based on assumptions about the output of aa-status.
 // If those assumptions are incorrect, or aa-status changes, this could crash.
@@ -38,6 +58,7 @@ void ProfilesController<ProfilesTab, ColumnRecord>::refresh()
 {
   uint num_visible = col_record->filter_rows();
   prof->set_status_label_text(" " + std::to_string(num_visible) + " matching profiles");
+  handle_profile_selected();
 }
 
 template<class ProfilesTab, class ColumnRecord> 
@@ -56,6 +77,10 @@ ProfilesController<ProfilesTab, ColumnRecord>::ProfilesController()
 
   auto filter_fun = sigc::mem_fun(*this, &ProfilesController::filter);
   col_record->set_visible_func(filter_fun);
+
+  auto row_activate_fun = sigc::mem_fun(*this, &ProfilesController::on_row_activated);
+  prof->get_view()->signal_row_activated().connect(row_activate_fun, true);
+  prof->get_view()->set_activate_on_single_click(true);
 }
 
 // Used to avoid linker errors

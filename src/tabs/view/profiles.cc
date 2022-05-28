@@ -52,16 +52,35 @@ void Profiles::set_apply_label_text(const std::string &str) {
   p_apply_info_text->set_text(str);
 }
 
+void Profiles::set_selected_profile_information(const std::string &status, const std::string &num_perms, const std::string &num_procs){
+  p_status_label->set_text(status);
+  p_num_proc_label->set_text(num_perms);
+  p_num_perm_label->set_text(num_procs);
+}
+
+void Profiles::show_profile_info(){
+  p_profile_info->show_all();
+}
+
+void Profiles::hide_profile_info(){
+  p_profile_info->hide();
+}
+
 Profiles::Profiles()
     : Status("/resources/profile.glade"),
       builder{Status::get_builder()},
       p_status_selection{get_widget_shared<Gtk::ComboBoxText>("p_status_selection", builder)},
       p_apply_button{get_widget_shared<Gtk::Button>("p_apply_button", builder)},
-      p_apply_info_text{get_widget_shared<Gtk::Label>("p_apply_info_text", builder)}
+      p_apply_info_text{get_widget_shared<Gtk::Label>("p_apply_info_text", builder)},
+      p_profile_info{get_widget_shared<Gtk::Box>("p_profile_info", builder)},
+      p_status_label{get_widget_shared<Gtk::Label>("p_status_label", builder)},
+      p_num_proc_label{get_widget_shared<Gtk::Label>("p_num_proc_label", builder)},
+      p_num_perm_label{get_widget_shared<Gtk::Label>("p_num_perm_label", builder)}
 {
   // Set the function to be called when the apply button is pressed
   auto change_fun = sigc::mem_fun(*this, &Profiles::change_status);
   p_apply_button->signal_clicked().connect(change_fun, true);
 
   this->show_all();
+  this->hide_profile_info();
 }

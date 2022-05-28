@@ -76,6 +76,8 @@ Status::Status(const std::string& glade_resource)
       s_whole_word{Status::get_widget<Gtk::CheckButton>("s_whole_word", builder)},
       s_found_label{Status::get_widget<Gtk::Label>("s_found_label", builder)}
 {
+  s_view->set_activate_on_single_click(true);
+
   s_win->set_shadow_type(Gtk::ShadowType::SHADOW_NONE);
   s_win->set_policy(Gtk::PolicyType::POLICY_AUTOMATIC, Gtk::PolicyType::POLICY_AUTOMATIC);
   s_win->set_hexpand();
