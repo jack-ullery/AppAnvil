@@ -6,6 +6,7 @@
 #include "tabs/controller/processes_controller.h"
 #include "tabs/controller/profile_loader_controller.h"
 #include "tabs/controller/profiles_controller.h"
+#include "tabs/model/database.h"
 #include "tabs/model/status_column_record.h"
 #include "tabs/view/help.h"
 #include "tabs/view/logs.h"
@@ -74,7 +75,7 @@ protected:
 private:
   // A set of Typedeffed classes, to handle dependency injection
   // This lowers the amount of repeated <..> symbols
-  typedef ProfilesController<Profiles, StatusColumnRecord> ProfilesControllerInstance;
+  typedef ProfilesController<Profiles, StatusColumnRecord, Database> ProfilesControllerInstance;
   typedef ProcessesController<Processes, StatusColumnRecord> ProcessesControllerInstance;
   typedef LogsController<Logs, StatusColumnRecord> LogsControllerInstance;
   typedef ProfileLoaderController<ProfileLoader> ProfileLoaderControllerInstance;
@@ -94,12 +95,15 @@ private:
   Gtk::ToggleButton m_help_button;
   Gtk::ToggleButton m_search_button;
 
+  // Data structure for sharing data related to AppArmor between tabs
+  std::shared_ptr<Database> database;
+
   // Controllers
   std::shared_ptr<ProfilesControllerInstance>    prof_control;
   std::shared_ptr<ProcessesControllerInstance>   proc_control;
   std::shared_ptr<LogsControllerInstance>        logs_control;
   std::shared_ptr<ProfileLoaderControllerInstance> profile_loader_control;
-  
+
   // Tab (Without Controller)
   std::shared_ptr<Help> help;
 

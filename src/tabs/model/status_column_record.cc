@@ -2,6 +2,7 @@
 
 #include <gtkmm/box.h>
 #include <gtkmm/main.h>
+#include <gtkmm/treeiter.h>
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treemodelsort.h>
 #include <memory>
@@ -33,9 +34,20 @@ void StatusColumnRecord::set_visible_func(const Gtk::TreeModelFilter::SlotVisibl
   filter_model->set_visible_func(filter);
 }
 
-Gtk::TreeRow StatusColumnRecord::new_row() { return *(store->append()); }
+Gtk::TreeRow StatusColumnRecord::new_row()
+{
+  return *(store->append());
+}
 
-Gtk::TreeRow StatusColumnRecord::new_child_row(const Gtk::TreeRow &parent) { return *(store->append(parent.children())); }
+Gtk::TreeRow StatusColumnRecord::new_child_row(const Gtk::TreeRow &parent)
+{
+  return *(store->append(parent.children()));
+}
+
+Gtk::TreeRow StatusColumnRecord::get_row(const Gtk::TreePath &path)
+{
+  return *(store->get_iter(path));
+}
 
 void StatusColumnRecord::clear()
 {

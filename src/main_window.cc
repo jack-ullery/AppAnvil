@@ -5,7 +5,8 @@
 #include <tuple>
 
 MainWindow::MainWindow()
-    : prof_control{new ProfilesControllerInstance()},
+    : database{new Database()},
+      prof_control{new ProfilesControllerInstance(database)},
       proc_control{new ProcessesControllerInstance()},
       logs_control{new LogsControllerInstance()},
       profile_loader_control{new ProfileLoaderControllerInstance()},

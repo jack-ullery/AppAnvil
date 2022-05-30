@@ -1,7 +1,56 @@
 #include "database.h"
+#include <exception>
+#include <memory>
+#include <stdexcept>
 
-void Database::add_profile_data(const ProfileTableEntry &entry) { profile_data.emplace(entry.profile_name, entry); }
+void Database::put_profile_data(const std::string profile_name, const std::string status)
+{
+    if(prof_col_record == nullptr){
+        throw new std::runtime_error("Error: Attempted to write to ColumnRecord (Profile) before it was registered.");
+    }
 
-void Database::add_process_data(const ProcessTableEntry &entry) { process_data.emplace(entry.profile_name, entry); }
+    // Attempt to find an entry with this profile name
+    auto iter = profile_data.find(profile_name);
 
-void Database::add_log_data(const LogTableEntry &entry) { log_data.emplace(entry.profile_name, entry); }
+    if(iter == profile_data.end()){
+        // If not entry was found, we should create one
+        auto row = prof_col_record->new_row();
+        row->set_value(0, profile_name);
+        row->set_value(1, status);
+
+        ProfileTableEntry entry(profile_name, status, row);
+        profile_data.emplace(profile_name, entry);
+    }
+    else {
+        // A pre-existing entry was found, so we should modify it
+        ProfileTableEntry entry = iter->second;
+        entry.status=status;
+    }
+
+
+}
+
+void Database::put_process_data(const std::string profile_name, const unsigned int pid)
+{
+    // Not implemented yet!
+}
+
+void Database::put_log_data(const std::string profile_name, const unsigned int pid, const std::string timestamp, const std::string type, const std::string operation)
+{
+    // Not implemented yet!
+}
+
+void Database::register_profile_column_record(std::shared_ptr<StatusColumnRecord> col_record)
+{
+    if(col_record == NULL) {
+        throw new std::runtime_error("Error: Argument for ColumnRecord (Profile) is null.");
+    } else if (prof_col_record != NULL) {
+        throw new std::runtime_error("Error: Attempted to initialize ColumnRecord (Profile) more than once.");
+    }
+
+    prof_col_record = col_record;
+}
+
+
+Database::Database()
+{   }

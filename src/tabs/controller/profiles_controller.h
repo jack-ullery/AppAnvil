@@ -7,10 +7,10 @@
 #include <string>
 #include <vector>
 
-template<class ProfilesTab, class ColumnRecord> class ProfilesController : public StatusController<ProfilesTab>
+template<class ProfilesTab, class ColumnRecord, class Database> class ProfilesController : public StatusController<ProfilesTab>
 {
 public:
-  ProfilesController();
+  ProfilesController(std::shared_ptr<Database> database);
 
   virtual void add_data_to_record(const std::string &data);
   void refresh();
@@ -26,6 +26,7 @@ protected:
   void handle_profile_selected();
 
 private:
+  std::shared_ptr<Database> database;
   std::shared_ptr<ProfilesTab> prof;
 
   const std::vector<ColumnHeader> col_names{ColumnHeader("Profile"), ColumnHeader("Status")};

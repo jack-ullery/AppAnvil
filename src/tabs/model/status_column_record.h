@@ -70,6 +70,18 @@ public:
   Gtk::TreeRow new_child_row(const Gtk::TreeRow &parent);
 
   /**
+   * @brief Gets the TreeRow in the table which is the child of another TreeRow.
+   *
+   * @details
+   * Data of the row can be modified using the `set_row_data()` method
+   *
+   * @param parent, The TreeRow to be the parent of the created TreeRow
+   *
+   * @returns A new TreeRow from the table.
+   */
+  Gtk::TreeRow get_row(const Gtk::TreePath &path);
+
+  /**
    * @brief Deletes all rows in the StatusColumnRecord.
    */
   void clear();
