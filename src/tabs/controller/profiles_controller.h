@@ -30,7 +30,7 @@ private:
   std::shared_ptr<Database> database;
   std::shared_ptr<ProfilesTab> prof;
 
-  const std::vector<ColumnHeader> col_names{ColumnHeader("Profile"), ColumnHeader("Status")};
+  const std::vector<ColumnHeader> col_names{ColumnHeader("Profile")};
   std::shared_ptr<ColumnRecord> col_record;
 };
 

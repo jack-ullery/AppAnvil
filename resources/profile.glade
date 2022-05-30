@@ -57,7 +57,7 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="valign">center</property>
+                <property name="halign">center</property>
                 <property name="margin_top">10</property>
                 <property name="margin_bottom">5</property>
                 <property name="label" translatable="yes">Status: </property>
@@ -75,7 +75,7 @@
               <object class="GtkLabel" id="p_status_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="halign">start</property>
+                <property name="halign">center</property>
                 <property name="margin_bottom">10</property>
               </object>
               <packing>
@@ -88,6 +88,8 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="halign">center</property>
+                <property name="margin_top">10</property>
                 <property name="margin_bottom">5</property>
                 <property name="label" translatable="yes">Number Permissions: </property>
                 <attributes>
@@ -104,6 +106,7 @@
               <object class="GtkLabel" id="p_num_proc_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="halign">center</property>
                 <property name="margin_bottom">10</property>
               </object>
               <packing>
@@ -116,7 +119,8 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="valign">center</property>
+                <property name="halign">center</property>
+                <property name="margin_top">10</property>
                 <property name="margin_bottom">5</property>
                 <property name="label" translatable="yes">Active Proccesses: </property>
                 <attributes>
@@ -133,7 +137,7 @@
               <object class="GtkLabel" id="p_num_perm_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="valign">center</property>
+                <property name="halign">center</property>
                 <property name="margin_bottom">10</property>
               </object>
               <packing>
