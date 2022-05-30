@@ -23,14 +23,15 @@ public:
   void set_apply_label_text(const std::string &str);
 
 protected:
-  void on_row_activated(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column);
+  bool on_button_event(GdkEventButton* event);
+  bool on_key_event(GdkEventKey* event);
   void handle_profile_selected();
 
 private:
   std::shared_ptr<Database> database;
   std::shared_ptr<ProfilesTab> prof;
 
-  const std::vector<ColumnHeader> col_names{ColumnHeader("Profile")};
+  const std::vector<ColumnHeader> col_names{ColumnHeader("Profile"), ColumnHeader("Status")};
   std::shared_ptr<ColumnRecord> col_record;
 };
 

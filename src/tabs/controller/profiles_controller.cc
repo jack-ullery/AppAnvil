@@ -16,12 +16,19 @@
 #include <vector>
 
 template<class ProfilesTab, class ColumnRecord, class Database> 
-void ProfilesController<ProfilesTab, ColumnRecord, Database>::on_row_activated(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column){
-  // Ignore unused parameters
-  std::ignore=path;
-  std::ignore=column;
+bool ProfilesController<ProfilesTab, ColumnRecord, Database>::on_button_event(GdkEventButton* event){
+  std::ignore=event;
 
   handle_profile_selected();
+  return false;
+}
+
+template<class ProfilesTab, class ColumnRecord, class Database> 
+bool ProfilesController<ProfilesTab, ColumnRecord, Database>::on_key_event(GdkEventKey* event){
+  std::ignore=event;
+
+  handle_profile_selected();
+  return false;
 }
 
 template<class ProfilesTab, class ColumnRecord, class Database> 
@@ -41,6 +48,8 @@ void ProfilesController<ProfilesTab, ColumnRecord, Database>::handle_profile_sel
 
     prof->set_profile_info(entry.status, "Not implemented yet!", "Not implemented yet!");
     prof->show_profile_info();
+  } else {
+    prof -> hide_profile_info();
   }
 }
 
@@ -88,8 +97,13 @@ ProfilesController<ProfilesTab, ColumnRecord, Database>::ProfilesController(std:
   auto filter_fun = sigc::mem_fun(*this, &ProfilesController::filter);
   col_record->set_visible_func(filter_fun);
 
-  auto row_activate_fun = sigc::mem_fun(*this, &ProfilesController::on_row_activated);
-  prof->get_view()->signal_row_activated().connect(row_activate_fun, true);
+  // When a key/button is pressed or released, check if the selection has changed
+  auto button_event_fun = sigc::mem_fun(*this, &ProfilesController::on_button_event);
+  prof->get_view()->signal_button_release_event().connect(button_event_fun, true);
+
+  auto key_event_fun = sigc::mem_fun(*this, &ProfilesController::on_key_event);
+  prof->get_view()->signal_key_release_event().connect(key_event_fun, true);
+
   prof->get_view()->set_activate_on_single_click(true);
 }
 

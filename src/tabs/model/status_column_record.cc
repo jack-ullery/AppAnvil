@@ -46,7 +46,7 @@ Gtk::TreeRow StatusColumnRecord::new_child_row(const Gtk::TreeRow &parent)
 
 Gtk::TreeRow StatusColumnRecord::get_row(const Gtk::TreePath &path)
 {
-  return *(store->get_iter(path));
+  return *(sort_model->get_iter(path));
 }
 
 void StatusColumnRecord::clear()

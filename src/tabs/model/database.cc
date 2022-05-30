@@ -17,6 +17,7 @@ void Database::put_profile_data(const std::string profile_name, const std::strin
         // If not entry was found, we should create one
         auto row = prof_col_record->new_row();
         row->set_value(0, profile_name);
+        row->set_value(1, status);
 
         ProfileTableEntry entry(profile_name, status, row);
         profile_data.emplace(profile_name, entry);
