@@ -31,10 +31,15 @@ void ProfilesController<ProfilesTab, ColumnRecord, Database>::handle_profile_sel
   auto row_selected = selection->count_selected_rows() == 1;
 
   if(row_selected){
-    // Gtk::TreePath path = selection->get_selected_rows()[0]; 
-    // Gtk::TreeRow row = col_record->get_row(path);
+    Gtk::TreePath path = selection->get_selected_rows()[0]; 
+    Gtk::TreeRow row = col_record->get_row(path);
 
-    prof->set_selected_profile_information("Not implemented yet!", "Not implemented yet!", "Not implemented yet!");
+    std::string profile_name;
+    row.get_value(0, profile_name);
+    
+    ProfileTableEntry entry = database->get_profile_data(profile_name); 
+
+    prof->set_profile_info(entry.status, "Not implemented yet!", "Not implemented yet!");
     prof->show_profile_info();
   }
 }

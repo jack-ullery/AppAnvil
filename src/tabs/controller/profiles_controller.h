@@ -1,6 +1,7 @@
 #ifndef TABS_CONTROLLER_PROFILESCONTROLLER_H
 #define TABS_CONTROLLER_PROFILESCONTROLLER_H
 
+#include "../entries.h"
 #include "status_controller.h"
 
 #include <memory>

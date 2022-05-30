@@ -20,7 +20,7 @@ public:
    */
   void set_apply_label_text(const std::string &str);
 
-  void set_selected_profile_information(const std::string &status, const std::string &num_perms, const std::string &num_procs);
+  void set_profile_info(const std::string &status, const std::string &num_perms, const std::string &num_procs);
 
   void show_profile_info();
   void hide_profile_info();

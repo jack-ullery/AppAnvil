@@ -52,7 +52,7 @@ void Profiles::set_apply_label_text(const std::string &str) {
   p_apply_info_text->set_text(str);
 }
 
-void Profiles::set_selected_profile_information(const std::string &status, const std::string &num_perms, const std::string &num_procs){
+void Profiles::set_profile_info(const std::string &status, const std::string &num_perms, const std::string &num_procs){
   p_status_label->set_text(status);
   p_num_proc_label->set_text(num_perms);
   p_num_perm_label->set_text(num_procs);

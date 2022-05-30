@@ -17,8 +17,6 @@
 #include <gtkmm/treeview.h>
 #include <memory>
 
-constexpr auto UNKNOWN_STATUS = "unknown";
-
 class Status : public Gtk::ScrolledWindow
 {
 public:
