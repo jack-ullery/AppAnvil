@@ -59,7 +59,7 @@ public:
   void show_searchbar();
 
 protected:
-  Status(const std::string& glade_resource);
+  explicit Status(const std::string& glade_resource);
 
   Glib::RefPtr<Gtk::Builder> get_builder();
 
