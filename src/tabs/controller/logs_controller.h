@@ -45,12 +45,15 @@ protected:
 private:
   std::shared_ptr<LogsTab> logs;
 
-  const std::vector<ColumnHeader> col_names{ColumnHeader("Time"),
-                                            ColumnHeader("Type"),
-                                            ColumnHeader("Operation"),
-                                            ColumnHeader("Name"),
-                                            ColumnHeader("Pid", ColumnHeader::ColumnType::INT),
-                                            ColumnHeader("Status")};
+  const std::vector<ColumnHeader> col_names{
+    ColumnHeader("Time"),
+    ColumnHeader("Type"),
+    ColumnHeader("Operation"),
+    ColumnHeader("Name"),
+    ColumnHeader("Pid", ColumnHeader::ColumnType::INT),
+    ColumnHeader("Status")
+  };
+
   std::shared_ptr<ColumnRecord> col_record;
 };
 

@@ -2,7 +2,9 @@
 #include "tabs/controller/logs_controller.h"
 #include "tabs/controller/processes_controller.h"
 #include "tabs/controller/profiles_controller.h"
+#include "tabs/model/adapter.h"
 #include "tabs/model/database.h"
+#include "tabs/model/profile_adapter.h"
 #include "tabs/model/status_column_record.h"
 #include "tabs/view/logs.h"
 #include "tabs/view/processes.h"
@@ -148,4 +150,4 @@ ConsoleThread<ProfilesController, ProcessesController, LogsController>::~Console
   asynchronous_thread.wait();
 }
 
-template class ConsoleThread<ProfilesController<Profiles, StatusColumnRecord, Database>, ProcessesController<Processes, StatusColumnRecord>, LogsController<Logs, StatusColumnRecord> >;
+template class ConsoleThread<ProfilesController<Profiles, StatusColumnRecord, Database, ProfileAdapter<Database>>, ProcessesController<Processes, StatusColumnRecord>, LogsController<Logs, StatusColumnRecord> >;

@@ -21,8 +21,14 @@ protected:
 private:
   std::shared_ptr<ProcessesTab> proc;
 
-  const std::vector<ColumnHeader> col_names{ColumnHeader("Process Name"), ColumnHeader("User"),
-                                            ColumnHeader("Pid", ColumnHeader::ColumnType::INT), ColumnHeader("Status")};
+  const std::vector<ColumnHeader> col_names
+  {
+    ColumnHeader("Process Name"), 
+    ColumnHeader("User"),
+    ColumnHeader("Pid", ColumnHeader::ColumnType::INT), 
+    ColumnHeader("Status")
+  };
+
   std::shared_ptr<ColumnRecord> col_record;
 };
 

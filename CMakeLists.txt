@@ -15,6 +15,7 @@ set(
   ${PROJECT_SOURCE_DIR}/threads/dispatcher_middleman.cc
   ${PROJECT_SOURCE_DIR}/tabs/model/database.cc
   ${PROJECT_SOURCE_DIR}/tabs/model/status_column_record.cc
+  ${PROJECT_SOURCE_DIR}/tabs/model/profile_adapter.cc
   ${PROJECT_SOURCE_DIR}/tabs/controller/status_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/controller/profiles_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/controller/processes_controller.cc
