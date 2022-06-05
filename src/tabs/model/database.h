@@ -8,6 +8,7 @@
 
 #include "../column_header.h"
 #include "../entries.h"
+#include "process_adapter.h"
 #include "profile_adapter.h"
 #include "status_column_record.h"
 
@@ -22,10 +23,11 @@ public:
 
 private:
   std::map<std::string, ProfileTableEntry> profile_data;
-  std::map<std::string, ProcessTableEntry> process_data;
-  std::map<std::string, LogTableEntry> log_data;
+  std::map<uint, ProcessTableEntry>        process_data;
+  std::map<std::string, LogTableEntry>     log_data;
 
   friend class ProfileAdapter<Database>;
+  friend class ProcessAdapter<Database>;
 };
 
 #endif // TABS_MODEL_DATABASE_H

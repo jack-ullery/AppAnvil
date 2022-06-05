@@ -4,7 +4,8 @@
 #include <gtkmm/treeiter.h>
 #include <string>
 
-constexpr auto UNKNOWN_STATUS = "unknown";
+constexpr auto UNKNOWN_STATUS  = "unknown";
+constexpr auto UNKNOWN_PROFILE = "unknown";
 
 struct ProfileTableEntry {
   const std::string profile_name; // Unique, Primary Key
@@ -19,8 +20,8 @@ struct ProfileTableEntry {
 };
 
 struct ProcessTableEntry {
-  const std::string profile_name; // Refrences profile_name from ProfileTabEntry
-  const unsigned int pid;         // Unique
+  std::string profile_name; // Refrences profile_name from ProfileTabEntry
+  const unsigned int pid;   // Unique, Primary Key
   const Gtk::TreeRow row;
 
   ProcessTableEntry(const std::string &_profile_name, const unsigned int &_pid, const Gtk::TreeRow &_row)
