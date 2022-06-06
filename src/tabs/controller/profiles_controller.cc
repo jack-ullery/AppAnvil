@@ -65,7 +65,7 @@ void ProfilesController<ProfilesTab, ColumnRecord, Database, Adapter>::add_data_
 
   for(auto profile = profiles.begin(); profile != profiles.end(); profile++) {
     auto profile_name = profile.key().asString();
-    auto status       = profiles.get(profile_name, UNKNOWN_STATUS).asString();
+    auto status       = profiles.get(profile_name, UNKNOWN_STR).asString();
     adapter.put_data(profile_name, status);
   }
 

@@ -8,6 +8,7 @@
 
 #include "../column_header.h"
 #include "../entries.h"
+#include "log_adapter.h"
 #include "process_adapter.h"
 #include "profile_adapter.h"
 #include "status_column_record.h"
@@ -24,10 +25,14 @@ public:
 private:
   std::map<std::string, ProfileTableEntry> profile_data;
   std::map<uint, ProcessTableEntry>        process_data;
-  std::map<std::string, LogTableEntry>     log_data;
+
+  // Indexed by profile, returns a map of logs
+  // Each log in the retrned map is indexed by the time it was added
+  std::map<std::string, std::map<time_t, LogTableEntry>> log_data;
 
   friend class ProfileAdapter<Database>;
   friend class ProcessAdapter<Database>;
+  friend class LogAdapter<Database>;
 };
 
 #endif // TABS_MODEL_DATABASE_H

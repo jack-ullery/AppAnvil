@@ -2,9 +2,7 @@
 #include "tabs/controller/logs_controller.h"
 #include "tabs/controller/processes_controller.h"
 #include "tabs/controller/profiles_controller.h"
-#include "tabs/model/adapter.h"
 #include "tabs/model/database.h"
-#include "tabs/model/profile_adapter.h"
 #include "tabs/model/status_column_record.h"
 #include "tabs/view/logs.h"
 #include "tabs/view/processes.h"
@@ -96,10 +94,12 @@ typename ConsoleThread<ProfilesController, ProcessesController, LogsController>:
     auto cv_status = cv.condition_variable::wait_until(lock, get_wait_time_point()); // Look into `wait_until`
 
     if(cv_status == std::cv_status::timeout) {
-      // Create a message with the state to refresh for, but no data
-      Message message(REFRESH, last_state, {});
-      // Send the message to the queue, this lets the other thread know what it should do.
-      queue.push(message);
+      if(last_state != LOGS){ // TODO We need to improve how logs are parsed before we can refresh them
+        // Create a message with the state to refresh for, but no data
+        Message message(REFRESH, last_state, {});
+        // Send the message to the queue, this lets the other thread know what it should do.
+        queue.push(message);
+      }
     }
   }
 
@@ -150,4 +150,4 @@ ConsoleThread<ProfilesController, ProcessesController, LogsController>::~Console
   asynchronous_thread.wait();
 }
 
-template class ConsoleThread<ProfilesController<Profiles, StatusColumnRecord, Database, ProfileAdapter<Database>>, ProcessesController<Processes, StatusColumnRecord, Database, ProcessAdapter<Database>>, LogsController<Logs, StatusColumnRecord> >;
+template class ConsoleThread<ProfilesController<Profiles, StatusColumnRecord, Database, ProfileAdapter<Database>>, ProcessesController<Processes, StatusColumnRecord, Database, ProcessAdapter<Database>>, LogsController<Logs, Database, LogAdapter<Database> > >;

@@ -35,7 +35,7 @@ ProfileTableEntry ProfileAdapter<Database>::get_data(const std::string &profile_
 
     if(iter == db->profile_data.end()){
         // No data was found, so make up a fake entry
-        return ProfileTableEntry(profile_name, UNKNOWN_STATUS, Gtk::TreeRow());;
+        return ProfileTableEntry(profile_name, UNKNOWN_STR, Gtk::TreeRow());;
     }
 
     // Return the found entry

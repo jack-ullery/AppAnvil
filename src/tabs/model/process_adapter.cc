@@ -65,7 +65,7 @@ ProcessTableEntry ProcessAdapter<Database>::get_data(const unsigned int &pid){
 
     if(iter == db->process_data.end()){
         // No data was found, so make up a fake entry
-        return ProcessTableEntry(UNKNOWN_PROFILE, pid, Gtk::TreeRow());;
+        return ProcessTableEntry(UNKNOWN_STR, pid, Gtk::TreeRow());;
     }
 
     // Return the found entry
@@ -76,12 +76,6 @@ template<class Database>
 std::shared_ptr<StatusColumnRecord> ProcessAdapter<Database>::get_col_record() {
   return col_record;
 }
-
-// template<class Database>
-// const std::vector<ColumnHeader> ProcessAdapter<Database>::col_names{ColumnHeader("Process Name"), 
-//                                                                     ColumnHeader("User"),
-//                                                                     ColumnHeader("Pid", ColumnHeader::ColumnType::INT), 
-//                                                                     ColumnHeader("Status")};
 
 template<class Database>
 ProcessAdapter<Database>::ProcessAdapter(std::shared_ptr<Database> db, 

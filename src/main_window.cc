@@ -8,7 +8,7 @@ MainWindow::MainWindow()
     : database{new Database()},
       prof_control{new ProfilesControllerInstance(database)},
       proc_control{new ProcessesControllerInstance(database)},
-      logs_control{new LogsControllerInstance()},
+      logs_control{new LogsControllerInstance(database)},
       profile_loader_control{new ProfileLoaderControllerInstance()},
       help{new Help()},
       console{new ConsoleThreadInstance(prof_control, proc_control, logs_control)}
