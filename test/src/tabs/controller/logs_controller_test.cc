@@ -14,13 +14,12 @@ using ::testing::Return;
 using ::testing::Sequence;
 
 // Test Fixture for Logs class
-class LogsTest : public ::testing::Test
+class LogsControllerTest : public ::testing::Test
 {
 protected:
-  LogsTest() 
+  LogsControllerTest() 
   : adapter_mock{new LogAdapterMock()}, 
     col_record_mock{new StatusColumnRecordMock()},
-    row_mock{new TreeRowMock()}, 
     logs_view_mock{new LogsMock()},
     logs_controller{new LogsControllerChild(adapter_mock, logs_view_mock)}
   { }
@@ -50,41 +49,12 @@ protected:
   // Mock objects
   std::shared_ptr<LogAdapterMock> adapter_mock;
   std::shared_ptr<StatusColumnRecordMock> col_record_mock;
-  std::shared_ptr<TreeRowMock> row_mock;
   std::shared_ptr<LogsMock> logs_view_mock;
   std::shared_ptr<LogsControllerChild> logs_controller;
 };
 
-// // Test for method format_log_data
-// TEST_F(LogsTest, TEST_FORMAT_LOG_DATA)
-// {
-//   std::string formatted_type      = logs_controller->format_log_data(sample_log_data_type);
-//   std::string formatted_operation = logs_controller->format_log_data(sample_log_data_operation);
-//   std::string formatted_status    = logs_controller->format_log_data(sample_log_data_status);
-
-//   ASSERT_TRUE(formatted_type.find('\"') == std::string::npos) << "sample type should not contain quotation marks after formatting";
-//   ASSERT_TRUE(formatted_operation.find('\"') == std::string::npos)
-//       << "sample operation should not contain quotation marks after formatting";
-//   ASSERT_TRUE(formatted_status.find('\"') == std::string::npos) << "sample status should not contain quotation marks after formatting";
-//   EXPECT_EQ(formatted_type, "STATUS") << "error formatting sample type from log data";
-//   EXPECT_EQ(formatted_operation, "profile_load") << "error formatting sample operation from log data";
-//   EXPECT_EQ(formatted_status, "unconfined") << "error formatting sample status from log data";
-// }
-
-// // Test for method format_timestamp
-// TEST_F(LogsTest, TEST_FORMAT_TIMESTAMP)
-// {
-//   std::string formatted_timestamp = logs_controller->format_timestamp(sample_log_data_timestamp);
-//   std::string formatted_zerotime  = logs_controller->format_timestamp(zerotime);
-
-//   bool res = std::regex_match(formatted_timestamp, timestamp_regex);
-//   ASSERT_TRUE(res) << "formatted timestamp does not match regex";
-//   res = std::regex_match(formatted_zerotime, timestamp_regex);
-//   ASSERT_TRUE(res) << "formatted zerotime does not match regex";
-// }
-
 // Test for method add_row_from_json
-TEST_F(LogsTest, TEST_ADD_ROW_FROM_JSON)
+TEST_F(LogsControllerTest, TEST_ADD_ROW_FROM_JSON)
 {
   Json::Value root;
   Json::CharReaderBuilder builder;
@@ -103,7 +73,7 @@ TEST_F(LogsTest, TEST_ADD_ROW_FROM_JSON)
 }
 
 // Test for method add_data_to_record with a valid argument passed
-TEST_F(LogsTest, TEST_ADD_DATA_TO_RECORD_VALID)
+TEST_F(LogsControllerTest, TEST_ADD_DATA_TO_RECORD_VALID)
 {
   uint arbitrary_num = 42;
   Sequence add_row_calls;
@@ -134,7 +104,7 @@ TEST_F(LogsTest, TEST_ADD_DATA_TO_RECORD_VALID)
 }
 
 // Test for method add_data_to_record with an invalid argument passed
-TEST_F(LogsTest, TEST_ADD_DATA_TO_RECORD_INVALID)
+TEST_F(LogsControllerTest, TEST_ADD_DATA_TO_RECORD_INVALID)
 {
   EXPECT_CALL(*adapter_mock, put_data(_, _, _, _, _, _)).Times(0);
   EXPECT_CALL(*adapter_mock, get_col_record()).Times(0);
@@ -143,7 +113,7 @@ TEST_F(LogsTest, TEST_ADD_DATA_TO_RECORD_INVALID)
 }
 
 // Test for method refresh()
-TEST_F(LogsTest, TEST_REFRESH)
+TEST_F(LogsControllerTest, TEST_REFRESH)
 {
   Sequence refresh_sequence;
   unsigned int arbitrary_num = 1234;

@@ -16,6 +16,9 @@ public:
   // Initializes the database adapter
   LogAdapter(std::shared_ptr<Database> db, const std::shared_ptr<Gtk::TreeView> &view, const std::shared_ptr<Gtk::ScrolledWindow> &win);
 
+  // For unit-tests
+  LogAdapter(std::shared_ptr<Database> db);
+
   void put_data(const time_t &timestamp,
                 const std::string &type, 
                 const std::string &operation,

@@ -13,12 +13,10 @@
 class LogsControllerChild : public LogsController<LogsMock, Database, LogAdapterMock>
 {
 public:
-  FRIEND_TEST(LogsTest, TEST_FORMAT_LOG_DATA);
-  FRIEND_TEST(LogsTest, TEST_FORMAT_TIMESTAMP);
-  FRIEND_TEST(LogsTest, TEST_ADD_ROW_FROM_JSON);
-  FRIEND_TEST(LogsTest, TEST_ADD_DATA_TO_RECORD_VALID);
-  FRIEND_TEST(LogsTest, TEST_ADD_DATA_TO_RECORD_INVALID);
-  FRIEND_TEST(LogsTest, TEST_REFRESH);
+  FRIEND_TEST(LogsControllerTest, TEST_ADD_ROW_FROM_JSON);
+  FRIEND_TEST(LogsControllerTest, TEST_ADD_DATA_TO_RECORD_VALID);
+  FRIEND_TEST(LogsControllerTest, TEST_ADD_DATA_TO_RECORD_INVALID);
+  FRIEND_TEST(LogsControllerTest, TEST_REFRESH);
 
   explicit LogsControllerChild(std::shared_ptr<LogAdapterMock> adapter, std::shared_ptr<LogsMock> logs) 
     : LogsController(adapter, logs) 

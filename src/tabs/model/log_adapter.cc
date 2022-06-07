@@ -112,4 +112,10 @@ LogAdapter<Database>::LogAdapter(std::shared_ptr<Database> db,
     col_record{StatusColumnRecord::create(view, win, col_names)}  
 {   }
 
+template<class Database>
+LogAdapter<Database>::LogAdapter(std::shared_ptr<Database> db)
+  : db{db},
+    col_record{nullptr} // TODO: Make a generic col_record, not have nullptr  
+{   }
+
 template class LogAdapter<Database>;
