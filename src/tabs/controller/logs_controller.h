@@ -23,7 +23,6 @@ public:
   void refresh();
 
 protected:
-  static std::string format_log_data(const std::string &data);
   void add_row_from_json(const Json::Value &entry);
 
 private:
