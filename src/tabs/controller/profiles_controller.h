@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-template<class ProfilesTab, class ColumnRecord, class Database, class Adapter> class ProfilesController : public StatusController<ProfilesTab>
+template<class ProfilesTab, class Database, class Adapter> class ProfilesController : public StatusController<ProfilesTab>
 {
 public:
   explicit ProfilesController(std::shared_ptr<Database> database);

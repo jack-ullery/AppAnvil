@@ -1,7 +1,6 @@
 #include "processes_controller.h"
 #include "../model/database.h"
 #include "../model/process_adapter.h"
-#include "../model/status_column_record.h"
 #include "../view/processes.h"
 #include "status_controller.h"
 
@@ -10,8 +9,8 @@
 // clang-tidy throws [cert-err58-cpp], but it's not a problem in this case, so lets ignore it.
 const std::regex unconfined_proc("^\\s*(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(unconfined|\\S+ \\(\\S+\\))\\s+(\\S+)"); // NOLINT(cert-err58-cpp)
 
-template<class ProcessesTab, class ColumnRecord, class Database, class Adapter> 
-void ProcessesController<ProcessesTab, ColumnRecord, Database, Adapter>::add_row_from_line(const std::string &line)
+template<class ProcessesTab, class Database, class Adapter> 
+void ProcessesController<ProcessesTab, Database, Adapter>::add_row_from_line(const std::string &line)
 {
   std::smatch match;
   std::regex_search(line, match, unconfined_proc);
@@ -26,8 +25,8 @@ void ProcessesController<ProcessesTab, ColumnRecord, Database, Adapter>::add_row
 }
 
 
-template<class ProcessesTab, class ColumnRecord, class Database, class Adapter> 
-void ProcessesController<ProcessesTab, ColumnRecord, Database, Adapter>::add_data_to_record(const std::string &unconfined)
+template<class ProcessesTab, class Database, class Adapter> 
+void ProcessesController<ProcessesTab, Database, Adapter>::add_data_to_record(const std::string &unconfined)
 {
   std::stringstream data;
   data << unconfined;
@@ -40,27 +39,27 @@ void ProcessesController<ProcessesTab, ColumnRecord, Database, Adapter>::add_dat
   refresh();
 }
 
-template<class ProcessesTab, class ColumnRecord, class Database, class Adapter> 
-void ProcessesController<ProcessesTab, ColumnRecord, Database, Adapter>::refresh()
+template<class ProcessesTab, class Database, class Adapter> 
+void ProcessesController<ProcessesTab, Database, Adapter>::refresh()
 {
   uint num_visible = adapter.get_col_record()->filter_rows();
   proc->set_status_label_text(" " + std::to_string(num_visible) + " matching processes");
 }
 
-template<class ProcessesTab, class ColumnRecord, class Database, class Adapter> 
-ProcessesController<ProcessesTab, ColumnRecord, Database, Adapter>::ProcessesController(std::shared_ptr<Database> database)
+template<class ProcessesTab, class Database, class Adapter> 
+ProcessesController<ProcessesTab, Database, Adapter>::ProcessesController(std::shared_ptr<Database> database)
   : proc{StatusController<ProcessesTab>::get_tab()}, 
     adapter(database, proc->get_view(), proc->get_window())
 {
   // Set the Processes<ColumnRecord>::refresh function to be called whenever
   // the searchbar and checkboxes are updated
-  auto func = sigc::mem_fun(*this, &ProcessesController<ProcessesTab, ColumnRecord, Database, Adapter>::refresh);
+  auto func = sigc::mem_fun(*this, &ProcessesController<ProcessesTab, Database, Adapter>::refresh);
   proc->set_refresh_signal_handler(func);
 
-  auto filter_fun = sigc::mem_fun(*this, &ProcessesController<ProcessesTab, ColumnRecord, Database, Adapter>::filter);
+  auto filter_fun = sigc::mem_fun(*this, &ProcessesController<ProcessesTab, Database, Adapter>::filter);
   adapter.get_col_record()->set_visible_func(filter_fun);
 }
 
 // Used to avoid linker errors
 // For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
-template class ProcessesController<Processes, StatusColumnRecord, Database, ProcessAdapter<Database>>;
+template class ProcessesController<Processes, Database, ProcessAdapter<Database>>;

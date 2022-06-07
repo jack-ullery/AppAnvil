@@ -1,7 +1,6 @@
 #include "profiles_controller.h"
 #include "../model/database.h"
 #include "../model/profile_adapter.h"
-#include "../model/status_column_record.h"
 #include "../view/profiles.h"
 
 #include "jsoncpp/json/json.h"
@@ -17,24 +16,24 @@
 #include <tuple>
 #include <vector>
 
-template<class ProfilesTab, class ColumnRecord, class Database, class Adapter> 
-bool ProfilesController<ProfilesTab, ColumnRecord, Database, Adapter>::on_button_event(GdkEventButton* event){
+template<class ProfilesTab, class Database, class Adapter> 
+bool ProfilesController<ProfilesTab, Database, Adapter>::on_button_event(GdkEventButton* event){
   std::ignore=event;
 
   handle_profile_selected();
   return false;
 }
 
-template<class ProfilesTab, class ColumnRecord, class Database, class Adapter> 
-bool ProfilesController<ProfilesTab, ColumnRecord, Database, Adapter>::on_key_event(GdkEventKey* event){
+template<class ProfilesTab, class Database, class Adapter> 
+bool ProfilesController<ProfilesTab, Database, Adapter>::on_key_event(GdkEventKey* event){
   std::ignore=event;
 
   handle_profile_selected();
   return false;
 }
 
-template<class ProfilesTab, class ColumnRecord, class Database, class Adapter> 
-void ProfilesController<ProfilesTab, ColumnRecord, Database, Adapter>::handle_profile_selected(){
+template<class ProfilesTab, class Database, class Adapter> 
+void ProfilesController<ProfilesTab, Database, Adapter>::handle_profile_selected(){
   // Check if there is any row selected
   auto selection = prof->get_view()->get_selection();
   auto row_selected = selection->count_selected_rows() == 1;
@@ -57,8 +56,8 @@ void ProfilesController<ProfilesTab, ColumnRecord, Database, Adapter>::handle_pr
 
 // add_data_to_record() is based on assumptions about the output of aa-status.
 // If those assumptions are incorrect, or aa-status changes, this could crash.
-template<class ProfilesTab, class ColumnRecord, class Database, class Adapter> 
-void ProfilesController<ProfilesTab, ColumnRecord, Database, Adapter>::add_data_to_record(const std::string &data)
+template<class ProfilesTab, class Database, class Adapter> 
+void ProfilesController<ProfilesTab, Database, Adapter>::add_data_to_record(const std::string &data)
 {
   Json::Value root     = StatusController<ProfilesTab>::parse_JSON(data);
   Json::Value profiles = root["profiles"];
@@ -72,27 +71,27 @@ void ProfilesController<ProfilesTab, ColumnRecord, Database, Adapter>::add_data_
   refresh();
 }
 
-template<class ProfilesTab, class ColumnRecord, class Database, class Adapter> 
-void ProfilesController<ProfilesTab, ColumnRecord, Database, Adapter>::refresh()
+template<class ProfilesTab, class Database, class Adapter> 
+void ProfilesController<ProfilesTab, Database, Adapter>::refresh()
 {
   uint num_visible = adapter.get_col_record()->filter_rows();
   prof->set_status_label_text(" " + std::to_string(num_visible) + " matching profiles");
   handle_profile_selected();
 }
 
-template<class ProfilesTab, class ColumnRecord, class Database, class Adapter> 
-void ProfilesController<ProfilesTab, ColumnRecord, Database, Adapter>::set_apply_label_text(const std::string &str){
+template<class ProfilesTab, class Database, class Adapter> 
+void ProfilesController<ProfilesTab, Database, Adapter>::set_apply_label_text(const std::string &str){
   prof->set_apply_label_text(str);
 }
 
-template<class ProfilesTab, class ColumnRecord, class Database, class Adapter> 
-ProfilesController<ProfilesTab, ColumnRecord, Database, Adapter>::ProfilesController(std::shared_ptr<Database> database) 
+template<class ProfilesTab, class Database, class Adapter> 
+ProfilesController<ProfilesTab, Database, Adapter>::ProfilesController(std::shared_ptr<Database> database) 
   : StatusController<ProfilesTab>(),
     prof{StatusController<ProfilesTab>::get_tab()},
     adapter(database, prof->get_view(), prof->get_window())
 {
 
-  auto func = sigc::mem_fun(*this, &ProfilesController<ProfilesTab, ColumnRecord, Database, Adapter>::refresh);
+  auto func = sigc::mem_fun(*this, &ProfilesController<ProfilesTab, Database, Adapter>::refresh);
   prof->set_refresh_signal_handler(func);
 
   auto filter_fun = sigc::mem_fun(*this, &ProfilesController::filter);
@@ -110,4 +109,4 @@ ProfilesController<ProfilesTab, ColumnRecord, Database, Adapter>::ProfilesContro
 
 // Used to avoid linker errors
 // For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
-template class ProfilesController<Profiles, StatusColumnRecord, Database, ProfileAdapter<Database> >;
+template class ProfilesController<Profiles, Database, ProfileAdapter<Database>>;

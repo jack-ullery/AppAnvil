@@ -77,8 +77,8 @@ protected:
 private:
   // A set of Typedeffed classes, to handle dependency injection
   // This lowers the amount of repeated <..> symbols
-  typedef ProfilesController<Profiles, StatusColumnRecord, Database, ProfileAdapter<Database>> ProfilesControllerInstance;
-  typedef ProcessesController<Processes, StatusColumnRecord, Database, ProcessAdapter<Database>> ProcessesControllerInstance;
+  typedef ProfilesController<Profiles, Database, ProfileAdapter<Database>> ProfilesControllerInstance;
+  typedef ProcessesController<Processes, Database, ProcessAdapter<Database>> ProcessesControllerInstance;
   typedef LogsController<Logs, Database, LogAdapter<Database>> LogsControllerInstance;
   typedef ProfileLoaderController<ProfileLoader> ProfileLoaderControllerInstance;
 

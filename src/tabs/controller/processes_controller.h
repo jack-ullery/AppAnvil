@@ -7,7 +7,7 @@
 #include <regex>
 #include <string>
 
-template<class ProcessesTab, class ColumnRecord, class Database, class Adapter> class ProcessesController : public StatusController<ProcessesTab>
+template<class ProcessesTab, class Database, class Adapter> class ProcessesController : public StatusController<ProcessesTab>
 {
 public:
   explicit ProcessesController(std::shared_ptr<Database> database);
