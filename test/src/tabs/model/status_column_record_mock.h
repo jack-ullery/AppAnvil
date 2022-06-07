@@ -1,6 +1,7 @@
 #ifndef TEST_SRC_TABS_MODEL_STATUS_COLUMN_RECORD_MOCK_TEST_H
 #define TEST_SRC_TABS_MODEL_STATUS_COLUMN_RECORD_MOCK_TEST_H
 
+#include "tree_row_mock.h"
 #include "../../../../src/tabs/column_header.h"
 
 #include <gmock/gmock.h>
@@ -12,13 +13,6 @@
 #include <gtkmm/treestore.h>
 #include <gtkmm/treeview.h>
 #include <tuple>
-
-class TreeRowMock
-{
-public:
-  MOCK_METHOD(void, set_value, (const uint &index, const std::string &data));
-  MOCK_METHOD(void, set_value, (const uint &index, const unsigned long &data));
-};
 
 class StatusColumnRecordMock
 {
