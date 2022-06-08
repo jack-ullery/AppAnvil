@@ -17,10 +17,10 @@ Gtk::TreeRow ProcessAdapter<Database>::add_row(const std::string &profile_name,
     Gtk::TreeRow row;
 
     if(ppid > 0) {
-    auto parent_row = col_record->get_parent_by_pid(ppid);
-    row             = col_record->new_child_row(parent_row);
+        auto parent_row = col_record->get_parent_by_pid(ppid);
+        row             = col_record->new_child_row(parent_row);
     } else {
-    row = col_record->new_row();
+        row = col_record->new_row();
     }
 
     row->set_value(0, profile_name); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
@@ -43,33 +43,50 @@ void ProcessAdapter<Database>::put_data(const std::string &profile_name,
     }
 
     // Attempt to find an entry with this profile name
-    auto iter = db->process_data.find(pid);
+    auto entry_pair  = get_data(profile_name, pid);
+    bool entry_found = entry_pair.second;
 
-    if(iter == db->process_data.end()){
+    if(entry_found){
+        // A pre-existing entry was found, so we should modify it
+        ProcessTableEntry entry = entry_pair.first;
+        entry.profile_name=profile_name;
+
+        entry.row->set_value(1, user);         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        entry.row->set_value(3, status);       // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    }
+    else {
         // If not entry was found, we should create one
+        // create a new row
         auto row = ProcessAdapter<Database>::add_row(profile_name, pid, ppid, user, status);
 
         ProcessTableEntry entry(profile_name, pid, row);
-        db->process_data.emplace(pid, entry);
-    }
-    else {
-        // A pre-existing entry was found, so we should modify it
-        ProcessTableEntry entry = iter->second;
-        entry.profile_name=profile_name;
+
+        // Assume no map of logs exists with this profile_name, and attempt to add a new one 
+        auto emplace_iter = db->process_data.emplace(profile_name, std::map<uint, ProcessTableEntry>());
+
+        // Get the map that we just added (or the one that existed previously)
+        std::map<uint, ProcessTableEntry> pid_map = emplace_iter.first->second;
+
+        // Add the entry to the table
+        pid_map.emplace(pid, entry);
     }
 }
 
 template<class Database>
-ProcessTableEntry ProcessAdapter<Database>::get_data(const unsigned int &pid){
-    auto iter = db->process_data.find(pid);
-
-    if(iter == db->process_data.end()){
-        // No data was found, so make up a fake entry
-        return ProcessTableEntry(UNKNOWN_STR, pid, Gtk::TreeRow());;
+std::pair<ProcessTableEntry, bool> ProcessAdapter<Database>::get_data(std::string profile_name, const unsigned int &pid)
+{
+    auto pid_map_iter = db->process_data.find(profile_name);
+    if(pid_map_iter != db->process_data.end()){
+        auto pid_map = pid_map_iter->second;
+        auto iter = pid_map.find(pid);
+        if(iter != pid_map.end()){
+            // We actually found some data, so return the found data
+            return std::pair<ProcessTableEntry, bool>(iter->second, true);
+        }
     }
 
-    // Return the found entry
-    return iter->second;
+    // If the entry is not found
+    return std::pair<ProcessTableEntry, bool>(ProcessTableEntry(), false);
 }
 
 template<class Database>

@@ -19,15 +19,18 @@ public:
   // Initializes the database
   Database() = default;
 
-  // void put_process_data(const std::string &profile_name, const unsigned int &pid);
-  // void put_log_data(const std::string &profile_name, const unsigned int &pid, const std::string &timestamp, const std::string &type, const std::string &operation);
+  // The number of processes at this profile
+  uint num_processes(std::string profile);
 
 private:
   std::map<std::string, ProfileTableEntry> profile_data;
-  std::map<uint, ProcessTableEntry>        process_data;
+
+  // Indexed by profile, returns a map of procesess
+  // Each process in the returned map is indexed by the pid it was added
+  std::map<std::string, std::map<uint, ProcessTableEntry>> process_data;
 
   // Indexed by profile, returns a map of logs
-  // Each log in the retrned map is indexed by the time it was added
+  // Each log in the returned map is indexed by the time it was added
   std::map<std::string, std::map<time_t, LogTableEntry>> log_data;
 
   friend class ProfileAdapter<Database>;
