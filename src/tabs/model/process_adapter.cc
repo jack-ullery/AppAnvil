@@ -8,7 +8,7 @@
 const std::regex unconfined_proc("^\\s*(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(unconfined|\\S+ \\(\\S+\\))\\s+(\\S+)"); // NOLINT(cert-err58-cpp)
 
 template<class Database>
-Gtk::TreeRow ProcessAdapter<Database>::add_row(const std::string &profile_name, 
+Gtk::TreeRow ProcessAdapter<Database>::add_row(const std::string &process_name, 
                                                  const unsigned int &pid,  
                                                  const unsigned int &ppid, 
                                                  const std::string &user, 
@@ -23,7 +23,7 @@ Gtk::TreeRow ProcessAdapter<Database>::add_row(const std::string &profile_name,
         row = col_record->new_row();
     }
 
-    row->set_value(0, profile_name); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    row->set_value(0, process_name); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     row->set_value(1, user);         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     row->set_value(2, pid);          // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     row->set_value(3, status);       // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
@@ -32,7 +32,8 @@ Gtk::TreeRow ProcessAdapter<Database>::add_row(const std::string &profile_name,
 }
 
 template<class Database>
-void ProcessAdapter<Database>::put_data(const std::string &profile_name, 
+void ProcessAdapter<Database>::put_data(const std::string &process_name,
+                                        const std::string &profile_name, 
                                         const unsigned int &pid,  
                                         const unsigned int &ppid, 
                                         const std::string &user, 
@@ -43,12 +44,13 @@ void ProcessAdapter<Database>::put_data(const std::string &profile_name,
     }
 
     // Attempt to find an entry with this profile name
-    auto entry_pair  = get_data(profile_name, pid);
+    auto entry_pair  = get_data(process_name, pid);
     bool entry_found = entry_pair.second;
 
     if(entry_found){
         // A pre-existing entry was found, so we should modify it
         ProcessTableEntry entry = entry_pair.first;
+        entry.process_name=process_name;
         entry.profile_name=profile_name;
 
         entry.row->set_value(1, user);         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
@@ -57,11 +59,11 @@ void ProcessAdapter<Database>::put_data(const std::string &profile_name,
     else {
         // If not entry was found, we should create one
         // create a new row
-        auto row = ProcessAdapter<Database>::add_row(profile_name, pid, ppid, user, status);
+        auto row = ProcessAdapter<Database>::add_row(process_name, pid, ppid, user, status);
 
-        ProcessTableEntry entry(profile_name, pid, row);
+        ProcessTableEntry entry(process_name, profile_name, pid, row);
 
-        // Assume no map of logs exists with this profile_name, and attempt to add a new one 
+        // Assume no map of logs exists with this process_name, and attempt to add a new one 
         auto emplace_iter = db->process_data.emplace(profile_name, std::map<uint, ProcessTableEntry>());
 
         // Get the map that we just added (or the one that existed previously)

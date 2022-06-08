@@ -27,12 +27,14 @@ struct ProfileTableEntry {
 };
 
 struct ProcessTableEntry {
-  std::string profile_name; // Refrences profile_name from ProfileTabEntry
+  std::string process_name;
+  std::string profile_name; // Refrences profile_name from ProfileTabEntry (if not null)
   const unsigned int pid;   // Unique, Primary Key
   const Gtk::TreeRow row;
 
-  ProcessTableEntry(const std::string &_profile_name, const unsigned int &_pid, const Gtk::TreeRow &_row)
-  : profile_name{_profile_name}, 
+  ProcessTableEntry(const std::string &_process_name, const std::string &_profile_name, const unsigned int &_pid, const Gtk::TreeRow &_row)
+  : process_name{_process_name},
+    profile_name{_profile_name}, 
     pid{_pid}, 
     row{_row} 
   { }

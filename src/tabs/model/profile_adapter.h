@@ -21,6 +21,10 @@ public:
 
   std::shared_ptr<StatusColumnRecord> get_col_record();
 
+  // Number of processes with a profile
+  // TODO: Need to clean up Adapter/DB, maybe make Adapter inherit DB somehow
+  uint get_number_processes(std::string profile);
+
 private:
   std::shared_ptr<Database> db;
 

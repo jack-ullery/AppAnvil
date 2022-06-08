@@ -46,8 +46,10 @@ void ProfilesController<ProfilesTab, Database, Adapter>::handle_profile_selected
     row.get_value(0, profile_name);
     
     ProfileTableEntry entry = adapter.get_data(profile_name); 
+    uint num_proc = adapter.get_number_processes(profile_name);
 
-    prof->set_profile_info(entry.status, "Not implemented yet!", "Not implemented yet!");
+    prof->set_profile_info(entry.status, "Not implemented yet!", std::to_string(num_proc) + " running processes");
+
     prof->show_profile_info();
   } else {
     prof -> hide_profile_info();

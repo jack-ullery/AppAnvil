@@ -20,7 +20,8 @@ public:
   Database() = default;
 
   // The number of processes at this profile
-  uint num_processes(std::string profile);
+  // TODO: Maybe we can store and retrieve this data in the profile table entry instead?
+  uint get_number_processes(std::string profile);
 
 private:
   std::map<std::string, ProfileTableEntry> profile_data;

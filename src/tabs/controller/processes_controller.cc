@@ -4,10 +4,15 @@
 #include "../view/processes.h"
 #include "status_controller.h"
 
+#include <regex>
 #include <string>
+#include <iostream>
 
 // clang-tidy throws [cert-err58-cpp], but it's not a problem in this case, so lets ignore it.
 const std::regex unconfined_proc("^\\s*(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(unconfined|\\S+ \\(\\S+\\))\\s+(\\S+)"); // NOLINT(cert-err58-cpp)
+
+// TODO: This is pretty buggy currently, we should fix it
+const std::regex confined_prof("^\\s*(.+)\\s+\\((enforce|complain)\\)"); // NOLINT(cert-err58-cpp)
 
 template<class ProcessesTab, class Database, class Adapter> 
 void ProcessesController<ProcessesTab, Database, Adapter>::add_row_from_line(const std::string &line)
@@ -15,13 +20,21 @@ void ProcessesController<ProcessesTab, Database, Adapter>::add_row_from_line(con
   std::smatch match;
   std::regex_search(line, match, unconfined_proc);
 
-  unsigned int pid   = stoul(match[1]); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  unsigned int ppid  = stoul(match[2]); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  std::string user   = match[3];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  std::string status = match[4];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  std::string comm   = match[5];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  unsigned int pid    = stoul(match[1]); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  unsigned int ppid   = stoul(match[2]); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  std::string user    = match[3];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  std::string status  = match[4];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  std::string process = match[5];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-  adapter.put_data(comm, pid, ppid, user, status);
+  // Attempt to get the profile that confines this process (if availible)
+  std::string profile = "";
+  bool is_confined = std::regex_match(status, match, confined_prof);
+  if(is_confined){
+    profile = match[1]; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    std::cout<<profile<<std::endl;
+  }
+
+  adapter.put_data(process, profile, pid, ppid, user, status);
 }
 
 

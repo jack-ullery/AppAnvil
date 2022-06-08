@@ -48,6 +48,11 @@ std::shared_ptr<StatusColumnRecord> ProfileAdapter<Database>::get_col_record() {
 }
 
 template<class Database>
+uint ProfileAdapter<Database>::get_number_processes(std::string profile){
+    return db->get_number_processes(profile);
+}
+
+template<class Database>
 ProfileAdapter<Database>::ProfileAdapter(std::shared_ptr<Database> db, 
                                          const std::shared_ptr<Gtk::TreeView> &view, 
                                          const std::shared_ptr<Gtk::ScrolledWindow> &win)

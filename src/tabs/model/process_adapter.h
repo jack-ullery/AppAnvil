@@ -16,7 +16,13 @@ public:
   // Initializes the database adapter
   ProcessAdapter(std::shared_ptr<Database> db, const std::shared_ptr<Gtk::TreeView> &view, const std::shared_ptr<Gtk::ScrolledWindow> &win);
 
-  void put_data(const std::string &profile_name, const unsigned int &pid,  const unsigned int &ppid, const std::string &user, const std::string &status);
+  void put_data(const std::string &process_name,
+                const std::string &profile_name,
+                const unsigned int &pid,
+                const unsigned int &ppid,
+                const std::string &user,
+                const std::string &status);
+  
   std::pair<ProcessTableEntry, bool> get_data(std::string profile_name, const unsigned int &pid);
 
   std::shared_ptr<StatusColumnRecord> get_col_record();
