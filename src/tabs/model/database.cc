@@ -1,6 +1,6 @@
 #include "database.h"
 
-uint Database::get_number_processes(std::string profile) {
+uint Database::get_number_processes(const std::string &profile) {
     auto pid_map = process_data.find(profile);
     
     if(pid_map == process_data.end()){

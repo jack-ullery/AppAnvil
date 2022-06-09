@@ -94,7 +94,7 @@ typename ConsoleThread<ProfilesController, ProcessesController, LogsController>:
     auto cv_status = cv.condition_variable::wait_until(lock, get_wait_time_point()); // Look into `wait_until`
 
     if(cv_status == std::cv_status::timeout) {
-      if(last_state != LOGS){ // TODO We need to improve how logs are parsed before we can refresh them
+      if(last_state != LOGS){ // TODO(logs-parse): We need to improve how logs are parsed before we can refresh them
         // Create a message with the state to refresh for, but no data
         Message message(REFRESH, last_state, {});
         // Send the message to the queue, this lets the other thread know what it should do.

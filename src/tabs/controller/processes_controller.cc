@@ -4,14 +4,14 @@
 #include "../view/processes.h"
 #include "status_controller.h"
 
+#include <iostream>
 #include <regex>
 #include <string>
-#include <iostream>
 
 // clang-tidy throws [cert-err58-cpp], but it's not a problem in this case, so lets ignore it.
 const std::regex unconfined_proc("^\\s*(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(unconfined|\\S+ \\(\\S+\\))\\s+(\\S+)"); // NOLINT(cert-err58-cpp)
 
-// TODO: This is pretty buggy currently, we should fix it
+// TODO(regex): This is pretty buggy currently, we should fix it
 const std::regex confined_prof("^\\s*(.+)\\s+\\((enforce|complain)\\)"); // NOLINT(cert-err58-cpp)
 
 template<class ProcessesTab, class Database, class Adapter> 
@@ -27,7 +27,7 @@ void ProcessesController<ProcessesTab, Database, Adapter>::add_row_from_line(con
   std::string process = match[5];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
   // Attempt to get the profile that confines this process (if availible)
-  std::string profile = "";
+  std::string profile;
   bool is_confined = std::regex_match(status, match, confined_prof);
   if(is_confined){
     profile = match[1]; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)

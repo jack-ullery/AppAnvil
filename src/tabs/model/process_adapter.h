@@ -29,7 +29,7 @@ public:
 
 protected:
   // Helper function for "put_data", creates and returns a new row.
-  Gtk::TreeRow add_row(const std::string &profile_name, const unsigned int &pid,  const unsigned int &ppid, const std::string &user, const std::string &status);
+  Gtk::TreeRow add_row(const std::string &process_name, const unsigned int &pid,  const unsigned int &ppid, const std::string &user, const std::string &status);
 
 private:
   std::shared_ptr<Database> db;

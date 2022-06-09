@@ -115,7 +115,7 @@ LogAdapter<Database>::LogAdapter(std::shared_ptr<Database> db,
 template<class Database>
 LogAdapter<Database>::LogAdapter(std::shared_ptr<Database> db)
   : db{db},
-    col_record{nullptr} // TODO: Make a generic col_record, not have nullptr  
+    col_record{nullptr} // TODO(test-construction): Make a generic col_record, not have nullptr  
 {   }
 
 template class LogAdapter<Database>;

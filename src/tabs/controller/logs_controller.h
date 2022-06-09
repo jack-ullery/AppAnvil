@@ -16,7 +16,7 @@ public:
   // For production
   explicit LogsController(std::shared_ptr<Database> database);
   // For unit testing
-  explicit LogsController(std::shared_ptr<Adapter> column_record, std::shared_ptr<LogsTab> logs);
+  explicit LogsController(std::shared_ptr<Adapter> adapter, std::shared_ptr<LogsTab> logs);
 
   virtual void add_data_to_record(const std::string &data);
   unsigned int num_visible_rows(); 
