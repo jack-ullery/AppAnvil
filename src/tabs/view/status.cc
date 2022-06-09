@@ -83,6 +83,10 @@ Status::Status(const std::string& glade_resource)
   s_win->set_hexpand();
   s_win->set_vexpand();
 
+  // Make the searchbox invisible, until show_searchbar() is called
+  s_searchbox->set_no_show_all(true);
+  hide_searchbar();
+
   this->add(*s_box);
 }
 

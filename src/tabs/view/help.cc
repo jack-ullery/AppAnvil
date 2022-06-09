@@ -26,6 +26,10 @@ Help::Help()
   h_box->set_hexpand();
   h_box->set_vexpand();
 
+  // Make the searchbox invisible, until show_searchbar() is called
+  h_searchbox->set_no_show_all(true);
+  hide_searchbar();
+
   this->add(*h_box);
 }
 

@@ -79,9 +79,6 @@ MainWindow::MainWindow()
 
   // Hide the side info in the Profiles Tab
   prof_control->get_tab()->hide_profile_info();
-
-  // Hide all tabs with a searchbar
-  on_search_toggle();
 }
 
 void MainWindow::send_status_change(const std::string &profile, const std::string &old_status, const std::string &new_status)
