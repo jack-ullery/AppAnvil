@@ -56,7 +56,7 @@ public:
 
   void hide_searchbar();
 
-  void show_searchbar();
+  void show_searchbar(const bool &should_focus);
 
 protected:
   explicit Status(const std::string& glade_resource);

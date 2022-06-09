@@ -59,9 +59,13 @@ void Status::hide_searchbar()
   s_searchbox->hide();
 }
 
-void Status::show_searchbar()
+void Status::show_searchbar(const bool &should_focus)
 {
   s_searchbox->show();
+
+  if(should_focus){
+    s_search->grab_focus();
+  }
 }
 
 Status::Status(const std::string& glade_resource)

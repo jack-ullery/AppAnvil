@@ -38,9 +38,13 @@ void Help::hide_searchbar()
   h_searchbox->hide();
 }
 
-void Help::show_searchbar()
+void Help::show_searchbar(const bool &should_focus)
 {
   h_searchbox->show();
+
+  if(should_focus){
+    h_search->grab_focus();
+  }
 }
 
 void Help::set_return_signal_handler(const Glib::SignalProxy<void>::SlotType &func){

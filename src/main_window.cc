@@ -113,13 +113,15 @@ void MainWindow::untoggle_help(){
 
 void MainWindow::on_search_toggle()
 {
+  std::string visible_child = m_tab_stack.get_visible_child_name();
   bool is_active = m_search_button.get_active();
 
   if(is_active){
-    prof_control->get_tab()->show_searchbar();
-    proc_control->get_tab()->show_searchbar();
-    logs_control->get_tab()->show_searchbar();
-    help->show_searchbar();
+    // Show the searchbars, and determine which searchbar should be focused
+    prof_control->get_tab()->show_searchbar(visible_child == "prof");
+    proc_control->get_tab()->show_searchbar(visible_child == "proc");
+    logs_control->get_tab()->show_searchbar(visible_child == "logs");
+    help->show_searchbar(m_help_button.get_active());
   }
   else {
     prof_control->get_tab()->hide_searchbar();
