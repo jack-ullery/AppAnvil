@@ -150,4 +150,4 @@ ConsoleThread<ProfilesController, ProcessesController, LogsController>::~Console
   asynchronous_thread.wait();
 }
 
-template class ConsoleThread<ProfilesController<Profiles, Database, ProfileAdapter<Database>>, ProcessesController<Processes, Database, ProcessAdapter<Database>>, LogsController<Logs, Database, LogAdapter<Database> > >;
+template class ConsoleThread<ProfilesController<Profiles, Database, ProfileAdapter<Database>>, ProcessesController<Processes, Database, ProcessAdapter<Database>>, LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord> > >;

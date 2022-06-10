@@ -77,4 +77,4 @@ LogsController<LogsTab, Database, Adapter>::LogsController(std::shared_ptr<Datab
 
 // Used to avoid linker errors
 // For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
-template class LogsController<Logs, Database, LogAdapter<Database>>;
+template class LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord>>;

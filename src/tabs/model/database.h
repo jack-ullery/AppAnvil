@@ -36,7 +36,7 @@ private:
 
   friend class ProfileAdapter<Database>;
   friend class ProcessAdapter<Database>;
-  friend class LogAdapter<Database>;
+  friend class LogAdapter<Database, StatusColumnRecord>;
 };
 
 #endif // TABS_MODEL_DATABASE_H

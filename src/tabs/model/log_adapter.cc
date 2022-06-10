@@ -1,13 +1,14 @@
 #include "database.h"
 #include "log_adapter.h"
+#include "status_column_record.h"
 
 #include <cstddef>
 #include <iomanip>
 #include <regex>
 #include <stdexcept>
 
-template<class Database>
-std::string LogAdapter<Database>::format_log_data(const std::string &data)
+template<class Database, class ColumnRecord>
+std::string LogAdapter<Database, ColumnRecord>::format_log_data(const std::string &data)
 {
   const std::regex remove_quotes = std::regex("\\\"(\\S*)\\\"");
   std::smatch m;
@@ -15,8 +16,8 @@ std::string LogAdapter<Database>::format_log_data(const std::string &data)
   return m[1];
 }
 
-template<class Database>
-std::string LogAdapter<Database>::format_timestamp(const time_t &timestamp)
+template<class Database, class ColumnRecord>
+std::string LogAdapter<Database, ColumnRecord>::format_timestamp(const time_t &timestamp)
 {
   std::stringstream stream;
 
@@ -26,8 +27,8 @@ std::string LogAdapter<Database>::format_timestamp(const time_t &timestamp)
   return stream.str() + '\t';
 }
 
-template<class Database>
-void LogAdapter<Database>::put_data(const time_t &timestamp,
+template<class Database, class ColumnRecord>
+void LogAdapter<Database, ColumnRecord>::put_data(const time_t &timestamp,
                                     const std::string &type,
                                     const std::string &operation,
                                     const std::string &profile_name,
@@ -82,8 +83,8 @@ void LogAdapter<Database>::put_data(const time_t &timestamp,
     }
 }
 
-template<class Database>
-std::pair<LogTableEntry, bool> LogAdapter<Database>::get_data(const std::string &profile_name, const time_t &timestamp)
+template<class Database, class ColumnRecord>
+std::pair<LogTableEntry, bool> LogAdapter<Database, ColumnRecord>::get_data(const std::string &profile_name, const time_t &timestamp)
 {
     auto time_map_iter = db->log_data.find(profile_name);
     if(time_map_iter != db->log_data.end()){
@@ -99,23 +100,23 @@ std::pair<LogTableEntry, bool> LogAdapter<Database>::get_data(const std::string 
     return std::pair<LogTableEntry, bool>(LogTableEntry(), false);
 }
 
-template<class Database>
-std::shared_ptr<StatusColumnRecord> LogAdapter<Database>::get_col_record() {
+template<class Database, class ColumnRecord>
+std::shared_ptr<ColumnRecord> LogAdapter<Database, ColumnRecord>::get_col_record() {
   return col_record;
 }
 
-template<class Database>
-LogAdapter<Database>::LogAdapter(std::shared_ptr<Database> db, 
-                                         const std::shared_ptr<Gtk::TreeView> &view, 
-                                         const std::shared_ptr<Gtk::ScrolledWindow> &win)
+template<class Database, class ColumnRecord>
+LogAdapter<Database, ColumnRecord>::LogAdapter(std::shared_ptr<Database> db, 
+                                 const std::shared_ptr<Gtk::TreeView> &view, 
+                                 const std::shared_ptr<Gtk::ScrolledWindow> &win)
   : db{db},
-    col_record{StatusColumnRecord::create(view, win, col_names)}  
+    col_record{ColumnRecord::create(view, win, col_names)}  
 {   }
 
-template<class Database>
-LogAdapter<Database>::LogAdapter(std::shared_ptr<Database> db)
+template<class Database, class ColumnRecord>
+LogAdapter<Database, ColumnRecord>::LogAdapter(std::shared_ptr<Database> db, std::shared_ptr<ColumnRecord> mock)
   : db{db},
     col_record{nullptr} // TODO(test-construction): Make a generic col_record, not have nullptr  
 {   }
 
-template class LogAdapter<Database>;
+template class LogAdapter<Database, StatusColumnRecord>;

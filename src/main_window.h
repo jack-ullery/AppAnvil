@@ -79,7 +79,7 @@ private:
   // This lowers the amount of repeated <..> symbols
   typedef ProfilesController<Profiles, Database, ProfileAdapter<Database>> ProfilesControllerInstance;
   typedef ProcessesController<Processes, Database, ProcessAdapter<Database>> ProcessesControllerInstance;
-  typedef LogsController<Logs, Database, LogAdapter<Database>> LogsControllerInstance;
+  typedef LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord>> LogsControllerInstance;
   typedef ProfileLoaderController<ProfileLoader> ProfileLoaderControllerInstance;
 
   typedef ConsoleThread<ProfilesControllerInstance,
