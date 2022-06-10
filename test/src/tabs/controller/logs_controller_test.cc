@@ -93,7 +93,6 @@ TEST_F(LogsControllerTest, TEST_ADD_DATA_TO_RECORD_VALID)
 
   EXPECT_CALL(*col_record_mock, filter_rows())
     .Times(1)
-    .InSequence(add_row_calls)
     .WillOnce(Return(arbitrary_num));
 
   EXPECT_CALL(*logs_view_mock, set_status_label_text(::HasSubstr(std::to_string(arbitrary_num) + " logs")))
@@ -125,7 +124,6 @@ TEST_F(LogsControllerTest, TEST_REFRESH)
 
   EXPECT_CALL(*col_record_mock, filter_rows())
     .Times(1)
-    .InSequence(refresh_sequence)
     .WillOnce(Return(arbitrary_num));
 
   EXPECT_CALL(*logs_view_mock, set_status_label_text(::HasSubstr(std::to_string(arbitrary_num))))
