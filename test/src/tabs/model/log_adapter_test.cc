@@ -1,6 +1,5 @@
 #include "jsoncpp/json/json.h"
 #include "log_adapter_test.h"
-#include "../model/database_mock.h"
 #include "../model/status_column_record_mock.h"
 
 #include <gmock/gmock-matchers.h>
@@ -15,8 +14,8 @@ class LogAdapterTest : public ::testing::Test
 protected:
   LogAdapterTest() 
   : col_record_mock{new StatusColumnRecordMock()},
-    database_mock{new DatabaseMock()},
-    log_adapter(database_mock)
+    database{new DatabaseChild()},
+    log_adapter(database, col_record_mock)
   { }
 
   // Some of the sample snippets of information below were taken from the output of running 'journalctl -b "_AUDIT_TYPE=1400" --output=json'
@@ -32,7 +31,7 @@ protected:
 
   // Mock objects
   std::shared_ptr<StatusColumnRecordMock> col_record_mock;
-  std::shared_ptr<DatabaseMock> database_mock;
+  std::shared_ptr<DatabaseChild> database;
 
   LogAdapterChild log_adapter;
 };
@@ -63,3 +62,17 @@ TEST_F(LogAdapterTest, TEST_FORMAT_TIMESTAMP)
   res = std::regex_match(formatted_zerotime, timestamp_regex);
   ASSERT_TRUE(res) << "formatted zerotime does not match regex";
 }
+
+// // Test for method put_data
+// TEST_F(LogAdapterTest, TEST_PUT_DATA)
+// {
+//   const time_t timestamp = sample_log_data_timestamp;
+//   const std::string type = "test_type";
+//   const std::string operation = "test_operation";
+//   const std::string profile_name = "test_profile_name";
+//   const unsigned int pid = 42;
+//   const std::string status = "test_status";
+
+//   log_adapter.put_data(timestamp, type, operation, profile_name, pid, status);
+//   ASSERT_TRUE(false) << "This test is not completed yet!!!";
+// }
