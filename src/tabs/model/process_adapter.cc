@@ -4,9 +4,6 @@
 #include <regex>
 #include <stdexcept>
 
-// clang-tidy throws [cert-err58-cpp], but it's not a problem in this case, so lets ignore it.
-const std::regex unconfined_proc("^\\s*(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(unconfined|\\S+ \\(\\S+\\))\\s+(\\S+)"); // NOLINT(cert-err58-cpp)
-
 template<class Database, class ColumnRecord>
 Gtk::TreeRow ProcessAdapter<Database, ColumnRecord>::add_row(const std::string &process_name, 
                                                  const unsigned int &pid,  
