@@ -36,42 +36,46 @@ void ProcessAdapter<Database, ColumnRecord>::put_data(const std::string &process
                                         const std::string &user, 
                                         const std::string &status)
 {
-    if(col_record == nullptr){
-        throw std::runtime_error("Error: Attempted to write to ColumnRecord (Profile) before it was registered.");
+    // Attempt to find an map with this profile name
+    auto map_pair = db->process_data.find(profile_name);
+
+    // The map (indexed by pid) that we will add to
+    std::map<uint, ProcessTableEntry> pid_map = map_pair->second;
+
+    // Check that we actually found the map
+    if(map_pair == db->process_data.end()) {
+        // Create new map if no previous one was found
+        pid_map = std::map<uint, ProcessTableEntry>();
     }
 
-    // Attempt to find an entry with this profile name
-    auto entry_pair  = get_data(process_name, pid);
-    bool entry_found = entry_pair.second;
+    // Attempt to find an entry with this profile
+    auto entry_pair = pid_map.find(pid);
 
-    if(entry_found){
+    // Check that we actually found the entry
+    if(entry_pair != pid_map.end()) {
         // A pre-existing entry was found, so we should modify it
-        ProcessTableEntry entry = entry_pair.first;
+        ProcessTableEntry entry = entry_pair->second;
         entry.process_name=process_name;
         entry.profile_name=profile_name;
 
-        entry.row->set_value(1, user);         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-        entry.row->set_value(3, status);       // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        entry.row->set_value(1, user);   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        entry.row->set_value(3, status); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+
+        // Add the entry to the map
+        pid_map.insert({pid, entry});
     }
     else {
         // If not entry was found, we should create one
-        // create a new row
         auto row = ProcessAdapter<Database, ColumnRecord>::add_row(process_name, pid, ppid, user, status);
         ProcessTableEntry entry(process_name, profile_name, pid, row);
 
-        // No map of logs exists with this process_name, and attempt to add a new one 
-        std::map<uint, ProcessTableEntry> pid_map{};
+        // Add the entry to the map
         pid_map.insert({pid, entry});
-        db->process_data.insert({profile_name, pid_map});
-
-        // auto emplace_iter = db->process_data.emplace(profile_name, std::map<uint, ProcessTableEntry>());
-
-        // Get the map that we just added (or the one that existed previously)
-        // std::map<uint, ProcessTableEntry> pid_map = emplace_iter.first->second;
-
-        // Add the entry to the table
-        // pid_map.emplace(pid, entry);
     }
+
+    // A weird way of updating our profile in the map (because insert_or_assign does not exist with C++11)
+    db->process_data.erase(profile_name);
+    db->process_data.insert({profile_name, pid_map});
 }
 
 template<class Database, class ColumnRecord>
