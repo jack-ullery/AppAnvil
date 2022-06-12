@@ -57,17 +57,20 @@ void ProcessAdapter<Database, ColumnRecord>::put_data(const std::string &process
         // If not entry was found, we should create one
         // create a new row
         auto row = ProcessAdapter<Database, ColumnRecord>::add_row(process_name, pid, ppid, user, status);
-
         ProcessTableEntry entry(process_name, profile_name, pid, row);
 
-        // Assume no map of logs exists with this process_name, and attempt to add a new one 
-        auto emplace_iter = db->process_data.emplace(profile_name, std::map<uint, ProcessTableEntry>());
+        // No map of logs exists with this process_name, and attempt to add a new one 
+        std::map<uint, ProcessTableEntry> pid_map{};
+        pid_map.insert({pid, entry});
+        db->process_data.insert({profile_name, pid_map});
+
+        // auto emplace_iter = db->process_data.emplace(profile_name, std::map<uint, ProcessTableEntry>());
 
         // Get the map that we just added (or the one that existed previously)
-        std::map<uint, ProcessTableEntry> pid_map = emplace_iter.first->second;
+        // std::map<uint, ProcessTableEntry> pid_map = emplace_iter.first->second;
 
         // Add the entry to the table
-        pid_map.emplace(pid, entry);
+        // pid_map.emplace(pid, entry);
     }
 }
 
