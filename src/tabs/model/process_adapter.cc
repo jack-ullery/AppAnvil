@@ -7,8 +7,8 @@
 // clang-tidy throws [cert-err58-cpp], but it's not a problem in this case, so lets ignore it.
 const std::regex unconfined_proc("^\\s*(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(unconfined|\\S+ \\(\\S+\\))\\s+(\\S+)"); // NOLINT(cert-err58-cpp)
 
-template<class Database>
-Gtk::TreeRow ProcessAdapter<Database>::add_row(const std::string &process_name, 
+template<class Database, class ColumnRecord>
+Gtk::TreeRow ProcessAdapter<Database, ColumnRecord>::add_row(const std::string &process_name, 
                                                  const unsigned int &pid,  
                                                  const unsigned int &ppid, 
                                                  const std::string &user, 
@@ -31,8 +31,8 @@ Gtk::TreeRow ProcessAdapter<Database>::add_row(const std::string &process_name,
     return row;
 }
 
-template<class Database>
-void ProcessAdapter<Database>::put_data(const std::string &process_name,
+template<class Database, class ColumnRecord>
+void ProcessAdapter<Database, ColumnRecord>::put_data(const std::string &process_name,
                                         const std::string &profile_name, 
                                         const unsigned int &pid,  
                                         const unsigned int &ppid, 
@@ -59,7 +59,7 @@ void ProcessAdapter<Database>::put_data(const std::string &process_name,
     else {
         // If not entry was found, we should create one
         // create a new row
-        auto row = ProcessAdapter<Database>::add_row(process_name, pid, ppid, user, status);
+        auto row = ProcessAdapter<Database, ColumnRecord>::add_row(process_name, pid, ppid, user, status);
 
         ProcessTableEntry entry(process_name, profile_name, pid, row);
 
@@ -74,8 +74,8 @@ void ProcessAdapter<Database>::put_data(const std::string &process_name,
     }
 }
 
-template<class Database>
-std::pair<ProcessTableEntry, bool> ProcessAdapter<Database>::get_data(std::string profile_name, const unsigned int &pid)
+template<class Database, class ColumnRecord>
+std::pair<ProcessTableEntry, bool> ProcessAdapter<Database, ColumnRecord>::get_data(std::string profile_name, const unsigned int &pid)
 {
     auto pid_map_iter = db->process_data.find(profile_name);
     if(pid_map_iter != db->process_data.end()){
@@ -91,17 +91,23 @@ std::pair<ProcessTableEntry, bool> ProcessAdapter<Database>::get_data(std::strin
     return std::pair<ProcessTableEntry, bool>(ProcessTableEntry(), false);
 }
 
-template<class Database>
-std::shared_ptr<StatusColumnRecord> ProcessAdapter<Database>::get_col_record() {
+template<class Database, class ColumnRecord>
+std::shared_ptr<ColumnRecord> ProcessAdapter<Database, ColumnRecord>::get_col_record() {
   return col_record;
 }
 
-template<class Database>
-ProcessAdapter<Database>::ProcessAdapter(std::shared_ptr<Database> db, 
+template<class Database, class ColumnRecord>
+ProcessAdapter<Database, ColumnRecord>::ProcessAdapter(std::shared_ptr<Database> db, 
                                          const std::shared_ptr<Gtk::TreeView> &view, 
                                          const std::shared_ptr<Gtk::ScrolledWindow> &win)
   : db{db},
     col_record{StatusColumnRecord::create(view, win, col_names)}  
 {   }
 
-template class ProcessAdapter<Database>;
+template<class Database, class ColumnRecord>
+LogAdapter<Database, ColumnRecord>::LogAdapter(std::shared_ptr<Database> db, std::shared_ptr<ColumnRecord> mock)
+  : db{db},
+    col_record{mock}  
+{   }
+
+template class ProcessAdapter<Database, StatusColumnRecord>;

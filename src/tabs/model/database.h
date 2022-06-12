@@ -35,7 +35,7 @@ private:
   std::map<std::string, std::map<time_t, LogTableEntry>> log_data;
 
   friend class ProfileAdapter<Database>;
-  friend class ProcessAdapter<Database>;
+  friend class ProcessAdapter<Database, StatusColumnRecord>;
   friend class LogAdapter<Database, StatusColumnRecord>;
 };
 

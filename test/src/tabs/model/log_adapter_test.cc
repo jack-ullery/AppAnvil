@@ -1,12 +1,18 @@
 #include "jsoncpp/json/json.h"
 #include "log_adapter_test.h"
 #include "../model/status_column_record_mock.h"
+#include "tree_row_mock.h"
 
 #include <gmock/gmock-matchers.h>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <gtkmm/treestore.h>
 #include <regex>
 #include <string>
+
+using ::testing::_;
+using ::testing::Matcher;
+using ::testing::Return;
 
 // Test Fixture for Logs class
 class LogAdapterTest : public ::testing::Test
@@ -14,9 +20,9 @@ class LogAdapterTest : public ::testing::Test
 protected:
   LogAdapterTest() 
   : col_record_mock{new StatusColumnRecordMock()},
-    database{new DatabaseChild()},
+    database{new DatabaseMock()},
     log_adapter(database, col_record_mock)
-  { }
+    { }
 
   // Some of the sample snippets of information below were taken from the output of running 'journalctl -b "_AUDIT_TYPE=1400" --output=json'
   // in the terminal. They are mostly used to verify that information is being formatted correctly in format_log_data and format_timestamp.
@@ -31,7 +37,7 @@ protected:
 
   // Mock objects
   std::shared_ptr<StatusColumnRecordMock> col_record_mock;
-  std::shared_ptr<DatabaseChild> database;
+  std::shared_ptr<DatabaseMock> database;
 
   LogAdapterChild log_adapter;
 };
@@ -73,6 +79,23 @@ TEST_F(LogAdapterTest, TEST_FORMAT_TIMESTAMP)
 //   const unsigned int pid = 42;
 //   const std::string status = "test_status";
 
-//   log_adapter.put_data(timestamp, type, operation, profile_name, pid, status);
-//   ASSERT_TRUE(false) << "This test is not completed yet!!!";
+//   TreeRowMock row_mock{};
+//   ASSERT_FALSE( row_mock == NULL) << "Row should not be null (1)";
+
+//   EXPECT_CALL(*col_record_mock, new_row())
+//     .Times(1)
+//     .WillOnce(Return(row_mock));
+
+//   // EXPECT_CALL(*row_mock, set_value(_, Matcher<const std::string&>(_))).Times(4);
+//   // EXPECT_CALL(*row_mock, set_value(_, Matcher<const unsigned int&>(_))).Times(1);
+
+//   Gtk::TreeStore store();
+
+//   auto row = col_record_mock->new_row();
+//   ASSERT_FALSE(row == NULL) << "Mocked row should not be null";
+
+//   row->set_value(1, pid);
+
+//   // log_adapter.put_data(timestamp, type, operation, profile_name, pid, status);
+//   // ASSERT_TRUE(false) << "This test is not completed yet!!!";
 // }

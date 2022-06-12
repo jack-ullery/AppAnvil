@@ -151,6 +151,13 @@ bool StatusColumnRecord::pid_exists_in_child(unsigned int pid, const Gtk::TreeRo
 }
 
 /*
+    Protected Methods
+*/
+StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Status> tab, const std::vector<ColumnHeader> &names)
+  : StatusColumnRecord(tab->get_view(), tab->get_window(), names)
+{ }
+
+/*
     Private Methods
 */
 StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, 

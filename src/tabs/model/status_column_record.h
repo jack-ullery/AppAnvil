@@ -2,6 +2,7 @@
 #define TABS_STATUS_COLUMN_RECORD_H
 
 #include "../column_header.h"
+#include "../view/status.h"
 
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/treeiter.h>
@@ -102,6 +103,10 @@ public:
   Gtk::TreeRow get_parent_by_pid(unsigned int pid);
   Gtk::TreeRow get_parent_by_pid(unsigned int pid, const Gtk::TreeRow &parent);
   bool pid_exists_in_child(unsigned int pid, const Gtk::TreeRow &parent);
+
+protected:
+  StatusColumnRecord(const std::shared_ptr<Status> tab,
+                     const std::vector<ColumnHeader> &names);
 
 private:
   struct RowData {

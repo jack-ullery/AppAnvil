@@ -31,7 +31,6 @@ void ProcessesController<ProcessesTab, Database, Adapter>::add_row_from_line(con
   bool is_confined = std::regex_match(status, match, confined_prof);
   if(is_confined){
     profile = match[1]; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-    std::cout<<profile<<std::endl;
   }
 
   adapter.put_data(process, profile, pid, ppid, user, status);
@@ -75,4 +74,4 @@ ProcessesController<ProcessesTab, Database, Adapter>::ProcessesController(std::s
 
 // Used to avoid linker errors
 // For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
-template class ProcessesController<Processes, Database, ProcessAdapter<Database>>;
+template class ProcessesController<Processes, Database, ProcessAdapter<Database, StatusColumnRecord>>;

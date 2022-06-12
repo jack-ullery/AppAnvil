@@ -3,6 +3,7 @@
 #include "status_column_record.h"
 
 #include <cstddef>
+#include <gtkmm/treeiter.h>
 #include <iomanip>
 #include <regex>
 #include <stdexcept>
@@ -59,15 +60,17 @@ void LogAdapter<Database, ColumnRecord>::put_data(const time_t &timestamp,
     }
     else {
         // create a new row
-        auto row = col_record->new_row();
+        // auto row = col_record->new_row();
+        const Gtk::TreeRow row = col_record->new_row();
+
 
         // clang-format off
-        row->set_value(0, format_timestamp(timestamp)); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-        row->set_value(1, format_log_data(type));       // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-        row->set_value(2, format_log_data(operation));  // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-        row->set_value(3, profile_name);                // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-        row->set_value(4, pid);                         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-        row->set_value(5, format_log_data(status));     // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        row.set_value(0, format_timestamp(timestamp)); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        row.set_value(1, format_log_data(type));       // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        row.set_value(2, format_log_data(operation));  // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        row.set_value(3, profile_name);                // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        row.set_value(4, pid);                         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+        row.set_value(5, format_log_data(status));     // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
         // clang-format on
 
         LogTableEntry entry(timestamp, type, operation, profile_name, pid, row);

@@ -3,12 +3,16 @@
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <gtkmm/treeiter.h>
 
-class TreeRowMock
+class TreeRowMock : public Gtk::TreeRow
 {
 public:
-  MOCK_METHOD(void, set_value, (const uint &index, const std::string &data));
-  MOCK_METHOD(void, set_value, (const uint &index, const unsigned long &data));
+  TreeRowMock() = default;
+  TreeRowMock(const TreeRowMock&){};
+
+  MOCK_METHOD(void, set_value, (int column, const std::string &data));
+  MOCK_METHOD(void, set_value, (int column, const unsigned int& data));
 };
 
 #endif
