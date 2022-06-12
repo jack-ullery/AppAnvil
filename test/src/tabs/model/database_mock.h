@@ -13,6 +13,9 @@ public:
   std::map<std::string, ProfileTableEntry> profile_data;
   std::map<std::string, std::map<uint, ProcessTableEntry>> process_data;
   std::map<std::string, std::map<time_t, LogTableEntry>> log_data;
+
+  // Copied from the real Database
+  uint get_number_processes(const std::string &profile);
 };
 
 #endif
