@@ -21,9 +21,8 @@ class ProfileAdapterTest : public ::testing::Test
 protected:
   ProfileAdapterTest() 
   : database{new DatabaseMock()},
-    profiles_controller(database),
-    proc{profiles_controller.get_tab()},
-    adapter(database, proc->get_view(), proc->get_window())
+    status{new Status()},
+    adapter(database, status->get_view(), status->get_window())
   { }
 
 protected:
@@ -35,8 +34,7 @@ protected:
 
   // Test objects
   std::shared_ptr<DatabaseMock> database;
-  ProfilesController<Profiles, DatabaseMock, ProfileAdapter<DatabaseMock>> profiles_controller;
-  std::shared_ptr<Status> proc;
+  std::shared_ptr<Status> status;
   ProfileAdapter<DatabaseMock> adapter;
 
   // Helper methods

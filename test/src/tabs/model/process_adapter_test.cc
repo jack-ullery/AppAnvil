@@ -9,6 +9,8 @@
 #include <gmock/gmock-matchers.h>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <gtkmm/treeview.h>
+#include <gtkmm/window.h>
 #include <memory>
 #include <regex>
 #include <string>
@@ -21,9 +23,8 @@ class ProcessAdapterTest : public ::testing::Test
 protected:
   ProcessAdapterTest() 
   : database{new DatabaseMock()},
-    processes_controller(database),
-    proc{processes_controller.get_tab()},
-    adapter(database, proc->get_view(), proc->get_window())
+    status{new Status()},
+    adapter(database, status->get_view(), status->get_window())
   { }
 
 protected:
@@ -41,8 +42,7 @@ protected:
 
   // Test objects
   std::shared_ptr<DatabaseMock> database;
-  ProcessesController<Processes, DatabaseMock, ProcessAdapter<DatabaseMock, StatusColumnRecord>> processes_controller;
-  std::shared_ptr<Status> proc;
+  std::shared_ptr<Status> status;
   ProcessAdapter<DatabaseMock, StatusColumnRecord> adapter;
 
   // Helper methods
@@ -82,7 +82,7 @@ void ProcessAdapterTest::check_process_entry(ProcessTableEntry entry, const std:
 void ProcessAdapterTest::check_put_data(std::vector<ProcessAdapterTest::TestData> data_set, uint num_maps){
   ASSERT_TRUE(database->profile_data.empty())  << "We did not add any profile data, so this map should be empty.";
   ASSERT_TRUE(database->log_data.empty())      << "We did not add any log data, so this map should be empty.";
-  ASSERT_FALSE(database->process_data.empty()) << "We added " << data_set.size() << " instances ofProcessEntry, so this map should not be empty.";
+  ASSERT_FALSE(database->process_data.empty()) << "We added " << data_set.size() << " instances of ProcessEntry, so this map should not be empty.";
 
   ASSERT_EQ(data_set.size(), entry_count()) << "We expected exactly " << data_set.size() << " entries in the database.";
   ASSERT_EQ(database->process_data.size(), num_maps);
@@ -148,4 +148,3 @@ TEST_F(ProcessAdapterTest, PUT_OVERRIDE_SAME_PROCESS)
   try_put_data(input_data_set);
   check_put_data(output_data_set, 1);
 }
-
