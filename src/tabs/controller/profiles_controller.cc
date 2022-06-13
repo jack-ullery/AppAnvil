@@ -45,12 +45,15 @@ void ProfilesController<ProfilesTab, Database, Adapter>::handle_profile_selected
     std::string profile_name;
     row.get_value(0, profile_name);
     
-    ProfileTableEntry entry = adapter.get_data(profile_name); 
-    uint num_proc = adapter.get_number_processes(profile_name);
+    auto entry_pair = adapter.get_data(profile_name); 
+    auto entry = entry_pair.first;
+    bool found = entry_pair.second;
 
-    prof->set_profile_info(entry.status, "Not implemented yet!", std::to_string(num_proc) + " running processes");
-
-    prof->show_profile_info();
+    if(found){
+      uint num_proc = adapter.get_number_processes(profile_name);
+      prof->set_profile_info(entry.status, "Not implemented yet!", std::to_string(num_proc) + " running processes");
+      prof->show_profile_info();
+    }
   } else {
     prof -> hide_profile_info();
   }

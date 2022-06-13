@@ -30,16 +30,16 @@ void ProfileAdapter<Database>::put_data(const std::string &profile_name, const s
 }
 
 template<class Database>
-ProfileTableEntry ProfileAdapter<Database>::get_data(const std::string &profile_name){
+std::pair<ProfileTableEntry, bool> ProfileAdapter<Database>::get_data(const std::string &profile_name){
     auto iter = db->profile_data.find(profile_name);
 
     if(iter == db->profile_data.end()){
         // No data was found, so make up a fake entry
-        return ProfileTableEntry(profile_name, UNKNOWN_STR, Gtk::TreeRow());;
+        return {ProfileTableEntry(profile_name, UNKNOWN_STR, Gtk::TreeRow()), false};
     }
 
     // Return the found entry
-    return iter->second;
+    return {iter->second, true};
 }
 
 template<class Database>
@@ -58,6 +58,12 @@ ProfileAdapter<Database>::ProfileAdapter(std::shared_ptr<Database> db,
                                          const std::shared_ptr<Gtk::ScrolledWindow> &win)
   : db{db},
     col_record{StatusColumnRecord::create(view, win, col_names)}  
+{   }
+
+template<class Database>
+ProfileAdapter<Database>::ProfileAdapter(std::shared_ptr<Database> db, std::shared_ptr<StatusColumnRecord> mock)
+  : db{db},
+    col_record{mock}  
 {   }
 
 template class ProfileAdapter<Database>;
