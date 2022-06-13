@@ -109,7 +109,7 @@ ProcessAdapter<Database, ColumnRecord>::ProcessAdapter(std::shared_ptr<Database>
 {   }
 
 template<class Database, class ColumnRecord>
-LogAdapter<Database, ColumnRecord>::LogAdapter(std::shared_ptr<Database> db, std::shared_ptr<ColumnRecord> mock)
+ProcessAdapter<Database, ColumnRecord>::ProcessAdapter(std::shared_ptr<Database> db, std::shared_ptr<ColumnRecord> mock)
   : db{db},
     col_record{mock}  
 {   }
