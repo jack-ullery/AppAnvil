@@ -6,8 +6,10 @@ set(
   ./src/test_runner.cc
   ./src/tabs/controller/logs_controller_test.cc
   ./src/tabs/controller/status_controller_test.cc
+  ./src/tabs/model/database_mock.cc
   ./src/tabs/model/log_adapter_test.cc
   ./src/tabs/model/process_adapter_test.cc
+  ./src/tabs/model/profile_adapter_test.cc
   ./src/tabs/view/status_test.cc
   ./src/threads/command_caller.cc
   ./src/threads/dispatcher_middleman.cc
