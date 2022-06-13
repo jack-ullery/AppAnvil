@@ -10,18 +10,14 @@
 #include <regex>
 #include <string>
 
-using ::testing::_;
-using ::testing::Matcher;
-using ::testing::Return;
-
 // Test Fixture for Logs class
 class LogAdapterTest : public ::testing::Test
 {
 protected:
   LogAdapterTest() 
-  : col_record_mock{new StatusColumnRecordMock()},
-    database{new DatabaseMock()},
-    log_adapter(database, col_record_mock)
+  : database{new DatabaseMock()},
+    status{new Status()},
+    adapter(database, status->get_view(), status->get_window())
     { }
 
   // Some of the sample snippets of information below were taken from the output of running 'journalctl -b "_AUDIT_TYPE=1400" --output=json'
@@ -35,19 +31,33 @@ protected:
   time_t zerotime                       = (time_t) 0;          // Thu Jan 1st 00:00:00 1970 (UTC) (Wed Dec 31 19:00:00 1969 in Eastern Time)
   std::regex timestamp_regex            = std::regex("\\d{4}-\\d{2}-\\d{2}\\s{1}\\d{2}:\\d{2}:\\d{2}\\t");
 
-  // Mock objects
-  std::shared_ptr<StatusColumnRecordMock> col_record_mock;
-  std::shared_ptr<DatabaseMock> database;
+  struct TestData {
+    std::string profile_name = "test_profile_name";
+    unsigned int pid = 42;
+    time_t timestamp = (time_t) 1648234140;
+    std::string type = "\"STATUS\"";
+    std::string operation = "\"profile_load\"";
+    std::string status = "enforce";
+  };
 
-  LogAdapterChild log_adapter;
+  // Test objects
+  std::shared_ptr<DatabaseMock> database;
+  std::shared_ptr<Status> status;
+  LogAdapterChild adapter;
+
+  // Helper methods
+  void try_put_data(std::vector<LogAdapterTest::TestData> data_set);
+  uint entry_count();
+  void check_log_entry(LogTableEntry entry, TestData expected_data);
+  void check_put_data(std::vector<LogAdapterTest::TestData> data_set, uint num_maps);
 };
 
 // Test for method format_log_data
 TEST_F(LogAdapterTest, TEST_FORMAT_LOG_DATA)
 {
-  std::string formatted_type      = log_adapter.format_log_data(sample_log_data_type);
-  std::string formatted_operation = log_adapter.format_log_data(sample_log_data_operation);
-  std::string formatted_status    = log_adapter.format_log_data(sample_log_data_status);
+  std::string formatted_type      = adapter.format_log_data(sample_log_data_type);
+  std::string formatted_operation = adapter.format_log_data(sample_log_data_operation);
+  std::string formatted_status    = adapter.format_log_data(sample_log_data_status);
 
   ASSERT_TRUE(formatted_type.find('\"') == std::string::npos) << "sample type should not contain quotation marks after formatting";
   ASSERT_TRUE(formatted_operation.find('\"') == std::string::npos) << "sample operation should not contain quotation marks after formatting";
@@ -60,8 +70,8 @@ TEST_F(LogAdapterTest, TEST_FORMAT_LOG_DATA)
 // Test for method format_timestamp
 TEST_F(LogAdapterTest, TEST_FORMAT_TIMESTAMP)
 {
-  std::string formatted_timestamp = log_adapter.format_timestamp(sample_log_data_timestamp);
-  std::string formatted_zerotime  = log_adapter.format_timestamp(zerotime);
+  std::string formatted_timestamp = adapter.format_timestamp(sample_log_data_timestamp);
+  std::string formatted_zerotime  = adapter.format_timestamp(zerotime);
 
   bool res = std::regex_match(formatted_timestamp, timestamp_regex);
   ASSERT_TRUE(res) << "formatted timestamp does not match regex";
@@ -69,33 +79,101 @@ TEST_F(LogAdapterTest, TEST_FORMAT_TIMESTAMP)
   ASSERT_TRUE(res) << "formatted zerotime does not match regex";
 }
 
-// // Test for method put_data
-// TEST_F(LogAdapterTest, TEST_PUT_DATA)
-// {
-//   const time_t timestamp = sample_log_data_timestamp;
-//   const std::string type = "test_type";
-//   const std::string operation = "test_operation";
-//   const std::string profile_name = "test_profile_name";
-//   const unsigned int pid = 42;
-//   const std::string status = "test_status";
+void LogAdapterTest::try_put_data(std::vector<LogAdapterTest::TestData> data_set){
+  for(auto data : data_set){
+    adapter.put_data(data.timestamp, data.type, data.operation, data.profile_name, data.pid, data.status);
+  }
+}
 
-//   TreeRowMock row_mock{};
-//   ASSERT_FALSE( row_mock == NULL) << "Row should not be null (1)";
+uint LogAdapterTest::entry_count(){
+  uint num_entry = 0;
+  
+  for(auto map_pair : database->log_data){
+    auto map = map_pair.second;
+    for(auto entry : map){
+      std::ignore = entry;
+      num_entry++;
+    }
+  }
 
-//   EXPECT_CALL(*col_record_mock, new_row())
-//     .Times(1)
-//     .WillOnce(Return(row_mock));
+  return num_entry;
+}
 
-//   // EXPECT_CALL(*row_mock, set_value(_, Matcher<const std::string&>(_))).Times(4);
-//   // EXPECT_CALL(*row_mock, set_value(_, Matcher<const unsigned int&>(_))).Times(1);
+void LogAdapterTest::check_log_entry(LogTableEntry entry, TestData expected_data)
+{
+  ASSERT_EQ(entry.profile_name, expected_data.profile_name);
+  ASSERT_EQ(entry.pid, expected_data.pid);
+  ASSERT_EQ(entry.timestamp, expected_data.timestamp);
+  ASSERT_EQ(entry.type, expected_data.type);
+  ASSERT_EQ(entry.operation, expected_data.operation);
+}
 
-//   Gtk::TreeStore store();
+void LogAdapterTest::check_put_data(std::vector<LogAdapterTest::TestData> data_set, uint num_maps){
+  ASSERT_TRUE(database->profile_data.empty()) << "We did not add any profile data, so this map should be empty.";
+  ASSERT_TRUE(database->process_data.empty()) << "We did not add any process data, so this map should be empty.";
+  ASSERT_FALSE(database->log_data.empty()) << "We added " << data_set.size() << " instances of LogEntry, so this map should not be empty.";
 
-//   auto row = col_record_mock->new_row();
-//   ASSERT_FALSE(row == NULL) << "Mocked row should not be null";
+  ASSERT_EQ(data_set.size(), entry_count()) << "We expected exactly " << data_set.size() << " entries in the database.";
+  ASSERT_EQ(database->log_data.size(), num_maps);
 
-//   row->set_value(1, pid);
+  for(auto data : data_set){
+    // Attempt to retrieve the data
+    auto entry_pair = adapter.get_data(data.profile_name, data.pid);
+    auto entry = entry_pair.first;
+    auto did_find_entry = entry_pair.second;
 
-//   // log_adapter.put_data(timestamp, type, operation, profile_name, pid, status);
-//   // ASSERT_TRUE(false) << "This test is not completed yet!!!";
-// }
+    ASSERT_TRUE(did_find_entry) << "The entry indexed by (" << data.profile_name << ", " << data.pid << ") could not be found";
+    check_log_entry(entry, data);
+  }
+}
+
+// Test for method put_data
+TEST_F(LogAdapterTest, PUT_DATA)
+{
+  TestData data;
+  std::vector<TestData> data_set{data};
+
+  try_put_data(data_set);
+  check_put_data(data_set, 1);
+}
+
+TEST_F(LogAdapterTest, PUT_TWO_PROCESSES_SAME_PROFILE)
+{
+  TestData data;
+
+  TestData data2;
+  data2.pid = 62;
+
+  std::vector<TestData> data_set{data, data2};
+
+  try_put_data(data_set);
+  check_put_data(data_set, 1);
+}
+
+TEST_F(LogAdapterTest, PUT_TWO_PROCESSES_DIFFERENT_PROFILES)
+{
+  TestData data;
+
+  TestData data2;
+  data2.pid = 62;
+  data2.profile_name = "alternate_profile";
+
+  std::vector<TestData> data_set{data, data2};
+  try_put_data(data_set);
+  check_put_data(data_set, 2);
+}
+
+TEST_F(LogAdapterTest, PUT_OVERRIDE_SAME_PROCESS)
+{
+  TestData data;
+
+  TestData data2;
+  data2.profile_name = "alternate_profile_name";
+  data2.status = "complain";
+
+  std::vector<TestData> input_data_set{data, data2};
+  std::vector<TestData> output_data_set{data2};
+
+  try_put_data(input_data_set);
+  check_put_data(output_data_set, 1);
+}

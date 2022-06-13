@@ -10,14 +10,14 @@
 #include <gtest/gtest.h>
 #include <memory>
 
-class LogAdapterChild : public LogAdapter<DatabaseMock, StatusColumnRecordMock>
+class LogAdapterChild : public LogAdapter<DatabaseMock, StatusColumnRecord>
 {
 public:
   FRIEND_TEST(LogAdapterTest, TEST_FORMAT_LOG_DATA);
   FRIEND_TEST(LogAdapterTest, TEST_FORMAT_TIMESTAMP);
 
-  explicit LogAdapterChild(std::shared_ptr<DatabaseMock> db, std::shared_ptr<StatusColumnRecordMock> cr) 
-    : LogAdapter(db, cr)
+  explicit LogAdapterChild(std::shared_ptr<DatabaseMock> db, const std::shared_ptr<Gtk::TreeView> &view, const std::shared_ptr<Gtk::ScrolledWindow> &win)
+    : LogAdapter(db, view, win)
   { }
 };
 
