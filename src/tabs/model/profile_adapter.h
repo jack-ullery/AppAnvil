@@ -26,7 +26,11 @@ public:
 
   // Number of processes with a profile
   // TODO(inherit): Need to clean up Adapter/DB, maybe make Adapter inherit DB somehow
-  uint get_number_processes(std::string profile);
+  uint get_number_processes(const std::string &profile);
+
+  // Number of processes related to a profile
+  // TODO(inherit): Need to clean up Adapter/DB, maybe make Adapter inherit DB somehow
+  uint get_number_logs(const std::string &profile);
 
 private:
   std::shared_ptr<Database> db;

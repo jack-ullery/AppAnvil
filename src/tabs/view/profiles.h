@@ -20,7 +20,7 @@ public:
    */
   void set_apply_label_text(const std::string &str);
 
-  void set_profile_info(const std::string &status, const std::string &num_perms, const std::string &num_procs);
+  void set_profile_info(const std::string &num_logs, const std::string &num_perms, const std::string &num_procs);
 
   void show_profile_info();
   void hide_profile_info();
@@ -41,7 +41,7 @@ private:
   std::shared_ptr<Gtk::Label> p_apply_info_text;
 
   std::shared_ptr<Gtk::Box> p_profile_info;
-  std::shared_ptr<Gtk::Label> p_status_label;
+  std::shared_ptr<Gtk::Label> p_num_log_label;
   std::shared_ptr<Gtk::Label> p_num_proc_label;
   std::shared_ptr<Gtk::Label> p_num_perm_label;
 

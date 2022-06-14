@@ -23,6 +23,10 @@ public:
   // TODO(database): Maybe we can store and retrieve this data in the profile table entry instead?
   uint get_number_processes(const std::string &profile);
 
+  // The number of processes at this profile
+  // TODO(database): Maybe we can store and retrieve this data in the profile table entry instead?
+  uint get_number_logs(const std::string &profile);
+
 private:
   std::map<std::string, ProfileTableEntry> profile_data;
 
@@ -32,7 +36,7 @@ private:
 
   // Indexed by profile, returns a map of logs
   // Each log in the returned map is indexed by the time it was added
-  std::map<std::string, std::map<time_t, LogTableEntry>> log_data;
+  std::map<std::string, std::map<long, LogTableEntry>> log_data;
 
   friend class ProfileAdapter<Database>;
   friend class ProcessAdapter<Database, StatusColumnRecord>;

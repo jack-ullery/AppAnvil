@@ -16,6 +16,7 @@ public:
 
   // Copied from the real Database
   uint get_number_processes(const std::string &profile);
+  uint get_number_logs(const std::string &profile);
 };
 
 #endif

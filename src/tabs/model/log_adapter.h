@@ -31,8 +31,8 @@ public:
   std::shared_ptr<ColumnRecord> get_col_record();
 
 protected:
-  static std::string format_log_data(const std::string &data);
-  static std::string format_timestamp(const time_t &timestamp);
+  static std::string format_log_data(std::string data);
+  static std::string format_timestamp(time_t timestamp);
 
 private:
   std::shared_ptr<Database> db;

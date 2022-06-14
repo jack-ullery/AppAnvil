@@ -52,8 +52,8 @@ void Profiles::set_apply_label_text(const std::string &str) {
   p_apply_info_text->set_text(str);
 }
 
-void Profiles::set_profile_info(const std::string &status, const std::string &num_perms, const std::string &num_procs){
-  p_status_label->set_text(status);
+void Profiles::set_profile_info(const std::string &num_logs, const std::string &num_perms, const std::string &num_procs){
+  p_num_log_label->set_text(num_logs);
   p_num_proc_label->set_text(num_perms);
   p_num_perm_label->set_text(num_procs);
 }
@@ -73,7 +73,7 @@ Profiles::Profiles()
       p_apply_button{get_widget_shared<Gtk::Button>("p_apply_button", builder)},
       p_apply_info_text{get_widget_shared<Gtk::Label>("p_apply_info_text", builder)},
       p_profile_info{get_widget_shared<Gtk::Box>("p_profile_info", builder)},
-      p_status_label{get_widget_shared<Gtk::Label>("p_status_label", builder)},
+      p_num_log_label{get_widget_shared<Gtk::Label>("p_num_log_label", builder)},
       p_num_proc_label{get_widget_shared<Gtk::Label>("p_num_proc_label", builder)},
       p_num_perm_label{get_widget_shared<Gtk::Label>("p_num_perm_label", builder)}
 {

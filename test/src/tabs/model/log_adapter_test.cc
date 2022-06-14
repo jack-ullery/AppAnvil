@@ -118,7 +118,7 @@ void LogAdapterTest::check_put_data(std::vector<LogAdapterTest::TestData> data_s
 
   for(auto data : data_set){
     // Attempt to retrieve the data
-    auto entry_pair = adapter.get_data(data.profile_name, data.pid);
+    auto entry_pair = adapter.get_data(data.profile_name, data.timestamp);
     auto entry = entry_pair.first;
     auto did_find_entry = entry_pair.second;
 
@@ -142,7 +142,7 @@ TEST_F(LogAdapterTest, PUT_TWO_PROCESSES_SAME_PROFILE)
   TestData data;
 
   TestData data2;
-  data2.pid = 62;
+  data2.timestamp = 62;
 
   std::vector<TestData> data_set{data, data2};
 
@@ -155,7 +155,7 @@ TEST_F(LogAdapterTest, PUT_TWO_PROCESSES_DIFFERENT_PROFILES)
   TestData data;
 
   TestData data2;
-  data2.pid = 62;
+  data2.timestamp = 62;
   data2.profile_name = "alternate_profile";
 
   std::vector<TestData> data_set{data, data2};

@@ -48,8 +48,13 @@ std::shared_ptr<StatusColumnRecord> ProfileAdapter<Database>::get_col_record() {
 }
 
 template<class Database>
-uint ProfileAdapter<Database>::get_number_processes(std::string profile){
+uint ProfileAdapter<Database>::get_number_processes(const std::string &profile){
     return db->get_number_processes(profile);
+}
+
+template<class Database>
+uint ProfileAdapter<Database>::get_number_logs(const std::string &profile){
+    return db->get_number_logs(profile);
 }
 
 template<class Database>

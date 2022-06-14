@@ -58,9 +58,11 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="halign">center</property>
+                <property name="margin_left">5</property>
+                <property name="margin_right">5</property>
                 <property name="margin_top">10</property>
                 <property name="margin_bottom">5</property>
-                <property name="label" translatable="yes">Status: </property>
+                <property name="label" translatable="yes">Active Proccesses: </property>
                 <attributes>
                   <attribute name="weight" value="semibold"/>
                 </attributes>
@@ -72,10 +74,12 @@
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="p_status_label">
+              <object class="GtkLabel" id="p_num_perm_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="halign">center</property>
+                <property name="margin_left">5</property>
+                <property name="margin_right">5</property>
                 <property name="margin_bottom">10</property>
               </object>
               <packing>
@@ -89,6 +93,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="halign">center</property>
+                <property name="margin_left">5</property>
+                <property name="margin_right">5</property>
                 <property name="margin_top">10</property>
                 <property name="margin_bottom">5</property>
                 <property name="label" translatable="yes">Number Permissions: </property>
@@ -107,6 +113,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="halign">center</property>
+                <property name="margin_left">5</property>
+                <property name="margin_right">5</property>
                 <property name="margin_bottom">10</property>
               </object>
               <packing>
@@ -120,9 +128,11 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="halign">center</property>
+                <property name="margin_left">5</property>
+                <property name="margin_right">5</property>
                 <property name="margin_top">10</property>
                 <property name="margin_bottom">5</property>
-                <property name="label" translatable="yes">Active Proccesses: </property>
+                <property name="label" translatable="yes">Number Logs: </property>
                 <attributes>
                   <attribute name="weight" value="semibold"/>
                 </attributes>
@@ -134,16 +144,18 @@
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="p_num_perm_label">
+              <object class="GtkLabel" id="p_num_log_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="halign">center</property>
+                <property name="margin_left">5</property>
+                <property name="margin_right">5</property>
                 <property name="margin_bottom">10</property>
               </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">6</property>
+                <property name="position">5</property>
               </packing>
             </child>
           </object>

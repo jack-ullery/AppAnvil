@@ -50,8 +50,9 @@ void ProfilesController<ProfilesTab, Database, Adapter>::handle_profile_selected
     bool found = entry_pair.second;
 
     if(found){
+      uint num_log  = adapter.get_number_logs(profile_name);
       uint num_proc = adapter.get_number_processes(profile_name);
-      prof->set_profile_info(entry.status, "Not implemented yet!", std::to_string(num_proc) + " running processes");
+      prof->set_profile_info(std::to_string(num_log) + " related logs", "Not implemented yet!", std::to_string(num_proc) + " running processes");
       prof->show_profile_info();
     }
   } else {
