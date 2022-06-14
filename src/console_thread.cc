@@ -14,9 +14,15 @@
 
 template<class ProfilesController, class ProcessesController, class LogsController>
 ConsoleThread<ProfilesController, ProcessesController, LogsController>::ConsoleThread(std::shared_ptr<ProfilesController> prof, std::shared_ptr<ProcessesController> proc, std::shared_ptr<LogsController> logs)
-    : last_state{PROFILE}, dispatch_man(std::move(prof), std::move(proc), std::move(logs))
+    : last_state{PROFILE}, 
+      dispatch_man(std::move(prof), std::move(proc), std::move(logs))
 {
   asynchronous_thread = std::async(std::launch::async, &ConsoleThread<ProfilesController, ProcessesController, LogsController>::console_caller, this);
+  
+  // Get all the important data at startup 
+  send_refresh_message(PROFILE);
+  send_refresh_message(PROCESS);
+  send_refresh_message(LOGS);
 }
 
 template<class ProfilesController, class ProcessesController, class LogsController>
