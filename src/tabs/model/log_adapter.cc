@@ -59,20 +59,9 @@ void LogAdapter<Database, ColumnRecord>::put_data(const time_t &timestamp,
 
     // Check that we actually found the entry
     if(entry_pair != time_map.end()) {
-        // A pre-existing entry was found, so we should modify it
-        LogTableEntry entry = entry_pair->second;
-        entry.type = type;
-        entry.operation = operation;
-        entry.profile_name = profile_name;
-
-        // clang-format off
-        entry.row.set_value(1, type);
-        entry.row.set_value(2, operation);
-        entry.row.set_value(3, profile_name);
-        // clang-format on
-
-        // Add the entry to the map
-        time_map.insert({(long) timestamp, entry});
+        // A pre-existing entry was found, so we should return and not modify the db.
+        // This assumes that logs entries are readonly; they do not change over time.
+        return;
     }
     else {
         // If not entry was found, we should create one
