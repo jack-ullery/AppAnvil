@@ -137,7 +137,7 @@ TEST_F(LogAdapterTest, PUT_DATA)
   check_put_data(data_set, 1);
 }
 
-TEST_F(LogAdapterTest, PUT_TWO_PROCESSES_SAME_PROFILE)
+TEST_F(LogAdapterTest, PUT_TWO_LOGS_SAME_PROFILE)
 {
   TestData data;
 
@@ -150,30 +150,14 @@ TEST_F(LogAdapterTest, PUT_TWO_PROCESSES_SAME_PROFILE)
   check_put_data(data_set, 1);
 }
 
-TEST_F(LogAdapterTest, PUT_TWO_PROCESSES_DIFFERENT_PROFILES)
+TEST_F(LogAdapterTest, PUT_TWO_LOGS_DIFFERENT_PROFILES)
 {
   TestData data;
 
   TestData data2;
-  data2.timestamp = 62;
   data2.profile_name = "alternate_profile";
 
   std::vector<TestData> data_set{data, data2};
   try_put_data(data_set);
   check_put_data(data_set, 2);
-}
-
-TEST_F(LogAdapterTest, PUT_OVERRIDE_SAME_PROCESS)
-{
-  TestData data;
-
-  TestData data2;
-  data2.profile_name = "alternate_profile_name";
-  data2.status = "complain";
-
-  std::vector<TestData> input_data_set{data, data2};
-  std::vector<TestData> output_data_set{data2};
-
-  try_put_data(input_data_set);
-  check_put_data(output_data_set, 1);
 }

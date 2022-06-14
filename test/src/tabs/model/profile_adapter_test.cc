@@ -96,7 +96,7 @@ TEST_F(ProfileAdapterTest, PUT_DATA)
   check_put_data(data_set);
 }
 
-TEST_F(ProfileAdapterTest, PUT_TWO_PROCESSES)
+TEST_F(ProfileAdapterTest, PUT_TWO_PROFILES)
 {
   TestData data;
 
@@ -109,7 +109,7 @@ TEST_F(ProfileAdapterTest, PUT_TWO_PROCESSES)
   check_put_data(data_set);
 }
 
-TEST_F(ProfileAdapterTest, PUT_OVERRIDE_SAME_PROCESS)
+TEST_F(ProfileAdapterTest, PUT_OVERRIDE_SAME_PROFILE)
 {
   TestData data;
 
