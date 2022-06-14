@@ -40,12 +40,15 @@ void ProcessAdapter<Database, ColumnRecord>::put_data(const std::string &process
     auto map_pair = db->process_data.find(profile_name);
 
     // The map (indexed by pid) that we will add to
-    std::map<uint, ProcessTableEntry> pid_map = map_pair->second;
+    std::map<uint, ProcessTableEntry> pid_map;
 
     // Check that we actually found the map
     if(map_pair == db->process_data.end()) {
         // Create new map if no previous one was found
         pid_map = std::map<uint, ProcessTableEntry>();
+    }
+    else {
+        pid_map = map_pair->second;
     }
 
     // Attempt to find an entry with this profile
