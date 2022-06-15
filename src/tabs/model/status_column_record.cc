@@ -2,6 +2,7 @@
 
 #include <gtkmm/box.h>
 #include <gtkmm/main.h>
+#include <gtkmm/treeiter.h>
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treemodelsort.h>
 #include <memory>
@@ -33,9 +34,20 @@ void StatusColumnRecord::set_visible_func(const Gtk::TreeModelFilter::SlotVisibl
   filter_model->set_visible_func(filter);
 }
 
-Gtk::TreeRow StatusColumnRecord::new_row() { return *(store->append()); }
+Gtk::TreeRow StatusColumnRecord::new_row()
+{
+  return *(store->append());
+}
 
-Gtk::TreeRow StatusColumnRecord::new_child_row(const Gtk::TreeRow &parent) { return *(store->append(parent.children())); }
+Gtk::TreeRow StatusColumnRecord::new_child_row(const Gtk::TreeRow &parent)
+{
+  return *(store->append(parent.children()));
+}
+
+Gtk::TreeRow StatusColumnRecord::get_row(const Gtk::TreePath &path)
+{
+  return *(sort_model->get_iter(path));
+}
 
 void StatusColumnRecord::clear()
 {
@@ -53,7 +65,7 @@ void StatusColumnRecord::clear()
   }
 
   // Remember the path of every selected or expanded row in the TreeView
-  auto children = store->children();
+  auto children = sort_model->children();
   remember_children_rows(children);
 
   // Remember last position of the ScrolledBar in the ScrolledWindow our TreeView is a member of
@@ -139,9 +151,17 @@ bool StatusColumnRecord::pid_exists_in_child(unsigned int pid, const Gtk::TreeRo
 }
 
 /*
+    Protected Methods
+*/
+StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Status> &tab, const std::vector<ColumnHeader> &names)
+  : StatusColumnRecord(tab->get_view(), tab->get_window(), names)
+{ }
+
+/*
     Private Methods
 */
-StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, const std::shared_ptr<Gtk::ScrolledWindow> &win,
+StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, 
+                                       const std::shared_ptr<Gtk::ScrolledWindow> &win,
                                        const std::vector<ColumnHeader> &names)
     : view{view}, win{win}, filter_fun{sigc::ptr_fun(&StatusColumnRecord::default_filter)}
 {
@@ -194,7 +214,7 @@ void StatusColumnRecord::remember_children_rows(const Gtk::TreeModel::Children &
 {
   for(const auto &row: children) {
     // Get the path
-    Gtk::TreePath path = store->get_path(row);
+    Gtk::TreePath path = sort_model->get_path(row);
     // If the row is expanded, and not contained in the map
     bool isExpanded = view->row_expanded(path);
     bool exists     = significant_rows.find(path) != significant_rows.end();
@@ -213,7 +233,7 @@ void StatusColumnRecord::reselect_children_rows(const Gtk::TreeModel::Children &
 {
   for(const auto &row: children) {
     // Get the path
-    Gtk::TreePath path = store->get_path(row);
+    Gtk::TreePath path = sort_model->get_path(row);
 
     // If this row has the same data as the previously selected row (when this ColumnRecord was last cleared), then select it
     auto row_pair = significant_rows.find(path);
@@ -240,7 +260,7 @@ void StatusColumnRecord::reselect_children_rows(const Gtk::TreeModel::Children &
 void StatusColumnRecord::reselect_rows()
 {
   // Reselect/reexpand every row in the TreeView, if it was selected or expanded before
-  auto children = store->children();
+  auto children = sort_model->children();
   reselect_children_rows(children);
 
   // Adjust the ScrolledWindow to its previous position

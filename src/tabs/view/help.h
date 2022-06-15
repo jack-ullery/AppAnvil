@@ -27,7 +27,7 @@ public:
   Help();
 
   void hide_searchbar();
-  void show_searchbar();
+  void show_searchbar(const bool &should_focus);
   void set_return_signal_handler(const Glib::SignalProxy<void>::SlotType &func);
 
 protected:

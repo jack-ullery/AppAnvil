@@ -6,6 +6,8 @@
 // Mock object of the Processes class in ./src/tab/view/processes.h
 class ProcessesMock : public StatusMock
 {
+public:
+  MOCK_METHOD(void, add_data_to_record, (const std::string &confined, const std::string &unconfined));
 };
 
 #endif

@@ -5,9 +5,10 @@
 #include <tuple>
 
 MainWindow::MainWindow()
-    : prof_control{new ProfilesControllerInstance()},
-      proc_control{new ProcessesControllerInstance()},
-      logs_control{new LogsControllerInstance()},
+    : database{new Database()},
+      prof_control{new ProfilesControllerInstance(database)},
+      proc_control{new ProcessesControllerInstance(database)},
+      logs_control{new LogsControllerInstance(database)},
       profile_loader_control{new ProfileLoaderControllerInstance()},
       help{new Help()},
       console{new ConsoleThreadInstance(prof_control, proc_control, logs_control)}
@@ -36,7 +37,7 @@ MainWindow::MainWindow()
   auto help_toggle_fun = sigc::mem_fun(*this, &MainWindow::on_help_toggle);
   m_help_button.signal_toggled().connect(help_toggle_fun, true);
 
-  // Click the help toggle button (m_help_button), whenever somebody presses the bottom button on the help page
+  // Simulate clicking the help toggle button (m_help_button), whenever somebody presses the bottom button on the help page
   auto activate_help_toggle_fun = sigc::mem_fun(*this, &MainWindow::untoggle_help);
   help->set_return_signal_handler(activate_help_toggle_fun);
 
@@ -76,8 +77,8 @@ MainWindow::MainWindow()
   this->add(m_top_stack);
   this->show_all();
 
-  // Hide all tabs with a searchbar
-  on_search_toggle();
+  // Hide the side info in the Profiles Tab
+  prof_control->get_tab()->hide_profile_info();
 }
 
 void MainWindow::send_status_change(const std::string &profile, const std::string &old_status, const std::string &new_status)
@@ -112,13 +113,15 @@ void MainWindow::untoggle_help(){
 
 void MainWindow::on_search_toggle()
 {
+  std::string visible_child = m_tab_stack.get_visible_child_name();
   bool is_active = m_search_button.get_active();
 
   if(is_active){
-    prof_control->get_tab()->show_searchbar();
-    proc_control->get_tab()->show_searchbar();
-    logs_control->get_tab()->show_searchbar();
-    help->show_searchbar();
+    // Show the searchbars, and determine which searchbar should be focused
+    prof_control->get_tab()->show_searchbar(visible_child == "prof");
+    proc_control->get_tab()->show_searchbar(visible_child == "proc");
+    logs_control->get_tab()->show_searchbar(visible_child == "logs");
+    help->show_searchbar(m_help_button.get_active());
   }
   else {
     prof_control->get_tab()->hide_searchbar();

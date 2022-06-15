@@ -2,6 +2,7 @@
 #include "tabs/controller/logs_controller.h"
 #include "tabs/controller/processes_controller.h"
 #include "tabs/controller/profiles_controller.h"
+#include "tabs/model/database.h"
 #include "tabs/model/status_column_record.h"
 #include "tabs/view/logs.h"
 #include "tabs/view/processes.h"
@@ -13,9 +14,15 @@
 
 template<class ProfilesController, class ProcessesController, class LogsController>
 ConsoleThread<ProfilesController, ProcessesController, LogsController>::ConsoleThread(std::shared_ptr<ProfilesController> prof, std::shared_ptr<ProcessesController> proc, std::shared_ptr<LogsController> logs)
-    : last_state{PROFILE}, dispatch_man(std::move(prof), std::move(proc), std::move(logs))
+    : last_state{PROFILE}, 
+      dispatch_man(std::move(prof), std::move(proc), std::move(logs))
 {
   asynchronous_thread = std::async(std::launch::async, &ConsoleThread<ProfilesController, ProcessesController, LogsController>::console_caller, this);
+  
+  // Get all the important data at startup 
+  send_refresh_message(PROFILE);
+  send_refresh_message(PROCESS);
+  send_refresh_message(LOGS);
 }
 
 template<class ProfilesController, class ProcessesController, class LogsController>
@@ -93,10 +100,12 @@ typename ConsoleThread<ProfilesController, ProcessesController, LogsController>:
     auto cv_status = cv.condition_variable::wait_until(lock, get_wait_time_point()); // Look into `wait_until`
 
     if(cv_status == std::cv_status::timeout) {
-      // Create a message with the state to refresh for, but no data
-      Message message(REFRESH, last_state, {});
-      // Send the message to the queue, this lets the other thread know what it should do.
-      queue.push(message);
+      if(last_state != LOGS){ // TODO(logs-parse): We need to improve how logs are parsed before we can refresh them
+        // Create a message with the state to refresh for, but no data
+        Message message(REFRESH, last_state, {});
+        // Send the message to the queue, this lets the other thread know what it should do.
+        queue.push(message);
+      }
     }
   }
 
@@ -147,4 +156,4 @@ ConsoleThread<ProfilesController, ProcessesController, LogsController>::~Console
   asynchronous_thread.wait();
 }
 
-template class ConsoleThread<ProfilesController<Profiles, StatusColumnRecord>, ProcessesController<Processes, StatusColumnRecord>, LogsController<Logs, StatusColumnRecord> >;
+template class ConsoleThread<ProfilesController<Profiles, Database, ProfileAdapter<Database>>, ProcessesController<Processes, Database, ProcessAdapter<Database, StatusColumnRecord>>, LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord> > >;

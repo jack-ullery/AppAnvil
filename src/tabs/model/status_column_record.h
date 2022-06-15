@@ -2,6 +2,7 @@
 #define TABS_STATUS_COLUMN_RECORD_H
 
 #include "../column_header.h"
+#include "../view/status.h"
 
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/treeiter.h>
@@ -70,6 +71,18 @@ public:
   Gtk::TreeRow new_child_row(const Gtk::TreeRow &parent);
 
   /**
+   * @brief Gets the TreeRow in the table which is the child of another TreeRow.
+   *
+   * @details
+   * Data of the row can be modified using the `set_row_data()` method
+   *
+   * @param parent, The TreeRow to be the parent of the created TreeRow
+   *
+   * @returns A new TreeRow from the table.
+   */
+  Gtk::TreeRow get_row(const Gtk::TreePath &path);
+
+  /**
    * @brief Deletes all rows in the StatusColumnRecord.
    */
   void clear();
@@ -91,6 +104,10 @@ public:
   Gtk::TreeRow get_parent_by_pid(unsigned int pid, const Gtk::TreeRow &parent);
   bool pid_exists_in_child(unsigned int pid, const Gtk::TreeRow &parent);
 
+protected:
+  StatusColumnRecord(const std::shared_ptr<Status> &tab,
+                     const std::vector<ColumnHeader> &names);
+
 private:
   struct RowData {
     const bool isSelected;
@@ -99,7 +116,8 @@ private:
     RowData(const bool &isSelectedArg, const bool &isExpandedArg) : isSelected{isSelectedArg}, isExpanded{isExpandedArg} { }
   };
 
-  explicit StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, const std::shared_ptr<Gtk::ScrolledWindow> &win,
+  explicit StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, 
+                              const std::shared_ptr<Gtk::ScrolledWindow> &win,
                               const std::vector<ColumnHeader> &names);
   Glib::RefPtr<Gtk::TreeStore> store;
   std::shared_ptr<Gtk::TreeView> view;

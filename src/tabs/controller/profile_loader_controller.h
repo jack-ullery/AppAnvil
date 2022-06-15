@@ -20,7 +20,7 @@
 #include <vector>
 
 template<class ProfileLoaderTab>
-class ProfileLoaderController : public Gtk::ScrolledWindow
+class ProfileLoaderController
 {
   public:
     ProfileLoaderController();

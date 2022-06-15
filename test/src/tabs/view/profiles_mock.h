@@ -6,6 +6,10 @@
 // Mock object of the Profiles class in ./src/tab/view/profiles.h
 class ProfilesMock : public StatusMock
 {
+public:
+  // virtual void add_data_to_record(const std::string& data){};
+  MOCK_METHOD(void, add_data_to_record, (const std::string &data));
+  MOCK_METHOD(void, set_apply_label_text, (const std::string &data));
 };
 
 #endif

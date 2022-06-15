@@ -1,80 +1,77 @@
 #include "processes_controller.h"
-#include "../model/status_column_record.h"
+#include "../model/database.h"
+#include "../model/process_adapter.h"
 #include "../view/processes.h"
 #include "status_controller.h"
 
+#include <iostream>
+#include <regex>
 #include <string>
 
 // clang-tidy throws [cert-err58-cpp], but it's not a problem in this case, so lets ignore it.
 const std::regex unconfined_proc("^\\s*(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(unconfined|\\S+ \\(\\S+\\))\\s+(\\S+)"); // NOLINT(cert-err58-cpp)
 
-template<class ProcessesTab, class ColumnRecord> 
-void ProcessesController<ProcessesTab, ColumnRecord>::add_row_from_line(const std::shared_ptr<ColumnRecord> &col_record, const std::string &line)
-{
-  Gtk::TreeRow row;
+// TODO(regex): This is pretty buggy currently, we should fix it
+const std::regex confined_prof("^\\s*(.+)\\s+\\((enforce|complain)\\)"); // NOLINT(cert-err58-cpp)
 
+template<class ProcessesTab, class Database, class Adapter> 
+void ProcessesController<ProcessesTab, Database, Adapter>::add_row_from_line(const std::string &line)
+{
   std::smatch match;
   std::regex_search(line, match, unconfined_proc);
 
-  unsigned int pid   = stoul(match[1]); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  unsigned int ppid  = stoul(match[2]); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  std::string user   = match[3];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  std::string status = match[4];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  std::string comm   = match[5];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  unsigned int pid    = stoul(match[1]); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  unsigned int ppid   = stoul(match[2]); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  std::string user    = match[3];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  std::string status  = match[4];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  std::string process = match[5];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-  if(ppid > 0) {
-    auto parent_row = col_record->get_parent_by_pid(ppid);
-    row             = col_record->new_child_row(parent_row);
-  } else {
-    row = col_record->new_row();
+  // Attempt to get the profile that confines this process (if availible)
+  std::string profile;
+  bool is_confined = std::regex_match(status, match, confined_prof);
+  if(is_confined){
+    profile = match[1]; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   }
 
-  row->set_value(0, comm);   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  row->set_value(1, user);   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  row->set_value(2, pid);    // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  row->set_value(3, status); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  adapter.put_data(process, profile, pid, ppid, user, status);
 }
 
 
-template<class ProcessesTab, class ColumnRecord> 
-void ProcessesController<ProcessesTab, ColumnRecord>::add_data_to_record(const std::string &unconfined)
+template<class ProcessesTab, class Database, class Adapter> 
+void ProcessesController<ProcessesTab, Database, Adapter>::add_data_to_record(const std::string &unconfined)
 {
-  // Delete all the data from col_record
-  col_record->clear();
-
   std::stringstream data;
   data << unconfined;
 
   std::string line;
   while(std::getline(data, line)) {
-    add_row_from_line(col_record, line);
+    add_row_from_line(line);
   }
 
-  col_record->reselect_rows();
   refresh();
 }
 
-template<class ProcessesTab, class ColumnRecord> 
-void ProcessesController<ProcessesTab, ColumnRecord>::refresh()
+template<class ProcessesTab, class Database, class Adapter> 
+void ProcessesController<ProcessesTab, Database, Adapter>::refresh()
 {
-  uint num_visible = col_record->filter_rows();
+  uint num_visible = adapter.get_col_record()->filter_rows();
   proc->set_status_label_text(" " + std::to_string(num_visible) + " matching processes");
 }
 
-template<class ProcessesTab, class ColumnRecord> 
-ProcessesController<ProcessesTab, ColumnRecord>::ProcessesController()
+template<class ProcessesTab, class Database, class Adapter> 
+ProcessesController<ProcessesTab, Database, Adapter>::ProcessesController(std::shared_ptr<Database> database)
   : proc{StatusController<ProcessesTab>::get_tab()}, 
-    col_record{ColumnRecord::create(proc->get_view(), proc->get_window(), col_names)}
+    adapter(database, proc->get_view(), proc->get_window())
 {
   // Set the Processes<ColumnRecord>::refresh function to be called whenever
   // the searchbar and checkboxes are updated
-  auto func = sigc::mem_fun(*this, &ProcessesController<ProcessesTab, ColumnRecord>::refresh);
+  auto func = sigc::mem_fun(*this, &ProcessesController<ProcessesTab, Database, Adapter>::refresh);
   proc->set_refresh_signal_handler(func);
 
-  auto filter_fun = sigc::mem_fun(*this, &ProcessesController<ProcessesTab, ColumnRecord>::filter);
-  col_record->set_visible_func(filter_fun);
+  auto filter_fun = sigc::mem_fun(*this, &ProcessesController<ProcessesTab, Database, Adapter>::filter);
+  adapter.get_col_record()->set_visible_func(filter_fun);
 }
 
 // Used to avoid linker errors
 // For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
-template class ProcessesController<Processes, StatusColumnRecord>;
+template class ProcessesController<Processes, Database, ProcessAdapter<Database, StatusColumnRecord>>;
