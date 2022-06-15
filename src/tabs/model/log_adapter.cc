@@ -12,7 +12,7 @@
 #include <string>
 
 template<class Database, class ColumnRecord>
-std::string LogAdapter<Database, ColumnRecord>::format_log_data(std::string data)
+std::string LogAdapter<Database, ColumnRecord>::format_log_data(const std::string &data)
 {
   const std::regex remove_quotes = std::regex("\\\"(\\S*)\\\"");
   std::smatch m;
@@ -21,7 +21,7 @@ std::string LogAdapter<Database, ColumnRecord>::format_log_data(std::string data
 }
 
 template<class Database, class ColumnRecord>
-std::string LogAdapter<Database, ColumnRecord>::format_timestamp(time_t timestamp)
+std::string LogAdapter<Database, ColumnRecord>::format_timestamp(const time_t &timestamp)
 {
   std::stringstream stream;
 
@@ -43,19 +43,19 @@ void LogAdapter<Database, ColumnRecord>::put_data(const time_t &timestamp,
     auto map_pair = db->log_data.find(profile_name);
 
     // The map (indexed by pid) that we will add to
-    std::map<long, LogTableEntry> time_map;;
+    std::map<time_t, LogTableEntry> time_map;;
 
     // Check that we actually found the map
     if(map_pair == db->log_data.end()) {
       // Create new map if no previous one was found
-      time_map = std::map<long, LogTableEntry>();
+      time_map = std::map<time_t, LogTableEntry>();
     }
     else {
       time_map = map_pair->second;
     }
 
     // Attempt to find an entry with this profile
-    auto entry_pair = time_map.find((long) timestamp);
+    auto entry_pair = time_map.find(timestamp);
 
     // Check that we actually found the entry
     if(entry_pair != time_map.end()) {
@@ -63,25 +63,24 @@ void LogAdapter<Database, ColumnRecord>::put_data(const time_t &timestamp,
         // This assumes that logs entries are readonly; they do not change over time.
         return;
     }
-    else {
-        // If not entry was found, we should create one
-        // create a new row
-        const Gtk::TreeRow row = col_record->new_row();
 
-        // clang-format off
-        row.set_value(0, format_timestamp(timestamp)); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-        row.set_value(1, format_log_data(type));       // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-        row.set_value(2, format_log_data(operation));  // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-        row.set_value(3, profile_name);                // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-        row.set_value(4, pid);                         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-        row.set_value(5, format_log_data(status));     // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-        // clang-format on
+    // If not entry was found, we should create one
+    // create a new row
+    const Gtk::TreeRow row = col_record->new_row();
 
-        LogTableEntry entry(timestamp, type, operation, profile_name, pid, row);
+    // clang-format off
+    row.set_value(0, format_timestamp(timestamp)); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    row.set_value(1, format_log_data(type));       // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    row.set_value(2, format_log_data(operation));  // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    row.set_value(3, profile_name);                // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    row.set_value(4, pid);                         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    row.set_value(5, format_log_data(status));     // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    // clang-format on
 
-        // Add the entry to the map
-        time_map.insert({(long) timestamp, entry});
-    }
+    LogTableEntry entry(timestamp, type, operation, profile_name, pid, row);
+
+    // Add the entry to the map
+    time_map.insert({timestamp, entry});
 
     // A weird way of updating our profile in the map (because insert_or_assign does not exist with C++11)
     db->log_data.erase(profile_name);

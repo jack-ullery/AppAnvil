@@ -8,20 +8,6 @@
 #include "database_mock.h"
 #include "status_column_record_mock.h"
 
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
-#include <memory>
-
-class ProcessAdapterChild : public ProcessAdapter<Database, StatusColumnRecord>
-{
-public:
-  FRIEND_TEST(ProcessAdapterTest, TEST_PUT_DATA);
-
-  explicit ProcessAdapterChild(std::shared_ptr<Database> db, std::shared_ptr<StatusColumnRecord> cr) 
-    : ProcessAdapter(db, cr)
-  { }
-};
-
 // template class ProcessesController<Processes, Database, ProcessAdapterChild>;
 template class ProcessesController<Processes, DatabaseMock, ProcessAdapter<DatabaseMock, StatusColumnRecord>>;
 

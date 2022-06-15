@@ -105,7 +105,7 @@ public:
   bool pid_exists_in_child(unsigned int pid, const Gtk::TreeRow &parent);
 
 protected:
-  StatusColumnRecord(const std::shared_ptr<Status> tab,
+  StatusColumnRecord(const std::shared_ptr<Status> &tab,
                      const std::vector<ColumnHeader> &names);
 
 private:

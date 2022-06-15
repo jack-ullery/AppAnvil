@@ -65,10 +65,4 @@ ProfileAdapter<Database>::ProfileAdapter(std::shared_ptr<Database> db,
     col_record{StatusColumnRecord::create(view, win, col_names)}  
 {   }
 
-template<class Database>
-ProfileAdapter<Database>::ProfileAdapter(std::shared_ptr<Database> db, std::shared_ptr<StatusColumnRecord> mock)
-  : db{db},
-    col_record{mock}  
-{   }
-
 template class ProfileAdapter<Database>;
