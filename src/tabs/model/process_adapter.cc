@@ -65,6 +65,7 @@ void ProcessAdapter<Database, ColumnRecord>::put_data(const std::string &process
         entry.row->set_value(3, status); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
         // Add the entry to the map
+        pid_map.erase(pid);
         pid_map.insert({pid, entry});
     }
     else {
