@@ -20,12 +20,14 @@ void ProfileAdapter<Database>::put_data(const std::string &profile_name, const s
         row->set_value(1, status);
 
         ProfileTableEntry entry(profile_name, status, row);
-        db->profile_data.emplace(profile_name, entry);
+        db->profile_data.insert({profile_name, entry});
     }
     else {
         // A pre-existing entry was found, so we should modify it
         ProfileTableEntry entry = iter->second;
         entry.status=status;
+        db->profile_data.erase(profile_name);
+        db->profile_data.insert({profile_name, entry});
     }
 }
 
