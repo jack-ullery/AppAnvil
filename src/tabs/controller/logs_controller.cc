@@ -2,7 +2,12 @@
 #include "../model/database.h"
 #include "../model/status_column_record.h"
 #include "../view/logs.h"
+#include <glibmm/main.h>
+#include <glibmm/priorities.h>
 #include <memory>
+#include <sigc++/functors/mem_fun.h>
+#include <sigc++/functors/ptr_fun.h>
+#include <sstream>
 
 template<class LogsTab, class Database, class Adapter>
 void LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::Value &entry)
@@ -23,30 +28,52 @@ void LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::V
                     status);
 }
 
-template<class LogsTab, class Database, class Adapter> void LogsController<LogsTab, Database, Adapter>::add_data_to_record(const std::string &data)
+template<class LogsTab, class Database, class Adapter> 
+void LogsController<LogsTab, Database, Adapter>::add_data_to_record(const std::string &data)
 {
+  auto json_data = std::make_shared<std::istringstream>(data);
 
-  // declare variables
-  std::stringstream logs;
-  std::istringstream json_data(data);
-  std::string line;
-  Json::Value root;
+  auto lambda = [&, json_data]() -> bool
+  {
+    return add_data_to_record_helper(json_data);
+  };
+
+  Glib::signal_idle().connect(lambda, Glib::PRIORITY_LOW);
+}
+
+template<class LogsTab, class Database, class Adapter> 
+bool LogsController<LogsTab, Database, Adapter>::add_data_to_record_helper(std::shared_ptr<std::istringstream> json_data)
+{
+  // Declare some variables that will be written to
+  Json::Value value;
   Json::CharReaderBuilder builder;
   JSONCPP_STRING errs;
 
   // gets each log entry (in json format, separated by \n), parses the json, and calls add_row_from_json to add each individual entry
-  while(std::getline(json_data, line)) {
-    logs << line;
-    if(!parseFromStream(builder, logs, &root, &errs)) {
+  for(uint i = 0; i < 127; i++) {
+    // Get the next line (if it exists)
+    std::string line;
+    if(!std::getline(*json_data, line)){
+      // We exhausted the input stream, which means no more logs exist
+      // Return false to disconnect the signal handler
+      refresh();
+      return false;
+    }
+
+    // A log exists, so lets parse it using JsonCpp
+    std::stringstream log_stream(line);
+
+    if(!parseFromStream(builder, log_stream, &value, &errs)) {
       throw std::invalid_argument(errs + "\nArgument of add_data_to_record contains line with invalid JSON format.");
     }
-    add_row_from_json(root);
-    logs.clear();
-    root.clear();
+
+    // Create a row from the json value
+    add_row_from_json(value);
   }
 
-  // refresh the display after all logs have been added
+  // Refresh the display to show an accurate count of the number of logs
   refresh();
+  return true;
 }
 
 template<class LogsTab, class Database, class Adapter> void LogsController<LogsTab, Database, Adapter>::refresh()
