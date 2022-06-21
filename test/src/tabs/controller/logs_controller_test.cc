@@ -6,6 +6,7 @@
 #include <gmock/gmock-matchers.h>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <sstream>
 #include <string>
 
 using ::testing::_;
@@ -99,7 +100,8 @@ TEST_F(LogsControllerTest, TEST_ADD_DATA_TO_RECORD_VALID)
     .Times(1)
     .InSequence(add_row_calls);
 
-  logs_controller->add_data_to_record(data_arg);
+  auto data_stream = std::make_shared<std::istringstream>(data_arg);
+  logs_controller->add_data_to_record_helper(data_stream);
 }
 
 // Test for method add_data_to_record with an invalid argument passed
@@ -108,7 +110,8 @@ TEST_F(LogsControllerTest, TEST_ADD_DATA_TO_RECORD_INVALID)
   EXPECT_CALL(*adapter_mock, put_data(_, _, _, _, _, _)).Times(0);
   EXPECT_CALL(*adapter_mock, get_col_record()).Times(0);
 
-  EXPECT_THROW(logs_controller->add_data_to_record("{test}"), std::invalid_argument);
+  auto data_stream = std::make_shared<std::istringstream>("{test}");
+  EXPECT_THROW(logs_controller->add_data_to_record_helper(data_stream), std::invalid_argument);
 }
 
 // Test for method refresh()

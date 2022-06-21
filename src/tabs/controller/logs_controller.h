@@ -19,10 +19,12 @@ public:
   explicit LogsController(std::shared_ptr<Adapter> adapter, std::shared_ptr<LogsTab> logs);
 
   virtual void add_data_to_record(const std::string &data);
-  unsigned int num_visible_rows(); 
+
+  unsigned int num_visible_rows();
   void refresh();
 
 protected:
+  bool add_data_to_record_helper(std::shared_ptr<std::istringstream> json_data);
   void add_row_from_json(const Json::Value &entry);
 
 private:

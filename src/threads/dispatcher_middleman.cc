@@ -9,13 +9,18 @@
 #include "../tabs/view/processes.h"
 #include "../tabs/view/profiles.h"
 
+#include <glibmm/priorities.h>
 #include <mutex>
+#include <sigc++/functors/mem_fun.h>
 
 template<class Profiles, class Processes, class Logs, class Dispatcher, class Mutex>
 DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::DispatcherMiddleman(std::shared_ptr<Profiles> prof_arg,
                                                                                        std::shared_ptr<Processes> proc_arg,
                                                                                        std::shared_ptr<Logs> logs_arg)
-    : dispatch{new Dispatcher()}, prof{std::move(prof_arg)}, proc{std::move(proc_arg)}, logs{std::move(logs_arg)}
+  : dispatch{new Dispatcher()}, 
+    prof{std::move(prof_arg)}, 
+    proc{std::move(proc_arg)}, 
+    logs{std::move(logs_arg)}
 {
   auto function = sigc::mem_fun(*this, &DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::handle_signal);
   dispatch->connect(function);
@@ -69,7 +74,6 @@ void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_p
 template<class Profiles, class Processes, class Logs, class Dispatcher, class Mutex>
 void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::handle_signal()
 {
-
   CallData data = queue.pop();
 
   switch(data.type) {
