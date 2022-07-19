@@ -15,11 +15,23 @@ void LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::V
   // getting timestamp from json argument, retrieving important fields from json
   const time_t timestamp      = std::stol(entry["_SOURCE_REALTIME_TIMESTAMP"].asString()) / 1000000;
   const std::string type      = entry["_AUDIT_FIELD_APPARMOR"].asString();
-  const std::string operation = entry["_AUDIT_FIELD_OPERATION"].asString();
-  const std::string name      = entry["_AUDIT_FIELD_NAME"].asString();
   const std::string pid       = entry["_PID"].asString();
-  const std::string status    = entry["_AUDIT_FIELD_PROFILE"].asString();
-
+  
+  std::string operation;
+  std::string name;
+  std::string status;
+  
+  if(type == "\"DENIED\"") {
+    operation = entry["_AUDIT_FIELD_OPERATION"].asString();
+    name      = entry["_AUDIT_FIELD_PROFILE"].asString();
+    status    = "\"Not implemented yet!\"";
+  }
+  else {
+    operation = entry["_AUDIT_FIELD_OPERATION"].asString();
+    name      = entry["_AUDIT_FIELD_NAME"].asString();
+    status    = entry["_AUDIT_FIELD_PROFILE"].asString();
+  }
+  
   adapter->put_data(timestamp,
                     type,
                     operation,
