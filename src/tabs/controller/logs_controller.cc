@@ -9,27 +9,38 @@
 #include <sigc++/functors/ptr_fun.h>
 #include <sstream>
 
+#include <iostream>
+
+template<class LogsTab, class Database, class Adapter>
+std::string LogsController<LogsTab, Database, Adapter>::format_log_data(const std::string &data)
+{
+  const std::regex remove_quotes = std::regex("\\\"(\\S*)\\\"");
+  std::smatch m;
+  std::regex_search(data, m, remove_quotes);
+  return m[1];
+}
+
 template<class LogsTab, class Database, class Adapter>
 void LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::Value &entry)
 {
   // getting timestamp from json argument, retrieving important fields from json
   const time_t timestamp      = std::stol(entry["_SOURCE_REALTIME_TIMESTAMP"].asString()) / 1000000;
-  const std::string type      = entry["_AUDIT_FIELD_APPARMOR"].asString();
+  const std::string type      = format_log_data(entry["_AUDIT_FIELD_APPARMOR"].asString());
   const std::string pid       = entry["_PID"].asString();
   
   std::string operation;
   std::string name;
   std::string status;
-  
-  if(type == "\"DENIED\"") {
-    operation = entry["_AUDIT_FIELD_OPERATION"].asString();
-    name      = entry["_AUDIT_FIELD_PROFILE"].asString();
-    status    = "\"Not implemented yet!\"";
+
+  if(type == "DENIED") {
+    name      = format_log_data(entry["_AUDIT_FIELD_PROFILE"].asString());
+    operation = format_log_data(entry["_AUDIT_FIELD_OPERATION"].asString());
+    status    = "Not implemented yet!";
   }
   else {
-    operation = entry["_AUDIT_FIELD_OPERATION"].asString();
     name      = entry["_AUDIT_FIELD_NAME"].asString();
-    status    = entry["_AUDIT_FIELD_PROFILE"].asString();
+    operation = format_log_data(entry["_AUDIT_FIELD_OPERATION"].asString());
+    status    = format_log_data(entry["_AUDIT_FIELD_PROFILE"].asString());
   }
   
   adapter->put_data(timestamp,

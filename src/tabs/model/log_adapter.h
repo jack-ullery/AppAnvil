@@ -31,7 +31,6 @@ public:
   std::shared_ptr<ColumnRecord> get_col_record();
 
 protected:
-  static std::string format_log_data(const std::string &data);
   static std::string format_timestamp(const time_t &timestamp);
 
 private:

@@ -32,13 +32,12 @@ protected:
   std::string sample_log_data_type      = "\"STATUS\"";
   std::string sample_log_data_operation = "\"profile_load\"";
   std::string sample_log_data_status    = "\"unconfined\"";
-  time_t sample_log_data_timestamp      = (time_t) 1648234140; // Fri Mar 25 14:49:00 2022 (time as of writing tests (Eastern Time))
-  time_t zerotime                       = (time_t) 0;          // Thu Jan 1st 00:00:00 1970 (UTC) (Wed Dec 31 19:00:00 1969 in Eastern Time)
-  std::regex timestamp_regex            = std::regex("\\d{4}-\\d{2}-\\d{2}\\s{1}\\d{2}:\\d{2}:\\d{2}\\t");
+
   std::string journalctl_json_snippet =
       "{\"_SOURCE_REALTIME_TIMESTAMP\" : \"1648231725959000\",\"_AUDIT_FIELD_APPARMOR\" : \"\\\"STATUS\\\"\","
       "\"_AUDIT_FIELD_OPERATION\" : \"\\\"profile_load\\\"\",\"_AUDIT_FIELD_NAME\" : \"nvidia_modprobe\","
       "\"_PID\" : \"601\",\"_AUDIT_FIELD_PROFILE\" : \"\\\"unconfined\\\"\"}";
+
   int data_arg_num_lines = 2;
   std::string data_arg   = "{\"_SOURCE_REALTIME_TIMESTAMP\" : \"1648231725959000\",\"_AUDIT_FIELD_APPARMOR\" : \"\\\"STATUS\\\"\","
                          "\"_AUDIT_FIELD_OPERATION\" : \"\\\"profile_load\\\"\",\"_AUDIT_FIELD_NAME\" : \"nvidia_modprobe\","
@@ -134,4 +133,19 @@ TEST_F(LogsControllerTest, TEST_REFRESH)
     .InSequence(refresh_sequence);
 
   logs_controller->refresh();
+}
+
+// Test for method format_log_data
+TEST_F(LogsControllerTest, TEST_FORMAT_LOG_DATA)
+{
+  std::string formatted_type      = logs_controller->format_log_data(sample_log_data_type);
+  std::string formatted_operation = logs_controller->format_log_data(sample_log_data_operation);
+  std::string formatted_status    = logs_controller->format_log_data(sample_log_data_status);
+
+  ASSERT_TRUE(formatted_type.find('\"') == std::string::npos) << "sample type should not contain quotation marks after formatting";
+  ASSERT_TRUE(formatted_operation.find('\"') == std::string::npos) << "sample operation should not contain quotation marks after formatting";
+  ASSERT_TRUE(formatted_status.find('\"') == std::string::npos) << "sample status should not contain quotation marks after formatting";
+  EXPECT_EQ(formatted_type, "STATUS") << "error formatting sample type from log data";
+  EXPECT_EQ(formatted_operation, "profile_load") << "error formatting sample operation from log data";
+  EXPECT_EQ(formatted_status, "unconfined") << "error formatting sample status from log data";
 }

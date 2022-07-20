@@ -12,15 +12,6 @@
 #include <string>
 
 template<class Database, class ColumnRecord>
-std::string LogAdapter<Database, ColumnRecord>::format_log_data(const std::string &data)
-{
-  const std::regex remove_quotes = std::regex("\\\"(\\S*)\\\"");
-  std::smatch m;
-  std::regex_search(data, m, remove_quotes);
-  return m[1];
-}
-
-template<class Database, class ColumnRecord>
 std::string LogAdapter<Database, ColumnRecord>::format_timestamp(const time_t &timestamp)
 {
   std::stringstream stream;
@@ -70,11 +61,11 @@ void LogAdapter<Database, ColumnRecord>::put_data(const time_t &timestamp,
 
     // clang-format off
     row.set_value(0, format_timestamp(timestamp)); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-    row.set_value(1, format_log_data(type));       // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-    row.set_value(2, format_log_data(operation));  // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    row.set_value(1, type);                        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    row.set_value(2, operation);                   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     row.set_value(3, profile_name);                // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     row.set_value(4, pid);                         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-    row.set_value(5, format_log_data(status));     // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    row.set_value(5, status);                      // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
     // clang-format on
 
     LogTableEntry entry(timestamp, type, operation, profile_name, pid, row);

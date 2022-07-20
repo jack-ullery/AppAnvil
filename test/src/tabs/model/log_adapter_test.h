@@ -13,7 +13,6 @@
 class LogAdapterChild : public LogAdapter<DatabaseMock, StatusColumnRecord>
 {
 public:
-  FRIEND_TEST(LogAdapterTest, TEST_FORMAT_LOG_DATA);
   FRIEND_TEST(LogAdapterTest, TEST_FORMAT_TIMESTAMP);
 
   explicit LogAdapterChild(std::shared_ptr<DatabaseMock> db, const std::shared_ptr<Gtk::TreeView> &view, const std::shared_ptr<Gtk::ScrolledWindow> &win)
