@@ -32,12 +32,40 @@ void LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::V
   std::string name;
   std::string status;
 
-  if(type == "DENIED") {
+  // Adapted from: https://gitlab.com/apparmor/apparmor/-/blob/master/libraries/libapparmor/include/aalogparse.h
+  if(type == "STATUS") {
+    name      = entry["_AUDIT_FIELD_NAME"].asString();
+    operation = format_log_data(entry["_AUDIT_FIELD_OPERATION"].asString());
+    status    = format_log_data(entry["_AUDIT_FIELD_PROFILE"].asString());
+  }
+  /* Denied access event */
+  else if(type == "DENIED") {
     name      = format_log_data(entry["_AUDIT_FIELD_PROFILE"].asString());
     operation = format_log_data(entry["_AUDIT_FIELD_OPERATION"].asString());
     status    = "Not implemented yet!";
   }
+  // /* Default event type */
+  // else if(type == "INVALID") {
+
+  // }
+  // /* Internal AA error */
+  // else if(type == "ERROR") {
+
+  // }
+  // /* Audited event */
+  // else if(type == "AUDIT") {
+
+  // }
+  // /* Complain mode event */
+  // else if(type == "ALLOWED") {
+
+  // }
+  // /* Process tracking info */
+  // else if(type == "HINT") {
+
+  // }
   else {
+    std::cerr << "Error - Unknown log type: " << type << std::endl;
     name      = entry["_AUDIT_FIELD_NAME"].asString();
     operation = format_log_data(entry["_AUDIT_FIELD_OPERATION"].asString());
     status    = format_log_data(entry["_AUDIT_FIELD_PROFILE"].asString());
