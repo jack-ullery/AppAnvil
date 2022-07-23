@@ -13,6 +13,7 @@ set(
   ${PROJECT_SOURCE_DIR}/threads/blocking_queue.cc
   ${PROJECT_SOURCE_DIR}/threads/command_caller.cc
   ${PROJECT_SOURCE_DIR}/threads/dispatcher_middleman.cc
+  ${PROJECT_SOURCE_DIR}/tabs/log_record.cc
   ${PROJECT_SOURCE_DIR}/tabs/model/database.cc
   ${PROJECT_SOURCE_DIR}/tabs/model/status_column_record.cc
   ${PROJECT_SOURCE_DIR}/tabs/model/profile_adapter.cc
@@ -114,6 +115,9 @@ pkg_check_modules(GTKMM gtkmm-3.0)
 #### Include jsoncpp libraries ####
 pkg_check_modules(JSONCPP jsoncpp)
 
+#### Include AppArmor libraries ####
+pkg_check_modules(LIBAPPARMOR libapparmor)
+
 #### Package the .gresource.xml resource bundle ####
 
 # This gets the list of dependencies for ${XML_GRESOURCE} when cmake is called.
@@ -159,10 +163,12 @@ set(LIBRARY_OUTPUT_NAME ${PROJECT_NAME}_main)
 add_library(${LIBRARY_OUTPUT_NAME} STATIC ${RESOURCE_BUNDLE_OUTPUT} ${SOURCES})
 
 target_include_directories(${LIBRARY_OUTPUT_NAME} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
-target_include_directories(${LIBRARY_OUTPUT_NAME} SYSTEM PUBLIC ${jsoncpp_DIRS})
+target_include_directories(${LIBRARY_OUTPUT_NAME} SYSTEM PUBLIC ${JSONCPP_DIRS})
+target_include_directories(${LIBRARY_OUTPUT_NAME} SYSTEM PUBLIC ${LIBAPPARMOR_DIRS})
 
-target_link_libraries(${LIBRARY_OUTPUT_NAME} PUBLIC ${GTKMM_LIBRARIES})
-target_link_libraries(${LIBRARY_OUTPUT_NAME} PUBLIC jsoncpp)
+target_link_libraries(${LIBRARY_OUTPUT_NAME} PUBLIC ${GTKMM_LINK_LIBRARIES})
+target_link_libraries(${LIBRARY_OUTPUT_NAME} PUBLIC ${JSONCPP_LINK_LIBRARIES})
+target_link_libraries(${LIBRARY_OUTPUT_NAME} PUBLIC ${LIBAPPARMOR_LINK_LIBRARIES})
 target_link_libraries(${LIBRARY_OUTPUT_NAME} PUBLIC pthread)
 
 add_subdirectory(aa-caller)
@@ -179,7 +185,7 @@ install(
 )
 
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libgtkmm-3.0-dev,libjsoncpp-dev")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libgtkmm-3.0-dev,libjsoncpp-dev,libapparmor-dev")
 set(CPACK_PACKAGE_CONTACT "Jack Ullery")
 set(CPACK_INSTALL_SCRIPT "cmake_install.cmake")
 include(CPack)

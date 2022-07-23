@@ -1,7 +1,9 @@
 #include "main_window.h"
-#include "resource.autogen.c"
-
 #include <gtkmm/application.h>
+
+extern "C" {
+  #include "resource.autogen.c"
+}
 
 /**
  * @brief Globally registers the resources from resource.autogen.c
