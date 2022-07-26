@@ -1,4 +1,3 @@
-#include "jsoncpp/json/json.h"
 #include "logs_controller_test.h"
 #include "../model/status_column_record_mock.h"
 #include "../model/tree_row_mock.h"
@@ -52,25 +51,6 @@ protected:
   std::shared_ptr<LogsMock> logs_view_mock;
   std::shared_ptr<LogsControllerChild> logs_controller;
 };
-
-// Test for method add_row_from_json
-TEST_F(LogsControllerTest, TEST_ADD_ROW_FROM_JSON)
-{
-  Json::Value root;
-  Json::CharReaderBuilder builder;
-  JSONCPP_STRING errs;
-  std::stringstream stream;
-  stream << journalctl_json_snippet;
-
-  bool res = parseFromStream(builder, stream, &root, &errs);
-  ASSERT_TRUE(res) << "failed to parse sample json";
-
-  // Should check that the arguments are correct
-  EXPECT_CALL(*adapter_mock, put_data(_, _, _, _, _, _))
-    .Times(1);
-
-  logs_controller->add_row_from_json(root);
-}
 
 // Test for method add_data_to_record with a valid argument passed
 TEST_F(LogsControllerTest, TEST_ADD_DATA_TO_RECORD_VALID)

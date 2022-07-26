@@ -2,7 +2,6 @@
 #define TABS_CONTROLLER_LOGSCONTROLLER_H
 
 #include "../model/status_column_record.h"
-#include "jsoncpp/json/json.h"
 #include "status_controller.h"
 
 #include <memory>
@@ -27,7 +26,7 @@ protected:
   static std::string format_log_data(const std::string &data);
 
   bool add_data_to_record_helper(std::shared_ptr<std::istringstream> json_data);
-  void add_row_from_json(const Json::Value &entry);
+  void add_row(const std::string &entry);
 
 private:
   std::shared_ptr<LogsTab> logs;
