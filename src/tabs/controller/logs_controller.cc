@@ -42,7 +42,13 @@ void LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::V
   else if(type == "DENIED") {
     name      = format_log_data(entry["_AUDIT_FIELD_PROFILE"].asString());
     operation = format_log_data(entry["_AUDIT_FIELD_OPERATION"].asString());
-    status    = "Not implemented yet!";
+
+    if(operation == "capable") {
+      status = "capname: " + entry["_AUDIT_FIELD_CAPNAME"].asString() + " capability: " + entry["_AUDIT_FIELD_CAPABILITY"].asString();
+    }
+    else {
+      status = "requested mask: " + format_log_data(entry["_AUDIT_FIELD_REQUESTED_MASK"].asString()) + " denied mask: " + format_log_data(entry["_AUDIT_FIELD_DENIED_MASK"].asString());
+    }
   }
   // /* Default event type */
   // else if(type == "INVALID") {
