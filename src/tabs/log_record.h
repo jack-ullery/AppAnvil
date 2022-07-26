@@ -28,9 +28,12 @@ class LogRecord {
         LogRecord&  operator=(const LogRecord&)     = default;
         LogRecord&  operator=(LogRecord&&)          = default;
 
+        // Whether or not this record actually has parseable data
+        bool has_data();
+
         // Method to access the parsed data (make sure to NOT free this data)
         // We may want to create getter functions in the future to hide this object
-        const aa_log_record* Data();
+        aa_log_record* Data();
 
     private:
         // The parsed record

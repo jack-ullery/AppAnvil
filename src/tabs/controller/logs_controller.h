@@ -2,7 +2,6 @@
 #define TABS_CONTROLLER_LOGSCONTROLLER_H
 
 #include "../model/status_column_record.h"
-#include "jsoncpp/json/json.h"
 #include "status_controller.h"
 
 #include <memory>
@@ -12,7 +11,7 @@
 #include <vector>
 
 #ifdef TESTS_ENABLED
-#include <gtest/gtest.h>
+  #include <gtest/gtest.h>
 #endif
 
 template<class LogsTab, class Database, class Adapter>
@@ -37,14 +36,14 @@ protected:
   static std::string format_log_data(const std::string &data);
 
   bool add_data_to_record_helper(std::shared_ptr<std::istringstream> json_data);
-  void add_row_from_json(const Json::Value &entry);
+  void add_row(const std::string &entry);
 
 private:
   std::shared_ptr<LogsTab> logs;
   std::shared_ptr<Adapter> adapter;
 
 #ifdef TESTS_ENABLED
-    FRIEND_TEST(LogAdapterTest, TEST_FORMAT_LOG_DATA);
+  FRIEND_TEST(LogsControllerTest, TEST_ADD_ROW);
 #endif
 
 };

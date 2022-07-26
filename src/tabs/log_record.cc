@@ -1,24 +1,31 @@
 #include "log_record.h"
 #include <iostream>
+#include <ostream>
 
 LogRecord::LogRecord(const std::string &log)
 {
     // NOLINTNEXTLINE (cppcoreguidelines-pro-type-const-cast)
-    char *log_char_ptr = const_cast<char*>(log.data());
-    
+    char *log_char = const_cast<char*>(log.c_str());
+
     // Parse the log into a record (which will need to be freed before the constructor completes)
-    data = parse_record(log_char_ptr);
+    aa_log_record *record = parse_record(log_char);
 
     // If the returned data is null, give an error message
-    if(data == NULL) {
+    if(record == NULL) {
         std::cerr << "Could not parse the following record: " << log << std::endl;
+    }
+    else {
+        data = record;
     }
 }
 
-const aa_log_record* LogRecord::Data() {
-    return data;
+bool LogRecord::has_data() {
+    return (data != NULL);
 }
 
+aa_log_record* LogRecord::Data() {
+    return data;
+}
 
 LogRecord::~LogRecord()
 {

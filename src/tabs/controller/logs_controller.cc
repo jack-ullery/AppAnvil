@@ -1,4 +1,5 @@
 #include "logs_controller.h"
+#include "../log_record.h"
 #include "../model/database.h"
 #include "../model/status_column_record.h"
 #include "../view/logs.h"
@@ -6,11 +7,10 @@
 #include <glibmm/priorities.h>
 #include <list>
 #include <memory>
+#include <iostream>
 #include <sigc++/functors/mem_fun.h>
 #include <sigc++/functors/ptr_fun.h>
 #include <sstream>
-
-#include <iostream>
 
 template<class LogsTab, class Database, class Adapter>
 bool LogsController<LogsTab, Database, Adapter>::on_button_event(GdkEventButton *event)
@@ -61,45 +61,54 @@ std::string LogsController<LogsTab, Database, Adapter>::format_log_data(const st
 }
 
 template<class LogsTab, class Database, class Adapter>
-void LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::Value &entry)
+void LogsController<LogsTab, Database, Adapter>::add_data_to_record(const std::string &data)
 {
-  // getting timestamp from json argument, retrieving important fields from json
-  const time_t timestamp      = std::stol(entry["_SOURCE_REALTIME_TIMESTAMP"].asString()) / 1000000;
-  const std::string type      = format_log_data(entry["_AUDIT_FIELD_APPARMOR"].asString());
-  const std::string pid       = entry["_PID"].asString();
-  
-  std::string operation;
-  std::string name;
+  auto json_data = std::make_shared<std::istringstream>(data);
+
+  auto lambda = [&, json_data]() -> bool { return add_data_to_record_helper(json_data); };
+
+  Glib::signal_idle().connect(lambda, Glib::PRIORITY_LOW);
+}
+
+template<class LogsTab, class Database, class Adapter>
+void LogsController<LogsTab, Database, Adapter>::add_row(const std::string &entry)
+{
+  LogRecord record(entry);
+
+  if(!record.has_data()) {
+    return;
+  }
+
+  const long timestamp        = record.Data()->epoch;
+  const std::string type      = record.Data()->name;
+  const unsigned long pid     = record.Data()->pid;
+  const std::string operation = record.Data()->operation;
+  const std::string name      = record.Data()->profile;
+
   std::list<std::pair<std::string, std::string>> metadata;
 
-  // Adapted from: https://gitlab.com/apparmor/apparmor/-/blob/master/libraries/libapparmor/include/aalogparse.h
-  if(type == "STATUS") {
-    name      = entry["_AUDIT_FIELD_NAME"].asString();
-    operation = format_log_data(entry["_AUDIT_FIELD_OPERATION"].asString());
+  // // Adapted from: https://gitlab.com/apparmor/apparmor/-/blob/master/libraries/libapparmor/include/aalogparse.h
+  // if(type == "STATUS") {
+  //   // std::string status = record.Data()->;
+  //   // metadata.push_back({"Status", status});
+  // }
+  // /* Denied access event */
+  // else if(type == "DENIED") {
+  //   if(operation == "capable") {
+  //     std::string capname    = record.Data()->name;
+  //     std::string capability = record.Data()->name2;
 
-    std::string status = format_log_data(entry["_AUDIT_FIELD_PROFILE"].asString());
-    metadata.push_back({"Status", status});
-  }
-  /* Denied access event */
-  else if(type == "DENIED") {
-    name      = format_log_data(entry["_AUDIT_FIELD_PROFILE"].asString());
-    operation = format_log_data(entry["_AUDIT_FIELD_OPERATION"].asString());
+  //     metadata.push_back({"Capname", capname});
+  //     metadata.push_back({"Capability", capability});
+  //   }
+  //   else {
+  //     std::string requested = record.Data()->requested_mask;
+  //     std::string denied    = record.Data()->denied_mask;
 
-    if(operation == "capable") {
-      std::string capname = entry["_AUDIT_FIELD_CAPNAME"].asString();
-      std::string capability = entry["_AUDIT_FIELD_CAPABILITY"].asString();
-
-      metadata.push_back({"Capname", capname});
-      metadata.push_back({"Capability", capability});
-    }
-    else {
-      std::string requested = format_log_data(entry["_AUDIT_FIELD_REQUESTED_MASK"].asString());
-      std::string denied    = format_log_data(entry["_AUDIT_FIELD_DENIED_MASK"].asString());
-
-      metadata.push_back({"Requested Mask", requested});
-      metadata.push_back({"Denied Mask", denied});
-    }
-  }
+  //     metadata.push_back({"Requested Mask", requested});
+  //     metadata.push_back({"Denied Mask", denied});
+  //   }
+  // }
   // /* Default event type */
   // else if(type == "INVALID") {
 
@@ -120,61 +129,34 @@ void LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::V
   // else if(type == "HINT") {
 
   // }
-  else {
-    std::cerr << "Error - Unknown log type: " << type << std::endl;
-    name      = entry["_AUDIT_FIELD_NAME"].asString();
-    operation = format_log_data(entry["_AUDIT_FIELD_OPERATION"].asString());
-
-    std::string status = format_log_data(entry["_AUDIT_FIELD_PROFILE"].asString());
-    metadata.push_back({"Status", status});
-  }
+  // else {
+  //   std::cerr << "Error - Unknown log type: " << type << std::endl;
+  // }
 
   adapter->put_data(timestamp,
                     type,
                     operation,
                     name,
-                    stoul(pid),
+                    pid,
                     metadata);
 }
 
-template<class LogsTab, class Database, class Adapter>
-void LogsController<LogsTab, Database, Adapter>::add_data_to_record(const std::string &data)
+template<class LogsTab, class Database, class Adapter> 
+bool LogsController<LogsTab, Database, Adapter>::add_data_to_record_helper(std::shared_ptr<std::istringstream> data)
 {
-  auto json_data = std::make_shared<std::istringstream>(data);
-
-  auto lambda = [&, json_data]() -> bool { return add_data_to_record_helper(json_data); };
-
-  Glib::signal_idle().connect(lambda, Glib::PRIORITY_LOW);
-}
-
-template<class LogsTab, class Database, class Adapter>
-bool LogsController<LogsTab, Database, Adapter>::add_data_to_record_helper(std::shared_ptr<std::istringstream> json_data)
-{
-  // Declare some variables that will be written to
-  Json::Value value;
-  Json::CharReaderBuilder builder;
-  JSONCPP_STRING errs;
-
-  // gets each log entry (in json format, separated by \n), parses the json, and calls add_row_from_json to add each individual entry
-  for (uint i = 0; i < 127; i++) {
+  // gets each log entry and calls add_row to add each individual entry
+  for(uint i = 0; i < 127; i++) {
     // Get the next line (if it exists)
     std::string line;
-    if (!std::getline(*json_data, line)) {
+    if(!std::getline(*data, line)){
       // We exhausted the input stream, which means no more logs exist
       // Return false to disconnect the signal handler
       refresh();
       return false;
     }
 
-    // A log exists, so lets parse it using JsonCpp
-    std::stringstream log_stream(line);
-
-    if (!parseFromStream(builder, log_stream, &value, &errs)) {
-      throw std::invalid_argument(errs + "\nArgument of add_data_to_record contains line with invalid JSON format.");
-    }
-
-    // Create a row from the json value
-    add_row_from_json(value);
+    // Add the row to the record
+    add_row(line);
   }
 
   // Refresh the display to show an accurate count of the number of logs
