@@ -3,6 +3,8 @@
 
 #include "status.h"
 
+#include <gtkmm/box.h>
+#include <gtkmm/togglebutton.h>
 #include <memory>
 #include <string>
 #include <vector>
@@ -33,15 +35,21 @@ protected:
   // This calls the default_change_fun with the correct values for the profile, old_status, and new_status
   void change_status();
 
+  void handle_load_profile_toggle();
+  void handle_change_state_toggle();
+
 private:
   sigc::slot<void(std::string, std::string, std::string)> profile_status_change_fun;
 
   // Widgets
   Glib::RefPtr<Gtk::Builder> builder;
-  
+
+  std::shared_ptr<Gtk::ToggleButton> p_change_state_toggle;
+  std::shared_ptr<Gtk::ToggleButton> p_load_profile_toggle;
+
+  std::shared_ptr<Gtk::Box> p_state_selection_box;
   std::shared_ptr<Gtk::ComboBoxText> p_status_selection;
   std::shared_ptr<Gtk::Button> p_apply_button;
-  std::shared_ptr<Gtk::Button> p_load_profile;
   std::shared_ptr<Gtk::Label> p_apply_info_text;
 
   std::shared_ptr<Gtk::Box> p_profile_info;

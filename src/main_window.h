@@ -72,8 +72,6 @@ protected:
    */
   bool on_switch(GdkEvent *event);
 
-  void on_load_profile_button_pressed();
-
   void send_status_change(const std::string &profile, const std::string &old_status, const std::string &new_status);
 
 private:
@@ -106,16 +104,12 @@ private:
   std::shared_ptr<ProfilesControllerInstance>    prof_control;
   std::shared_ptr<ProcessesControllerInstance>   proc_control;
   std::shared_ptr<LogsControllerInstance>        logs_control;
-  std::shared_ptr<ProfileLoaderControllerInstance> profile_loader_control;
 
   // Tab (Without Controller)
   std::shared_ptr<Help> help;
 
   // Second thread for calling command line utilities
   std::shared_ptr<ConsoleThreadInstance> console;
-
-  // Whether the "Load Profile" page is currently visible on the stack
-  bool load_profile_visible = false;
 
   // Controls whether a the 'Search' button is visible
   void handle_search_button_visiblity();
