@@ -15,6 +15,9 @@ public:
   // Sets the function to be used when changing the status of a profile, this is used in main_window.cc
   void set_status_change_signal_handler(sigc::slot<void(std::string, std::string, std::string)> change_fun);
 
+  // Sets the function to be called when the `p_load_profile` button is pressed 
+  void set_load_profile_signal_handler(sigc::slot<void> change_fun);
+
   /**
    * @brief Change the text in the label next to the Apply button/spinner.
    */
@@ -38,6 +41,7 @@ private:
   
   std::shared_ptr<Gtk::ComboBoxText> p_status_selection;
   std::shared_ptr<Gtk::Button> p_apply_button;
+  std::shared_ptr<Gtk::Button> p_load_profile;
   std::shared_ptr<Gtk::Label> p_apply_info_text;
 
   std::shared_ptr<Gtk::Box> p_profile_info;

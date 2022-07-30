@@ -2,6 +2,12 @@
 <!-- Generated with glade 3.22.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
+  <object class="GtkImage" id="load_profile_icon">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">list-add</property>
+    <property name="icon_size">2</property>
+  </object>
   <object class="GtkBox" id="s_box">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -15,22 +21,39 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
-          <object class="GtkScrolledWindow" id="s_win">
+          <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="hexpand">True</property>
-            <property name="vexpand">True</property>
-            <property name="shadow_type">in</property>
+            <property name="app_paintable">True</property>
+            <property name="can_focus">False</property>
+            <property name="orientation">vertical</property>
             <child>
-              <object class="GtkTreeView" id="s_view">
+              <placeholder/>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow" id="s_win">
                 <property name="visible">True</property>
+                <property name="app_paintable">True</property>
                 <property name="can_focus">True</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
-                <child internal-child="selection">
-                  <object class="GtkTreeSelection"/>
+                <property name="shadow_type">in</property>
+                <child>
+                  <object class="GtkTreeView" id="s_view">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+                    <child internal-child="selection">
+                      <object class="GtkTreeSelection"/>
+                    </child>
+                  </object>
                 </child>
               </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
             </child>
           </object>
           <packing>
@@ -40,32 +63,47 @@
           </packing>
         </child>
         <child>
-          <object class="GtkBox" id="p_profile_info">
-            <property name="width_request">100</property>
-            <property name="height_request">-1</property>
+          <object class="GtkSeparator">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="halign">end</property>
-            <property name="margin_left">10</property>
-            <property name="margin_right">10</property>
-            <property name="margin_top">10</property>
-            <property name="margin_bottom">10</property>
-            <property name="hexpand">False</property>
-            <property name="vexpand">True</property>
+            <property name="orientation">vertical</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="orientation">vertical</property>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="halign">center</property>
-                <property name="margin_left">5</property>
-                <property name="margin_right">5</property>
                 <property name="margin_top">10</property>
-                <property name="margin_bottom">5</property>
-                <property name="label" translatable="yes">Active Proccesses: </property>
-                <attributes>
-                  <attribute name="weight" value="semibold"/>
-                </attributes>
+                <property name="margin_bottom">10</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkButton" id="p_load_profile">
+                    <property name="label" translatable="yes">  Load Profile</property>
+                    <property name="width_request">100</property>
+                    <property name="visible">True</property>
+                    <property name="app_paintable">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="halign">center</property>
+                    <property name="image">load_profile_icon</property>
+                    <property name="always_show_image">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -74,13 +112,9 @@
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="p_num_perm_label">
+              <object class="GtkSeparator">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="halign">center</property>
-                <property name="margin_left">5</property>
-                <property name="margin_right">5</property>
-                <property name="margin_bottom">10</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -89,18 +123,149 @@
               </packing>
             </child>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkBox" id="p_profile_info">
+                <property name="width_request">200</property>
+                <property name="height_request">-1</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="halign">center</property>
-                <property name="margin_left">5</property>
-                <property name="margin_right">5</property>
+                <property name="halign">end</property>
+                <property name="margin_left">10</property>
+                <property name="margin_right">15</property>
                 <property name="margin_top">10</property>
-                <property name="margin_bottom">5</property>
-                <property name="label" translatable="yes">Number Permissions: </property>
-                <attributes>
-                  <attribute name="weight" value="semibold"/>
-                </attributes>
+                <property name="margin_bottom">10</property>
+                <property name="hexpand">False</property>
+                <property name="vexpand">True</property>
+                <property name="resize_mode">queue</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_top">15</property>
+                    <property name="margin_bottom">10</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="halign">end</property>
+                        <property name="margin_bottom">5</property>
+                        <property name="label" translatable="yes">Number Permissions</property>
+                        <attributes>
+                          <attribute name="weight" value="semibold"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="p_num_perm_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="halign">end</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_top">10</property>
+                    <property name="margin_bottom">10</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="halign">end</property>
+                        <property name="margin_bottom">5</property>
+                        <property name="label" translatable="yes">Active Proccesses</property>
+                        <attributes>
+                          <attribute name="weight" value="semibold"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="p_num_proc_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="halign">end</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_top">10</property>
+                    <property name="margin_bottom">10</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="halign">end</property>
+                        <property name="margin_bottom">5</property>
+                        <property name="label" translatable="yes">Number Logs</property>
+                        <attributes>
+                          <attribute name="weight" value="semibold"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="p_num_log_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="halign">end</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -109,60 +274,23 @@
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="p_num_proc_label">
+              <object class="GtkSeparator">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="halign">center</property>
-                <property name="margin_left">5</property>
-                <property name="margin_right">5</property>
-                <property name="margin_bottom">10</property>
+                <property name="margin_top">5</property>
               </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
+                <property name="pack_type">end</property>
                 <property name="position">3</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="halign">center</property>
-                <property name="margin_left">5</property>
-                <property name="margin_right">5</property>
-                <property name="margin_top">10</property>
-                <property name="margin_bottom">5</property>
-                <property name="label" translatable="yes">Number Logs: </property>
-                <attributes>
-                  <attribute name="weight" value="semibold"/>
-                </attributes>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">4</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="p_num_log_label">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="halign">center</property>
-                <property name="margin_left">5</property>
-                <property name="margin_right">5</property>
-                <property name="margin_bottom">10</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">5</property>
               </packing>
             </child>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">1</property>
+            <property name="position">2</property>
           </packing>
         </child>
       </object>

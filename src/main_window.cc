@@ -17,7 +17,6 @@ MainWindow::MainWindow()
   m_tab_stack.add(*(prof_control->get_tab()), "prof", "Profiles");
   m_tab_stack.add(*(proc_control->get_tab()), "proc", "Processes");
   m_tab_stack.add(*(logs_control->get_tab()), "logs", "Logs");
-  m_tab_stack.add(*(profile_loader_control->get_tab()), "profile_loader", "Load Profile");
 
   // Attach the stack to the stack switcher
   m_switcher.set_stack(m_tab_stack);
@@ -47,10 +46,15 @@ MainWindow::MainWindow()
   auto search_togggle_fun = sigc::mem_fun(*this, &MainWindow::on_search_toggle);
   m_search_button.signal_toggled().connect(search_togggle_fun, true);
 
+  // Add signal handle to the "Load Profile Button"
+  auto load_profile_fun = sigc::mem_fun(*this, &MainWindow::on_load_profile_button_pressed);
+  prof_control->get_tab()->set_load_profile_signal_handler(load_profile_fun);
+
   // Add the main page and the help page to the top stack
   // This stack controls whether the 'Help' page is visible, or the main application 
   m_top_stack.add(m_tab_stack, "main_page");
   m_top_stack.add(*help, "help_page");
+  m_top_stack.add(*(profile_loader_control->get_tab()), "profile_loader", "Load Profile");
 
   // Set some default properties for titlebar
   m_headerbar.set_custom_title(m_switcher);
@@ -86,15 +90,29 @@ void MainWindow::send_status_change(const std::string &profile, const std::strin
   console->send_change_profile_status_message(profile, old_status, new_status);
 }
 
+void MainWindow::on_load_profile_button_pressed()
+{
+  load_profile_visible = true;
+  m_help_button.set_active(true);
+}
+
 void MainWindow::on_help_toggle()
 {
   bool is_active = m_help_button.get_active();
 
   if(is_active){
-    m_switcher.hide();
-    m_top_stack.set_visible_child("help_page");
-    m_help_button.set_label("Return to application");
-    m_help_button.set_always_show_image(false);
+    if(load_profile_visible) {
+      m_switcher.hide();
+      m_top_stack.set_visible_child("profile_loader");
+      m_help_button.set_label("Cancel operation");
+      m_help_button.set_always_show_image(false);
+    }
+    else {
+      m_switcher.hide();
+      m_top_stack.set_visible_child("help_page");
+      m_help_button.set_label("Return to application");
+      m_help_button.set_always_show_image(false);
+    }
   }
   else {
     m_switcher.show();
@@ -102,6 +120,8 @@ void MainWindow::on_help_toggle()
     m_help_button.set_label("");
     m_help_button.set_image_from_icon_name("dialog-question");
     m_help_button.set_always_show_image(true);
+
+    load_profile_visible = false;
   }
 
   handle_search_button_visiblity();
@@ -153,10 +173,7 @@ bool MainWindow::on_switch(GdkEvent *event)
 
 void MainWindow::handle_search_button_visiblity()
 {
-  bool help_is_active = m_help_button.get_active();
-  std::string visible_child = m_tab_stack.get_visible_child_name();
-
-  if(visible_child == "profile_loader" && !help_is_active) {
+  if(load_profile_visible) {
     m_search_button.hide();
   } else {
     m_search_button.show();

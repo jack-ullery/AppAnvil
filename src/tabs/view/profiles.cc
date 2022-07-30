@@ -48,6 +48,11 @@ void Profiles::set_status_change_signal_handler(sigc::slot<void(std::string, std
   profile_status_change_fun = std::move(change_fun);
 }
 
+void Profiles::set_load_profile_signal_handler(sigc::slot<void> load_fun)
+{
+  p_load_profile->signal_clicked().connect(load_fun);
+}
+
 void Profiles::set_apply_label_text(const std::string &str) {
   p_apply_info_text->set_text(str);
 }
@@ -71,6 +76,7 @@ Profiles::Profiles()
       builder{Status::get_builder()},
       p_status_selection{get_widget_shared<Gtk::ComboBoxText>("p_status_selection", builder)},
       p_apply_button{get_widget_shared<Gtk::Button>("p_apply_button", builder)},
+      p_load_profile{get_widget_shared<Gtk::Button>("p_load_profile", builder)},
       p_apply_info_text{get_widget_shared<Gtk::Label>("p_apply_info_text", builder)},
       p_profile_info{get_widget_shared<Gtk::Box>("p_profile_info", builder)},
       p_num_log_label{get_widget_shared<Gtk::Label>("p_num_log_label", builder)},
