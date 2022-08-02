@@ -1,9 +1,11 @@
 #ifndef TABS_PROFILES_H
 #define TABS_PROFILES_H
 
+#include "profile_loader.h"
 #include "status.h"
 
 #include <gtkmm/box.h>
+#include <gtkmm/stack.h>
 #include <gtkmm/togglebutton.h>
 #include <memory>
 #include <string>
@@ -47,6 +49,7 @@ private:
   std::shared_ptr<Gtk::ToggleButton> p_change_state_toggle;
   std::shared_ptr<Gtk::ToggleButton> p_load_profile_toggle;
 
+  std::shared_ptr<Gtk::Stack> p_stack;
   std::shared_ptr<Gtk::Box> p_state_selection_box;
   std::shared_ptr<Gtk::ComboBoxText> p_status_selection;
   std::shared_ptr<Gtk::Button> p_apply_button;
@@ -56,6 +59,9 @@ private:
   std::shared_ptr<Gtk::Label> p_num_log_label;
   std::shared_ptr<Gtk::Label> p_num_proc_label;
   std::shared_ptr<Gtk::Label> p_num_perm_label;
+
+  // Profile Loader page, which is added to the stack
+  std::unique_ptr<ProfileLoader> loader;
 
   // Misc
   template<typename T_Widget> static std::shared_ptr<T_Widget> get_widget_shared(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);

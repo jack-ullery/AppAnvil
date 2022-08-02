@@ -4,7 +4,6 @@
 #include "console_thread.h"
 #include "tabs/controller/logs_controller.h"
 #include "tabs/controller/processes_controller.h"
-#include "tabs/controller/profile_loader_controller.h"
 #include "tabs/controller/profiles_controller.h"
 #include "tabs/model/database.h"
 #include "tabs/model/process_adapter.h"
@@ -80,7 +79,6 @@ private:
   typedef ProfilesController<Profiles, Database, ProfileAdapter<Database>> ProfilesControllerInstance;
   typedef ProcessesController<Processes, Database, ProcessAdapter<Database, StatusColumnRecord>> ProcessesControllerInstance;
   typedef LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord>> LogsControllerInstance;
-  typedef ProfileLoaderController<ProfileLoader> ProfileLoaderControllerInstance;
 
   typedef ConsoleThread<ProfilesControllerInstance,
                         ProcessesControllerInstance,
