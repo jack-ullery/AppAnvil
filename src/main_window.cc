@@ -9,7 +9,6 @@ MainWindow::MainWindow()
       prof_control{new ProfilesControllerInstance(database)},
       proc_control{new ProcessesControllerInstance(database)},
       logs_control{new LogsControllerInstance(database)},
-      profile_loader_control{new ProfileLoaderControllerInstance()},
       help{new Help()},
       console{new ConsoleThreadInstance(prof_control, proc_control, logs_control)}
 {
@@ -17,7 +16,6 @@ MainWindow::MainWindow()
   m_tab_stack.add(*(prof_control->get_tab()), "prof", "Profiles");
   m_tab_stack.add(*(proc_control->get_tab()), "proc", "Processes");
   m_tab_stack.add(*(logs_control->get_tab()), "logs", "Logs");
-  m_tab_stack.add(*(profile_loader_control->get_tab()), "profile_loader", "Load Profile");
 
   // Attach the stack to the stack switcher
   m_switcher.set_stack(m_tab_stack);
@@ -134,9 +132,6 @@ void MainWindow::on_search_toggle()
 bool MainWindow::on_switch(GdkEvent *event)
 {
   std::ignore = event;
-  
-  // Make sure to clear the label on the load-profiles tab 
-  profile_loader_control->clearLabel();
 
   std::string visible_child = m_tab_stack.get_visible_child_name();
   if(visible_child == "prof") {
