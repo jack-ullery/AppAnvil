@@ -7,7 +7,7 @@
 CommandCaller::results CommandCaller::call_command(const std::vector<std::string> &command)
 {
   results result;
-  Glib::spawn_sync("/usr/sbin/", command, Glib::SpawnFlags::SPAWN_DEFAULT, {}, &result.output, &result.error, &result.exit_status);
+  Glib::spawn_sync("/usr/sbin/", command, Glib::SpawnFlags::SPAWN_SEARCH_PATH, {}, &result.output, &result.error, &result.exit_status);
   return result;
 }
 
