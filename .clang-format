@@ -61,7 +61,7 @@ Cpp11BracedListStyle: true
 DeriveLineEnding: true
 DerivePointerAlignment: false
 DisableFormat:   false
-# EmptyLineAfterAccessModifier: Never
+EmptyLineAfterAccessModifier: Never
 EmptyLineBeforeAccessModifier: LogicalBlock
 ExperimentalAutoDetectBinPacking: false
 FixNamespaceComments: true
@@ -82,7 +82,7 @@ IncludeCategories:
     SortPriority:    0
 IncludeIsMainRegex: '(Test)?$'
 IncludeIsMainSourceRegex: ''
-# IndentAccessModifiers: true
+IndentAccessModifiers: true
 IndentCaseLabels: false
 IndentGotoLabels: true
 IndentPPDirectives: None
@@ -99,7 +99,7 @@ ObjCBinPackProtocolList: Auto
 ObjCBlockIndentWidth: 2
 ObjCSpaceAfterProperty: false
 ObjCSpaceBeforeProtocolList: true
-# PackConstructorInitializers: Never
+PackConstructorInitializers: Never
 PenaltyBreakAssignment: 2
 PenaltyBreakBeforeFirstCallParameter: 19
 PenaltyBreakComment: 300
