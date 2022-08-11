@@ -26,7 +26,13 @@ jobs:
       # Formats code using clang-format (version 14 or higher required)
       run: make FORMAT
 
-    - name: Add, Commit, & Push 
+    - name: Configure Git
+      run: |
+        # setup the username and email for the bot. Using 'GitHub Actions Bot' with no email by default
+        git config user.name "GitHub Actions Bot"
+        git config user.email "<>"
+
+    - name: Commit & Push 
       run: |
         num_files_changed=$(git diff --numstat | wc -l)
         if [ $num_files_changed != 0 ]; then 
