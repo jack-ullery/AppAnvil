@@ -1,16 +1,15 @@
 name: Auto-Format
 
-on: 
-  push:
-    branches:
-      - 'main'
+on:
+  pull_request_target:
+    types: [assigned, opened, synchronize, reopened]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
 
 jobs:
-  build:
+  format:
     runs-on: ubuntu-22.04
 
     steps:
@@ -20,14 +19,11 @@ jobs:
       run: |
         sudo apt-get update 1> /dev/null
         sudo apt upgrade 1> /dev/null
-        sudo apt-get install libgtkmm-3.0-dev libjsoncpp-dev libgtest-dev libgmock-dev clang-tidy cppcheck clang-format 1> /dev/null
-
-    - name: Configure CMake
-      run: cmake .
+        sudo apt-get install clang-format 1> /dev/null
 
     - name: Format Code
       # Formats code using clang-format (version 14 or higher required)
-      run: make FORMAT
+      run: clang-format -style=file -i ./src/*.cc ./src/*.h ./src/*.inl ./test/src/*.cc ./test/src/*.h ./test/src/*.inl ./aa-caller/src/*.cc ./aa-caller/src/*.h ./aa-caller/src/*.inl
 
     - name: Configure Git
       run: |
