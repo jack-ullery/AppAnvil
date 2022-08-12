@@ -59,7 +59,7 @@ public:
   void show_searchbar(const bool &should_focus);
 
 protected:
-  explicit Status(const std::string& glade_resource);
+  explicit Status(const std::string &glade_resource);
 
   Glib::RefPtr<Gtk::Builder> get_builder();
 
@@ -81,8 +81,10 @@ private:
   std::unique_ptr<Gtk::Label> s_found_label;
 
   // Misc
-  template<typename T_Widget> static std::shared_ptr<T_Widget> get_widget_shared(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);
-  template<typename T_Widget> static std::unique_ptr<T_Widget> get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);
+  template<typename T_Widget>
+  static std::shared_ptr<T_Widget> get_widget_shared(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);
+  template<typename T_Widget>
+  static std::unique_ptr<T_Widget> get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);
 
   // clang-tidy complains about the `COLUMN_TYPE_STRING` macro, so we assign it here and tell clang-tidy not to look at it
   static constexpr unsigned int COLUMN_TYPE_STRING = G_TYPE_STRING; // NOLINT

@@ -11,9 +11,14 @@ using ::testing::Sequence;
 class BlockingQueueTest : public ::testing::Test
 {
 protected:
-  BlockingQueueTest() : my_internal_queue{new DequeMock<int>()}, mtx_mock{new MutexMock()}, b_queue(my_internal_queue, mtx_mock) { }
+  BlockingQueueTest()
+    : my_internal_queue{ new DequeMock<int>() },
+      mtx_mock{ new MutexMock() },
+      b_queue(my_internal_queue, mtx_mock)
+  {
+  }
 
-  virtual void SetUp() { }
+  virtual void SetUp() {}
 
   void expect_locks(unsigned int num);
 
@@ -28,11 +33,12 @@ protected:
 // Expect the mutex to be locked and unlocked `num` times
 // If lock/unlock is called in the wrong order this throws an error
 // Fuerthermore, `mtx_mock` is a fake mutex which never blocks.
-void BlockingQueueTest::expect_locks(unsigned int num)
+void
+BlockingQueueTest::expect_locks(unsigned int num)
 {
   Sequence lock_calls;
 
-  for(unsigned int i = 0; i < num; i++) {
+  for (unsigned int i = 0; i < num; i++) {
     EXPECT_CALL(*mtx_mock, lock()).Times(1).InSequence(lock_calls);
     EXPECT_CALL(*mtx_mock, unlock()).Times(1).InSequence(lock_calls);
   }

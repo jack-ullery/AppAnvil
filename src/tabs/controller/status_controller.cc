@@ -13,19 +13,24 @@
 #include <string>
 
 template<class Tab>
-bool StatusController<Tab>::should_filter(const std::string &str, const std::string &rule, const bool &use_regex, const bool &match_case, const bool &whole_word)
+bool
+StatusController<Tab>::should_filter(const std::string &str,
+                                     const std::string &rule,
+                                     const bool &use_regex,
+                                     const bool &match_case,
+                                     const bool &whole_word)
 {
   std::string new_str  = str;
   std::string new_rule = rule;
 
-  if(use_regex) {
+  if (use_regex) {
     try {
       // Set a flag if we want to ignore case
       auto flag = (match_case) ? (std::regex_constants::collate) : (std::regex_constants::collate | std::regex_constants::icase);
       // Try to parse the regular expression rule.
       std::regex filter_regex(new_rule, flag);
 
-      if(whole_word) {
+      if (whole_word) {
         // Match strings that entirely match the rule
         return std::regex_match(new_str, filter_regex);
       }
@@ -33,17 +38,17 @@ bool StatusController<Tab>::should_filter(const std::string &str, const std::str
       // Otherwise, match strings that contain a substring that matches the rule
       return std::regex_search(new_str, filter_regex);
 
-    } catch(const std::regex_error &ex) {
+    } catch (const std::regex_error &ex) {
       // If the regular expression was not valid, return false
       return false;
     }
-  } else if(!match_case) {
+  } else if (!match_case) {
     // If we don't care about case and we are not using regex, convert the filtered string and rule to lower case
     transform(str.begin(), str.end(), new_str.begin(), ::tolower);
     transform(rule.begin(), rule.end(), new_rule.begin(), ::tolower);
   }
 
-  if(whole_word) {
+  if (whole_word) {
     // Only match strings that are exactly equal to the rule
     return new_str == new_rule;
   }
@@ -53,17 +58,18 @@ bool StatusController<Tab>::should_filter(const std::string &str, const std::str
 }
 
 template<class Tab>
-bool StatusController<Tab>::filter(const Gtk::TreeModel::iterator &node)
+bool
+StatusController<Tab>::filter(const Gtk::TreeModel::iterator &node)
 {
   const uint num_columns = tab->get_view()->get_n_columns();
   auto treeModel         = tab->get_view()->get_model();
   SearchInfo info        = tab->get_search_info();
 
   // If one column of the tree row has a string that matches the pattern, then make this node visible
-  for(uint i = 0; i < num_columns; i++) {
-    bool re  = false;
+  for (uint i = 0; i < num_columns; i++) {
+    bool re = false;
 
-    if(treeModel->get_column_type(i) == COLUMN_TYPE_STRING) {
+    if (treeModel->get_column_type(i) == COLUMN_TYPE_STRING) {
       // If the column is a string, see whether it matches the pattern
       std::string data;
       node->get_value(i, data);
@@ -77,7 +83,7 @@ bool StatusController<Tab>::filter(const Gtk::TreeModel::iterator &node)
     }
 
     // If the data in this column should be visible, show the entire row
-    if(re) {
+    if (re) {
       return true;
     }
   }
@@ -85,10 +91,10 @@ bool StatusController<Tab>::filter(const Gtk::TreeModel::iterator &node)
   // Search the children and determine whether or not they should be visible
   // For efficiency: we should use a more complex data structure, or do memoization
   auto children = node->children();
-  for(auto child = children.begin(); child != children.end(); child++) {
+  for (auto child = children.begin(); child != children.end(); child++) {
     bool re = filter(child);
     // If a child of this row is visible, make this row visible
-    if(re){
+    if (re) {
       return true;
     }
   }
@@ -97,7 +103,8 @@ bool StatusController<Tab>::filter(const Gtk::TreeModel::iterator &node)
 }
 
 template<class Tab>
-Json::Value StatusController<Tab>::parse_JSON(const std::string &raw_json)
+Json::Value
+StatusController<Tab>::parse_JSON(const std::string &raw_json)
 {
   std::stringstream stream;
   stream << raw_json;
@@ -106,7 +113,7 @@ Json::Value StatusController<Tab>::parse_JSON(const std::string &raw_json)
   Json::CharReaderBuilder builder;
   JSONCPP_STRING errs;
 
-  if(!parseFromStream(builder, stream, &root, &errs)) {
+  if (!parseFromStream(builder, stream, &root, &errs)) {
     throw std::invalid_argument(errs + "\nArgument of parse_JSON is not in valid JSON format.");
   }
 
@@ -115,16 +122,20 @@ Json::Value StatusController<Tab>::parse_JSON(const std::string &raw_json)
 
 template<class Tab>
 StatusController<Tab>::StatusController()
-: tab{new Tab()}
-{ }
+  : tab{ new Tab() }
+{
+}
 
 template<class Tab>
 StatusController<Tab>::StatusController(std::shared_ptr<Tab> tab)
-: tab{tab}
-{ }
+  : tab{ tab }
+{
+}
 
 template<class Tab>
-std::shared_ptr<Tab> StatusController<Tab>::get_tab(){
+std::shared_ptr<Tab>
+StatusController<Tab>::get_tab()
+{
   return tab;
 }
 

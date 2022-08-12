@@ -25,9 +25,12 @@ public:
   FRIEND_TEST(DispatcherMiddlemanTest, UPDATE_PROFILES_PROCESSES_SEQUENTIAL);
   FRIEND_TEST(DispatcherMiddlemanTest, UPDATE_PROFILES_PROCESSES_INTERLOCKING);
 
-  explicit DispatcherMiddlemanMock(std::shared_ptr<Dispatcher> disp, std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc,
-                                   std::shared_ptr<Logs> logs, std::shared_ptr<Mutex> my_mtx)
-      : DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>(disp, prof, proc, logs, my_mtx)
+  explicit DispatcherMiddlemanMock(std::shared_ptr<Dispatcher> disp,
+                                   std::shared_ptr<Profiles> prof,
+                                   std::shared_ptr<Processes> proc,
+                                   std::shared_ptr<Logs> logs,
+                                   std::shared_ptr<Mutex> my_mtx)
+    : DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>(disp, prof, proc, logs, my_mtx)
   {
   }
 };
@@ -36,8 +39,8 @@ public:
 // For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
 template class DispatcherMiddleman<ProfilesStatusMock, ProcessesStatusMock, LogsControllerMock, GlibDispatcherMock, MutexMock>;
 template class BlockingQueue<
-    DispatcherMiddleman<ProfilesStatusMock, ProcessesStatusMock, LogsControllerMock, GlibDispatcherMock, MutexMock>::CallData,
-    std::deque<DispatcherMiddleman<ProfilesStatusMock, ProcessesStatusMock, LogsControllerMock, GlibDispatcherMock, MutexMock>::CallData,
-               std::allocator<
-                   DispatcherMiddleman<ProfilesStatusMock, ProcessesStatusMock, LogsControllerMock, GlibDispatcherMock, MutexMock>::CallData>>,
-    MutexMock>;
+  DispatcherMiddleman<ProfilesStatusMock, ProcessesStatusMock, LogsControllerMock, GlibDispatcherMock, MutexMock>::CallData,
+  std::deque<DispatcherMiddleman<ProfilesStatusMock, ProcessesStatusMock, LogsControllerMock, GlibDispatcherMock, MutexMock>::CallData,
+             std::allocator<
+               DispatcherMiddleman<ProfilesStatusMock, ProcessesStatusMock, LogsControllerMock, GlibDispatcherMock, MutexMock>::CallData>>,
+  MutexMock>;

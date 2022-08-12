@@ -14,12 +14,16 @@ class DispatcherMiddlemanTest : public ::testing::Test
 {
 protected:
   DispatcherMiddlemanTest()
-      : disp{new GlibDispatcherMock()}, prof{new ProfilesStatusMock()}, proc{new ProcessesStatusMock()}, logs{new LogsControllerMock()},
-        mtx_mock{new MutexMock()}, dispatch_man(disp, prof, proc, logs, mtx_mock)
+    : disp{ new GlibDispatcherMock() },
+      prof{ new ProfilesStatusMock() },
+      proc{ new ProcessesStatusMock() },
+      logs{ new LogsControllerMock() },
+      mtx_mock{ new MutexMock() },
+      dispatch_man(disp, prof, proc, logs, mtx_mock)
   {
   }
 
-  virtual void SetUp() { }
+  virtual void SetUp() {}
 
   void expect_locks(unsigned int num);
 
@@ -39,11 +43,12 @@ protected:
 // Expect the mutex to be locked and unlocked `num` times
 // If lock/unlock is called in the wrong order this throws an error
 // Fuerthermore, `mtx_mock` is a fake mutex which never blocks.
-void DispatcherMiddlemanTest::expect_locks(unsigned int num)
+void
+DispatcherMiddlemanTest::expect_locks(unsigned int num)
 {
   Sequence lock_calls;
 
-  for(unsigned int i = 0; i < num; i++) {
+  for (unsigned int i = 0; i < num; i++) {
     EXPECT_CALL(*mtx_mock, lock()).Times(1).InSequence(lock_calls);
     EXPECT_CALL(*mtx_mock, unlock()).Times(1).InSequence(lock_calls);
   }

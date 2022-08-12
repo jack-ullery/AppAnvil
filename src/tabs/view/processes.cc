@@ -2,7 +2,7 @@
 
 #include <string>
 
-Processes::Processes() 
+Processes::Processes()
 {
   this->show_all();
 }

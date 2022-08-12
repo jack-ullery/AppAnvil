@@ -1,9 +1,9 @@
 #ifndef TEST_SRC_TABS_MODEL_STATUS_COLUMN_RECORD_MOCK_TEST_H
 #define TEST_SRC_TABS_MODEL_STATUS_COLUMN_RECORD_MOCK_TEST_H
 
-#include "tree_row_mock.h"
 #include "../../../../src/tabs/column_header.h"
 #include "../../../../src/tabs/model/status_column_record.h"
+#include "tree_row_mock.h"
 // #include "../../../../src/tabs/view/status.h"
 
 #include <gmock/gmock.h>
@@ -45,12 +45,12 @@ public:
   MOCK_METHOD(Gtk::TreeRow, get_parent_by_pid, (unsigned int pid));
 
 private:
-  const std::vector<ColumnHeader> col_names{ColumnHeader("Time"),
-                                            ColumnHeader("Type"),
-                                            ColumnHeader("Operation"),
-                                            ColumnHeader("Name"),
-                                            ColumnHeader("Pid", ColumnHeader::ColumnType::INT),
-                                            ColumnHeader("Status")};
+  const std::vector<ColumnHeader> col_names{ ColumnHeader("Time"),
+                                             ColumnHeader("Type"),
+                                             ColumnHeader("Operation"),
+                                             ColumnHeader("Name"),
+                                             ColumnHeader("Pid", ColumnHeader::ColumnType::INT),
+                                             ColumnHeader("Status") };
   // const std::shared_ptr<Status> tab{new Status()};
 };
 

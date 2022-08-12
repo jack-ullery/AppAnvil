@@ -4,11 +4,11 @@
 #include <string>
 #include <vector>
 
-/** 
-  * Calls commands on the terminal to be used by the rest of the program.
-  * This is where AppAnvil actually interfaces with AppArmor. 
-  * Most of these functions are called on the second thread.
-  **/
+/**
+ * Calls commands on the terminal to be used by the rest of the program.
+ * This is where AppAnvil actually interfaces with AppArmor.
+ * Most of these functions are called on the second thread.
+ **/
 class CommandCaller
 {
 public:
@@ -62,7 +62,8 @@ public:
   static std::string disable_profile(const std::string &profileName);
 
 protected:
-  struct results {
+  struct results
+  {
     int exit_status = 0;
     std::string output;
     std::string error;
@@ -78,7 +79,9 @@ protected:
   static std::string get_unconfined(CommandCaller *caller);
   static std::string load_profile(CommandCaller *caller, const std::string &fullFileName);
   static std::string disable_profile(CommandCaller *caller, const std::string &profileName);
-  static std::string execute_change(CommandCaller *caller, const std::string &profile, const std::string &old_status,
+  static std::string execute_change(CommandCaller *caller,
+                                    const std::string &profile,
+                                    const std::string &old_status,
                                     const std::string &new_status);
 };
 

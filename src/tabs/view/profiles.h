@@ -19,7 +19,7 @@ public:
   // Sets the function to be used when changing the status of a profile, this is used in main_window.cc
   void set_status_change_signal_handler(sigc::slot<void(std::string, std::string, std::string)> change_fun);
 
-  // Sets the function to be called when the `p_load_profile` button is pressed 
+  // Sets the function to be called when the `p_load_profile` button is pressed
   void set_load_profile_signal_handler(sigc::slot<void> change_fun);
 
   /**
@@ -64,7 +64,8 @@ private:
   std::unique_ptr<ProfileLoader> loader;
 
   // Misc
-  template<typename T_Widget> static std::shared_ptr<T_Widget> get_widget_shared(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);
+  template<typename T_Widget>
+  static std::shared_ptr<T_Widget> get_widget_shared(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);
 };
 
 #endif // TABS_PROFILES_H

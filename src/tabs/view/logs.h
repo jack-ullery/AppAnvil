@@ -17,7 +17,8 @@ public:
   explicit Logs();
 
 protected:
-  struct LogData {
+  struct LogData
+  {
     time_t timestamp;
     std::string type;
     std::string operation;
@@ -26,7 +27,12 @@ protected:
     std::string status;
 
     LogData(time_t a, std::string b, std::string c, std::string d, std::string e, std::string f)
-        : timestamp{a}, type{std::move(b)}, operation{std::move(c)}, name{std::move(d)}, pid{std::move(e)}, status{std::move(f)}
+      : timestamp{ a },
+        type{ std::move(b) },
+        operation{ std::move(c) },
+        name{ std::move(d) },
+        pid{ std::move(e) },
+        status{ std::move(f) }
     {
     }
   };

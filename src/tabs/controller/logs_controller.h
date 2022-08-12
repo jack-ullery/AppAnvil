@@ -10,7 +10,8 @@
 #include <string>
 #include <vector>
 
-template<class LogsTab, class Database, class Adapter> class LogsController : public StatusController<LogsTab>
+template<class LogsTab, class Database, class Adapter>
+class LogsController : public StatusController<LogsTab>
 {
 public:
   // For production

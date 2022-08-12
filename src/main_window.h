@@ -39,11 +39,11 @@ public:
   MainWindow();
 
 protected:
-  //Signal handlers:
+  // Signal handlers:
 
   /**
    * @brief Untoggles the button that controls the 'Help' page.
-   * 
+   *
    * @details
    * This function is used as a signal handler in the 'Help' page
    */
@@ -51,7 +51,7 @@ protected:
 
   /**
    * @brief Makes the 'Help' page visible whenever toggled.
-   * 
+   *
    * @details
    * Hides the stack and stack switcher, when showing the 'Help' page
    */
@@ -80,10 +80,8 @@ private:
   typedef ProcessesController<Processes, Database, ProcessAdapter<Database, StatusColumnRecord>> ProcessesControllerInstance;
   typedef LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord>> LogsControllerInstance;
 
-  typedef ConsoleThread<ProfilesControllerInstance,
-                        ProcessesControllerInstance,
-                        LogsControllerInstance> ConsoleThreadInstance;
- 
+  typedef ConsoleThread<ProfilesControllerInstance, ProcessesControllerInstance, LogsControllerInstance> ConsoleThreadInstance;
+
   // GUI Builder to parse UI from xml file
   Glib::RefPtr<Gtk::Builder> builder;
 
@@ -99,9 +97,9 @@ private:
   std::shared_ptr<Database> database;
 
   // Controllers
-  std::shared_ptr<ProfilesControllerInstance>    prof_control;
-  std::shared_ptr<ProcessesControllerInstance>   proc_control;
-  std::shared_ptr<LogsControllerInstance>        logs_control;
+  std::shared_ptr<ProfilesControllerInstance> prof_control;
+  std::shared_ptr<ProcessesControllerInstance> proc_control;
+  std::shared_ptr<LogsControllerInstance> logs_control;
 
   // Tab (Without Controller)
   std::shared_ptr<Help> help;

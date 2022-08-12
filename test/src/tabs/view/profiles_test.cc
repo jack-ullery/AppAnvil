@@ -13,10 +13,9 @@ public:
   MOCK_METHOD(void, handle_signal, ());
 
 protected:
-  ProfilesTest() 
-  { }
+  ProfilesTest() {}
 
-  virtual void SetUp() { }
+  virtual void SetUp() {}
   void click_everything(Gtk::Widget *obj);
   bool check_label_exists(Gtk::Widget *obj, std::string label_text);
 
@@ -24,14 +23,15 @@ protected:
 };
 
 // Recursive method to click all the checkboxes that are descendents of a Container Widget
-void ProfilesTest::click_everything(Gtk::Widget *obj)
+void
+ProfilesTest::click_everything(Gtk::Widget *obj)
 {
   // Attempt to cast the object as a Gtk::Button, then click it
   // This will also cast CheckButtons which are a type of Button
   Gtk::Button *bu = dynamic_cast<Gtk::Button *>(obj);
 
   // If bu is not a nullptr, then it is a Gtk::Button
-  if(bu) {
+  if (bu) {
     // click the button
     bu->clicked();
   }
@@ -40,23 +40,24 @@ void ProfilesTest::click_everything(Gtk::Widget *obj)
   Gtk::Container *parent = dynamic_cast<Gtk::Container *>(obj);
 
   // If parent is not a nullptr, then it is a Gtk::Container
-  if(parent) {
+  if (parent) {
     auto children = parent->get_children();
 
-    for(auto child: children) {
+    for (auto child : children) {
       click_everything(child);
     }
   }
 }
 
 // Recursive method to check whether label exists with `label_text`
-bool ProfilesTest::check_label_exists(Gtk::Widget *obj, std::string label_text)
+bool
+ProfilesTest::check_label_exists(Gtk::Widget *obj, std::string label_text)
 {
   // Attempt to cast the object as a Gtk::Label
   Gtk::Label *lab = dynamic_cast<Gtk::Label *>(obj);
 
   // If cb is not a nullptr, then it is a Gtk::Label
-  if(lab) {
+  if (lab) {
     // click the button
     return (lab->get_text().compare(label_text) == 0);
   }
@@ -65,13 +66,13 @@ bool ProfilesTest::check_label_exists(Gtk::Widget *obj, std::string label_text)
   Gtk::Container *parent = dynamic_cast<Gtk::Container *>(obj);
 
   // If parent is not a nullptr, then it is a Gtk::Container
-  if(parent) {
+  if (parent) {
     auto children = parent->get_children();
 
-    for(auto child: children) {
+    for (auto child : children) {
       bool re = check_label_exists(child, label_text);
       // If there was a child Gtk::Label with label_text as its text
-      if(re) {
+      if (re) {
         return true;
       }
     }

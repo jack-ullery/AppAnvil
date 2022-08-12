@@ -5,10 +5,11 @@
 #include <memory>
 #include <mutex>
 
-/** 
-  * This is a thread safe queue that blocks on a mutex for each operation
-  **/
-template<class T, class Deque, class Mutex> class BlockingQueue
+/**
+ * This is a thread safe queue that blocks on a mutex for each operation
+ **/
+template<class T, class Deque, class Mutex>
+class BlockingQueue
 {
 public:
   // Constructor

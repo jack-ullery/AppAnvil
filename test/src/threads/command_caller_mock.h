@@ -26,8 +26,8 @@ public:
   MOCK_METHOD(std::string, call_command, (const std::vector<std::string> &, const std::string &), (override));
   MOCK_METHOD(CommandCaller::results, call_command, (const std::vector<std::string> &), (override));
 
-  CommandCallerMock::results result_success = {0, success_str, error_str};
-  CommandCallerMock::results result_error   = {1, success_str, error_str};
+  CommandCallerMock::results result_success = { 0, success_str, error_str };
+  CommandCallerMock::results result_error   = { 1, success_str, error_str };
 };
 
 #endif

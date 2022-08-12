@@ -11,7 +11,8 @@
 #include "../column_header.h"
 #include "../entries.h"
 
-template<class Database, class ColumnRecord> class ProcessAdapter
+template<class Database, class ColumnRecord>
+class ProcessAdapter
 {
 public:
   // Initializes the database adapter
@@ -26,22 +27,26 @@ public:
                 const unsigned int &ppid,
                 const std::string &user,
                 const std::string &status);
-  
+
   std::pair<ProcessTableEntry, bool> get_data(std::string profile_name, const unsigned int &pid);
 
   std::shared_ptr<ColumnRecord> get_col_record();
 
 protected:
   // Helper function for "put_data", creates and returns a new row.
-  Gtk::TreeRow add_row(const std::string &process_name, const unsigned int &pid,  const unsigned int &ppid, const std::string &user, const std::string &status);
+  Gtk::TreeRow add_row(const std::string &process_name,
+                       const unsigned int &pid,
+                       const unsigned int &ppid,
+                       const std::string &user,
+                       const std::string &status);
 
 private:
   std::shared_ptr<Database> db;
 
-  const std::vector<ColumnHeader> col_names{ColumnHeader("Process Name"), 
-                                            ColumnHeader("User"),
-                                            ColumnHeader("Pid", ColumnHeader::ColumnType::INT), 
-                                            ColumnHeader("Status")};
+  const std::vector<ColumnHeader> col_names{ ColumnHeader("Process Name"),
+                                             ColumnHeader("User"),
+                                             ColumnHeader("Pid", ColumnHeader::ColumnType::INT),
+                                             ColumnHeader("Status") };
 
   std::shared_ptr<ColumnRecord> col_record;
 };

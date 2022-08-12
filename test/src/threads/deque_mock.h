@@ -4,7 +4,8 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-template<class T> class DequeMock
+template<class T>
+class DequeMock
 {
 public:
   MOCK_METHOD(T, front, ());
@@ -16,8 +17,8 @@ public:
   MOCK_METHOD(void, push_front, (const T &value));
   MOCK_METHOD(T, pop_front, ());
 
-  DequeMock() { }
-  DequeMock(const DequeMock &) { }
+  DequeMock() {}
+  DequeMock(const DequeMock &) {}
 };
 
 #endif
