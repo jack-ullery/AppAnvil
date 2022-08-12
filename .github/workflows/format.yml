@@ -1,6 +1,7 @@
 name: Auto-Format
 
-on: push
+on: 
+  push:
     branches:
       - 'main'
 
@@ -33,9 +34,6 @@ jobs:
         # setup the username and email for the bot. Using 'GitHub Actions Bot' with no email by default
         git config user.name "GitHub Actions Bot"
         git config user.email "<>"
-
-    - name: Checkout Branch
-      run: git checkout $GITHUB_REF
 
     - name: Commit & Push 
       run: |
