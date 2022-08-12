@@ -39,6 +39,9 @@ file(GLOB_RECURSE FORMAT_SOURCES
   ${CMAKE_CURRENT_BINARY_DIR}/test/src/*.cc
   ${CMAKE_CURRENT_BINARY_DIR}/test/src/*.h
   ${CMAKE_CURRENT_BINARY_DIR}/test/src/*.inl
+  ${CMAKE_CURRENT_BINARY_DIR}/aa-caller/src/*.cc
+  ${CMAKE_CURRENT_BINARY_DIR}/aa-caller/src/*.h
+  ${CMAKE_CURRENT_BINARY_DIR}/aa-caller/src/*.inl
 )
 
 set(PROJECT_RESOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/resources)
