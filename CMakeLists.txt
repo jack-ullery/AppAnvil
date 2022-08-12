@@ -95,14 +95,14 @@ if(${USE_CLANG_TIDY})
 endif()
 
 # If clang-format is downloaded, format all the source code files in ./src and ./test/src
-find_program(CLANG_FORMAT NAMES clang-format-12)
+find_program(CLANG_FORMAT NAMES clang-format)
   if(${CLANG_FORMAT} STREQUAL "CLANG_FORMAT-NOTFOUND")
-    message(WARNING "Could not find clang-format installation. Please install clang-format-12 if you want to use it to automaticaly format code.")
+    message(WARNING "Could not find clang-format installation. Please install clang-format if you want to use it to automaticaly format code.")
   else()
-    message(STATUS "Adding clang-format-12 to build")
+    message(STATUS "Adding clang-format to build")
     add_custom_target(
       FORMAT
-      COMMAND clang-format-12 -style=file -i ${FORMAT_SOURCES}
+      COMMAND clang-format -style=file -i ${FORMAT_SOURCES}
     )
 endif()
 
