@@ -8,8 +8,8 @@ AppArmor only activates after a program’s actions are authorized by the normal
 
 To configure AppArmor, users create and apply profiles that specify which resources an application should have access to. By default, applications cannot access resources, unless a profile grants them permission. 
 
-Every attempted breach of policy is recorded in the system log. AppArmor can be configured to send desktop notifications when such a violation occurs. 
-AppArmor is shipped with every Ubuntu, Debian, and SUSE operating system. It is a powerful tool that gives knowledgeable users control over their operating system. If made more accessible to the public, it could enhance privacy and security for users of Linux Operating Systems.
+Attempted breaches of policy are recorded in the system log. AppArmor can be configured to send desktop notifications when such a violation occurs. 
+AppArmor is shipped with every Ubuntu, Debian, and SUSE operating system. It is a powerful tool that gives knowledgeable users control over their operating system. If made more accessible to the public, it could enhance privacy and security for users of Linux distributions.
 
 ## The AppAnvil Project
 By default, AppArmor doesn’t do very much, running silently in the background. Currently, it is only accessible through the command-line, and requires some specialized knowledge to configure. 
