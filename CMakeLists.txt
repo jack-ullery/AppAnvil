@@ -4,6 +4,7 @@ project (appanvil)
 
 #### Set Source Code #####
 set(PROJECT_SOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/src)
+
 ### Sources that need to be built ###
 set(
   SOURCES
@@ -50,6 +51,7 @@ set(RESOURCE_BUNDLE_OUTPUT ${PROJECT_RESOURCE_DIR}/resource.autogen.c)
 
 set(PKEXEC_POLICY ${PROJECT_RESOURCE_DIR}/com.github.jack-ullery.AppAnvil.pkexec.policy)
 
+# set(REPORT_FILES_DIR ${CMAKE_BINARY_DIR}/test/CMakeFiles/${TEST_NAME}.dir)
 #### Add Linters and Static Analysis ####
 
 # If cmake was compiled with DANALYZE=TRUE
@@ -150,6 +152,8 @@ include_directories(
 
 #### Set Compiler Options ####
 set(CMAKE_CXX_FLAGS " -Wall -Wextra -g")
+set(CMAKE_CXX_FLAGS_DEBUG " -fprofile-arcs -ftest-coverage -Wall -Wextra -g")
+
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
