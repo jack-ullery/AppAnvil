@@ -14,6 +14,7 @@ set(
   ./src/threads/command_caller.cc
   ./src/threads/dispatcher_middleman.cc
   ./src/threads/blocking_queue.cc
+  ./aa-caller/aa-caller.cc
 )
 
 set(REPORT_FILES_DIR ${CMAKE_BINARY_DIR}/test/CMakeFiles/${TEST_NAME}.dir)
@@ -46,6 +47,7 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
   target_link_libraries(${TEST_NAME} PUBLIC ${GTKMM_LIBRARIES})
 
   target_link_libraries(${TEST_NAME} PUBLIC ${LIBRARY_OUTPUT_NAME})
+  target_link_libraries(${TEST_NAME} PUBLIC "aa-caller_dev")
 
   # Create target "REPORT", which should run the unit-tests and generate a code coverage report  
   add_custom_target(
@@ -77,7 +79,6 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
     DEPENDS LCOV
     COMMAND genhtml ${REPORT_FILES_DIR}/total_coverage.info --output-directory ${PROJECT_SOURCE_DIR}/../report
   )
-
 
 else()
   message(WARNING "Could not find googletest and googlemock packages. Please install them if you want to enable unit tests.")
