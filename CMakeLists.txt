@@ -161,7 +161,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # set(CMAKE_LINK_WHAT_YOU_USE TRUE)
 
 #### Create a library used by the binary and unit tests ####
-set(LIBRARY_OUTPUT_NAME ${PROJECT_NAME}_main)
+set(LIBRARY_OUTPUT_NAME ${PROJECT_NAME}_dev)
 add_library(${LIBRARY_OUTPUT_NAME} STATIC ${RESOURCE_BUNDLE_OUTPUT} ${SOURCES})
 
 target_include_directories(${LIBRARY_OUTPUT_NAME} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
@@ -175,7 +175,7 @@ add_subdirectory(aa-caller)
 add_subdirectory(test)
 
 #### Create the binary to the library ####
-add_executable(${PROJECT_NAME} ./src/main.cc)
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/main.cc)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${LIBRARY_OUTPUT_NAME})
 
 #### Create install target to install binaries  ####
