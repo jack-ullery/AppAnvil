@@ -49,21 +49,33 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
 
   # Create target "REPORT", which should run the unit-tests and generate a code coverage report  
   add_custom_target(
-    TEST_DATA
-    COMMAND ${CMAKE_BINARY_DIR}/dist/appanvil_test
+    LCOV_BASE
+    COMMAND lcov -c -i --no-external --exclude */test/* --exclude *.c -d ${CMAKE_BINARY_DIR} -o ${REPORT_FILES_DIR}/base_coverage.info
     DEPENDS appanvil_test
   )
 
   add_custom_target(
-    LCOV
-    COMMAND lcov -c --exclude '/usr/*' -d ${REPORT_FILES_DIR}/src --output-file ${REPORT_FILES_DIR}/test_coverage.info
+    TEST_DATA
+    COMMAND ${CMAKE_BINARY_DIR}/dist/appanvil_test
+    DEPENDS LCOV_BASE
+  )
+
+  add_custom_target(
+    LCOV_TEST
+    COMMAND lcov -c --exclude '/usr/*','*.c' --include '*/AppAnvil/src/*' -d ${REPORT_FILES_DIR} -o ${REPORT_FILES_DIR}/test_coverage.info
     DEPENDS TEST_DATA
+  )
+
+  add_custom_target(
+    LCOV
+    COMMAND lcov -a ${REPORT_FILES_DIR}/base_coverage.info -a ${REPORT_FILES_DIR}/test_coverage.info -o ${REPORT_FILES_DIR}/total_coverage.info
+    DEPENDS LCOV_TEST
   )
 
   add_custom_target(
     REPORT
     DEPENDS LCOV
-    COMMAND genhtml ${REPORT_FILES_DIR}/test_coverage.info --output-directory ${PROJECT_SOURCE_DIR}/../report
+    COMMAND genhtml ${REPORT_FILES_DIR}/total_coverage.info --output-directory ${PROJECT_SOURCE_DIR}/../report
   )
 
 
