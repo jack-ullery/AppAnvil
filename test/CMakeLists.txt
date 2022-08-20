@@ -64,7 +64,7 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
 
   add_custom_target(
     LCOV_TEST
-    COMMAND lcov -c --exclude '/usr/*','*.c' --include '*/AppAnvil/src/*' -d ${REPORT_FILES_DIR} -o ${REPORT_FILES_DIR}/test_coverage.info
+    COMMAND lcov -c --no-external --exclude */test/* --exclude *.c -d ${CMAKE_BINARY_DIR} -o ${REPORT_FILES_DIR}/test_coverage.info
     DEPENDS TEST_DATA
   )
 
