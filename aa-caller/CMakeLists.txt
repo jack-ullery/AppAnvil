@@ -18,7 +18,7 @@ pkg_check_modules(GTKMM gtkmm-3.0)
 message(STATUS "Adding aa-caller to build")
 
 set(CALLER_LIBRARY_NAME ${PROJECT_NAME}_dev)
-add_library(${CALLER_LIBRARY_NAME} STATIC ${RESOURCE_BUNDLE_OUTPUT} ${CALLER_SOURCES})
+add_library(${CALLER_LIBRARY_NAME} STATIC ${CALLER_SOURCES})
 
 target_include_directories(${CALLER_LIBRARY_NAME} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
 
