@@ -171,6 +171,18 @@ target_link_libraries(${LIBRARY_OUTPUT_NAME} PUBLIC ${GTKMM_LIBRARIES})
 target_link_libraries(${LIBRARY_OUTPUT_NAME} PUBLIC jsoncpp)
 target_link_libraries(${LIBRARY_OUTPUT_NAME} PUBLIC pthread)
 
+pkg_check_modules(GTEST gtest)
+pkg_check_modules(GMOCK gmock)
+
+if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+  if(${GTEST_FOUND} AND ${GMOCK_FOUND})
+    message(STATUS "Adding GoogleTest library")
+    add_definitions (-DTESTS_ENABLED)
+
+    target_link_libraries(${LIBRARY_OUTPUT_NAME} PUBLIC gtest)
+  endif()
+endif()
+
 add_subdirectory(aa-caller)
 add_subdirectory(test)
 
