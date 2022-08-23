@@ -8,6 +8,38 @@
 #include "database_mock.h"
 #include "status_column_record_mock.h"
 
+// Test Fixture for Logs class
+class ProfileAdapterTest : public ::testing::Test
+{
+
+protected:
+  ProfileAdapterTest()
+    : database{ new DatabaseMock() },
+      status{ new Status() },
+      adapter(database, status->get_view(), status->get_window())
+  {
+  }
+
+protected:
+  // Test data
+  struct TestData
+  {
+    std::string profile_name = "test_profile_name";
+    std::string status       = "test_status";
+  };
+
+  // Test objects
+  std::shared_ptr<DatabaseMock> database;
+  std::shared_ptr<Status> status;
+  ProfileAdapter<DatabaseMock> adapter;
+
+  // Helper methods
+  void try_put_data(std::vector<ProfileAdapterTest::TestData> data_set);
+  uint entry_count();
+  void check_profile_entry(ProfileTableEntry entry, const std::string &profile_name, const std::string &status);
+  void check_put_data(std::vector<ProfileAdapterTest::TestData> data_set);
+};
+
 template class ProfilesController<Profiles, DatabaseMock, ProfileAdapter<DatabaseMock>>;
 
 #endif // TEST_SRC_TABS_MODEL_PROFILE_ADAPTER_TEST_H

@@ -10,6 +10,10 @@
 #include "../column_header.h"
 #include "../entries.h"
 
+#ifdef TESTS_ENABLED
+  #include <gtest/gtest.h>
+#endif
+
 template<class Database, class ColumnRecord>
 class LogAdapter
 {
@@ -45,6 +49,11 @@ private:
                                              ColumnHeader("Status") };
 
   const std::shared_ptr<ColumnRecord> col_record;
+
+  #ifdef TESTS_ENABLED
+    FRIEND_TEST(LogAdapterTest, TEST_FORMAT_LOG_DATA);
+    FRIEND_TEST(LogAdapterTest, TEST_FORMAT_TIMESTAMP);
+  #endif
 };
 
 #endif // TABS_MODEL_LOG_ADAPTER_H
