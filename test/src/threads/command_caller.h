@@ -1,5 +1,5 @@
-#ifndef TEST_SRC_THREADS_COMMAND_CALLER_MOCK_H
-#define TEST_SRC_THREADS_COMMAND_CALLER_MOCK_H
+#ifndef TEST_SRC_THREADS_COMMAND_CALLER_H
+#define TEST_SRC_THREADS_COMMAND_CALLER_H
 
 #include "../../../src/threads/command_caller.h"
 

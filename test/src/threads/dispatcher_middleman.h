@@ -1,3 +1,6 @@
+#ifndef TEST_SRC_THREADS_DISPATCHER_MIDDLEMAN_H
+#define TEST_SRC_THREADS_DISPATCHER_MIDDLEMAN_H
+
 #include "../../../src/threads/dispatcher_middleman.cc"
 #include "../tabs/controller/logs_controller_mock.h"
 #include "../tabs/controller/processes_controller_mock.h"
@@ -49,3 +52,5 @@ protected:
 // For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
 template class DispatcherMiddleman<ProfilesStatusMock, ProcessesStatusMock, LogsControllerMock, GlibDispatcherMock, MutexMock>;
 template class BlockingQueue<DispatcherMiddleman<ProfilesStatusMock, ProcessesStatusMock, LogsControllerMock, GlibDispatcherMock, MutexMock>::CallData, std::deque<DispatcherMiddleman<ProfilesStatusMock, ProcessesStatusMock, LogsControllerMock, GlibDispatcherMock, MutexMock>::CallData, std::allocator<DispatcherMiddleman<ProfilesStatusMock, ProcessesStatusMock, LogsControllerMock, GlibDispatcherMock, MutexMock>::CallData>>,MutexMock>;
+
+#endif
