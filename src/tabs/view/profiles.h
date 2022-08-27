@@ -11,6 +11,10 @@
 #include <string>
 #include <vector>
 
+#ifdef TESTS_ENABLED
+  #include <gtest/gtest.h>
+#endif
+
 class Profiles : public Status
 {
 public:
@@ -66,6 +70,11 @@ private:
   // Misc
   template<typename T_Widget>
   static std::shared_ptr<T_Widget> get_widget_shared(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);
+
+  #ifdef TESTS_ENABLED
+    FRIEND_TEST(ProfilesTest, APPLY_NO_ROWS_SELECTED);
+    FRIEND_TEST(ProfilesTest, CHECK_APPLY_LABEL_TEXT);
+  #endif
 };
 
 #endif // TABS_PROFILES_H

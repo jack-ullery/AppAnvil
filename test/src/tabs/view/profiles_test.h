@@ -6,10 +6,20 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-class ProfilesChild : public Profiles
+// Test Fixture for Status class
+class ProfilesTest : public ::testing::Test
 {
-  FRIEND_TEST(ProfilesTest, APPLY_SIGNAL_HANDLER);
-  FRIEND_TEST(ProfilesTest, CHECK_APPLY_LABEL_TEXT);
+public:
+  MOCK_METHOD(void, handle_signal, (std::string, std::string, std::string));
+
+protected:
+  ProfilesTest() {}
+
+  virtual void SetUp() {}
+  void click_everything(Gtk::Widget *obj);
+  bool check_label_exists(Gtk::Widget *obj, std::string label_text);
+
+  Profiles pc;
 };
 
 #endif

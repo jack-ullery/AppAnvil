@@ -11,6 +11,7 @@ set(
   ./src/tabs/model/process_adapter_test.cc
   ./src/tabs/model/profile_adapter_test.cc
   ./src/tabs/view/status_test.cc
+  ./src/tabs/view/profiles_test.cc
   ./src/threads/command_caller.cc
   ./src/threads/dispatcher_middleman.cc
   ./src/threads/blocking_queue.cc
