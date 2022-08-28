@@ -23,9 +23,6 @@ public:
   // Sets the function to be used when changing the status of a profile, this is used in main_window.cc
   void set_status_change_signal_handler(sigc::slot<void(std::string, std::string, std::string)> change_fun);
 
-  // Sets the function to be called when the `p_load_profile` button is pressed
-  void set_load_profile_signal_handler(sigc::slot<void> change_fun);
-
   /**
    * @brief Change the text in the label next to the Apply button/spinner.
    */
