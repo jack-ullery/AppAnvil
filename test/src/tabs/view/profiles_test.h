@@ -5,6 +5,8 @@
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <gtkmm/treemodel.h>
+#include <gtkmm/treestore.h>
 
 // Test Fixture for Status class
 class ProfilesTest : public ::testing::Test
@@ -15,10 +17,10 @@ public:
 protected:
   ProfilesTest() {}
 
-  virtual void SetUp() {}
-  void click_everything(Gtk::Widget *obj);
-  bool check_label_exists(Gtk::Widget *obj, std::string label_text);
+  Glib::RefPtr<Gtk::TreeStore> initialize_store();
+  void create_and_select_row(Glib::RefPtr<Gtk::TreeStore> store, std::string profile, std::string status);
 
+  Gtk::TreeModelColumnRecord record;
   Profiles pc;
 };
 
