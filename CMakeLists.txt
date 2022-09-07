@@ -8,7 +8,6 @@ set(PROJECT_SOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/src)
 ### Sources that need to be built ###
 set(
   SOURCES
-  ${PROJECT_SOURCE_DIR}/main.cc
   ${PROJECT_SOURCE_DIR}/main_window.cc
   ${PROJECT_SOURCE_DIR}/console_thread.cc
   ${PROJECT_SOURCE_DIR}/threads/blocking_queue.cc
@@ -51,7 +50,6 @@ set(RESOURCE_BUNDLE_OUTPUT ${PROJECT_RESOURCE_DIR}/resource.autogen.c)
 
 set(PKEXEC_POLICY ${PROJECT_RESOURCE_DIR}/com.github.jack-ullery.AppAnvil.pkexec.policy)
 
-# set(REPORT_FILES_DIR ${CMAKE_BINARY_DIR}/test/CMakeFiles/${TEST_NAME}.dir)
 #### Add Linters and Static Analysis ####
 
 # If cmake was compiled with DANALYZE=TRUE
@@ -151,7 +149,7 @@ include_directories(
 )
 
 #### Set Compiler Options ####
-set(CMAKE_CXX_FLAGS " -Wall -Wextra -g")
+set(CMAKE_CXX_FLAGS " -Wall -Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG " -fprofile-arcs -ftest-coverage -Wall -Wextra -g")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
@@ -175,7 +173,7 @@ add_subdirectory(aa-caller)
 add_subdirectory(test)
 
 #### Create the binary to the library ####
-add_executable(${PROJECT_NAME} ./src/main.cc)
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/main.cc)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${LIBRARY_OUTPUT_NAME})
 
 #### Create install target to install binaries  ####
