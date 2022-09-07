@@ -47,16 +47,16 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
 
   target_link_libraries(${TEST_NAME} PUBLIC ${LIBRARY_OUTPUT_NAME})
 
-  # Create target "REPORT", which should run the unit-tests and generate a code coverage report  
+  # Create target "report", which should run the unit-tests and generate a code coverage report  
   add_custom_target(
     LCOV_BASE
     COMMAND lcov -c -i --no-external --exclude */test/* --exclude *.c -d ${CMAKE_BINARY_DIR} -o ${REPORT_FILES_DIR}/base_coverage.info
-    DEPENDS appanvil_test
+    DEPENDS ${TEST_NAME}
   )
 
   add_custom_target(
     TEST_DATA
-    COMMAND ${CMAKE_BINARY_DIR}/dist/appanvil_test
+    COMMAND ${CMAKE_BINARY_DIR}/dist/${TEST_NAME}
     DEPENDS LCOV_BASE
   )
 
@@ -73,11 +73,10 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
   )
 
   add_custom_target(
-    REPORT
+    report
     DEPENDS LCOV
     COMMAND genhtml ${REPORT_FILES_DIR}/total_coverage.info --output-directory ${PROJECT_SOURCE_DIR}/../report
   )
-
 
 else()
   message(WARNING "Could not find googletest and googlemock packages. Please install them if you want to enable unit tests.")
