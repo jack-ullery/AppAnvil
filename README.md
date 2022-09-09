@@ -53,6 +53,10 @@ To generate a makefile, build, install, and run extra static analysis on the sou
 $ cmake -DANALYZE=TRUE .
 $ sudo make install
 ```
+To build the unit tests:
+```
+$ make test
+```
 To format code, without building it:
 ```
 $ make FORMAT
@@ -69,7 +73,7 @@ To run the resulting binary:
 ```
 $ appanvil
 ```
-To run unit tests (need googletest & googlemock installed):
+To run the unit tests (need to be built first):
 ```
-$ ./dist/appanvil_test
+$ ./dist/test
 ```
