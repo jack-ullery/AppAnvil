@@ -1,4 +1,4 @@
-set(TEST_NAME ${PROJECT_NAME}_test)
+set(TEST_NAME test)
 cmake_minimum_required (VERSION 3.16.3)
 
 set(
@@ -32,7 +32,7 @@ pkg_check_modules(GMOCK gmock)
 if(${GTEST_FOUND} AND ${GMOCK_FOUND})
   message(STATUS "Adding unit tests to build")
 
-  add_executable(${TEST_NAME} ${TEST_SOURCES})
+  add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_SOURCES} ${SOURCES})
 
   # Do not use clang-tidy on test code
   set_target_properties(${TEST_NAME} PROPERTIES CXX_CLANG_TIDY "")
@@ -44,8 +44,6 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
   target_link_libraries(${TEST_NAME} PUBLIC pthread)
   target_link_libraries(${TEST_NAME} PUBLIC jsoncpp)
   target_link_libraries(${TEST_NAME} PUBLIC ${GTKMM_LIBRARIES})
-
-  target_link_libraries(${TEST_NAME} PUBLIC ${LIBRARY_OUTPUT_NAME})
 
   # Create target "report", which should run the unit-tests and generate a code coverage report  
   add_custom_target(

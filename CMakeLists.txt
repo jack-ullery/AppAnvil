@@ -150,7 +150,7 @@ include_directories(
 
 #### Set Compiler Options ####
 set(CMAKE_CXX_FLAGS " -Wall -Wextra")
-set(CMAKE_CXX_FLAGS_DEBUG " -fprofile-arcs -ftest-coverage -Wall -Wextra -c -g")
+set(CMAKE_CXX_FLAGS_DEBUG " -fprofile-arcs -ftest-coverage -Wall -Wextra -g")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -158,23 +158,18 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # set(CMAKE_LINK_WHAT_YOU_USE TRUE)
 
-#### Create a library used by the binary and unit tests ####
-set(LIBRARY_OUTPUT_NAME ${PROJECT_NAME}_dev)
-add_library(${LIBRARY_OUTPUT_NAME} STATIC ${RESOURCE_BUNDLE_OUTPUT} ${SOURCES})
+#### Create the main executable ####
+add_executable(${PROJECT_NAME} ${RESOURCE_BUNDLE_OUTPUT} ${SOURCES} ${PROJECT_SOURCE_DIR}/main.cc)
 
-target_include_directories(${LIBRARY_OUTPUT_NAME} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
-target_include_directories(${LIBRARY_OUTPUT_NAME} SYSTEM PUBLIC ${jsoncpp_DIRS})
+target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${jsoncpp_DIRS})
 
-target_link_libraries(${LIBRARY_OUTPUT_NAME} PUBLIC ${GTKMM_LIBRARIES})
-target_link_libraries(${LIBRARY_OUTPUT_NAME} PUBLIC jsoncpp)
-target_link_libraries(${LIBRARY_OUTPUT_NAME} PUBLIC pthread)
+target_link_libraries(${PROJECT_NAME} PUBLIC ${GTKMM_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PUBLIC jsoncpp)
+target_link_libraries(${PROJECT_NAME} PUBLIC pthread)
 
 add_subdirectory(aa-caller)
 add_subdirectory(test)
-
-#### Create the binary to the library ####
-add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/main.cc)
-target_link_libraries(${PROJECT_NAME} PUBLIC ${LIBRARY_OUTPUT_NAME})
 
 #### Create install target to install binaries  ####
 install(
