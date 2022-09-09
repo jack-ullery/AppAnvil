@@ -36,6 +36,7 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
 
   # Do not use clang-tidy on test code
   set_target_properties(${TEST_NAME} PROPERTIES CXX_CLANG_TIDY "")
+  set_target_properties(${TEST_NAME} PROPERTIES CMAKE_CXX_FLAGS_DEBUG " -fprofile-arcs -ftest-coverage -Wall -Wextra -g")
 
   target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
 
