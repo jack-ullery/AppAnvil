@@ -4,7 +4,7 @@ on: push
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
-  BUILD_TYPE: Debug
+  BUILD_TYPE: Release
 
 jobs:
   build:
@@ -26,9 +26,13 @@ jobs:
       # Formats code using clang-format (version 14 or higher required)
       run: make FORMAT
 
-    - name: Build
-      # Builds the binary any unit tests into the ./dist folder
+    - name: Build AppAnvil
+      # Builds the 'appanvil' binary into the ./dist folder
       run: make
+
+    - name: Build Tests
+      # Builds the unit tests into the ./dist folder
+      run: make test
 
     - name: Upload Binaries as Artifacts
       uses: actions/upload-artifact@master
@@ -57,8 +61,8 @@ jobs:
         path: dist
 
     - name: Make Tests Executable
-      run: chmod +x ./dist/appanvil_test
+      run: chmod +x ./dist/test
 
     - name: Test
       # Run the unit tests
-      run: xvfb-run --auto-servernum ./dist/appanvil_test
+      run: xvfb-run --auto-servernum ./dist/test
