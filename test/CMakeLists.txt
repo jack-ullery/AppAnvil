@@ -17,7 +17,6 @@ set(
 )
 
 set(REPORT_FILES_DIR ${CMAKE_BINARY_DIR}/test/CMakeFiles/${TEST_NAME}.dir)
-message(${REPORT_FILES_DIR})
 
 #====================================
 
@@ -36,7 +35,10 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
 
   # Do not use clang-tidy on test code
   set_target_properties(${TEST_NAME} PROPERTIES CXX_CLANG_TIDY "")
-  set_target_properties(${TEST_NAME} PROPERTIES CMAKE_CXX_FLAGS_DEBUG " -fprofile-arcs -ftest-coverage -Wall -Wextra -g")
+
+  # Use custom compile/link flags for 'test' target
+  set_target_properties(${TEST_NAME} PROPERTIES COMPILE_FLAGS " -fprofile-arcs -ftest-coverage -Wall -Wextra -g")
+  set_target_properties(${TEST_NAME} PROPERTIES LINK_FLAGS    " -fprofile-arcs -ftest-coverage")
 
   target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
 
