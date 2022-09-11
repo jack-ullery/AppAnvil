@@ -1,4 +1,4 @@
-set(TEST_NAME ${PROJECT_NAME}_test)
+set(TEST_NAME test)
 cmake_minimum_required (VERSION 3.16.3)
 
 set(
@@ -16,6 +16,9 @@ set(
   ./src/threads/blocking_queue.cc
 )
 
+set(REPORT_FILES_DIR ${CMAKE_BINARY_DIR}/test/CMakeFiles/${TEST_NAME}.dir)
+message(${REPORT_FILES_DIR})
+
 #====================================
 
 find_package(PkgConfig)
@@ -28,11 +31,12 @@ pkg_check_modules(GMOCK gmock)
 
 if(${GTEST_FOUND} AND ${GMOCK_FOUND})
   message(STATUS "Adding unit tests to build")
-  # set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../dist)
-  add_executable(${TEST_NAME} ${TEST_SOURCES})
+
+  add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_SOURCES} ${SOURCES})
 
   # Do not use clang-tidy on test code
   set_target_properties(${TEST_NAME} PROPERTIES CXX_CLANG_TIDY "")
+  set_target_properties(${TEST_NAME} PROPERTIES CMAKE_CXX_FLAGS_DEBUG " -fprofile-arcs -ftest-coverage -Wall -Wextra -g")
 
   target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
 
@@ -42,7 +46,37 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
   target_link_libraries(${TEST_NAME} PUBLIC jsoncpp)
   target_link_libraries(${TEST_NAME} PUBLIC ${GTKMM_LIBRARIES})
 
-  target_link_libraries(${TEST_NAME} PUBLIC ${LIBRARY_OUTPUT_NAME})
+  # Create target "report", which should run the unit-tests and generate a code coverage report  
+  add_custom_target(
+    LCOV_BASE
+    COMMAND lcov -c -i --no-external --exclude */test/* --exclude *.c -d ${CMAKE_BINARY_DIR} -o ${REPORT_FILES_DIR}/base_coverage.info
+    DEPENDS ${TEST_NAME}
+  )
+
+  add_custom_target(
+    TEST_DATA
+    COMMAND ${CMAKE_BINARY_DIR}/dist/${TEST_NAME}
+    DEPENDS LCOV_BASE
+  )
+
+  add_custom_target(
+    LCOV_TEST
+    COMMAND lcov -c --exclude '/usr/*','*.c' --include '*/AppAnvil/src/*' -d ${REPORT_FILES_DIR} -o ${REPORT_FILES_DIR}/test_coverage.info
+    DEPENDS TEST_DATA
+  )
+
+  add_custom_target(
+    LCOV
+    COMMAND lcov -a ${REPORT_FILES_DIR}/base_coverage.info -a ${REPORT_FILES_DIR}/test_coverage.info -o ${REPORT_FILES_DIR}/total_coverage.info
+    DEPENDS LCOV_TEST
+  )
+
+  add_custom_target(
+    report
+    DEPENDS LCOV
+    COMMAND genhtml ${REPORT_FILES_DIR}/total_coverage.info --output-directory ${PROJECT_SOURCE_DIR}/../report
+  )
+
 else()
   message(WARNING "Could not find googletest and googlemock packages. Please install them if you want to enable unit tests.")
 endif()

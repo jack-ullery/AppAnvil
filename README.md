@@ -42,34 +42,52 @@ Unit Tests
 * googlemock (libgmock-dev)
 
 # Compilation Instructions
+### Prebuild
+Before you build the executable, you must first generate the makefile by running:
+```
+cmake .
+```
+Alternatively, if you want to run optional linters and static analysis checks:
+```
+cmake -DANALYZE=TRUE .
+```
 
-To generate a makefile, build, and install the project using that makefile:
+### Build
+After the makefile is generated, you can build and install the executables:
 ```
-$ cmake .
-$ sudo make install
+sudo make install
 ```
-To generate a makefile, build, install, and run extra static analysis on the source code:
+This builds the necessary executables, installs them, and applies recommended changes to PolicyKit.
+
+### Test
+To build the unit tests:
 ```
-$ cmake -DANALYZE=TRUE .
-$ sudo make install
+make test
 ```
+To generate a code coverage report:
+```
+make report
+```
+Afterwards, you can then view the report by opening `./report/index.html` inside a web browser.
+
+### Automatically Format Code
 To format code, without building it:
 ```
-$ make FORMAT
+make FORMAT
 ```
 # Uninstall Instructions
 
 To uninstall AppAnvil binaries and pkexec policy from the system:
 ```
-$ sudo make uninstall
+sudo make uninstall
 ```
 
 # Run
 To run the resulting binary:
 ```
-$ appanvil
+appanvil
 ```
-To run unit tests (need googletest & googlemock installed):
+To run the unit tests (need to be built first):
 ```
-$ ./dist/appanvil_test
+./dist/test
 ```
