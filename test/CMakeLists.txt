@@ -19,7 +19,6 @@ set(
 )
 
 set(REPORT_FILES_DIR ${CMAKE_BINARY_DIR}/test/CMakeFiles/${TEST_NAME}.dir)
-message(${REPORT_FILES_DIR})
 
 #====================================
 
@@ -46,9 +45,10 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
 
   # Do not use clang-tidy on test code
   set_target_properties(${TEST_NAME} PROPERTIES CXX_CLANG_TIDY "")
-  
+
   # Set the flags for the "test" target
-  set_target_properties(${TEST_NAME} PROPERTIES CMAKE_CXX_FLAGS " -fprofile-arcs -ftest-coverage -Wall -Wextra -g")
+  set_target_properties(${TEST_NAME} PROPERTIES COMPILE_FLAGS " -fprofile-arcs -ftest-coverage -Wall -Wextra -g")
+  set_target_properties(${TEST_NAME} PROPERTIES LINK_FLAGS    " -fprofile-arcs -ftest-coverage")
 
   # Define the "TESTS_ENABLED" preprocessor flag for the "test" target
   target_compile_definitions(${TEST_NAME} PUBLIC -DTESTS_ENABLED)
@@ -75,17 +75,17 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
     DEPENDS LCOV_BASE
   )
 
-    add_custom_target(
-      LCOV_TEST
-      COMMAND lcov -c --no-external --exclude */test/* --exclude *.c -d ${CMAKE_BINARY_DIR} -o ${REPORT_FILES_DIR}/test_coverage.info
-      DEPENDS TEST_DATA
-    )
+  add_custom_target(
+    LCOV_TEST
+    COMMAND lcov -c --no-external --exclude */test/* --exclude *.c -d ${CMAKE_BINARY_DIR} -o ${REPORT_FILES_DIR}/test_coverage.info
+    DEPENDS TEST_DATA
+  )
 
-    add_custom_target(
-      LCOV
-      COMMAND lcov -a ${REPORT_FILES_DIR}/base_coverage.info -a ${REPORT_FILES_DIR}/test_coverage.info -o ${REPORT_FILES_DIR}/total_coverage.info
-      DEPENDS LCOV_TEST
-    )
+  add_custom_target(
+    LCOV
+    COMMAND lcov -a ${REPORT_FILES_DIR}/base_coverage.info -a ${REPORT_FILES_DIR}/test_coverage.info -o ${REPORT_FILES_DIR}/total_coverage.info
+    DEPENDS LCOV_TEST
+  )
 
   add_custom_target(
     report
