@@ -136,11 +136,11 @@ if (NOT GLIB_RETURN_VALUE EQUAL 0)
 endif()
 
 add_custom_command(
-    OUTPUT ${RESOURCE_BUNDLE_OUTPUT}
-    COMMAND glib-compile-resources --target=${RESOURCE_BUNDLE_OUTPUT} --generate-source ${XML_GRESOURCE}
-    DEPENDS ${XML_GRESOURCE} ${GLADE_RESOURCES} 
-    COMMENT "Generating Glib Resource Bundle."
-    VERBATIM
+  OUTPUT ${RESOURCE_BUNDLE_OUTPUT}
+  COMMAND glib-compile-resources --target=${RESOURCE_BUNDLE_OUTPUT} --generate-source ${XML_GRESOURCE}
+  DEPENDS ${XML_GRESOURCE} ${GLADE_RESOURCES} 
+  COMMENT "Generating Glib Resource Bundle."
+  VERBATIM
 )
 
 include_directories(

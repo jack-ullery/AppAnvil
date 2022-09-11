@@ -34,7 +34,15 @@ pkg_check_modules(GMOCK gmock)
 if(${GTEST_FOUND} AND ${GMOCK_FOUND})
   message(STATUS "Adding unit tests to build")
 
-  add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_SOURCES} ${SOURCES})
+  add_custom_command(
+    OUTPUT ${RESOURCE_BUNDLE_OUTPUT}
+    COMMAND glib-compile-resources --target=${RESOURCE_BUNDLE_OUTPUT} --generate-source ${XML_GRESOURCE}
+    DEPENDS ${XML_GRESOURCE} ${GLADE_RESOURCES} 
+    COMMENT "Generating Glib Resource Bundle."
+    VERBATIM
+  )
+
+  add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${RESOURCE_BUNDLE_OUTPUT} ${SOURCES} ${TEST_SOURCES})
 
   # Do not use clang-tidy on test code
   set_target_properties(${TEST_NAME} PROPERTIES CXX_CLANG_TIDY "")
