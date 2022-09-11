@@ -23,7 +23,7 @@ jobs:
 
     - name: Format Code
       # Formats code using clang-format (version 14 or higher required)
-      run: clang-format -style=file -i ./src/*.cc ./src/*.h ./src/*.inl ./test/src/*.cc ./test/src/*.h ./test/src/*.inl ./aa-caller/src/*.cc ./aa-caller/src/*.h ./aa-caller/src/*.inl
+      run: find src test/src aa-caller/src -iname *.cc -o -iname *.h -o -iname *.inl | xargs clang-format -style=file -i
 
     - name: Configure Git
       run: |

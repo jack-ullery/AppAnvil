@@ -1,4 +1,4 @@
-set(TEST_NAME ${PROJECT_NAME}_test)
+set(TEST_NAME test)
 cmake_minimum_required (VERSION 3.16.3)
 
 set(
@@ -31,38 +31,41 @@ pkg_check_modules(GTKMM gtkmm-3.0)
 pkg_check_modules(GTEST gtest)
 pkg_check_modules(GMOCK gmock)
 
-if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-  if(${GTEST_FOUND} AND ${GMOCK_FOUND})
-    message(STATUS "Adding unit tests to build")
+if(${GTEST_FOUND} AND ${GMOCK_FOUND})
+  message(STATUS "Adding unit tests to build")
 
-    add_executable(${TEST_NAME} ${TEST_SOURCES})
+  add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_SOURCES} ${SOURCES})
 
-    # Do not use clang-tidy on test code
-    set_target_properties(${TEST_NAME} PROPERTIES CXX_CLANG_TIDY "")
+  # Do not use clang-tidy on test code
+  set_target_properties(${TEST_NAME} PROPERTIES CXX_CLANG_TIDY "")
+  
+  # Set the flags for the "test" target
+  set_target_properties(${TEST_NAME} PROPERTIES CMAKE_CXX_FLAGS " -fprofile-arcs -ftest-coverage -Wall -Wextra -g")
 
-    target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
+  # Define the "TESTS_ENABLED" preprocessor flag for the "test" target
+  target_compile_definitions(${TEST_NAME} PUBLIC -DTESTS_ENABLED)
 
-    target_link_libraries(${TEST_NAME} PUBLIC gtest)
-    target_link_libraries(${TEST_NAME} PUBLIC gmock)
-    target_link_libraries(${TEST_NAME} PUBLIC pthread)
-    target_link_libraries(${TEST_NAME} PUBLIC jsoncpp)
-    target_link_libraries(${TEST_NAME} PUBLIC ${GTKMM_LIBRARIES})
+  target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
 
-    target_link_libraries(${TEST_NAME} PUBLIC ${LIBRARY_OUTPUT_NAME})
-    target_link_libraries(${TEST_NAME} PUBLIC "aa-caller_dev")
+  target_link_libraries(${TEST_NAME} PUBLIC gtest)
+  target_link_libraries(${TEST_NAME} PUBLIC gmock)
+  target_link_libraries(${TEST_NAME} PUBLIC pthread)
+  target_link_libraries(${TEST_NAME} PUBLIC jsoncpp)
+  target_link_libraries(${TEST_NAME} PUBLIC ${GTKMM_LIBRARIES})
+  target_link_libraries(${TEST_NAME} PUBLIC "aa-caller_dev")
 
-    # Create target "REPORT", which should run the unit-tests and generate a code coverage report  
-    add_custom_target(
-      LCOV_BASE
-      COMMAND lcov -c -i --no-external --exclude */test/* --exclude *.c -d ${CMAKE_BINARY_DIR} -o ${REPORT_FILES_DIR}/base_coverage.info
-      DEPENDS appanvil_test
-    )
+  # Create target "report", which should run the unit-tests and generate a code coverage report  
+  add_custom_target(
+    LCOV_BASE
+    COMMAND lcov -c -i --no-external --exclude */test/* --exclude *.c -d ${CMAKE_BINARY_DIR} -o ${REPORT_FILES_DIR}/base_coverage.info
+    DEPENDS ${TEST_NAME}
+  )
 
-    add_custom_target(
-      TEST_DATA
-      COMMAND ${CMAKE_BINARY_DIR}/dist/appanvil_test
-      DEPENDS LCOV_BASE
-    )
+  add_custom_target(
+    TEST_DATA
+    COMMAND ${CMAKE_BINARY_DIR}/dist/${TEST_NAME}
+    DEPENDS LCOV_BASE
+  )
 
     add_custom_target(
       LCOV_TEST
@@ -76,13 +79,12 @@ if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
       DEPENDS LCOV_TEST
     )
 
-    add_custom_target(
-      REPORT
-      DEPENDS LCOV
-      COMMAND genhtml ${REPORT_FILES_DIR}/total_coverage.info --output-directory ${PROJECT_SOURCE_DIR}/../report
-    )
+  add_custom_target(
+    report
+    DEPENDS LCOV
+    COMMAND genhtml ${REPORT_FILES_DIR}/total_coverage.info --output-directory ${PROJECT_SOURCE_DIR}/../report
+  )
 
-  else()
-    message(WARNING "Could not find googletest and googlemock packages. Please install them if you want to enable unit tests.")
-  endif()
+else()
+  message(WARNING "Could not find googletest and googlemock packages. Please install them if you want to enable unit tests.")
 endif()
