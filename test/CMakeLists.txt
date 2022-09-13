@@ -11,9 +11,11 @@ set(
   ./src/tabs/model/process_adapter_test.cc
   ./src/tabs/model/profile_adapter_test.cc
   ./src/tabs/view/status_test.cc
+  ./src/tabs/view/profiles_test.cc
   ./src/threads/command_caller.cc
   ./src/threads/dispatcher_middleman.cc
   ./src/threads/blocking_queue.cc
+  ./aa-caller/aa-caller.cc
 )
 
 set(REPORT_FILES_DIR ${CMAKE_BINARY_DIR}/test/CMakeFiles/${TEST_NAME}.dir)
@@ -31,14 +33,25 @@ pkg_check_modules(GMOCK gmock)
 if(${GTEST_FOUND} AND ${GMOCK_FOUND})
   message(STATUS "Adding unit tests to build")
 
-  add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${TEST_SOURCES} ${SOURCES})
+  add_custom_command(
+    OUTPUT ${RESOURCE_BUNDLE_OUTPUT}
+    COMMAND glib-compile-resources --target=${RESOURCE_BUNDLE_OUTPUT} --generate-source ${XML_GRESOURCE}
+    DEPENDS ${XML_GRESOURCE} ${GLADE_RESOURCES} 
+    COMMENT "Generating Glib Resource Bundle."
+    VERBATIM
+  )
+
+  add_executable(${TEST_NAME} EXCLUDE_FROM_ALL ${RESOURCE_BUNDLE_OUTPUT} ${SOURCES} ${TEST_SOURCES})
 
   # Do not use clang-tidy on test code
   set_target_properties(${TEST_NAME} PROPERTIES CXX_CLANG_TIDY "")
 
-  # Use custom compile/link flags for 'test' target
+  # Set the flags for the "test" target
   set_target_properties(${TEST_NAME} PROPERTIES COMPILE_FLAGS " -fprofile-arcs -ftest-coverage -Wall -Wextra -g")
   set_target_properties(${TEST_NAME} PROPERTIES LINK_FLAGS    " -fprofile-arcs -ftest-coverage")
+
+  # Define the "TESTS_ENABLED" preprocessor flag for the "test" target
+  target_compile_definitions(${TEST_NAME} PUBLIC -DTESTS_ENABLED)
 
   target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
 
@@ -47,6 +60,7 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
   target_link_libraries(${TEST_NAME} PUBLIC pthread)
   target_link_libraries(${TEST_NAME} PUBLIC jsoncpp)
   target_link_libraries(${TEST_NAME} PUBLIC ${GTKMM_LIBRARIES})
+  target_link_libraries(${TEST_NAME} PUBLIC "aa-caller_dev")
 
   # Create target "report", which should run the unit-tests and generate a code coverage report  
   add_custom_target(
@@ -63,7 +77,7 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
 
   add_custom_target(
     LCOV_TEST
-    COMMAND lcov -c --exclude '/usr/*','*.c' --include '*/AppAnvil/src/*' -d ${REPORT_FILES_DIR} -o ${REPORT_FILES_DIR}/test_coverage.info
+    COMMAND lcov -c --no-external --exclude */test/* --exclude *.c -d ${CMAKE_BINARY_DIR} -o ${REPORT_FILES_DIR}/test_coverage.info
     DEPENDS TEST_DATA
   )
 

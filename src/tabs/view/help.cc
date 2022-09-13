@@ -13,7 +13,7 @@ Help::get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder)
 }
 
 Help::Help()
-  : builder{ Gtk::Builder::create_from_file("./resources/help.glade") },
+  : builder{ Gtk::Builder::create_from_resource("/resources/help.glade") },
     h_box{ Help::get_widget<Gtk::Box>("h_box", builder) },
     h_label{ Help::get_widget<Gtk::Label>("h_label", builder) },
     h_searchbox{ Help::get_widget<Gtk::Box>("h_searchbox", builder) },

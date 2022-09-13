@@ -6,6 +6,11 @@
 #include <glibmm/dispatcher.h>
 #include <memory>
 
+// If the unit tests are enabled, include the following header
+#ifdef TESTS_ENABLED
+  #include <gtest/gtest.h>
+#endif
+
 /**
  * Class to extend some of the functionality of `Dispatcher` to easier facilitate inter-thread
  * communication between the second thread and main thread. This is needed to prevent some
@@ -62,6 +67,15 @@ private:
   std::shared_ptr<Profiles> prof;
   std::shared_ptr<Processes> proc;
   std::shared_ptr<Logs> logs;
+
+  #ifdef TESTS_ENABLED
+    FRIEND_TEST(DispatcherMiddlemanTest, UPDATE_PROFILES);
+    FRIEND_TEST(DispatcherMiddlemanTest, UPDATE_PROCESSES);
+    FRIEND_TEST(DispatcherMiddlemanTest, UPDATE_LOGS);
+    FRIEND_TEST(DispatcherMiddlemanTest, UPDATE_PROFILES_PROCESSES_SEQUENTIAL);
+    FRIEND_TEST(DispatcherMiddlemanTest, UPDATE_PROFILES_PROCESSES_INTERLOCKING);
+  #endif
+
 };
 
 #endif // SRC_THREADS_DISPATCHER_MIDDLEMAN_H

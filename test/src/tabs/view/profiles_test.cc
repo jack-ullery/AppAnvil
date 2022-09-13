@@ -6,98 +6,293 @@
 #include <memory>
 #include <thread>
 
-// Test Fixture for Status class
-class ProfilesTest : public ::testing::Test
+using ::testing::_;
+
+Glib::RefPtr<Gtk::TreeStore> ProfilesTest::initialize_store()
 {
-public:
-  MOCK_METHOD(void, handle_signal, ());
+  auto first_column  = Gtk::TreeModelColumn<std::string>();
+  auto second_column = Gtk::TreeModelColumn<std::string>();
 
-protected:
-  ProfilesTest() {}
+  record.add(first_column);
+  record.add(second_column);
 
-  virtual void SetUp() {}
-  void click_everything(Gtk::Widget *obj);
-  bool check_label_exists(Gtk::Widget *obj, std::string label_text);
+  auto view = pc.get_view();
+  EXPECT_FALSE(view == nullptr) << "`pc.get_view()` should not return a nullptr";
 
-  ProfilesChild pc;
-};
+  view->append_column("Profile", first_column);
+  view->append_column("Status", second_column);
 
-// Recursive method to click all the checkboxes that are descendents of a Container Widget
-void
-ProfilesTest::click_everything(Gtk::Widget *obj)
-{
-  // Attempt to cast the object as a Gtk::Button, then click it
-  // This will also cast CheckButtons which are a type of Button
-  Gtk::Button *bu = dynamic_cast<Gtk::Button *>(obj);
+  auto store = Gtk::TreeStore::create(record);
+  view->set_model(store);
 
-  // If bu is not a nullptr, then it is a Gtk::Button
-  if (bu) {
-    // click the button
-    bu->clicked();
-  }
-
-  // Attempt to cast the object as a Gtk::Container, then enumerate children
-  Gtk::Container *parent = dynamic_cast<Gtk::Container *>(obj);
-
-  // If parent is not a nullptr, then it is a Gtk::Container
-  if (parent) {
-    auto children = parent->get_children();
-
-    for (auto child : children) {
-      click_everything(child);
-    }
-  }
+  return store;
 }
 
-// Recursive method to check whether label exists with `label_text`
-bool
-ProfilesTest::check_label_exists(Gtk::Widget *obj, std::string label_text)
+void ProfilesTest::create_and_select_row(Glib::RefPtr<Gtk::TreeStore> store, std::string profile, std::string status)
 {
-  // Attempt to cast the object as a Gtk::Label
-  Gtk::Label *lab = dynamic_cast<Gtk::Label *>(obj);
+  // Create a row and put some data into the first column
+  auto iter = store->append();
+  iter->set_value(0, profile);
+  iter->set_value(1, status);
 
-  // If cb is not a nullptr, then it is a Gtk::Label
-  if (lab) {
-    // click the button
-    return (lab->get_text().compare(label_text) == 0);
-  }
+  // Get the path to the newly created row
+  auto path = store->get_path(iter);
 
-  // Attempt to cast the object as a Gtk::Container, then enumerate children
-  Gtk::Container *parent = dynamic_cast<Gtk::Container *>(obj);
+  // Get the view
+  auto view = pc.get_view();
+  EXPECT_FALSE(view == nullptr) << "`pc.get_view()` should not return a nullptr";
 
-  // If parent is not a nullptr, then it is a Gtk::Container
-  if (parent) {
-    auto children = parent->get_children();
-
-    for (auto child : children) {
-      bool re = check_label_exists(child, label_text);
-      // If there was a child Gtk::Label with label_text as its text
-      if (re) {
-        return true;
-      }
-    }
-  }
-
-  return false;
+  // Select the newly created row
+  view->get_selection()->select(path);
 }
 
 TEST_F(ProfilesTest, CHECK_APPLY_LABEL_TEXT)
 {
   std::string label_text = "arbitrary text for apply label";
-  EXPECT_FALSE(check_label_exists(&pc, label_text));
+
+  bool label_exists = (pc.p_apply_info_text->get_text().compare(label_text) == 0);
+  EXPECT_FALSE(label_exists);
+
   pc.set_apply_label_text(label_text);
-  EXPECT_TRUE(check_label_exists(&pc, label_text));
+
+  label_exists = (pc.p_apply_info_text->get_text().compare(label_text) == 0);
+  EXPECT_TRUE(label_exists);
 }
 
-TEST_F(ProfilesTest, APPLY_SIGNAL_HANDLER)
+TEST_F(ProfilesTest, CHANGE_STATUS_WIDGETS_INVISIBLE_WHEN_NO_ROWS_SELECTED)
 {
-  // We know there are exactly three CheckButtons and one SearchEntry that can be modified to send a signal
-  // However, I was getting some problems emitting the `signal_search_changed` event, so this does not test the SearchEntry
-  // If there are a different amount of CheckButtons, this will fail.
-  EXPECT_CALL(*this, handle_signal()).Times(3);
+  // Since there were no rows selected, the following widgets should not be visible
+  ASSERT_FALSE(pc.p_change_state_toggle->is_visible()) 
+    << "Since there were no rows selected, the change_state toggle button should not be visible";
 
+  ASSERT_FALSE(pc.p_state_selection_box->is_visible()) 
+    << "Since there were no rows selected, the Widget 'p_state_selection_box' should not be visible";
+
+  ASSERT_FALSE(pc.p_apply_button->is_visible()) 
+    << "Since there were no rows selected, the apply button should not be visible";
+
+  ASSERT_FALSE(pc.p_apply_info_text->is_visible()) 
+    << "Since there were no rows selected, the Widget 'p_apply_info_text' should not be visible";
+}
+
+TEST_F(ProfilesTest, CHANGE_STATUS_WIDGETS_INVISIBLE_WHEN_CHANGE_TOGGLE_NOT_PRESSED)
+{
+  auto profile_name = "Test_Profile_Name";
+  auto status   = "fake_status";
+  
+  auto store = initialize_store();
+  create_and_select_row(store, profile_name, status);
+
+  // This toggle should not be pressed by default
+  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) 
+    << "This toggle should not be pressed by default, even when a row is selected";
+
+  // Since the change status toggle is not pressed, these widgets should not be visible
+  ASSERT_FALSE(pc.p_state_selection_box->is_visible()) 
+    << "Since the change status toggle is not pressed, the Widget 'p_state_selection_box' should not be visible";
+
+  ASSERT_FALSE(pc.p_apply_button->is_visible()) 
+    << "Since the change status toggle is not pressed, the apply button should not be visible";
+
+  ASSERT_FALSE(pc.p_apply_info_text->is_visible()) 
+    << "Since the change status toggle is not pressed, the Widget 'p_apply_info_text' should not be visible";
+}
+
+TEST_F(ProfilesTest, CHANGE_STATUS_WIDGETS_VISIBLE_WHEN_CHANGE_TOGGLE_PRESSED)
+{
+  auto profile_name = "Test_Profile_Name";
+  auto status   = "fake_status";
+  
+  auto store = initialize_store();
+  create_and_select_row(store, profile_name, status);
+
+  // Press the toggle
+  pc.p_change_state_toggle->set_active(true); 
+
+  // Since the change status toggle is pressed, these widgets should be visible
+  ASSERT_TRUE(pc.p_state_selection_box->is_visible()) 
+    << "Since the change status toggle is pressed, the Widget 'p_state_selection_box' should be visible";
+
+  ASSERT_TRUE(pc.p_apply_button->is_visible()) 
+    << "Since the change status toggle is pressed, the apply button should be visible";
+
+  ASSERT_TRUE(pc.p_apply_info_text->is_visible()) 
+    << "Since the change status toggle is pressed, the Widget 'p_apply_info_text' should be visible";
+}
+
+TEST_F(ProfilesTest, CHANGE_STATUS_NO_ROWS_SELECTED)
+{
+  // Since there are no rows selected, handle_signal should not be called
+  EXPECT_CALL(*this, handle_signal(_, _, _)).Times(0);
+
+  // Connect the mocked function to the signal handler
   auto fun = sigc::mem_fun(*this, &ProfilesTest::handle_signal);
   pc.set_status_change_signal_handler(fun);
 
-  click_everything(&pc);
+  // Call the change_status function (which should be called when the apply button is pressed)
+  pc.change_status();
+
+  // Since there were no rows selected, there should be some text on the apply label
+  ASSERT_EQ(pc.p_apply_info_text->get_text(), "Please select a row.") 
+    << "Since there were no rows selected, we expect the above message on the apply label";
+}
+
+TEST_F(ProfilesTest, CHANGE_STATUS_ROW_SELECTED)
+{
+  auto profile_name = "Test_Profile_Name";
+  auto old_status   = "fake_status";
+  auto new_status   = "Complain";
+
+  auto store = initialize_store();
+  create_and_select_row(store, profile_name, old_status);
+
+  // Since there is one rows selected, handle_signal should be called once, with the correct profile name
+  EXPECT_CALL(*this, handle_signal(profile_name, old_status, "complain")).Times(1);
+
+  // Connect the mocked function to the signal handler
+  auto fun = sigc::mem_fun(*this, &ProfilesTest::handle_signal);
+  pc.set_status_change_signal_handler(fun);
+
+  // Set the combobox selection to new_status
+  pc.p_status_selection->set_active_text(new_status);
+
+  // Call the change_status function (which should be called when the apply button is pressed)
+  pc.change_status();
+}
+
+TEST_F(ProfilesTest, SHOW_PROFILE_INFO_MAKES_CHANGE_TOGGLE_VISIBLE)
+{
+  ASSERT_FALSE(pc.p_change_state_toggle->is_visible()) 
+    << "This toggle should not be visible by default";
+
+  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) 
+    << "This toggle should not be active by default";
+
+  // This should make the toggle visible
+  pc.show_profile_info();
+
+  ASSERT_TRUE(pc.p_change_state_toggle->is_visible()) 
+    << "This toggle should be visible after `show_profile_info()` is called";
+
+  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) 
+    << "This toggle should be active after `show_profile_info()` is called";
+}
+
+TEST_F(ProfilesTest, HIDE_PROFILE_INFO_MAKES_CHANGE_TOGGLE_INVISIBLE)
+{
+  pc.p_change_state_toggle->show();
+  pc.p_change_state_toggle->set_active(true);
+
+  // This should hide the toggle
+  pc.hide_profile_info();
+
+  ASSERT_FALSE(pc.p_change_state_toggle->is_visible()) 
+    << "This toggle should not be visible after `hide_profile_info()` is called";
+
+  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) 
+    << "This toggle should not be active after `hide_profile_info()` is called";
+}
+
+TEST_F(ProfilesTest, NO_SIMULTANEOUS_TOGGLE_PRESS)
+{
+  // When the tab is constructed, only the load_profile toggle should be visible
+  ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) 
+    << "This toggle should be visible by default";
+
+  ASSERT_FALSE(pc.p_change_state_toggle->is_visible()) 
+    << "This toggle should not be visible by default";
+
+  // Neither toggles should be active unless a user presses them
+  ASSERT_FALSE(pc.p_load_profile_toggle->get_active()) 
+    << "This toggle should not be active by default";
+
+  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) 
+    << "This toggle should not be active by default";
+
+  // Set the change_status toggle to be visible
+  // This happens normally when a row is selected
+  pc.show_profile_info();
+  
+  // Simulate activating the change_status toggle
+  pc.p_change_state_toggle->set_active(true);
+
+  // Only the change_status toggle should be pressed
+  ASSERT_FALSE(pc.p_load_profile_toggle->get_active()) 
+    << "This toggle should not be active, because it has not been pressed yet";
+
+  ASSERT_TRUE(pc.p_change_state_toggle->get_active()) 
+    << "This toggle should be active because it was just pressed";
+
+  // Simulate activating the load_profile toggle
+  pc.p_load_profile_toggle->set_active(true);
+
+  // Only the load_profile toggle should be pressed
+  // We are testing that neither of the toggles can be pressed simultaneously
+  ASSERT_TRUE(pc.p_load_profile_toggle->get_active()) 
+    << "This toggle should be active because it was just pressed";
+
+  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) 
+    << "This toggle should not be active, because it was not the most recent toggle pressed";
+
+  // Finally untoggle the load_profile toggle
+  pc.p_load_profile_toggle->set_active(false);
+
+  // Neither toggle should be active
+  ASSERT_FALSE(pc.p_load_profile_toggle->get_active()) 
+    << "This toggle should be active because it was just un-pressed";
+
+  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) 
+    << "This toggle should not be active, because was not the most recent toggle pressed";
+}
+
+TEST_F(ProfilesTest, NO_SIMULTANEOUS_TOGGLE_PRESS_TWO)
+{
+  // When the tab is constructed, only the load_profile toggle should be visible
+  ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) 
+    << "This toggle should be visible by default";
+
+  ASSERT_FALSE(pc.p_change_state_toggle->is_visible()) 
+    << "This toggle should not be visible by default";
+
+  // Neither toggles should be active unless a user presses them
+  ASSERT_FALSE(pc.p_load_profile_toggle->get_active()) 
+    << "This toggle should not be active by default";
+
+  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) 
+    << "This toggle should not be active by default";
+
+  // Set the change_status toggle to be visible
+  // This happens normally when a row is selected
+  pc.show_profile_info();
+
+  // Simulate activating the load_profile toggle
+  pc.p_load_profile_toggle->set_active(true);
+
+  // Only the load_profile toggle should be pressed
+  ASSERT_TRUE(pc.p_load_profile_toggle->get_active()) 
+    << "This toggle should be active because it was just pressed";
+
+  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) 
+    << "This toggle should not be active, because it has not been pressed yet";
+
+  // Simulate activating the change_status toggle
+  pc.p_change_state_toggle->set_active(true);
+
+  // Only the change_status toggle should be pressed
+  // We are testing that neither of the toggles can be pressed simultaneously
+  ASSERT_FALSE(pc.p_load_profile_toggle->get_active()) 
+    << "This toggle should not be active, because it was not the most recent toggle pressed";
+
+  ASSERT_TRUE(pc.p_change_state_toggle->get_active()) 
+    << "This toggle should be active because it was just pressed";
+
+  // Finally untoggle the change_status toggle
+  pc.p_change_state_toggle->set_active(false);
+
+  // Neither toggle should be active
+  ASSERT_FALSE(pc.p_load_profile_toggle->get_active()) 
+    << "This toggle should not be active, because was not the most recent toggle pressed";
+
+  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) 
+    << "This toggle should be active because it was just un-pressed";
 }

@@ -1,16 +1,7 @@
-#include "command_caller_mock.h"
+#include "command_caller.h"
 
 using ::testing::_;
 using ::testing::Return;
-
-class CommandCallerTest : public ::testing::Test
-{
-protected:
-  CommandCallerTest() = default;
-  virtual void SetUp() {}
-
-  CommandCallerMock tester;
-};
 
 TEST_F(CommandCallerTest, TEST_STATUS)
 {

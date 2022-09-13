@@ -4,6 +4,10 @@
 #include <string>
 #include <vector>
 
+#ifdef TESTS_ENABLED
+  #include <gtest/gtest.h>
+#endif
+
 /**
  * Calls commands on the terminal to be used by the rest of the program.
  * This is where AppAnvil actually interfaces with AppArmor.
@@ -83,6 +87,17 @@ protected:
                                     const std::string &profile,
                                     const std::string &old_status,
                                     const std::string &new_status);
+
+  #ifdef TESTS_ENABLED
+    FRIEND_TEST(CommandCallerTest, TEST_UNCONF);
+    FRIEND_TEST(CommandCallerTest, TEST_LOG);
+    FRIEND_TEST(CommandCallerTest, TEST_STATUS);
+    FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_EE);
+    FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_CC);
+    FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_CE);
+    FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_EC_SUCCESS);
+    FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_CE_FAIL);
+  #endif
 };
 
 #endif // COMMAND_CALLER_H

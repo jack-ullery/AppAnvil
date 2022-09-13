@@ -18,7 +18,7 @@
 #include <memory>
 #include <tuple>
 
-class StatusColumnRecordMock //: public StatusColumnRecord
+class StatusColumnRecordMock
 {
 public:
   static std::shared_ptr<StatusColumnRecordMock> create(const std::shared_ptr<Gtk::TreeView> &view,

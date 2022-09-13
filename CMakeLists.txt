@@ -136,11 +136,11 @@ if (NOT GLIB_RETURN_VALUE EQUAL 0)
 endif()
 
 add_custom_command(
-    OUTPUT ${RESOURCE_BUNDLE_OUTPUT}
-    COMMAND glib-compile-resources --target=${RESOURCE_BUNDLE_OUTPUT} --generate-source ${XML_GRESOURCE}
-    DEPENDS ${XML_GRESOURCE} ${GLADE_RESOURCES} 
-    COMMENT "Generating Glib Resource Bundle."
-    VERBATIM
+  OUTPUT ${RESOURCE_BUNDLE_OUTPUT}
+  COMMAND glib-compile-resources --target=${RESOURCE_BUNDLE_OUTPUT} --generate-source ${XML_GRESOURCE}
+  DEPENDS ${XML_GRESOURCE} ${GLADE_RESOURCES} 
+  COMMENT "Generating Glib Resource Bundle."
+  VERBATIM
 )
 
 include_directories(
@@ -166,6 +166,9 @@ target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${jsoncpp_DIRS})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${GTKMM_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} PUBLIC jsoncpp)
 target_link_libraries(${PROJECT_NAME} PUBLIC pthread)
+
+pkg_check_modules(GTEST gtest)
+pkg_check_modules(GMOCK gmock)
 
 add_subdirectory(aa-caller)
 add_subdirectory(test)

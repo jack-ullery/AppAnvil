@@ -11,6 +11,10 @@
 #include <string>
 #include <vector>
 
+#ifdef TESTS_ENABLED
+  #include <gtest/gtest.h>
+#endif
+
 class Profiles : public Status
 {
 public:
@@ -18,9 +22,6 @@ public:
 
   // Sets the function to be used when changing the status of a profile, this is used in main_window.cc
   void set_status_change_signal_handler(sigc::slot<void(std::string, std::string, std::string)> change_fun);
-
-  // Sets the function to be called when the `p_load_profile` button is pressed
-  void set_load_profile_signal_handler(sigc::slot<void> change_fun);
 
   /**
    * @brief Change the text in the label next to the Apply button/spinner.
@@ -66,6 +67,19 @@ private:
   // Misc
   template<typename T_Widget>
   static std::shared_ptr<T_Widget> get_widget_shared(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);
+
+  #ifdef TESTS_ENABLED
+    FRIEND_TEST(ProfilesTest, CHECK_APPLY_LABEL_TEXT);
+    FRIEND_TEST(ProfilesTest, CHANGE_STATUS_WIDGETS_INVISIBLE_WHEN_NO_ROWS_SELECTED);
+    FRIEND_TEST(ProfilesTest, CHANGE_STATUS_WIDGETS_INVISIBLE_WHEN_CHANGE_TOGGLE_NOT_PRESSED);
+    FRIEND_TEST(ProfilesTest, CHANGE_STATUS_WIDGETS_VISIBLE_WHEN_CHANGE_TOGGLE_PRESSED);
+    FRIEND_TEST(ProfilesTest, CHANGE_STATUS_NO_ROWS_SELECTED);
+    FRIEND_TEST(ProfilesTest, CHANGE_STATUS_ROW_SELECTED);
+    FRIEND_TEST(ProfilesTest, SHOW_PROFILE_INFO_MAKES_CHANGE_TOGGLE_VISIBLE);
+    FRIEND_TEST(ProfilesTest, HIDE_PROFILE_INFO_MAKES_CHANGE_TOGGLE_INVISIBLE);
+    FRIEND_TEST(ProfilesTest, NO_SIMULTANEOUS_TOGGLE_PRESS);
+    FRIEND_TEST(ProfilesTest, NO_SIMULTANEOUS_TOGGLE_PRESS_TWO);
+  #endif
 };
 
 #endif // TABS_PROFILES_H

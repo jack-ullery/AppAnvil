@@ -5,11 +5,23 @@
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <gtkmm/treemodel.h>
+#include <gtkmm/treestore.h>
 
-class ProfilesChild : public Profiles
+// Test Fixture for Status class
+class ProfilesTest : public ::testing::Test
 {
-  FRIEND_TEST(ProfilesTest, APPLY_SIGNAL_HANDLER);
-  FRIEND_TEST(ProfilesTest, CHECK_APPLY_LABEL_TEXT);
+public:
+  MOCK_METHOD(void, handle_signal, (std::string, std::string, std::string));
+
+protected:
+  ProfilesTest() {}
+
+  Glib::RefPtr<Gtk::TreeStore> initialize_store();
+  void create_and_select_row(Glib::RefPtr<Gtk::TreeStore> store, std::string profile, std::string status);
+
+  Gtk::TreeModelColumnRecord record;
+  Profiles pc;
 };
 
 #endif
