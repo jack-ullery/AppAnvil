@@ -4,11 +4,11 @@
 #include <string>
 #include <vector>
 
-/** 
-  * Calls commands on the terminal to be used by the rest of the program.
-  * This is where AppAnvil actually interfaces with AppArmor. 
-  * Most of these functions are called on the second thread.
-  **/
+/**
+ * Calls commands on the terminal to be used by the rest of the program.
+ * This is where AppAnvil actually interfaces with AppArmor.
+ * Most of these functions are called on the second thread.
+ **/
 class AppArmorCaller
 {
 public:
@@ -43,15 +43,16 @@ public:
   static std::string get_unconfined();
 
 protected:
-  struct results {
+  struct results
+  {
     int exit_status = 0;
     std::string output;
     std::string error;
   };
 
   // Used to call command-line commands from `/usr/sbin`
-  virtual results call_command(const std::vector<std::string>& command);
-  virtual std::string call_command(const std::vector<std::string>& command, const std::string& return_on_error);
+  virtual results call_command(const std::vector<std::string> &command);
+  virtual std::string call_command(const std::vector<std::string> &command, const std::string &return_on_error);
 
   // Dependency Injection: For unit testing
   static std::string get_status(AppArmorCaller *caller);

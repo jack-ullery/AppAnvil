@@ -10,19 +10,17 @@ void print_usage(){
 }
 
 int main(int argc, char **argv) {
-  if(argc == 2){
+  if (argc == 2) {
     std::string arg(argv[1]);
-    if(arg == "-s"){
+    if (arg == "-s") {
       // Argument for: "get_status"
       std::cout << AppArmorCaller::get_status();
       return 0;
-    }
-    else if(arg == "-u"){
+    } else if (arg == "-u") {
       // Argument for: "get_unconfined"
       std::cout << AppArmorCaller::get_unconfined();
       return 0;
-    }
-    else if(arg == "-l"){
+    } else if (arg == "-l") {
       // Argument for: "get_logs"
       std::cout << AppArmorCaller::get_logs();
       return 0;
