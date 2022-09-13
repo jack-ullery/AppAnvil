@@ -73,7 +73,7 @@ void
 Profiles::show_profile_info()
 {
   p_profile_info->show_all();
-  p_change_state_toggle->set_visible(true);
+  p_change_state_toggle->set_sensitive(true);
 }
 
 void
@@ -83,7 +83,7 @@ Profiles::hide_profile_info()
   p_state_selection_box->hide();
 
   p_change_state_toggle->set_active(false);
-  p_change_state_toggle->set_visible(false);
+  p_change_state_toggle->set_sensitive(false);
 }
 
 void

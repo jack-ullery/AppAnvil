@@ -62,8 +62,11 @@ TEST_F(ProfilesTest, CHECK_APPLY_LABEL_TEXT)
 TEST_F(ProfilesTest, CHANGE_STATUS_WIDGETS_INVISIBLE_WHEN_NO_ROWS_SELECTED)
 {
   // Since there were no rows selected, the following widgets should not be visible
-  ASSERT_FALSE(pc.p_change_state_toggle->is_visible()) 
-    << "Since there were no rows selected, the change_state toggle button should not be visible";
+  ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) 
+    << "This toggle should always be visible";
+
+  ASSERT_FALSE(pc.p_change_state_toggle->get_sensitive()) 
+    << "Since there were no rows selected, the change_state toggle button should not be enabled";
 
   ASSERT_FALSE(pc.p_state_selection_box->is_visible()) 
     << "Since there were no rows selected, the Widget 'p_state_selection_box' should not be visible";
@@ -162,8 +165,11 @@ TEST_F(ProfilesTest, CHANGE_STATUS_ROW_SELECTED)
 
 TEST_F(ProfilesTest, SHOW_PROFILE_INFO_MAKES_CHANGE_TOGGLE_VISIBLE)
 {
-  ASSERT_FALSE(pc.p_change_state_toggle->is_visible()) 
-    << "This toggle should not be visible by default";
+  ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) 
+    << "This toggle should always be visible";
+
+  ASSERT_FALSE(pc.p_change_state_toggle->get_sensitive()) 
+    << "This toggle should not be enabled by default";
 
   ASSERT_FALSE(pc.p_change_state_toggle->get_active()) 
     << "This toggle should not be active by default";
@@ -171,8 +177,11 @@ TEST_F(ProfilesTest, SHOW_PROFILE_INFO_MAKES_CHANGE_TOGGLE_VISIBLE)
   // This should make the toggle visible
   pc.show_profile_info();
 
-  ASSERT_TRUE(pc.p_change_state_toggle->is_visible()) 
-    << "This toggle should be visible after `show_profile_info()` is called";
+  ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) 
+    << "This toggle should always be visible";
+
+  ASSERT_TRUE(pc.p_change_state_toggle->get_sensitive()) 
+    << "This toggle should be enabled after `show_profile_info()` is called";
 
   ASSERT_FALSE(pc.p_change_state_toggle->get_active()) 
     << "This toggle should be active after `show_profile_info()` is called";
@@ -186,8 +195,11 @@ TEST_F(ProfilesTest, HIDE_PROFILE_INFO_MAKES_CHANGE_TOGGLE_INVISIBLE)
   // This should hide the toggle
   pc.hide_profile_info();
 
-  ASSERT_FALSE(pc.p_change_state_toggle->is_visible()) 
-    << "This toggle should not be visible after `hide_profile_info()` is called";
+  ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) 
+    << "This toggle should always be visible";
+
+  ASSERT_FALSE(pc.p_change_state_toggle->get_sensitive()) 
+    << "This toggle should not be enabled after `hide_profile_info()` is called";
 
   ASSERT_FALSE(pc.p_change_state_toggle->get_active()) 
     << "This toggle should not be active after `hide_profile_info()` is called";
@@ -197,10 +209,13 @@ TEST_F(ProfilesTest, NO_SIMULTANEOUS_TOGGLE_PRESS)
 {
   // When the tab is constructed, only the load_profile toggle should be visible
   ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) 
-    << "This toggle should be visible by default";
+    << "This toggle should always be visible";
 
-  ASSERT_FALSE(pc.p_change_state_toggle->is_visible()) 
-    << "This toggle should not be visible by default";
+  ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) 
+    << "This toggle should always be visible";
+
+  ASSERT_FALSE(pc.p_change_state_toggle->get_sensitive()) 
+    << "This toggle should not be enabled by default";
 
   // Neither toggles should be active unless a user presses them
   ASSERT_FALSE(pc.p_load_profile_toggle->get_active()) 
@@ -251,8 +266,11 @@ TEST_F(ProfilesTest, NO_SIMULTANEOUS_TOGGLE_PRESS_TWO)
   ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) 
     << "This toggle should be visible by default";
 
-  ASSERT_FALSE(pc.p_change_state_toggle->is_visible()) 
-    << "This toggle should not be visible by default";
+  ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) 
+    << "This toggle should always be visible";
+
+  ASSERT_FALSE(pc.p_change_state_toggle->get_sensitive()) 
+    << "This toggle should not be enabled by default";
 
   // Neither toggles should be active unless a user presses them
   ASSERT_FALSE(pc.p_load_profile_toggle->get_active()) 
