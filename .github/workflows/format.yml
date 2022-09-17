@@ -14,6 +14,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        ref: ${{github.event.pull_request.head.ref}}
+        repository: ${{github.event.pull_request.head.repo.full_name}}
 
     - name: Install Dependencies
       run: |
@@ -36,7 +39,6 @@ jobs:
         num_files_changed=$(git diff --numstat | wc -l)
         if [ $num_files_changed != 0 ]; then 
           # Stage the changed files, commit and push
-          git add ./src/* ./test/src/* ./aa-caller/src/*;
-          git commit -m "Format code";
+          git commit -am "Format code";
           git push
         fi;
