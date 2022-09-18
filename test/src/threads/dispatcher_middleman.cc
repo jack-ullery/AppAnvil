@@ -1,7 +1,7 @@
+#include "dispatcher_middleman.h"
 #include "../tabs/controller/logs_controller_mock.h"
 #include "../tabs/controller/processes_controller_mock.h"
 #include "../tabs/controller/profiles_controller_mock.h"
-#include "dispatcher_middleman.h"
 #include "mutex_mock.h"
 
 #include <future>

@@ -51,6 +51,11 @@ protected:
 // Used to avoid linker errors
 // For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
 template class DispatcherMiddleman<ProfilesStatusMock, ProcessesStatusMock, LogsControllerMock, GlibDispatcherMock, MutexMock>;
-template class BlockingQueue<DispatcherMiddleman<ProfilesStatusMock, ProcessesStatusMock, LogsControllerMock, GlibDispatcherMock, MutexMock>::CallData, std::deque<DispatcherMiddleman<ProfilesStatusMock, ProcessesStatusMock, LogsControllerMock, GlibDispatcherMock, MutexMock>::CallData, std::allocator<DispatcherMiddleman<ProfilesStatusMock, ProcessesStatusMock, LogsControllerMock, GlibDispatcherMock, MutexMock>::CallData>>,MutexMock>;
+template class BlockingQueue<
+  DispatcherMiddleman<ProfilesStatusMock, ProcessesStatusMock, LogsControllerMock, GlibDispatcherMock, MutexMock>::CallData,
+  std::deque<DispatcherMiddleman<ProfilesStatusMock, ProcessesStatusMock, LogsControllerMock, GlibDispatcherMock, MutexMock>::CallData,
+             std::allocator<
+               DispatcherMiddleman<ProfilesStatusMock, ProcessesStatusMock, LogsControllerMock, GlibDispatcherMock, MutexMock>::CallData>>,
+  MutexMock>;
 
 #endif

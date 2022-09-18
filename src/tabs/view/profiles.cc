@@ -65,8 +65,8 @@ void
 Profiles::set_profile_info(const std::string &num_logs, const std::string &num_perms, const std::string &num_procs)
 {
   p_num_log_label->set_text(num_logs);
-  p_num_proc_label->set_text(num_perms);
-  p_num_perm_label->set_text(num_procs);
+  p_num_proc_label->set_text(num_procs);
+  p_num_perm_label->set_text(num_perms);
 }
 
 void

@@ -5,7 +5,7 @@
 #include <vector>
 
 #ifdef TESTS_ENABLED
-  #include <gtest/gtest.h>
+#include <gtest/gtest.h>
 #endif
 
 /**
@@ -88,16 +88,16 @@ protected:
                                     const std::string &old_status,
                                     const std::string &new_status);
 
-  #ifdef TESTS_ENABLED
-    FRIEND_TEST(CommandCallerTest, TEST_UNCONF);
-    FRIEND_TEST(CommandCallerTest, TEST_LOG);
-    FRIEND_TEST(CommandCallerTest, TEST_STATUS);
-    FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_EE);
-    FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_CC);
-    FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_CE);
-    FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_EC_SUCCESS);
-    FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_CE_FAIL);
-  #endif
+#ifdef TESTS_ENABLED
+  FRIEND_TEST(CommandCallerTest, TEST_UNCONF);
+  FRIEND_TEST(CommandCallerTest, TEST_LOG);
+  FRIEND_TEST(CommandCallerTest, TEST_STATUS);
+  FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_EE);
+  FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_CC);
+  FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_CE);
+  FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_EC_SUCCESS);
+  FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_CE_FAIL);
+#endif
 };
 
 #endif // COMMAND_CALLER_H

@@ -8,7 +8,8 @@
 
 using ::testing::_;
 
-Glib::RefPtr<Gtk::TreeStore> ProfilesTest::initialize_store()
+Glib::RefPtr<Gtk::TreeStore>
+ProfilesTest::initialize_store()
 {
   auto first_column  = Gtk::TreeModelColumn<std::string>();
   auto second_column = Gtk::TreeModelColumn<std::string>();
@@ -28,7 +29,8 @@ Glib::RefPtr<Gtk::TreeStore> ProfilesTest::initialize_store()
   return store;
 }
 
-void ProfilesTest::create_and_select_row(Glib::RefPtr<Gtk::TreeStore> store, std::string profile, std::string status)
+void
+ProfilesTest::create_and_select_row(Glib::RefPtr<Gtk::TreeStore> store, std::string profile, std::string status)
 {
   // Create a row and put some data into the first column
   auto iter = store->append();
@@ -62,64 +64,59 @@ TEST_F(ProfilesTest, CHECK_APPLY_LABEL_TEXT)
 TEST_F(ProfilesTest, CHANGE_STATUS_WIDGETS_INVISIBLE_WHEN_NO_ROWS_SELECTED)
 {
   // Since there were no rows selected, the following widgets should not be visible
-  ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) 
-    << "This toggle should always be visible";
+  ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) << "This toggle should always be visible";
 
-  ASSERT_FALSE(pc.p_change_state_toggle->get_sensitive()) 
+  ASSERT_FALSE(pc.p_change_state_toggle->get_sensitive())
     << "Since there were no rows selected, the change_state toggle button should not be enabled";
 
-  ASSERT_FALSE(pc.p_state_selection_box->is_visible()) 
+  ASSERT_FALSE(pc.p_state_selection_box->is_visible())
     << "Since there were no rows selected, the Widget 'p_state_selection_box' should not be visible";
 
-  ASSERT_FALSE(pc.p_apply_button->is_visible()) 
-    << "Since there were no rows selected, the apply button should not be visible";
+  ASSERT_FALSE(pc.p_apply_button->is_visible()) << "Since there were no rows selected, the apply button should not be visible";
 
-  ASSERT_FALSE(pc.p_apply_info_text->is_visible()) 
+  ASSERT_FALSE(pc.p_apply_info_text->is_visible())
     << "Since there were no rows selected, the Widget 'p_apply_info_text' should not be visible";
 }
 
 TEST_F(ProfilesTest, CHANGE_STATUS_WIDGETS_INVISIBLE_WHEN_CHANGE_TOGGLE_NOT_PRESSED)
 {
   auto profile_name = "Test_Profile_Name";
-  auto status   = "fake_status";
-  
+  auto status       = "fake_status";
+
   auto store = initialize_store();
   create_and_select_row(store, profile_name, status);
 
   // This toggle should not be pressed by default
-  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) 
-    << "This toggle should not be pressed by default, even when a row is selected";
+  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) << "This toggle should not be pressed by default, even when a row is selected";
 
   // Since the change status toggle is not pressed, these widgets should not be visible
-  ASSERT_FALSE(pc.p_state_selection_box->is_visible()) 
+  ASSERT_FALSE(pc.p_state_selection_box->is_visible())
     << "Since the change status toggle is not pressed, the Widget 'p_state_selection_box' should not be visible";
 
-  ASSERT_FALSE(pc.p_apply_button->is_visible()) 
-    << "Since the change status toggle is not pressed, the apply button should not be visible";
+  ASSERT_FALSE(pc.p_apply_button->is_visible()) << "Since the change status toggle is not pressed, the apply button should not be visible";
 
-  ASSERT_FALSE(pc.p_apply_info_text->is_visible()) 
+  ASSERT_FALSE(pc.p_apply_info_text->is_visible())
     << "Since the change status toggle is not pressed, the Widget 'p_apply_info_text' should not be visible";
 }
 
 TEST_F(ProfilesTest, CHANGE_STATUS_WIDGETS_VISIBLE_WHEN_CHANGE_TOGGLE_PRESSED)
 {
   auto profile_name = "Test_Profile_Name";
-  auto status   = "fake_status";
-  
+  auto status       = "fake_status";
+
   auto store = initialize_store();
   create_and_select_row(store, profile_name, status);
 
   // Press the toggle
-  pc.p_change_state_toggle->set_active(true); 
+  pc.p_change_state_toggle->set_active(true);
 
   // Since the change status toggle is pressed, these widgets should be visible
-  ASSERT_TRUE(pc.p_state_selection_box->is_visible()) 
+  ASSERT_TRUE(pc.p_state_selection_box->is_visible())
     << "Since the change status toggle is pressed, the Widget 'p_state_selection_box' should be visible";
 
-  ASSERT_TRUE(pc.p_apply_button->is_visible()) 
-    << "Since the change status toggle is pressed, the apply button should be visible";
+  ASSERT_TRUE(pc.p_apply_button->is_visible()) << "Since the change status toggle is pressed, the apply button should be visible";
 
-  ASSERT_TRUE(pc.p_apply_info_text->is_visible()) 
+  ASSERT_TRUE(pc.p_apply_info_text->is_visible())
     << "Since the change status toggle is pressed, the Widget 'p_apply_info_text' should be visible";
 }
 
@@ -136,7 +133,7 @@ TEST_F(ProfilesTest, CHANGE_STATUS_NO_ROWS_SELECTED)
   pc.change_status();
 
   // Since there were no rows selected, there should be some text on the apply label
-  ASSERT_EQ(pc.p_apply_info_text->get_text(), "Please select a row.") 
+  ASSERT_EQ(pc.p_apply_info_text->get_text(), "Please select a row.")
     << "Since there were no rows selected, we expect the above message on the apply label";
 }
 
@@ -165,26 +162,20 @@ TEST_F(ProfilesTest, CHANGE_STATUS_ROW_SELECTED)
 
 TEST_F(ProfilesTest, SHOW_PROFILE_INFO_MAKES_CHANGE_TOGGLE_VISIBLE)
 {
-  ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) 
-    << "This toggle should always be visible";
+  ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) << "This toggle should always be visible";
 
-  ASSERT_FALSE(pc.p_change_state_toggle->get_sensitive()) 
-    << "This toggle should not be enabled by default";
+  ASSERT_FALSE(pc.p_change_state_toggle->get_sensitive()) << "This toggle should not be enabled by default";
 
-  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) 
-    << "This toggle should not be active by default";
+  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) << "This toggle should not be active by default";
 
   // This should make the toggle visible
   pc.show_profile_info();
 
-  ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) 
-    << "This toggle should always be visible";
+  ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) << "This toggle should always be visible";
 
-  ASSERT_TRUE(pc.p_change_state_toggle->get_sensitive()) 
-    << "This toggle should be enabled after `show_profile_info()` is called";
+  ASSERT_TRUE(pc.p_change_state_toggle->get_sensitive()) << "This toggle should be enabled after `show_profile_info()` is called";
 
-  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) 
-    << "This toggle should be active after `show_profile_info()` is called";
+  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) << "This toggle should be active after `show_profile_info()` is called";
 }
 
 TEST_F(ProfilesTest, HIDE_PROFILE_INFO_MAKES_CHANGE_TOGGLE_INVISIBLE)
@@ -195,89 +186,72 @@ TEST_F(ProfilesTest, HIDE_PROFILE_INFO_MAKES_CHANGE_TOGGLE_INVISIBLE)
   // This should hide the toggle
   pc.hide_profile_info();
 
-  ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) 
-    << "This toggle should always be visible";
+  ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) << "This toggle should always be visible";
 
-  ASSERT_FALSE(pc.p_change_state_toggle->get_sensitive()) 
-    << "This toggle should not be enabled after `hide_profile_info()` is called";
+  ASSERT_FALSE(pc.p_change_state_toggle->get_sensitive()) << "This toggle should not be enabled after `hide_profile_info()` is called";
 
-  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) 
-    << "This toggle should not be active after `hide_profile_info()` is called";
+  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) << "This toggle should not be active after `hide_profile_info()` is called";
 }
 
 TEST_F(ProfilesTest, NO_SIMULTANEOUS_TOGGLE_PRESS)
 {
   // When the tab is constructed, only the load_profile toggle should be visible
-  ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) 
-    << "This toggle should always be visible";
+  ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) << "This toggle should always be visible";
 
-  ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) 
-    << "This toggle should always be visible";
+  ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) << "This toggle should always be visible";
 
-  ASSERT_FALSE(pc.p_change_state_toggle->get_sensitive()) 
-    << "This toggle should not be enabled by default";
+  ASSERT_FALSE(pc.p_change_state_toggle->get_sensitive()) << "This toggle should not be enabled by default";
 
   // Neither toggles should be active unless a user presses them
-  ASSERT_FALSE(pc.p_load_profile_toggle->get_active()) 
-    << "This toggle should not be active by default";
+  ASSERT_FALSE(pc.p_load_profile_toggle->get_active()) << "This toggle should not be active by default";
 
-  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) 
-    << "This toggle should not be active by default";
+  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) << "This toggle should not be active by default";
 
   // Set the change_status toggle to be visible
   // This happens normally when a row is selected
   pc.show_profile_info();
-  
+
   // Simulate activating the change_status toggle
   pc.p_change_state_toggle->set_active(true);
 
   // Only the change_status toggle should be pressed
-  ASSERT_FALSE(pc.p_load_profile_toggle->get_active()) 
-    << "This toggle should not be active, because it has not been pressed yet";
+  ASSERT_FALSE(pc.p_load_profile_toggle->get_active()) << "This toggle should not be active, because it has not been pressed yet";
 
-  ASSERT_TRUE(pc.p_change_state_toggle->get_active()) 
-    << "This toggle should be active because it was just pressed";
+  ASSERT_TRUE(pc.p_change_state_toggle->get_active()) << "This toggle should be active because it was just pressed";
 
   // Simulate activating the load_profile toggle
   pc.p_load_profile_toggle->set_active(true);
 
   // Only the load_profile toggle should be pressed
   // We are testing that neither of the toggles can be pressed simultaneously
-  ASSERT_TRUE(pc.p_load_profile_toggle->get_active()) 
-    << "This toggle should be active because it was just pressed";
+  ASSERT_TRUE(pc.p_load_profile_toggle->get_active()) << "This toggle should be active because it was just pressed";
 
-  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) 
+  ASSERT_FALSE(pc.p_change_state_toggle->get_active())
     << "This toggle should not be active, because it was not the most recent toggle pressed";
 
   // Finally untoggle the load_profile toggle
   pc.p_load_profile_toggle->set_active(false);
 
   // Neither toggle should be active
-  ASSERT_FALSE(pc.p_load_profile_toggle->get_active()) 
-    << "This toggle should be active because it was just un-pressed";
+  ASSERT_FALSE(pc.p_load_profile_toggle->get_active()) << "This toggle should be active because it was just un-pressed";
 
-  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) 
+  ASSERT_FALSE(pc.p_change_state_toggle->get_active())
     << "This toggle should not be active, because was not the most recent toggle pressed";
 }
 
 TEST_F(ProfilesTest, NO_SIMULTANEOUS_TOGGLE_PRESS_TWO)
 {
   // When the tab is constructed, only the load_profile toggle should be visible
-  ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) 
-    << "This toggle should be visible by default";
+  ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) << "This toggle should be visible by default";
 
-  ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) 
-    << "This toggle should always be visible";
+  ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) << "This toggle should always be visible";
 
-  ASSERT_FALSE(pc.p_change_state_toggle->get_sensitive()) 
-    << "This toggle should not be enabled by default";
+  ASSERT_FALSE(pc.p_change_state_toggle->get_sensitive()) << "This toggle should not be enabled by default";
 
   // Neither toggles should be active unless a user presses them
-  ASSERT_FALSE(pc.p_load_profile_toggle->get_active()) 
-    << "This toggle should not be active by default";
+  ASSERT_FALSE(pc.p_load_profile_toggle->get_active()) << "This toggle should not be active by default";
 
-  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) 
-    << "This toggle should not be active by default";
+  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) << "This toggle should not be active by default";
 
   // Set the change_status toggle to be visible
   // This happens normally when a row is selected
@@ -287,30 +261,39 @@ TEST_F(ProfilesTest, NO_SIMULTANEOUS_TOGGLE_PRESS_TWO)
   pc.p_load_profile_toggle->set_active(true);
 
   // Only the load_profile toggle should be pressed
-  ASSERT_TRUE(pc.p_load_profile_toggle->get_active()) 
-    << "This toggle should be active because it was just pressed";
+  ASSERT_TRUE(pc.p_load_profile_toggle->get_active()) << "This toggle should be active because it was just pressed";
 
-  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) 
-    << "This toggle should not be active, because it has not been pressed yet";
+  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) << "This toggle should not be active, because it has not been pressed yet";
 
   // Simulate activating the change_status toggle
   pc.p_change_state_toggle->set_active(true);
 
   // Only the change_status toggle should be pressed
   // We are testing that neither of the toggles can be pressed simultaneously
-  ASSERT_FALSE(pc.p_load_profile_toggle->get_active()) 
+  ASSERT_FALSE(pc.p_load_profile_toggle->get_active())
     << "This toggle should not be active, because it was not the most recent toggle pressed";
 
-  ASSERT_TRUE(pc.p_change_state_toggle->get_active()) 
-    << "This toggle should be active because it was just pressed";
+  ASSERT_TRUE(pc.p_change_state_toggle->get_active()) << "This toggle should be active because it was just pressed";
 
   // Finally untoggle the change_status toggle
   pc.p_change_state_toggle->set_active(false);
 
   // Neither toggle should be active
-  ASSERT_FALSE(pc.p_load_profile_toggle->get_active()) 
+  ASSERT_FALSE(pc.p_load_profile_toggle->get_active())
     << "This toggle should not be active, because was not the most recent toggle pressed";
 
-  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) 
-    << "This toggle should be active because it was just un-pressed";
+  ASSERT_FALSE(pc.p_change_state_toggle->get_active()) << "This toggle should be active because it was just un-pressed";
+}
+
+TEST_F(ProfilesTest, SET_PROFILE_INFO)
+{
+  std::string logs_str       = "Example string for logs label";
+  std::string permission_str = "Example string for permissions label";
+  std::string processes_str  = "Example string for processes label";
+
+  pc.set_profile_info(logs_str, permission_str, processes_str);
+
+  ASSERT_EQ(logs_str, std::string(pc.p_num_log_label->get_text()));
+  ASSERT_EQ(permission_str, std::string(pc.p_num_perm_label->get_text()));
+  ASSERT_EQ(processes_str, std::string(pc.p_num_proc_label->get_text()));
 }
