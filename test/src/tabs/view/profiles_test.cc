@@ -314,3 +314,16 @@ TEST_F(ProfilesTest, NO_SIMULTANEOUS_TOGGLE_PRESS_TWO)
   ASSERT_FALSE(pc.p_change_state_toggle->get_active()) 
     << "This toggle should be active because it was just un-pressed";
 }
+
+TEST_F(ProfilesTest, SET_PROFILE_INFO)
+{
+  std::string logs_str       = "Example string for logs label";
+  std::string permission_str = "Example string for permissions label";
+  std::string processes_str  = "Example string for processes label";
+
+  pc.set_profile_info(logs_str, permission_str, processes_str);
+
+  ASSERT_EQ(logs_str,       std::string(pc.p_num_log_label->get_text()));
+  ASSERT_EQ(permission_str, std::string(pc.p_num_perm_label->get_text()));
+  ASSERT_EQ(processes_str,  std::string(pc.p_num_proc_label->get_text()));
+}
