@@ -3,39 +3,34 @@
 
 #include "jsoncpp/json/json.h"
 #include "status.h"
+#include "info_box.h"
 
-#include <iomanip>
 #include <memory>
-#include <regex>
-#include <sstream>
-#include <string>
-#include <vector>
 
 class Logs : public Status
 {
 public:
-  explicit Logs();
+  Logs();
 
-protected:
-  struct LogData
-  {
-    time_t timestamp;
-    std::string type;
-    std::string operation;
-    std::string name;
-    std::string pid;
-    std::string status;
-
-    LogData(time_t a, std::string b, std::string c, std::string d, std::string e, std::string f)
-      : timestamp{ a },
-        type{ std::move(b) },
-        operation{ std::move(c) },
-        name{ std::move(d) },
-        pid{ std::move(e) },
-        status{ std::move(f) }
-    {
-    }
+  enum InformationType {
+    LOG_STATUS
   };
+
+  void set_information(InformationType type, std::string text);
+
+private:
+  // GUI Builder to parse UI from xml file
+  Glib::RefPtr<Gtk::Builder> builder;
+
+  // Information pane
+  std::unique_ptr<Gtk::Box> l_log_info;
+
+  // Widgets
+  InfoBox status_info;
+
+  // Misc
+  template<typename T_Widget>
+  static std::unique_ptr<T_Widget> get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);
 };
 
 #endif // TABS_VIEW_LOGS_H

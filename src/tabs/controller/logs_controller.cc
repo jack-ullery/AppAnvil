@@ -12,6 +12,45 @@
 #include <iostream>
 
 template<class LogsTab, class Database, class Adapter>
+bool LogsController<LogsTab, Database, Adapter>::on_button_event(GdkEventButton *event)
+{
+  std::ignore = event;
+
+  handle_log_selected();
+  return false;
+}
+
+template<class LogsTab, class Database, class Adapter>
+bool LogsController<LogsTab, Database, Adapter>::on_key_event(GdkEventKey *event)
+{
+  std::ignore = event;
+
+  handle_log_selected();
+  return false;
+}
+
+template<class LogsTab, class Database, class Adapter>
+void LogsController<LogsTab, Database, Adapter>::handle_log_selected()
+{
+  // Check if there is any row selected
+  auto selection    = logs->get_view()->get_selection();
+  auto row_selected = selection->count_selected_rows() == 1;
+
+  if (row_selected) {
+    Gtk::TreePath path = selection->get_selected_rows()[0];
+    Gtk::TreeRow row   = adapter->get_col_record()->get_row(path);
+
+    // TODO: Get status from adapter
+    // This is a temporary solution for getting the status
+    std::string status;
+    row.get_value(5, status);
+    logs->set_information(LogsTab::InformationType::LOG_STATUS, status);
+  } else {
+    logs->set_information(LogsTab::InformationType::LOG_STATUS, "");
+  }
+}
+
+template<class LogsTab, class Database, class Adapter>
 std::string LogsController<LogsTab, Database, Adapter>::format_log_data(const std::string &data)
 {
   const std::regex remove_quotes = std::regex("\\\"(\\S*)\\\"");
@@ -21,8 +60,7 @@ std::string LogsController<LogsTab, Database, Adapter>::format_log_data(const st
 }
 
 template<class LogsTab, class Database, class Adapter>
-void
-LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::Value &entry)
+void LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::Value &entry)
 {
   // getting timestamp from json argument, retrieving important fields from json
   const time_t timestamp      = std::stol(entry["_SOURCE_REALTIME_TIMESTAMP"].asString()) / 1000000;
@@ -87,8 +125,7 @@ LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::Value 
 }
 
 template<class LogsTab, class Database, class Adapter>
-void
-LogsController<LogsTab, Database, Adapter>::add_data_to_record(const std::string &data)
+void LogsController<LogsTab, Database, Adapter>::add_data_to_record(const std::string &data)
 {
   auto json_data = std::make_shared<std::istringstream>(data);
 
@@ -98,8 +135,7 @@ LogsController<LogsTab, Database, Adapter>::add_data_to_record(const std::string
 }
 
 template<class LogsTab, class Database, class Adapter>
-bool
-LogsController<LogsTab, Database, Adapter>::add_data_to_record_helper(std::shared_ptr<std::istringstream> json_data)
+bool LogsController<LogsTab, Database, Adapter>::add_data_to_record_helper(std::shared_ptr<std::istringstream> json_data)
 {
   // Declare some variables that will be written to
   Json::Value value;
@@ -160,6 +196,15 @@ LogsController<LogsTab, Database, Adapter>::LogsController(std::shared_ptr<Datab
 
   auto filter_fun = sigc::mem_fun(*this, &LogsController::filter);
   adapter->get_col_record()->set_visible_func(filter_fun);
+
+  // When a key/button is pressed or released, check if the selection has changed
+  auto button_event_fun = sigc::mem_fun(*this, &LogsController::on_button_event);
+  logs->get_view()->signal_button_release_event().connect(button_event_fun, true);
+
+  auto key_event_fun = sigc::mem_fun(*this, &LogsController::on_key_event);
+  logs->get_view()->signal_key_release_event().connect(key_event_fun, true);
+
+  logs->get_view()->set_activate_on_single_click(true);
 }
 
 // Used to avoid linker errors

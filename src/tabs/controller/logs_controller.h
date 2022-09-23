@@ -6,6 +6,7 @@
 #include "status_controller.h"
 
 #include <memory>
+#include <regex>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -22,6 +23,10 @@ public:
   explicit LogsController(std::shared_ptr<Database> database);
   // For unit testing
   explicit LogsController(std::shared_ptr<Adapter> adapter, std::shared_ptr<LogsTab> logs);
+
+  void handle_log_selected();
+  bool on_key_event(GdkEventKey *event);
+  bool on_button_event(GdkEventButton *event);
 
   virtual void add_data_to_record(const std::string &data);
 
