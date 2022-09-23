@@ -14,7 +14,13 @@
 #include <thread>
 #include <vector>
 
-enum TabState { PROFILE, PROCESS, LOGS, OTHER };
+enum TabState
+{
+  PROFILE,
+  PROCESS,
+  LOGS,
+  OTHER
+};
 
 /**
  * This class creates a separate thread that the main GUI thread can communicate with.
@@ -28,8 +34,8 @@ public:
   ~ConsoleThread();
 
   // Delete the copy-constructor, move constructor, and copy assignment operator
-  ConsoleThread(const ConsoleThread &other)  = delete;
-  ConsoleThread(const ConsoleThread &&other) = delete;
+  ConsoleThread(const ConsoleThread &other)            = delete;
+  ConsoleThread(const ConsoleThread &&other)           = delete;
   ConsoleThread &operator=(const ConsoleThread &other) = delete;
 
   // Create a move assignment operator
@@ -44,14 +50,25 @@ public:
   void get_logs();
 
 protected:
-  enum Event { REFRESH, CHANGE_STATUS, QUIT };
+  enum Event
+  {
+    REFRESH,
+    CHANGE_STATUS,
+    QUIT
+  };
 
-  struct Message {
+  struct Message
+  {
     Event event;
     TabState state;
     std::vector<std::string> data;
 
-    Message(Event a, TabState b, std::vector<std::string> c) : event{a}, state{b}, data{std::move(c)} { }
+    Message(Event a, TabState b, std::vector<std::string> c)
+      : event{ a },
+        state{ b },
+        data{ std::move(c) }
+    {
+    }
   };
 
   void console_caller();
@@ -68,7 +85,7 @@ private:
 
   // Member fields
   BlockingQueue<Message, std::deque<Message>, std::mutex> queue;
-  TabState last_state{PROFILE};
+  TabState last_state{ PROFILE };
 
   // DispatcherMiddleman used to communicate results with main thread
   DispatcherMiddleman<ProfilesController, ProcessesController, LogsController, Glib::Dispatcher, std::mutex> dispatch_man;

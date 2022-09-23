@@ -28,10 +28,10 @@ public:
   virtual ~StatusController() = default;
 
   // Default copy-constructor, move constructor, move assignment operator, and copy assignment operator
-  StatusController(const StatusController<Tab> &other) noexcept = default;
-  StatusController(StatusController<Tab> &&other)      noexcept = default;
+  StatusController(const StatusController<Tab> &other) noexcept            = default;
+  StatusController(StatusController<Tab> &&other) noexcept                 = default;
   StatusController &operator=(const StatusController<Tab> &other) noexcept = default;
-  StatusController &operator=(StatusController<Tab> &&other)      noexcept = default;
+  StatusController &operator=(StatusController<Tab> &&other) noexcept      = default;
 
 protected:
   /**
@@ -60,8 +60,11 @@ protected:
    *
    * @returns `true` if the string should be shown, `false` if it should not
    */
-  static bool should_filter(const std::string &str, const std::string &rule, const bool &use_regex, const bool &match_case,
-                     const bool &whole_word);
+  static bool should_filter(const std::string &str,
+                            const std::string &rule,
+                            const bool &use_regex,
+                            const bool &match_case,
+                            const bool &whole_word);
 
   // Should probably add a description!
   static Json::Value parse_JSON(const std::string &raw_json);

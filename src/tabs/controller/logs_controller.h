@@ -10,7 +10,12 @@
 #include <string>
 #include <vector>
 
-template<class LogsTab, class Database, class Adapter> class LogsController : public StatusController<LogsTab>
+#ifdef TESTS_ENABLED
+#include <gtest/gtest.h>
+#endif
+
+template<class LogsTab, class Database, class Adapter>
+class LogsController : public StatusController<LogsTab>
 {
 public:
   // For production
@@ -32,6 +37,11 @@ protected:
 private:
   std::shared_ptr<LogsTab> logs;
   std::shared_ptr<Adapter> adapter;
+
+#ifdef TESTS_ENABLED
+    FRIEND_TEST(LogAdapterTest, TEST_FORMAT_LOG_DATA);
+#endif
+
 };
 
 #endif // TABS_CONTROLLER_LOGSCONTROLLER_H

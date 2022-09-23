@@ -13,18 +13,19 @@ public:
   MOCK_METHOD(void, handle_signal, ());
 
 protected:
-  StatusControllerTest() 
-  : sm{new StatusMock()},
-    sc(sm)
-  { }
-  
-  virtual void SetUp() { }
+  StatusControllerTest()
+    : sm{ new StatusMock() },
+      sc(sm)
+  {
+  }
+
+  virtual void SetUp() {}
   void click_everything(Gtk::Widget *obj);
   bool check_label_exists(Gtk::Widget *obj, std::string label_text);
   void set_combobox_text(Gtk::Widget *obj, std::string combo_text);
 
   std::shared_ptr<StatusMock> sm;
-  StatusControllerChild sc;  
+  StatusControllerChild sc;
 };
 
 TEST_F(StatusControllerTest, FILTER_FFF)
@@ -116,14 +117,15 @@ TEST_F(StatusControllerTest, GET_TAB)
 }
 
 // Recursive method to click all the checkboxes that are descendents of a Container Widget
-void StatusControllerTest::click_everything(Gtk::Widget *obj)
+void
+StatusControllerTest::click_everything(Gtk::Widget *obj)
 {
   // Attempt to cast the object as a Gtk::Button, then click it
   // This will also cast CheckButtons which are a type of Button
   Gtk::Button *bu = dynamic_cast<Gtk::Button *>(obj);
 
   // If bu is not a nullptr, then it is a Gtk::Button
-  if(bu) {
+  if (bu) {
     // click the button
     bu->clicked();
   }
@@ -132,23 +134,24 @@ void StatusControllerTest::click_everything(Gtk::Widget *obj)
   Gtk::Container *parent = dynamic_cast<Gtk::Container *>(obj);
 
   // If parent is not a nullptr, then it is a Gtk::Container
-  if(parent) {
+  if (parent) {
     auto children = parent->get_children();
 
-    for(auto child: children) {
+    for (auto child : children) {
       click_everything(child);
     }
   }
 }
 
 // Recursive method to check whether label exists with `label_text`
-bool StatusControllerTest::check_label_exists(Gtk::Widget *obj, std::string label_text)
+bool
+StatusControllerTest::check_label_exists(Gtk::Widget *obj, std::string label_text)
 {
   // Attempt to cast the object as a Gtk::Label
   Gtk::Label *lab = dynamic_cast<Gtk::Label *>(obj);
 
   // If cb is not a nullptr, then it is a Gtk::Label
-  if(lab) {
+  if (lab) {
     // click the button
     return (lab->get_text().compare(label_text) == 0);
   }
@@ -157,13 +160,13 @@ bool StatusControllerTest::check_label_exists(Gtk::Widget *obj, std::string labe
   Gtk::Container *parent = dynamic_cast<Gtk::Container *>(obj);
 
   // If parent is not a nullptr, then it is a Gtk::Container
-  if(parent) {
+  if (parent) {
     auto children = parent->get_children();
 
-    for(auto child: children) {
+    for (auto child : children) {
       bool re = check_label_exists(child, label_text);
       // If there was a child Gtk::Label with label_text as its text
-      if(re) {
+      if (re) {
         return true;
       }
     }
@@ -173,14 +176,15 @@ bool StatusControllerTest::check_label_exists(Gtk::Widget *obj, std::string labe
 }
 
 // Recursive method to set change the selection text of all comboboxes
-void StatusControllerTest::set_combobox_text(Gtk::Widget *obj, std::string combo_text)
+void
+StatusControllerTest::set_combobox_text(Gtk::Widget *obj, std::string combo_text)
 {
   // Attempt to cast the object as a Gtk::Button, then click it
   // This will also cast CheckButtons which are a type of Button
   Gtk::ComboBoxText *cb = dynamic_cast<Gtk::ComboBoxText *>(obj);
 
   // If cb is not a nullptr, then it is a Gtk::ComboBoxText
-  if(cb) {
+  if (cb) {
     // click the button
     cb->set_active_text(combo_text);
   }
@@ -189,10 +193,10 @@ void StatusControllerTest::set_combobox_text(Gtk::Widget *obj, std::string combo
   Gtk::Container *parent = dynamic_cast<Gtk::Container *>(obj);
 
   // If parent is not a nullptr, then it is a Gtk::Container
-  if(parent) {
+  if (parent) {
     auto children = parent->get_children();
 
-    for(auto child: children) {
+    for (auto child : children) {
       set_combobox_text(child, combo_text);
     }
   }
@@ -292,31 +296,31 @@ TEST_F(StatusControllerTest, PARSE_JSON_OBJECT_VALUE)
 TEST_F(StatusControllerTest, PARSE_JSON_SAMPLE_INPUT)
 {
   std::string raw_json =
-      "{\"version\" : \"1\", \"profiles\" : {\"/snap/snapd/14978/usr/lib/snapd/snap-confine\" : \"enforce\", \"/usr/bin/evince\" : "
-      "\"complain\"}, \"processes\": {\"/usr/sbin/cupsd\" : [ {\"profile\" : \"/usr/sbin/cupsd\", \"pid\" : \"616\", \"status\" : "
-      "\"enforce\"} ], \"/usr/sbin/cups-browsed\" : [ {\"profile\" : \"/usr/sbin/NetworkManager\", \"pid\" : \"619\", \"status\" : "
-      "\"unconfined\"} ] }}";
+    "{\"version\" : \"1\", \"profiles\" : {\"/snap/snapd/14978/usr/lib/snapd/snap-confine\" : \"enforce\", \"/usr/bin/evince\" : "
+    "\"complain\"}, \"processes\": {\"/usr/sbin/cupsd\" : [ {\"profile\" : \"/usr/sbin/cupsd\", \"pid\" : \"616\", \"status\" : "
+    "\"enforce\"} ], \"/usr/sbin/cups-browsed\" : [ {\"profile\" : \"/usr/sbin/NetworkManager\", \"pid\" : \"619\", \"status\" : "
+    "\"unconfined\"} ] }}";
   Json::Value res = sc.parse_JSON(raw_json);
   ASSERT_FALSE(res.isNull()) << "result of parsing json should not be null";
   EXPECT_EQ(res.type(), Json::ValueType::objectValue) << "ValueType of result should be ValueType.objectValue";
   EXPECT_EQ(res["profiles"].type(), Json::ValueType::objectValue) << "ValueType of property profiles should be ValueType.objectValue";
   EXPECT_EQ(res["profiles"]["/snap/snapd/14978/usr/lib/snapd/snap-confine"].type(), Json::ValueType::stringValue)
-      << "ValueType of property /snap/snapd/14978/usr/lib/snapd/snap-confine within profiles should be ValueType.stringValue";
+    << "ValueType of property /snap/snapd/14978/usr/lib/snapd/snap-confine within profiles should be ValueType.stringValue";
   EXPECT_EQ(res["profiles"]["/snap/snapd/14978/usr/lib/snapd/snap-confine"], "enforce")
-      << "value of property /snap/snapd/14978/usr/lib/snapd/snap-confine should be enforce";
+    << "value of property /snap/snapd/14978/usr/lib/snapd/snap-confine should be enforce";
   EXPECT_EQ(res["profiles"]["/usr/bin/evince"].type(), Json::ValueType::stringValue)
-      << "ValueType of property /usr/bin/evince within profiles should be ValueType.stringValue";
+    << "ValueType of property /usr/bin/evince within profiles should be ValueType.stringValue";
   EXPECT_EQ(res["profiles"]["/usr/bin/evince"], "complain") << "value of property /usr/bin/evince within profiles should be complain";
   EXPECT_EQ(res["processes"]["/usr/sbin/cupsd"].type(), Json::ValueType::arrayValue)
-      << "ValueType of property /usr/sbin/cupsd within processes should be ValueType.arrayValue";
+    << "ValueType of property /usr/sbin/cupsd within processes should be ValueType.arrayValue";
   EXPECT_EQ(res["processes"]["/usr/sbin/cupsd"][0]["pid"], "616")
-      << "value of property pid within /usr/sbin/cupsd in processes should be 616";
+    << "value of property pid within /usr/sbin/cupsd in processes should be 616";
   EXPECT_EQ(res["processes"]["/usr/sbin/cupsd"][0]["status"], "enforce")
-      << "value of property status within /usr/sbin/cupsd in processes should be enforce";
+    << "value of property status within /usr/sbin/cupsd in processes should be enforce";
   EXPECT_EQ(res["processes"]["/usr/sbin/cups-browsed"].type(), Json::ValueType::arrayValue)
-      << "ValueType of property /usr/sbin/cups-browsed within processes should be ValueType.arrayValue";
+    << "ValueType of property /usr/sbin/cups-browsed within processes should be ValueType.arrayValue";
   EXPECT_EQ(res["processes"]["/usr/sbin/cups-browsed"][0]["pid"], "619")
-      << "value of property pid within /usr/sbin/cups-browsed in processes should be 619";
+    << "value of property pid within /usr/sbin/cups-browsed in processes should be 619";
   EXPECT_EQ(res["processes"]["/usr/sbin/cups-browsed"][0]["status"], "unconfined")
-      << "value of property status within /usr/sbin/cups-browsed in processes should be unconfined";
+    << "value of property status within /usr/sbin/cups-browsed in processes should be unconfined";
 }

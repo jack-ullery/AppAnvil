@@ -9,10 +9,10 @@ class TreeRowMock : public Gtk::TreeRow
 {
 public:
   TreeRowMock() = default;
-  TreeRowMock(const TreeRowMock&){};
+  TreeRowMock(const TreeRowMock &){};
 
   MOCK_METHOD(void, set_value, (int column, const std::string &data));
-  MOCK_METHOD(void, set_value, (int column, const unsigned int& data));
+  MOCK_METHOD(void, set_value, (int column, const unsigned int &data));
 };
 
 #endif

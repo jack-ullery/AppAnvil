@@ -10,7 +10,8 @@
 #include "../entries.h"
 #include "status_column_record.h"
 
-template<class Database> class ProfileAdapter
+template<class Database>
+class ProfileAdapter
 {
 public:
   // Initializes the database adapter
@@ -32,7 +33,7 @@ public:
 private:
   std::shared_ptr<Database> db;
 
-  const std::vector<ColumnHeader> col_names{ColumnHeader("Profile"), ColumnHeader("Status")};
+  const std::vector<ColumnHeader> col_names{ ColumnHeader("Profile"), ColumnHeader("Status") };
   std::shared_ptr<StatusColumnRecord> col_record;
 };
 

@@ -24,8 +24,8 @@ public:
    *
    * @details
    * This method creates a new StatusColumnRecord and an associated TreeStore object.
-   * It then sets the TreeStore object as the model for the `view` argument (if `view` already has an underlying model, this will replace that model).
-   * Then columns are created for each element of `names` with titles from that std::vector.
+   * It then sets the TreeStore object as the model for the `view` argument (if `view` already has an underlying model, this will replace
+   * that model). Then columns are created for each element of `names` with titles from that std::vector.
    *
    * @param view, The TreeView object to be backed by the new StatusColumnRecord object
    * @param names, The vector of names which will be the titles of columns in the StatusColumnRecord object.
@@ -105,18 +105,22 @@ public:
   bool pid_exists_in_child(unsigned int pid, const Gtk::TreeRow &parent);
 
 protected:
-  StatusColumnRecord(const std::shared_ptr<Status> &tab,
-                     const std::vector<ColumnHeader> &names);
+  StatusColumnRecord(const std::shared_ptr<Status> &tab, const std::vector<ColumnHeader> &names);
 
 private:
-  struct RowData {
+  struct RowData
+  {
     const bool isSelected;
     const bool isExpanded;
 
-    RowData(const bool &isSelectedArg, const bool &isExpandedArg) : isSelected{isSelectedArg}, isExpanded{isExpandedArg} { }
+    RowData(const bool &isSelectedArg, const bool &isExpandedArg)
+      : isSelected{ isSelectedArg },
+        isExpanded{ isExpandedArg }
+    {
+    }
   };
 
-  explicit StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, 
+  explicit StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view,
                               const std::shared_ptr<Gtk::ScrolledWindow> &win,
                               const std::vector<ColumnHeader> &names);
   Glib::RefPtr<Gtk::TreeStore> store;

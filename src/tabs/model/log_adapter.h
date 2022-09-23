@@ -10,6 +10,10 @@
 #include "../column_header.h"
 #include "../entries.h"
 
+#ifdef TESTS_ENABLED
+#include <gtest/gtest.h>
+#endif
+
 template<class Database, class ColumnRecord>
 class LogAdapter
 {
@@ -21,10 +25,10 @@ public:
   LogAdapter(std::shared_ptr<Database> db, std::shared_ptr<ColumnRecord> mock);
 
   void put_data(const time_t &timestamp,
-                const std::string &type, 
+                const std::string &type,
                 const std::string &operation,
                 const std::string &profile_name,
-                const unsigned int &pid, 
+                const unsigned int &pid,
                 const std::string &status);
 
   std::pair<LogTableEntry, bool> get_data(const std::string &profile_name, const time_t &timestamp);
@@ -36,14 +40,18 @@ protected:
 private:
   std::shared_ptr<Database> db;
 
-  const std::vector<ColumnHeader> col_names{ColumnHeader("Time"),
-                                            ColumnHeader("Type"),
-                                            ColumnHeader("Operation"),
-                                            ColumnHeader("Name"),
-                                            ColumnHeader("Pid", ColumnHeader::ColumnType::INT),
-                                            ColumnHeader("Status")};
+  const std::vector<ColumnHeader> col_names{ ColumnHeader("Time"),
+                                             ColumnHeader("Type"),
+                                             ColumnHeader("Operation"),
+                                             ColumnHeader("Name"),
+                                             ColumnHeader("Pid", ColumnHeader::ColumnType::INT),
+                                             ColumnHeader("Status") };
 
   const std::shared_ptr<ColumnRecord> col_record;
+
+#ifdef TESTS_ENABLED
+  FRIEND_TEST(LogAdapterTest, TEST_FORMAT_TIMESTAMP);
+#endif
 };
 
 #endif // TABS_MODEL_LOG_ADAPTER_H

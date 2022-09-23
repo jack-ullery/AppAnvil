@@ -13,13 +13,12 @@ public:
   MOCK_METHOD(void, handle_signal, ());
 
 protected:
-  StatusTest() 
-  { }
-  
-  virtual void SetUp() { }
+  StatusTest() {}
+
+  virtual void SetUp() {}
   void click_everything(Gtk::Widget *obj);
 
-  StatusChild sc;  
+  StatusChild sc;
 };
 
 TEST_F(StatusTest, VIEW_NOT_NULL)
@@ -30,14 +29,15 @@ TEST_F(StatusTest, VIEW_NOT_NULL)
 }
 
 // Recursive method to click all the checkboxes that are descendents of a Container Widget
-void StatusTest::click_everything(Gtk::Widget *obj)
+void
+StatusTest::click_everything(Gtk::Widget *obj)
 {
   // Attempt to cast the object as a Gtk::Button, then click it
   // This will also cast CheckButtons which are a type of Button
   Gtk::Button *bu = dynamic_cast<Gtk::Button *>(obj);
 
   // If bu is not a nullptr, then it is a Gtk::Button
-  if(bu) {
+  if (bu) {
     // click the button
     bu->clicked();
   }
@@ -46,10 +46,10 @@ void StatusTest::click_everything(Gtk::Widget *obj)
   Gtk::Container *parent = dynamic_cast<Gtk::Container *>(obj);
 
   // If parent is not a nullptr, then it is a Gtk::Container
-  if(parent) {
+  if (parent) {
     auto children = parent->get_children();
 
-    for(auto child: children) {
+    for (auto child : children) {
       click_everything(child);
     }
   }

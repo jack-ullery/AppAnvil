@@ -1,7 +1,7 @@
+#include "dispatcher_middleman.h"
 #include "../tabs/controller/logs_controller_mock.h"
 #include "../tabs/controller/processes_controller_mock.h"
 #include "../tabs/controller/profiles_controller_mock.h"
-#include "dispatcher_middleman_mock.h"
 #include "mutex_mock.h"
 
 #include <future>
@@ -10,40 +10,15 @@
 
 using ::testing::Sequence;
 
-class DispatcherMiddlemanTest : public ::testing::Test
-{
-protected:
-  DispatcherMiddlemanTest()
-      : disp{new GlibDispatcherMock()}, prof{new ProfilesStatusMock()}, proc{new ProcessesStatusMock()}, logs{new LogsControllerMock()},
-        mtx_mock{new MutexMock()}, dispatch_man(disp, prof, proc, logs, mtx_mock)
-  {
-  }
-
-  virtual void SetUp() { }
-
-  void expect_locks(unsigned int num);
-
-  std::string profiles_arg  = "string argument for 'profiles.add_data()'";
-  std::string processes_arg = "string argument for 'processes.add_data()'";
-  std::string logs_arg      = "string argument for 'logs.add_data()'";
-
-  std::shared_ptr<GlibDispatcherMock> disp;
-  std::shared_ptr<ProfilesStatusMock> prof;
-  std::shared_ptr<ProcessesStatusMock> proc;
-  std::shared_ptr<LogsControllerMock> logs;
-  std::shared_ptr<MutexMock> mtx_mock;
-
-  DispatcherMiddlemanMock<ProfilesStatusMock, ProcessesStatusMock, LogsControllerMock, GlibDispatcherMock, MutexMock> dispatch_man;
-};
-
 // Expect the mutex to be locked and unlocked `num` times
 // If lock/unlock is called in the wrong order this throws an error
 // Fuerthermore, `mtx_mock` is a fake mutex which never blocks.
-void DispatcherMiddlemanTest::expect_locks(unsigned int num)
+void
+DispatcherMiddlemanTest::expect_locks(unsigned int num)
 {
   Sequence lock_calls;
 
-  for(unsigned int i = 0; i < num; i++) {
+  for (unsigned int i = 0; i < num; i++) {
     EXPECT_CALL(*mtx_mock, lock()).Times(1).InSequence(lock_calls);
     EXPECT_CALL(*mtx_mock, unlock()).Times(1).InSequence(lock_calls);
   }

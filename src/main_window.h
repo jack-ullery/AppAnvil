@@ -4,7 +4,6 @@
 #include "console_thread.h"
 #include "tabs/controller/logs_controller.h"
 #include "tabs/controller/processes_controller.h"
-#include "tabs/controller/profile_loader_controller.h"
 #include "tabs/controller/profiles_controller.h"
 #include "tabs/model/database.h"
 #include "tabs/model/process_adapter.h"
@@ -40,11 +39,11 @@ public:
   MainWindow();
 
 protected:
-  //Signal handlers:
+  // Signal handlers:
 
   /**
    * @brief Untoggles the button that controls the 'Help' page.
-   * 
+   *
    * @details
    * This function is used as a signal handler in the 'Help' page
    */
@@ -52,7 +51,7 @@ protected:
 
   /**
    * @brief Makes the 'Help' page visible whenever toggled.
-   * 
+   *
    * @details
    * Hides the stack and stack switcher, when showing the 'Help' page
    */
@@ -80,12 +79,9 @@ private:
   typedef ProfilesController<Profiles, Database, ProfileAdapter<Database>> ProfilesControllerInstance;
   typedef ProcessesController<Processes, Database, ProcessAdapter<Database, StatusColumnRecord>> ProcessesControllerInstance;
   typedef LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord>> LogsControllerInstance;
-  typedef ProfileLoaderController<ProfileLoader> ProfileLoaderControllerInstance;
 
-  typedef ConsoleThread<ProfilesControllerInstance,
-                        ProcessesControllerInstance,
-                        LogsControllerInstance> ConsoleThreadInstance;
- 
+  typedef ConsoleThread<ProfilesControllerInstance, ProcessesControllerInstance, LogsControllerInstance> ConsoleThreadInstance;
+
   // GUI Builder to parse UI from xml file
   Glib::RefPtr<Gtk::Builder> builder;
 
@@ -101,10 +97,9 @@ private:
   std::shared_ptr<Database> database;
 
   // Controllers
-  std::shared_ptr<ProfilesControllerInstance>    prof_control;
-  std::shared_ptr<ProcessesControllerInstance>   proc_control;
-  std::shared_ptr<LogsControllerInstance>        logs_control;
-  std::shared_ptr<ProfileLoaderControllerInstance> profile_loader_control;
+  std::shared_ptr<ProfilesControllerInstance> prof_control;
+  std::shared_ptr<ProcessesControllerInstance> proc_control;
+  std::shared_ptr<LogsControllerInstance> logs_control;
 
   // Tab (Without Controller)
   std::shared_ptr<Help> help;

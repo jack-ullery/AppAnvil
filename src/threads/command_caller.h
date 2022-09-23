@@ -4,11 +4,15 @@
 #include <string>
 #include <vector>
 
-/** 
-  * Calls commands on the terminal to be used by the rest of the program.
-  * This is where AppAnvil actually interfaces with AppArmor. 
-  * Most of these functions are called on the second thread.
-  **/
+#ifdef TESTS_ENABLED
+#include <gtest/gtest.h>
+#endif
+
+/**
+ * Calls commands on the terminal to be used by the rest of the program.
+ * This is where AppAnvil actually interfaces with AppArmor.
+ * Most of these functions are called on the second thread.
+ **/
 class CommandCaller
 {
 public:
@@ -62,7 +66,8 @@ public:
   static std::string disable_profile(const std::string &profileName);
 
 protected:
-  struct results {
+  struct results
+  {
     int exit_status = 0;
     std::string output;
     std::string error;
@@ -78,8 +83,21 @@ protected:
   static std::string get_unconfined(CommandCaller *caller);
   static std::string load_profile(CommandCaller *caller, const std::string &fullFileName);
   static std::string disable_profile(CommandCaller *caller, const std::string &profileName);
-  static std::string execute_change(CommandCaller *caller, const std::string &profile, const std::string &old_status,
+  static std::string execute_change(CommandCaller *caller,
+                                    const std::string &profile,
+                                    const std::string &old_status,
                                     const std::string &new_status);
+
+#ifdef TESTS_ENABLED
+  FRIEND_TEST(CommandCallerTest, TEST_UNCONF);
+  FRIEND_TEST(CommandCallerTest, TEST_LOG);
+  FRIEND_TEST(CommandCallerTest, TEST_STATUS);
+  FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_EE);
+  FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_CC);
+  FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_CE);
+  FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_EC_SUCCESS);
+  FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_CE_FAIL);
+#endif
 };
 
 #endif // COMMAND_CALLER_H

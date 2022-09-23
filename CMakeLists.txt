@@ -4,10 +4,10 @@ project (appanvil)
 
 #### Set Source Code #####
 set(PROJECT_SOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/src)
+
 ### Sources that need to be built ###
 set(
   SOURCES
-  ${PROJECT_SOURCE_DIR}/main.cc
   ${PROJECT_SOURCE_DIR}/main_window.cc
   ${PROJECT_SOURCE_DIR}/console_thread.cc
   ${PROJECT_SOURCE_DIR}/threads/blocking_queue.cc
@@ -22,7 +22,6 @@ set(
   ${PROJECT_SOURCE_DIR}/tabs/controller/profiles_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/controller/processes_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/controller/logs_controller.cc
-  ${PROJECT_SOURCE_DIR}/tabs/controller/profile_loader_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/status.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/profiles.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/processes.cc
@@ -40,6 +39,9 @@ file(GLOB_RECURSE FORMAT_SOURCES
   ${CMAKE_CURRENT_BINARY_DIR}/test/src/*.cc
   ${CMAKE_CURRENT_BINARY_DIR}/test/src/*.h
   ${CMAKE_CURRENT_BINARY_DIR}/test/src/*.inl
+  ${CMAKE_CURRENT_BINARY_DIR}/aa-caller/src/*.cc
+  ${CMAKE_CURRENT_BINARY_DIR}/aa-caller/src/*.h
+  ${CMAKE_CURRENT_BINARY_DIR}/aa-caller/src/*.inl
 )
 
 set(PROJECT_RESOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/resources)
@@ -96,14 +98,14 @@ if(${USE_CLANG_TIDY})
 endif()
 
 # If clang-format is downloaded, format all the source code files in ./src and ./test/src
-find_program(CLANG_FORMAT NAMES clang-format-12)
+find_program(CLANG_FORMAT NAMES clang-format)
   if(${CLANG_FORMAT} STREQUAL "CLANG_FORMAT-NOTFOUND")
-    message(WARNING "Could not find clang-format installation. Please install clang-format-12 if you want to use it to automaticaly format code.")
+    message(WARNING "Could not find clang-format installation. Please install clang-format if you want to use it to automaticaly format code.")
   else()
-    message(STATUS "Adding clang-format-12 to build")
+    message(STATUS "Adding clang-format to build")
     add_custom_target(
       FORMAT
-      COMMAND clang-format-12 -style=file -i ${FORMAT_SOURCES}
+      COMMAND clang-format -style=file -i ${FORMAT_SOURCES}
     )
 endif()
 
@@ -134,11 +136,11 @@ if (NOT GLIB_RETURN_VALUE EQUAL 0)
 endif()
 
 add_custom_command(
-    OUTPUT ${RESOURCE_BUNDLE_OUTPUT}
-    COMMAND glib-compile-resources --target=${RESOURCE_BUNDLE_OUTPUT} --generate-source ${XML_GRESOURCE}
-    DEPENDS ${XML_GRESOURCE} ${GLADE_RESOURCES} 
-    COMMENT "Generating Glib Resource Bundle."
-    VERBATIM
+  OUTPUT ${RESOURCE_BUNDLE_OUTPUT}
+  COMMAND glib-compile-resources --target=${RESOURCE_BUNDLE_OUTPUT} --generate-source ${XML_GRESOURCE}
+  DEPENDS ${XML_GRESOURCE} ${GLADE_RESOURCES} 
+  COMMENT "Generating Glib Resource Bundle."
+  VERBATIM
 )
 
 include_directories(
@@ -147,30 +149,29 @@ include_directories(
 )
 
 #### Set Compiler Options ####
-set(CMAKE_CXX_FLAGS " -Wall -Wextra -g")
+set(CMAKE_CXX_FLAGS " -Wall -Wextra")
+
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # set(CMAKE_LINK_WHAT_YOU_USE TRUE)
 
-#### Create a library used by the binary and unit tests ####
-set(LIBRARY_OUTPUT_NAME ${PROJECT_NAME}_main)
-add_library(${LIBRARY_OUTPUT_NAME} STATIC ${RESOURCE_BUNDLE_OUTPUT} ${SOURCES})
+#### Create the main executable ####
+add_executable(${PROJECT_NAME} ${RESOURCE_BUNDLE_OUTPUT} ${SOURCES} ${PROJECT_SOURCE_DIR}/main.cc)
 
-target_include_directories(${LIBRARY_OUTPUT_NAME} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
-target_include_directories(${LIBRARY_OUTPUT_NAME} SYSTEM PUBLIC ${jsoncpp_DIRS})
+target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${jsoncpp_DIRS})
 
-target_link_libraries(${LIBRARY_OUTPUT_NAME} PUBLIC ${GTKMM_LIBRARIES})
-target_link_libraries(${LIBRARY_OUTPUT_NAME} PUBLIC jsoncpp)
-target_link_libraries(${LIBRARY_OUTPUT_NAME} PUBLIC pthread)
+target_link_libraries(${PROJECT_NAME} PUBLIC ${GTKMM_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PUBLIC jsoncpp)
+target_link_libraries(${PROJECT_NAME} PUBLIC pthread)
+
+pkg_check_modules(GTEST gtest)
+pkg_check_modules(GMOCK gmock)
 
 add_subdirectory(aa-caller)
 add_subdirectory(test)
-
-#### Create the binary to the library ####
-add_executable(${PROJECT_NAME} ./src/main.cc)
-target_link_libraries(${PROJECT_NAME} PUBLIC ${LIBRARY_OUTPUT_NAME})
 
 #### Create install target to install binaries  ####
 install(

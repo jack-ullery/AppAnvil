@@ -1,0 +1,44 @@
+name: Auto-Format
+
+on:
+  pull_request_target:
+    types: [assigned, opened, synchronize, reopened]
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+  format:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: ${{github.event.pull_request.head.ref}}
+        repository: ${{github.event.pull_request.head.repo.full_name}}
+
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update 1> /dev/null
+        sudo apt upgrade 1> /dev/null
+        sudo apt-get install clang-format 1> /dev/null
+
+    - name: Format Code
+      # Formats code using clang-format (version 14 or higher required)
+      run: find src test/src aa-caller/src -iname *.cc -o -iname *.h -o -iname *.inl | xargs clang-format -style=file -i
+
+    - name: Configure Git
+      run: |
+        # setup the username and email for the bot. Using 'GitHub Actions Bot' with no email by default
+        git config user.name "GitHub Actions Bot"
+        git config user.email "<>"
+
+    - name: Commit & Push 
+      run: |
+        num_files_changed=$(git diff --numstat | wc -l)
+        if [ $num_files_changed != 0 ]; then 
+          # Stage the changed files, commit and push
+          git commit -am "Format code";
+          git push
+        fi;

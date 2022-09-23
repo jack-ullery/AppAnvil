@@ -8,7 +8,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
     - uses: actions/checkout@v2
@@ -17,18 +17,22 @@ jobs:
       run: |
         sudo apt-get update 1> /dev/null
         sudo apt upgrade 1> /dev/null
-        sudo apt-get install libgtkmm-3.0-dev libjsoncpp-dev libgtest-dev libgmock-dev clang-tidy cppcheck clang-format-12 1> /dev/null
+        sudo apt-get install libgtkmm-3.0-dev libjsoncpp-dev libgtest-dev libgmock-dev clang-tidy cppcheck clang-format 1> /dev/null
     
     - name: Configure CMake
       run: cmake .
 
     - name: Format Code
-      # Formats code using clang-format-12
+      # Formats code using clang-format (version 14 or higher required)
       run: make FORMAT
 
-    - name: Build
-      # Builds the binary any unit tests into the ./dist folder
+    - name: Build AppAnvil
+      # Builds the 'appanvil' binary into the ./dist folder
       run: make
+
+    - name: Build Tests
+      # Builds the unit tests into the ./dist folder
+      run: make test
 
     - name: Upload Binaries as Artifacts
       uses: actions/upload-artifact@master
@@ -38,7 +42,7 @@ jobs:
         if-no-files-found: error
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: [build]
 
     steps:
@@ -57,8 +61,8 @@ jobs:
         path: dist
 
     - name: Make Tests Executable
-      run: chmod +x ./dist/appanvil_test
+      run: chmod +x ./dist/test
 
     - name: Test
       # Run the unit tests
-      run: xvfb-run --auto-servernum ./dist/appanvil_test
+      run: xvfb-run --auto-servernum ./dist/test

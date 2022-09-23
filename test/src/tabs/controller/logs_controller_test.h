@@ -19,9 +19,10 @@ public:
   FRIEND_TEST(LogsControllerTest, TEST_REFRESH);
   FRIEND_TEST(LogsControllerTest, TEST_FORMAT_LOG_DATA);
 
-  explicit LogsControllerChild(std::shared_ptr<LogAdapterMock> adapter, std::shared_ptr<LogsMock> logs) 
-    : LogsController(adapter, logs) 
-  { }
+  explicit LogsControllerChild(std::shared_ptr<LogAdapterMock> adapter, std::shared_ptr<LogsMock> logs)
+    : LogsController(adapter, logs)
+  {
+  }
 };
 
 // Used to avoid linker errors

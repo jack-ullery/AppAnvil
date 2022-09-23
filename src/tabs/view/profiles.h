@@ -1,11 +1,19 @@
 #ifndef TABS_PROFILES_H
 #define TABS_PROFILES_H
 
+#include "profile_loader.h"
 #include "status.h"
 
+#include <gtkmm/box.h>
+#include <gtkmm/stack.h>
+#include <gtkmm/togglebutton.h>
 #include <memory>
 #include <string>
 #include <vector>
+
+#ifdef TESTS_ENABLED
+#include <gtest/gtest.h>
+#endif
 
 class Profiles : public Status
 {
@@ -30,12 +38,20 @@ protected:
   // This calls the default_change_fun with the correct values for the profile, old_status, and new_status
   void change_status();
 
+  void handle_load_profile_toggle();
+  void handle_change_state_toggle();
+
 private:
   sigc::slot<void(std::string, std::string, std::string)> profile_status_change_fun;
 
   // Widgets
   Glib::RefPtr<Gtk::Builder> builder;
-  
+
+  std::shared_ptr<Gtk::ToggleButton> p_change_state_toggle;
+  std::shared_ptr<Gtk::ToggleButton> p_load_profile_toggle;
+
+  std::shared_ptr<Gtk::Stack> p_stack;
+  std::shared_ptr<Gtk::Box> p_state_selection_box;
   std::shared_ptr<Gtk::ComboBoxText> p_status_selection;
   std::shared_ptr<Gtk::Button> p_apply_button;
   std::shared_ptr<Gtk::Label> p_apply_info_text;
@@ -45,8 +61,26 @@ private:
   std::shared_ptr<Gtk::Label> p_num_proc_label;
   std::shared_ptr<Gtk::Label> p_num_perm_label;
 
+  // Profile Loader page, which is added to the stack
+  std::unique_ptr<ProfileLoader> loader;
+
   // Misc
-  template<typename T_Widget> static std::shared_ptr<T_Widget> get_widget_shared(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);
+  template<typename T_Widget>
+  static std::shared_ptr<T_Widget> get_widget_shared(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);
+
+#ifdef TESTS_ENABLED
+  FRIEND_TEST(ProfilesTest, CHECK_APPLY_LABEL_TEXT);
+  FRIEND_TEST(ProfilesTest, CHANGE_STATUS_WIDGETS_INVISIBLE_WHEN_NO_ROWS_SELECTED);
+  FRIEND_TEST(ProfilesTest, CHANGE_STATUS_WIDGETS_INVISIBLE_WHEN_CHANGE_TOGGLE_NOT_PRESSED);
+  FRIEND_TEST(ProfilesTest, CHANGE_STATUS_WIDGETS_VISIBLE_WHEN_CHANGE_TOGGLE_PRESSED);
+  FRIEND_TEST(ProfilesTest, CHANGE_STATUS_NO_ROWS_SELECTED);
+  FRIEND_TEST(ProfilesTest, CHANGE_STATUS_ROW_SELECTED);
+  FRIEND_TEST(ProfilesTest, SHOW_PROFILE_INFO_MAKES_CHANGE_TOGGLE_VISIBLE);
+  FRIEND_TEST(ProfilesTest, HIDE_PROFILE_INFO_MAKES_CHANGE_TOGGLE_INVISIBLE);
+  FRIEND_TEST(ProfilesTest, NO_SIMULTANEOUS_TOGGLE_PRESS);
+  FRIEND_TEST(ProfilesTest, NO_SIMULTANEOUS_TOGGLE_PRESS_TWO);
+  FRIEND_TEST(ProfilesTest, SET_PROFILE_INFO);
+#endif
 };
 
 #endif // TABS_PROFILES_H

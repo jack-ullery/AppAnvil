@@ -1,8 +1,8 @@
 #ifndef TEST_SRC_TABS_CONTROLLER_STATUS_CONTROLLER_MOCK_TEST_H
 #define TEST_SRC_TABS_CONTROLLER_STATUS_CONTROLLER_MOCK_TEST_H
 
-#include "../view/status_mock.h"
 #include "../../../../src/tabs/controller/status_controller.cc"
+#include "../view/status_mock.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -31,7 +31,8 @@ class StatusControllerChild : public StatusController<StatusMock>
 public:
   explicit StatusControllerChild(std::shared_ptr<StatusMock> tab)
     : StatusController<StatusMock>(tab)
-  {  }
+  {
+  }
 };
 
 // Used to avoid linker errors

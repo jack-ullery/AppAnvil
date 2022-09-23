@@ -1,20 +1,11 @@
-#include "command_caller_mock.h"
+#include "command_caller.h"
 
 using ::testing::_;
 using ::testing::Return;
 
-class CommandCallerTest : public ::testing::Test
-{
-protected:
-  CommandCallerTest() = default;
-  virtual void SetUp() { }
-
-  CommandCallerMock tester;
-};
-
 TEST_F(CommandCallerTest, TEST_STATUS)
 {
-  std::vector<std::string> command = {"pkexec", "aa-caller", "-s"};
+  std::vector<std::string> command = { "pkexec", "aa-caller", "-s" };
   EXPECT_CALL(tester, call_command(command, _)).Times(1).WillOnce(Return(test_str));
 
   std::string output = CommandCallerMock::get_status(&tester);
@@ -23,7 +14,7 @@ TEST_F(CommandCallerTest, TEST_STATUS)
 
 TEST_F(CommandCallerTest, TEST_LOG)
 {
-  std::vector<std::string> command = {"pkexec", "aa-caller", "-l"};
+  std::vector<std::string> command = { "pkexec", "aa-caller", "-l" };
   EXPECT_CALL(tester, call_command(command, _)).Times(1).WillOnce(Return(test_str));
 
   std::string output = CommandCallerMock::get_logs(&tester);
@@ -32,7 +23,7 @@ TEST_F(CommandCallerTest, TEST_LOG)
 
 TEST_F(CommandCallerTest, TEST_UNCONF)
 {
-  std::vector<std::string> command = {"pkexec", "aa-caller", "-u"};
+  std::vector<std::string> command = { "pkexec", "aa-caller", "-u" };
   EXPECT_CALL(tester, call_command(command, _)).Times(1).WillOnce(Return(test_str));
 
   std::string output = CommandCallerMock::get_unconfined(&tester);
@@ -85,5 +76,5 @@ TEST_F(CommandCallerTest, TEST_CHANGE_STATUS_CE_FAIL)
   EXPECT_TRUE(output.find("Error") != std::string::npos) << "returned string should contain \"Error\" somewhere.";
   // expect that the output contains the error string from the result somewhere
   EXPECT_TRUE(output.find(tester.result_error.error) != std::string::npos)
-      << "returned string should contain the error returned from `call_command`.";
+    << "returned string should contain the error returned from `call_command`.";
 }

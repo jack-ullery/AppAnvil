@@ -8,7 +8,8 @@
 #include <string>
 #include <vector>
 
-template<class ProfilesTab, class Database, class Adapter> class ProfilesController : public StatusController<ProfilesTab>
+template<class ProfilesTab, class Database, class Adapter>
+class ProfilesController : public StatusController<ProfilesTab>
 {
 public:
   explicit ProfilesController(std::shared_ptr<Database> database);
@@ -23,8 +24,8 @@ public:
   void set_apply_label_text(const std::string &str);
 
 protected:
-  bool on_button_event(GdkEventButton* event);
-  bool on_key_event(GdkEventKey* event);
+  bool on_button_event(GdkEventButton *event);
+  bool on_key_event(GdkEventKey *event);
   void handle_profile_selected();
 
 private:

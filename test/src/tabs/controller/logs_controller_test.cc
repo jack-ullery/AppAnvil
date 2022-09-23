@@ -1,7 +1,7 @@
-#include "jsoncpp/json/json.h"
 #include "logs_controller_test.h"
 #include "../model/status_column_record_mock.h"
 #include "../model/tree_row_mock.h"
+#include "jsoncpp/json/json.h"
 
 #include <gmock/gmock-matchers.h>
 #include <gmock/gmock.h>
@@ -18,12 +18,13 @@ using ::testing::Sequence;
 class LogsControllerTest : public ::testing::Test
 {
 protected:
-  LogsControllerTest() 
-  : adapter_mock{new LogAdapterMock()}, 
-    col_record_mock{new StatusColumnRecordMock()},
-    logs_view_mock{new LogsMock()},
-    logs_controller{new LogsControllerChild(adapter_mock, logs_view_mock)}
-  { }
+  LogsControllerTest()
+    : adapter_mock{ new LogAdapterMock() },
+      col_record_mock{ new StatusColumnRecordMock() },
+      logs_view_mock{ new LogsMock() },
+      logs_controller{ new LogsControllerChild(adapter_mock, logs_view_mock) }
+  {
+  }
 
   // Some of the sample snippets of information below were taken from the output of running 'journalctl -b "_AUDIT_TYPE=1400" --output=json'
   // in the terminal. They are mostly used to verify that information is being formatted correctly in format_log_data and format_timestamp.
@@ -40,11 +41,11 @@ protected:
 
   int data_arg_num_lines = 2;
   std::string data_arg   = "{\"_SOURCE_REALTIME_TIMESTAMP\" : \"1648231725959000\",\"_AUDIT_FIELD_APPARMOR\" : \"\\\"STATUS\\\"\","
-                         "\"_AUDIT_FIELD_OPERATION\" : \"\\\"profile_load\\\"\",\"_AUDIT_FIELD_NAME\" : \"nvidia_modprobe\","
-                         "\"_PID\" : \"601\",\"_AUDIT_FIELD_PROFILE\" : \"\\\"unconfined\\\"\"}\n"
-                         "{\"_SOURCE_REALTIME_TIMESTAMP\" : \"1648231725959000\",\"_AUDIT_FIELD_APPARMOR\" : \"\\\"STATUS\\\"\","
-                         "\"_AUDIT_FIELD_OPERATION\" : \"\\\"profile_load\\\"\",\"_AUDIT_FIELD_NAME\" : \"nvidia_modprobe\","
-                         "\"_PID\" : \"601\",\"_AUDIT_FIELD_PROFILE\" : \"\\\"unconfined\\\"\"}";
+                           "\"_AUDIT_FIELD_OPERATION\" : \"\\\"profile_load\\\"\",\"_AUDIT_FIELD_NAME\" : \"nvidia_modprobe\","
+                           "\"_PID\" : \"601\",\"_AUDIT_FIELD_PROFILE\" : \"\\\"unconfined\\\"\"}\n"
+                           "{\"_SOURCE_REALTIME_TIMESTAMP\" : \"1648231725959000\",\"_AUDIT_FIELD_APPARMOR\" : \"\\\"STATUS\\\"\","
+                           "\"_AUDIT_FIELD_OPERATION\" : \"\\\"profile_load\\\"\",\"_AUDIT_FIELD_NAME\" : \"nvidia_modprobe\","
+                           "\"_PID\" : \"601\",\"_AUDIT_FIELD_PROFILE\" : \"\\\"unconfined\\\"\"}";
 
   // Mock objects
   std::shared_ptr<LogAdapterMock> adapter_mock;
@@ -66,8 +67,7 @@ TEST_F(LogsControllerTest, TEST_ADD_ROW_FROM_JSON)
   ASSERT_TRUE(res) << "failed to parse sample json";
 
   // Should check that the arguments are correct
-  EXPECT_CALL(*adapter_mock, put_data(_, _, _, _, _, _))
-    .Times(1);
+  EXPECT_CALL(*adapter_mock, put_data(_, _, _, _, _, _)).Times(1);
 
   logs_controller->add_row_from_json(root);
 }
@@ -80,20 +80,13 @@ TEST_F(LogsControllerTest, TEST_ADD_DATA_TO_RECORD_VALID)
 
   // add_data_to_record calls add_row_from_json(...) for each line of the passed json (string)
   // with the current values of data_arg and data_arg_num_lines, this means the sequence will occur twice
-  for(int i = 0; i < data_arg_num_lines; i++) {
-    EXPECT_CALL(*adapter_mock, put_data(_, _, _, _, _, _))
-      .Times(1)
-      .InSequence(add_row_calls);
+  for (int i = 0; i < data_arg_num_lines; i++) {
+    EXPECT_CALL(*adapter_mock, put_data(_, _, _, _, _, _)).Times(1).InSequence(add_row_calls);
   }
 
-  EXPECT_CALL(*adapter_mock, get_col_record())
-    .Times(1)
-    .InSequence(add_row_calls)
-    .WillOnce(Return(col_record_mock));
+  EXPECT_CALL(*adapter_mock, get_col_record()).Times(1).InSequence(add_row_calls).WillOnce(Return(col_record_mock));
 
-  EXPECT_CALL(*col_record_mock, filter_rows())
-    .Times(1)
-    .WillOnce(Return(arbitrary_num));
+  EXPECT_CALL(*col_record_mock, filter_rows()).Times(1).WillOnce(Return(arbitrary_num));
 
   EXPECT_CALL(*logs_view_mock, set_status_label_text(::HasSubstr(std::to_string(arbitrary_num) + " logs")))
     .Times(1)
@@ -119,18 +112,11 @@ TEST_F(LogsControllerTest, TEST_REFRESH)
   Sequence refresh_sequence;
   unsigned int arbitrary_num = 1234;
 
-  EXPECT_CALL(*adapter_mock, get_col_record())
-    .Times(1)
-    .InSequence(refresh_sequence)
-    .WillOnce(Return(col_record_mock));
+  EXPECT_CALL(*adapter_mock, get_col_record()).Times(1).InSequence(refresh_sequence).WillOnce(Return(col_record_mock));
 
-  EXPECT_CALL(*col_record_mock, filter_rows())
-    .Times(1)
-    .WillOnce(Return(arbitrary_num));
+  EXPECT_CALL(*col_record_mock, filter_rows()).Times(1).WillOnce(Return(arbitrary_num));
 
-  EXPECT_CALL(*logs_view_mock, set_status_label_text(::HasSubstr(std::to_string(arbitrary_num))))
-    .Times(1)
-    .InSequence(refresh_sequence);
+  EXPECT_CALL(*logs_view_mock, set_status_label_text(::HasSubstr(std::to_string(arbitrary_num)))).Times(1).InSequence(refresh_sequence);
 
   logs_controller->refresh();
 }
