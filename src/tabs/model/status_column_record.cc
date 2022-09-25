@@ -19,7 +19,7 @@ StatusColumnRecord::create(const std::shared_ptr<Gtk::TreeView> &view,
 {
   std::shared_ptr<StatusColumnRecord> record{ new StatusColumnRecord(view, win, names) };
 
-  auto store    = Gtk::TreeStore::create(*record);
+  auto store    = EntryStore::create(*record);
   record->store = store;
 
   record->filter_model = Gtk::TreeModelFilter::create(store);

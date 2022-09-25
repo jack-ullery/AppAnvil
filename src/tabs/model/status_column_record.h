@@ -3,6 +3,7 @@
 
 #include "../column_header.h"
 #include "../view/status.h"
+#include "entry_store.h"
 
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/treeiter.h>
