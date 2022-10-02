@@ -1,10 +1,12 @@
 #include "status_column_record.h"
+#include "entry_store.h"
 
 #include <gtkmm/box.h>
 #include <gtkmm/main.h>
 #include <gtkmm/treeiter.h>
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treemodelsort.h>
+#include <gtkmm/treestore.h>
 #include <memory>
 #include <tuple>
 #include <vector>

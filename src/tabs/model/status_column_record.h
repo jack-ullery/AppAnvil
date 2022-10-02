@@ -124,7 +124,7 @@ private:
   explicit StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view,
                               const std::shared_ptr<Gtk::ScrolledWindow> &win,
                               const std::vector<ColumnHeader> &names);
-  Glib::RefPtr<Gtk::TreeStore> store;
+  Glib::RefPtr<EntryStore> store;
   std::shared_ptr<Gtk::TreeView> view;
 
   std::shared_ptr<Gtk::ScrolledWindow> win;
