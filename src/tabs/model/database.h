@@ -39,8 +39,8 @@ private:
   std::map<std::string, std::map<time_t, LogTableEntry>> log_data;
 
   friend class ProfileAdapter<Database>;
-  friend class ProcessAdapter<Database, StatusColumnRecord>;
-  friend class LogAdapter<Database, StatusColumnRecord>;
+  friend class ProcessAdapter<Database, StatusColumnRecord<ProcessTableEntry>>;
+  friend class LogAdapter<Database, StatusColumnRecord<LogTableEntry>>;
 };
 
 #endif // TABS_MODEL_DATABASE_H

@@ -1,27 +1,22 @@
 #ifndef TABS_ENTRY_STORE_H
 #define TABS_ENTRY_STORE_H
 
-#include "entry_row.h"
+#include "entry_iter.cc"
 
 #include <glibmm/value.h>
-#include <gtkmm/treeiter.h>
 #include <gtkmm/treestore.h>
-#include <map>
-#include <unordered_map>
-#include <vector>
 
-class EntryStore : public Gtk::TreeStore // Might want to change to treemodel
+// A slight modification to Gtk::TreeStore to allow storing and using our custom EntryIter iterator class
+// Most of the implemented code is lifted from: https://github.com/GNOME/gtkmm/blob/master/gtk/src/treestore.ccg
+template<class EntryType>
+class EntryStore : public Gtk::TreeStore
 {
 public:
 	static Glib::RefPtr<EntryStore> create(const Gtk::TreeModelColumnRecord& columns);
  	explicit EntryStore(const Gtk::TreeModelColumnRecord& columns);
 
-protected:
-	void set_value_impl(const Gtk::TreeIter& iter, int column, const Glib::ValueBase &value) override;
-	// void get_value_impl(const const_iterator& iter, int column, Glib::ValueBase& value) const override; 
-
-private:
-	std::vector<std::unordered_map<int, Glib::ValueBase>> data;
+	EntryIter<EntryType> append();
+	EntryIter<EntryType> append(const Gtk::TreeNodeChildren& node);
 };
 
 #endif // TABS_ENTRY_STORE_H

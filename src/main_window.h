@@ -5,6 +5,7 @@
 #include "tabs/controller/logs_controller.h"
 #include "tabs/controller/processes_controller.h"
 #include "tabs/controller/profiles_controller.h"
+#include "tabs/entries.h"
 #include "tabs/model/database.h"
 #include "tabs/model/process_adapter.h"
 #include "tabs/model/profile_adapter.h"
@@ -77,8 +78,8 @@ private:
   // A set of Typedeffed classes, to handle dependency injection
   // This lowers the amount of repeated <..> symbols
   typedef ProfilesController<Profiles, Database, ProfileAdapter<Database>> ProfilesControllerInstance;
-  typedef ProcessesController<Processes, Database, ProcessAdapter<Database, StatusColumnRecord>> ProcessesControllerInstance;
-  typedef LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord>> LogsControllerInstance;
+  typedef ProcessesController<Processes, Database, ProcessAdapter<Database, StatusColumnRecord<ProcessTableEntry>>> ProcessesControllerInstance;
+  typedef LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord<LogTableEntry>>> LogsControllerInstance;
 
   typedef ConsoleThread<ProfilesControllerInstance, ProcessesControllerInstance, LogsControllerInstance> ConsoleThreadInstance;
 

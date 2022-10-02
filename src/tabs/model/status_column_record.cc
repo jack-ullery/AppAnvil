@@ -1,4 +1,5 @@
 #include "status_column_record.h"
+#include "../entries.h"
 #include "entry_store.h"
 
 #include <gtkmm/box.h>
@@ -14,14 +15,15 @@
 /*
     Public Methods
 */
-std::shared_ptr<StatusColumnRecord>
-StatusColumnRecord::create(const std::shared_ptr<Gtk::TreeView> &view,
+template<typename EntryType>
+std::shared_ptr<StatusColumnRecord<EntryType>>
+StatusColumnRecord<EntryType>::create(const std::shared_ptr<Gtk::TreeView> &view,
                            const std::shared_ptr<Gtk::ScrolledWindow> &win,
                            const std::vector<ColumnHeader> &names)
 {
-  std::shared_ptr<StatusColumnRecord> record{ new StatusColumnRecord(view, win, names) };
+  std::shared_ptr<StatusColumnRecord<EntryType>> record{ new StatusColumnRecord<EntryType>(view, win, names) };
 
-  auto store    = EntryStore::create(*record);
+  auto store    = EntryStore<EntryType>::create(*record);
   record->store = store;
 
   record->filter_model = Gtk::TreeModelFilter::create(store);
@@ -31,59 +33,33 @@ StatusColumnRecord::create(const std::shared_ptr<Gtk::TreeView> &view,
   return record;
 }
 
-void
-StatusColumnRecord::set_visible_func(const Gtk::TreeModelFilter::SlotVisible &filter)
+template<typename EntryType>
+void StatusColumnRecord<EntryType>::set_visible_func(const Gtk::TreeModelFilter::SlotVisible &filter)
 {
   filter_fun = filter;
   filter_model->set_visible_func(filter);
 }
 
-Gtk::TreeRow
-StatusColumnRecord::new_row()
+template<typename EntryType>
+Gtk::TreeRow StatusColumnRecord<EntryType>::new_row()
 {
   return *(store->append());
 }
 
-Gtk::TreeRow
-StatusColumnRecord::new_child_row(const Gtk::TreeRow &parent)
+template<typename EntryType>
+Gtk::TreeRow StatusColumnRecord<EntryType>::new_child_row(const Gtk::TreeRow &parent)
 {
   return *(store->append(parent.children()));
 }
 
-Gtk::TreeRow
-StatusColumnRecord::get_row(const Gtk::TreePath &path)
+template<typename EntryType>
+Gtk::TreeRow StatusColumnRecord<EntryType>::get_row(const Gtk::TreePath &path)
 {
   return *(sort_model->get_iter(path));
 }
 
-void
-StatusColumnRecord::clear()
-{
-  // We want to remember the last selected row, so that when data is added, we can select it again if a similar row appears
-  // If a future row has the same string values we treat it the same as this row
-  significant_rows.clear();
-  // Get the currently selected rows (right now the max is one)
-  auto selection = view->get_selection()->get_selected_rows();
-
-  // Add all selected rows to map
-  for (const auto &path : selection) {
-    bool isExpanded = view->row_expanded(path);
-    RowData data(true, isExpanded);
-    significant_rows.insert({ path, data });
-  }
-
-  // Remember the path of every selected or expanded row in the TreeView
-  auto children = sort_model->children();
-  remember_children_rows(children);
-
-  // Remember last position of the ScrolledBar in the ScrolledWindow our TreeView is a member of
-  remember_scrollbar_position();
-
-  store->clear();
-}
-
-uint
-StatusColumnRecord::filter_rows()
+template<typename EntryType>
+uint StatusColumnRecord<EntryType>::filter_rows()
 {
   // Count the number of rows that are visible
   uint num_visible = 0;
@@ -103,8 +79,8 @@ StatusColumnRecord::filter_rows()
   return num_visible;
 }
 
-Gtk::TreeRow
-StatusColumnRecord::get_parent_by_pid(unsigned int pid)
+template<typename EntryType>
+Gtk::TreeRow StatusColumnRecord<EntryType>::get_parent_by_pid(unsigned int pid)
 {
   Gtk::TreeRow parentRow;
   auto children = store->children();
@@ -124,8 +100,8 @@ StatusColumnRecord::get_parent_by_pid(unsigned int pid)
   return parentRow;
 }
 
-Gtk::TreeRow
-StatusColumnRecord::get_parent_by_pid(unsigned int pid, const Gtk::TreeRow &parent)
+template<typename EntryType>
+Gtk::TreeRow StatusColumnRecord<EntryType>::get_parent_by_pid(unsigned int pid, const Gtk::TreeRow &parent)
 {
   Gtk::TreeRow parentRow;
   auto children = parent->children();
@@ -145,8 +121,8 @@ StatusColumnRecord::get_parent_by_pid(unsigned int pid, const Gtk::TreeRow &pare
   return parentRow;
 }
 
-bool
-StatusColumnRecord::pid_exists_in_child(unsigned int pid, const Gtk::TreeRow &parent)
+template<typename EntryType>
+bool StatusColumnRecord<EntryType>::pid_exists_in_child(unsigned int pid, const Gtk::TreeRow &parent)
 {
   auto children = parent.children();
 
@@ -165,20 +141,22 @@ StatusColumnRecord::pid_exists_in_child(unsigned int pid, const Gtk::TreeRow &pa
 /*
     Protected Methods
 */
-StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Status> &tab, const std::vector<ColumnHeader> &names)
-  : StatusColumnRecord(tab->get_view(), tab->get_window(), names)
+template<typename EntryType>
+StatusColumnRecord<EntryType>::StatusColumnRecord(const std::shared_ptr<Status> &tab, const std::vector<ColumnHeader> &names)
+  : StatusColumnRecord<EntryType>(tab->get_view(), tab->get_window(), names)
 {
 }
 
 /*
     Private Methods
 */
-StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view,
+template<typename EntryType>
+StatusColumnRecord<EntryType>::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view,
                                        const std::shared_ptr<Gtk::ScrolledWindow> &win,
                                        const std::vector<ColumnHeader> &names)
   : view{ view },
     win{ win },
-    filter_fun{ sigc::ptr_fun(&StatusColumnRecord::default_filter) }
+    filter_fun{ sigc::ptr_fun(&StatusColumnRecord<EntryType>::default_filter) }
 {
   for (uint i = 0; i < names.size(); i++) {
     std::unique_ptr<Gtk::TreeModelColumnBase> column_base;
@@ -207,16 +185,16 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
   }
 }
 
-void
-StatusColumnRecord::remember_scrollbar_position()
+template<typename EntryType>
+void StatusColumnRecord<EntryType>::remember_scrollbar_position()
 {
   // Remember last position of the ScrolledBar in the ScrolledWindow our TreeView is a member of
   last_vadjustment_value = win->get_vadjustment()->get_value();
   last_hadjustment_value = win->get_hadjustment()->get_value();
 }
 
-void
-StatusColumnRecord::reset_scrollbar_position()
+template<typename EntryType>
+void StatusColumnRecord<EntryType>::reset_scrollbar_position()
 {
   // Adjust the ScrolledWindow to its previous position
   while (Gtk::Main::events_pending()) {
@@ -227,8 +205,8 @@ StatusColumnRecord::reset_scrollbar_position()
   win->get_hadjustment()->set_value(last_hadjustment_value);
 }
 
-void
-StatusColumnRecord::remember_children_rows(const Gtk::TreeModel::Children &children)
+template<typename EntryType>
+void StatusColumnRecord<EntryType>::remember_children_rows(const Gtk::TreeModel::Children &children)
 {
   for (const auto &row : children) {
     // Get the path
@@ -247,8 +225,8 @@ StatusColumnRecord::remember_children_rows(const Gtk::TreeModel::Children &child
   }
 }
 
-void
-StatusColumnRecord::reselect_children_rows(const Gtk::TreeModel::Children &children)
+template<typename EntryType>
+void StatusColumnRecord<EntryType>::reselect_children_rows(const Gtk::TreeModel::Children &children)
 {
   for (const auto &row : children) {
     // Get the path
@@ -276,8 +254,8 @@ StatusColumnRecord::reselect_children_rows(const Gtk::TreeModel::Children &child
   }
 }
 
-void
-StatusColumnRecord::reselect_rows()
+template<typename EntryType>
+void StatusColumnRecord<EntryType>::reselect_rows()
 {
   // Reselect/reexpand every row in the TreeView, if it was selected or expanded before
   auto children = sort_model->children();
@@ -287,9 +265,13 @@ StatusColumnRecord::reselect_rows()
   reset_scrollbar_position();
 }
 
-bool
-StatusColumnRecord::default_filter(const Gtk::TreeModel::iterator &node)
+template<typename EntryType>
+bool StatusColumnRecord<EntryType>::default_filter(const Gtk::TreeModel::iterator &node)
 {
   std::ignore = node;
   return true;
 }
+
+template class StatusColumnRecord<ProfileTableEntry>;
+template class StatusColumnRecord<ProcessTableEntry>;
+template class StatusColumnRecord<LogTableEntry>;

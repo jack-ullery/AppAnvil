@@ -112,7 +112,7 @@ ProcessAdapter<Database, ColumnRecord>::ProcessAdapter(std::shared_ptr<Database>
                                                        const std::shared_ptr<Gtk::TreeView> &view,
                                                        const std::shared_ptr<Gtk::ScrolledWindow> &win)
   : db{ db },
-    col_record{ StatusColumnRecord::create(view, win, col_names) }
+    col_record{ ColumnRecord::create(view, win, col_names) }
 {
 }
 
@@ -123,4 +123,4 @@ ProcessAdapter<Database, ColumnRecord>::ProcessAdapter(std::shared_ptr<Database>
 {
 }
 
-template class ProcessAdapter<Database, StatusColumnRecord>;
+template class ProcessAdapter<Database, StatusColumnRecord<ProcessTableEntry>>;

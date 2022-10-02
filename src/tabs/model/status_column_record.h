@@ -17,6 +17,7 @@
 
 constexpr int MIN_COL_WIDTH = 20;
 
+template<typename EntryType>
 class StatusColumnRecord : public Gtk::TreeModel::ColumnRecord
 {
 public:
@@ -84,11 +85,6 @@ public:
   Gtk::TreeRow get_row(const Gtk::TreePath &path);
 
   /**
-   * @brief Deletes all rows in the StatusColumnRecord.
-   */
-  void clear();
-
-  /**
    * @brief Set the visibility all the rows in the ColumnRecord.
    *
    * @details
@@ -124,7 +120,7 @@ private:
   explicit StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view,
                               const std::shared_ptr<Gtk::ScrolledWindow> &win,
                               const std::vector<ColumnHeader> &names);
-  Glib::RefPtr<EntryStore> store;
+  Glib::RefPtr<EntryStore<EntryType>> store;
   std::shared_ptr<Gtk::TreeView> view;
 
   std::shared_ptr<Gtk::ScrolledWindow> win;

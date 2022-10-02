@@ -20,7 +20,7 @@ public:
   void put_data(const std::string &profile_name, const std::string &status);
   std::pair<ProfileTableEntry, bool> get_data(const std::string &profile_name);
 
-  std::shared_ptr<StatusColumnRecord> get_col_record();
+  std::shared_ptr<StatusColumnRecord<ProfileTableEntry>> get_col_record();
 
   // Number of processes with a profile
   // TODO(inherit): Need to clean up Adapter/DB, maybe make Adapter inherit DB somehow
@@ -34,7 +34,7 @@ private:
   std::shared_ptr<Database> db;
 
   const std::vector<ColumnHeader> col_names{ ColumnHeader("Profile"), ColumnHeader("Status") };
-  std::shared_ptr<StatusColumnRecord> col_record;
+  std::shared_ptr<StatusColumnRecord<ProfileTableEntry>> col_record;
 };
 
 #endif // TABS_MODEL_PROFILE_ADAPTER_H

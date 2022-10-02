@@ -1,37 +1,36 @@
 #include "entry_store.h"
-#include "entry_row.h"
+#include "../entries.h"
 #include <glibmm/value.h>
 #include <gtkmm/treeiter.h>
 #include <gtkmm/treemodel.h>
 #include <vector>
 
-Glib::RefPtr<EntryStore> EntryStore::create(const Gtk::TreeModelColumnRecord& columns)
-{
+template<class EntryType>
+Glib::RefPtr<EntryStore<EntryType>> EntryStore<EntryType>::create(const Gtk::TreeModelColumnRecord& columns){
     return Glib::RefPtr<EntryStore>(new EntryStore(columns));
 }
 
-EntryStore::EntryStore(const Gtk::TreeModelColumnRecord& columns)
-: Gtk::TreeStore(columns),
-  data()
+template<class EntryType>
+EntryStore<EntryType>::EntryStore(const Gtk::TreeModelColumnRecord& columns)
+: Gtk::TreeStore(columns)
 { }
 
-void EntryStore::set_value_impl(const Gtk::TreeIter& iter, int column, const Glib::ValueBase &value)
+template<class EntryType>
+EntryIter<EntryType> EntryStore<EntryType>::append()
 {
-    // // Set the stamp to be the next unoccupied index in the vector
-    // uint stamp = iter->get_stamp();
-
-    // if(stamp < data.size()) {
-    //     auto entry_map = data.at(stamp);
-    //     entry_map.erase(column);
-    //     entry_map.emplace(column, value);
-    // }
-
-    // Lifted from the implementation of TreeStore
-    gtk_tree_store_set_value(
-      gobj(), const_cast<GtkTreeIter*>(iter.gobj()),
-      column, const_cast<GValue*>(value.gobj()));
-
-    // Signal to the parent that the row at this path has been changed
-    // auto path = get_path(iter);
-    // row_changed(path, iter);
+    EntryIter<EntryType> iter((Gtk::TreeModel*) this);
+    gtk_tree_store_append(gobj(), iter.gobj(), nullptr);
+    return iter;
 }
+
+template<class EntryType>
+EntryIter<EntryType> EntryStore<EntryType>::append(const Gtk::TreeNodeChildren& node)
+{
+    EntryIter<EntryType> iter((Gtk::TreeModel*) this);
+    gtk_tree_store_append(gobj(), iter.gobj(), const_cast<GtkTreeIter*>(node.get_parent_gobject()));
+    return iter;
+}
+
+template class EntryStore<ProfileTableEntry>;
+template class EntryStore<ProcessTableEntry>;
+template class EntryStore<LogTableEntry>;

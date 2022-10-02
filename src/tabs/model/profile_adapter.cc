@@ -47,7 +47,7 @@ ProfileAdapter<Database>::get_data(const std::string &profile_name)
 }
 
 template<class Database>
-std::shared_ptr<StatusColumnRecord>
+std::shared_ptr<StatusColumnRecord<ProfileTableEntry>>
 ProfileAdapter<Database>::get_col_record()
 {
   return col_record;
@@ -72,7 +72,7 @@ ProfileAdapter<Database>::ProfileAdapter(std::shared_ptr<Database> db,
                                          const std::shared_ptr<Gtk::TreeView> &view,
                                          const std::shared_ptr<Gtk::ScrolledWindow> &win)
   : db{ db },
-    col_record{ StatusColumnRecord::create(view, win, col_names) }
+    col_record{ StatusColumnRecord<ProfileTableEntry>::create(view, win, col_names) }
 {
 }
 

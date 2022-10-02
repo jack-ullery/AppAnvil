@@ -120,4 +120,4 @@ LogAdapter<Database, ColumnRecord>::LogAdapter(std::shared_ptr<Database> db, std
 {
 }
 
-template class LogAdapter<Database, StatusColumnRecord>;
+template class LogAdapter<Database, StatusColumnRecord<LogTableEntry>>;

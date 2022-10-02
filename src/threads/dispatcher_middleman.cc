@@ -110,7 +110,7 @@ DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::handle_signal
 // Used to avoid linker errors
 // For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
 template class DispatcherMiddleman<ProfilesController<Profiles, Database, ProfileAdapter<Database>>,
-                                   ProcessesController<Processes, Database, ProcessAdapter<Database, StatusColumnRecord>>,
-                                   LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord>>,
+                                   ProcessesController<Processes, Database, ProcessAdapter<Database, StatusColumnRecord<ProcessTableEntry>>>,
+                                   LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord<LogTableEntry>>>,
                                    Glib::Dispatcher,
                                    std::mutex>;

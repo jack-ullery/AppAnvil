@@ -169,5 +169,5 @@ ConsoleThread<ProfilesController, ProcessesController, LogsController>::~Console
 }
 
 template class ConsoleThread<ProfilesController<Profiles, Database, ProfileAdapter<Database>>,
-                             ProcessesController<Processes, Database, ProcessAdapter<Database, StatusColumnRecord>>,
-                             LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord>>>;
+                             ProcessesController<Processes, Database, ProcessAdapter<Database, StatusColumnRecord<ProcessTableEntry>>>,
+                             LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord<LogTableEntry>>>>;

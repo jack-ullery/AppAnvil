@@ -76,4 +76,4 @@ ProcessesController<ProcessesTab, Database, Adapter>::ProcessesController(std::s
 
 // Used to avoid linker errors
 // For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
-template class ProcessesController<Processes, Database, ProcessAdapter<Database, StatusColumnRecord>>;
+template class ProcessesController<Processes, Database, ProcessAdapter<Database, StatusColumnRecord<ProcessTableEntry>>>;
