@@ -7,7 +7,11 @@ template<class EntryType>
 class EntryIter : public Gtk::TreeIter
 {
 public:
+	EntryIter(Gtk::TreeModel* model, EntryType entry);
  	explicit EntryIter(Gtk::TreeModel* model);
+
+ 	EntryIter() = default;
+	EntryIter(Gtk::TreeIter iter);
 
 	EntryType get_entry();
 

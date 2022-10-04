@@ -8,6 +8,7 @@
 
 #include "../column_header.h"
 #include "../entries.h"
+#include "entry_iter.h"
 #include "log_adapter.h"
 #include "process_adapter.h"
 #include "profile_adapter.h"
@@ -28,15 +29,15 @@ public:
   uint get_number_logs(const std::string &profile);
 
 private:
-  std::map<std::string, ProfileTableEntry> profile_data;
+  std::map<std::string, EntryIter<ProfileTableEntry>> profile_data;
 
   // Indexed by profile, returns a map of procesess
   // Each process in the returned map is indexed by the pid it was added
-  std::map<std::string, std::map<uint, ProcessTableEntry>> process_data;
+  std::map<std::string, std::map<uint, EntryIter<ProcessTableEntry>>> process_data;
 
   // Indexed by profile, returns a map of logs
   // Each log in the returned map is indexed by the time it was added
-  std::map<std::string, std::map<time_t, LogTableEntry>> log_data;
+  std::map<std::string, std::map<time_t, EntryIter<LogTableEntry>>> log_data;
 
   friend class ProfileAdapter<Database>;
   friend class ProcessAdapter<Database, StatusColumnRecord<ProcessTableEntry>>;

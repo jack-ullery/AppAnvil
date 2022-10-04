@@ -15,19 +15,20 @@ ProfileAdapter<Database>::put_data(const std::string &profile_name, const std::s
   auto iter = db->profile_data.find(profile_name);
 
   if (iter == db->profile_data.end()) {
-    // If not entry was found, we should create one
-    auto row = col_record->new_row();
+    // If no entry was found, we should create one
+    ProfileTableEntry entry(profile_name, status);
+
+    auto row = col_record->new_row(entry);
     row->set_value(0, profile_name);
     row->set_value(1, status);
 
-    ProfileTableEntry entry(profile_name, status, row);
-    db->profile_data.insert({ profile_name, entry });
+    db->profile_data.insert({ profile_name, row });
   } else {
     // A pre-existing entry was found, so we should modify it
-    ProfileTableEntry entry = iter->second;
-    entry.status            = status;
+    EntryIter<ProfileTableEntry> row = iter->second;
+    row.get_entry().status           = status;
     db->profile_data.erase(profile_name);
-    db->profile_data.insert({ profile_name, entry });
+    db->profile_data.insert({ profile_name, row });
   }
 }
 
@@ -39,11 +40,11 @@ ProfileAdapter<Database>::get_data(const std::string &profile_name)
 
   if (iter == db->profile_data.end()) {
     // No data was found, so make up a fake entry
-    return { ProfileTableEntry(profile_name, UNKNOWN_STR, Gtk::TreeRow()), false };
+    return { ProfileTableEntry(profile_name, UNKNOWN_STR), false };
   }
 
   // Return the found entry
-  return { iter->second, true };
+  return { iter->second.get_entry(), true };
 }
 
 template<class Database>

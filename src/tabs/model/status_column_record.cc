@@ -1,5 +1,6 @@
 #include "status_column_record.h"
 #include "../entries.h"
+#include "entry_iter.h"
 #include "entry_store.h"
 
 #include <gtkmm/box.h>
@@ -41,15 +42,15 @@ void StatusColumnRecord<EntryType>::set_visible_func(const Gtk::TreeModelFilter:
 }
 
 template<typename EntryType>
-Gtk::TreeRow StatusColumnRecord<EntryType>::new_row()
+EntryIter<EntryType> StatusColumnRecord<EntryType>::new_row(EntryType entry)
 {
-  return *(store->append());
+  return store->append(entry);
 }
 
 template<typename EntryType>
-Gtk::TreeRow StatusColumnRecord<EntryType>::new_child_row(const Gtk::TreeRow &parent)
+EntryIter<EntryType> StatusColumnRecord<EntryType>::new_child_row(EntryType entry, const Gtk::TreeRow &parent)
 {
-  return *(store->append(parent.children()));
+  return store->append(entry, parent.children());
 }
 
 template<typename EntryType>

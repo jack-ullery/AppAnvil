@@ -16,17 +16,17 @@ EntryStore<EntryType>::EntryStore(const Gtk::TreeModelColumnRecord& columns)
 { }
 
 template<class EntryType>
-EntryIter<EntryType> EntryStore<EntryType>::append()
+EntryIter<EntryType> EntryStore<EntryType>::append(EntryType entry)
 {
-    EntryIter<EntryType> iter((Gtk::TreeModel*) this);
+    EntryIter<EntryType> iter((Gtk::TreeModel*) this, entry);
     gtk_tree_store_append(gobj(), iter.gobj(), nullptr);
     return iter;
 }
 
 template<class EntryType>
-EntryIter<EntryType> EntryStore<EntryType>::append(const Gtk::TreeNodeChildren& node)
+EntryIter<EntryType> EntryStore<EntryType>::append(EntryType entry, const Gtk::TreeNodeChildren& node)
 {
-    EntryIter<EntryType> iter((Gtk::TreeModel*) this);
+    EntryIter<EntryType> iter((Gtk::TreeModel*) this, entry);
     gtk_tree_store_append(gobj(), iter.gobj(), const_cast<GtkTreeIter*>(node.get_parent_gobject()));
     return iter;
 }

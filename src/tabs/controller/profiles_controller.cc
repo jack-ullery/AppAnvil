@@ -16,6 +16,8 @@
 #include <tuple>
 #include <vector>
 
+#include <iostream>
+
 template<class ProfilesTab, class Database, class Adapter>
 bool
 ProfilesController<ProfilesTab, Database, Adapter>::on_button_event(GdkEventButton *event)

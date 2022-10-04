@@ -15,8 +15,8 @@ public:
 	static Glib::RefPtr<EntryStore> create(const Gtk::TreeModelColumnRecord& columns);
  	explicit EntryStore(const Gtk::TreeModelColumnRecord& columns);
 
-	EntryIter<EntryType> append();
-	EntryIter<EntryType> append(const Gtk::TreeNodeChildren& node);
+	EntryIter<EntryType> append(EntryType entry);
+	EntryIter<EntryType> append(EntryType entry, const Gtk::TreeNodeChildren& node);
 };
 
 #endif // TABS_ENTRY_STORE_H

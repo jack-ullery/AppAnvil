@@ -1,32 +1,34 @@
 #include "process_adapter.h"
 #include "database.h"
 
+#include <memory>
 #include <regex>
 #include <stdexcept>
 
 template<class Database, class ColumnRecord>
-Gtk::TreeRow
-ProcessAdapter<Database, ColumnRecord>::add_row(const std::string &process_name,
-                                                const unsigned int &pid,
-                                                const unsigned int &ppid,
-                                                const std::string &user,
-                                                const std::string &status)
+EntryIter<ProcessTableEntry> ProcessAdapter<Database, ColumnRecord>::add_row(const std::string &profile_name,
+                                                                             const std::string &process_name,
+                                                                             const unsigned int &pid,
+                                                                             const unsigned int &ppid,
+                                                                             const std::string &user,
+                                                                             const std::string &status)
 {
-  Gtk::TreeRow row;
+  ProcessTableEntry entry(process_name, profile_name, pid);
 
+  std::unique_ptr<EntryIter<ProcessTableEntry>> row;
   if (ppid > 0) {
     auto parent_row = col_record->get_parent_by_pid(ppid);
-    row             = col_record->new_child_row(parent_row);
+    row = std::make_unique<EntryIter<ProcessTableEntry>>(col_record->new_child_row(entry, parent_row));
   } else {
-    row = col_record->new_row();
+    row = std::make_unique<EntryIter<ProcessTableEntry>>(col_record->new_row(entry));
   }
 
-  row->set_value(0, process_name); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  row->set_value(1, user);         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  row->set_value(2, pid);          // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  row->set_value(3, status);       // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  (*row)->set_value(0, process_name); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  (*row)->set_value(1, user);         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  (*row)->set_value(2, pid);          // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  (*row)->set_value(3, status);       // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
-  return row;
+  return *row;
 }
 
 template<class Database, class ColumnRecord>
@@ -42,12 +44,12 @@ ProcessAdapter<Database, ColumnRecord>::put_data(const std::string &process_name
   auto map_pair = db->process_data.find(profile_name);
 
   // The map (indexed by pid) that we will add to
-  std::map<uint, ProcessTableEntry> pid_map;
+  std::map<uint, EntryIter<ProcessTableEntry>> pid_map;
 
   // Check that we actually found the map
   if (map_pair == db->process_data.end()) {
     // Create new map if no previous one was found
-    pid_map = std::map<uint, ProcessTableEntry>();
+    pid_map = std::map<uint, EntryIter<ProcessTableEntry>>();
   } else {
     pid_map = map_pair->second;
   }
@@ -58,23 +60,18 @@ ProcessAdapter<Database, ColumnRecord>::put_data(const std::string &process_name
   // Check that we actually found the entry
   if (entry_pair != pid_map.end()) {
     // A pre-existing entry was found, so we should modify it
-    ProcessTableEntry entry = entry_pair->second;
-    entry.process_name      = process_name;
-    entry.profile_name      = profile_name;
+    EntryIter<ProcessTableEntry> iter = entry_pair->second;
+    iter.get_entry().process_name     = process_name;
+    iter.get_entry().profile_name     = profile_name;
 
-    entry.row->set_value(1, user);   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-    entry.row->set_value(3, status); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-
-    // Add the entry to the map
-    pid_map.erase(pid);
-    pid_map.insert({ pid, entry });
+    iter->set_value(1, user);   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    iter->set_value(3, status); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   } else {
     // If not entry was found, we should create one
-    auto row = ProcessAdapter<Database, ColumnRecord>::add_row(process_name, pid, ppid, user, status);
-    ProcessTableEntry entry(process_name, profile_name, pid, row);
+    auto row = ProcessAdapter<Database, ColumnRecord>::add_row(profile_name, process_name, pid, ppid, user, status);
 
     // Add the entry to the map
-    pid_map.insert({ pid, entry });
+    pid_map.insert({ pid, row });
   }
 
   // A weird way of updating our profile in the map (because insert_or_assign does not exist with C++11)
@@ -92,7 +89,7 @@ ProcessAdapter<Database, ColumnRecord>::get_data(std::string profile_name, const
     auto iter    = pid_map.find(pid);
     if (iter != pid_map.end()) {
       // We actually found some data, so return the found data
-      return std::pair<ProcessTableEntry, bool>(iter->second, true);
+      return std::pair<ProcessTableEntry, bool>(iter->second.get_entry(), true);
     }
   }
 

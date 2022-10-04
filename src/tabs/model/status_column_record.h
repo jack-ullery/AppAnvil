@@ -51,17 +51,17 @@ public:
   void set_visible_func(const Gtk::TreeModelFilter::SlotVisible &filter);
 
   /**
-   * @brief Creates and returns a new TreeRow in the table.
+   * @brief Creates and returns a pointer to a new TreeRow in the table.
    *
    * @details
    * Data of the row can be modified using the `set_row_data()` method
    *
    * @returns A new TreeRow from the table.
    */
-  Gtk::TreeRow new_row();
+  EntryIter<EntryType> new_row(EntryType entry);
 
   /**
-   * @brief Creates and returns a new TreeRow in the table which is the child of another TreeRow.
+   * @brief Creates and returns a pointer to a new TreeRow in the table which is the child of another TreeRow.
    *
    * @details
    * Data of the row can be modified using the `set_row_data()` method
@@ -70,7 +70,7 @@ public:
    *
    * @returns A new TreeRow from the table.
    */
-  Gtk::TreeRow new_child_row(const Gtk::TreeRow &parent);
+  EntryIter<EntryType> new_child_row(EntryType entry, const Gtk::TreeRow &parent);
 
   /**
    * @brief Gets the TreeRow in the table which is the child of another TreeRow.

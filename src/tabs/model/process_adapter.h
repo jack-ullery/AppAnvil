@@ -10,6 +10,7 @@
 
 #include "../column_header.h"
 #include "../entries.h"
+#include "entry_iter.h"
 
 template<class Database, class ColumnRecord>
 class ProcessAdapter
@@ -33,12 +34,13 @@ public:
   std::shared_ptr<ColumnRecord> get_col_record();
 
 protected:
-  // Helper function for "put_data", creates and returns a new row.
-  Gtk::TreeRow add_row(const std::string &process_name,
-                       const unsigned int &pid,
-                       const unsigned int &ppid,
-                       const std::string &user,
-                       const std::string &status);
+  // Helper function for "put_data", creates and returns the pointer to a new row.
+  EntryIter<ProcessTableEntry> add_row(const std::string &profile_name,
+                                       const std::string &process_name,
+                                       const unsigned int &pid,
+                                       const unsigned int &ppid,
+                                       const std::string &user,
+                                       const std::string &status);
 
 private:
   std::shared_ptr<Database> db;
