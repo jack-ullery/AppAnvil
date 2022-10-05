@@ -9,9 +9,9 @@ constexpr uint UNKNOWN_UINT = -1;
 
 struct ProfileTableEntry
 {
-  const std::string profile_name; // Unique, Primary Key
+  std::string profile_name; // Unique, Primary Key
   std::string status;
-  const Gtk::TreeRow row;
+  Gtk::TreeRow row;
 
   ProfileTableEntry(const std::string &_profile_name, const std::string &_status, const Gtk::TreeRow &_row)
     : profile_name{ _profile_name },
@@ -33,8 +33,8 @@ struct ProcessTableEntry
 {
   std::string process_name;
   std::string profile_name; // Refrences profile_name from ProfileTabEntry (if not null)
-  const unsigned int pid;   // Unique, Primary Key
-  const Gtk::TreeRow row;
+  unsigned int pid;         // Unique, Primary Key
+  Gtk::TreeRow row;
 
   ProcessTableEntry(const std::string &_process_name, const std::string &_profile_name, const unsigned int &_pid, const Gtk::TreeRow &_row)
     : process_name{ _process_name },
@@ -56,11 +56,11 @@ struct ProcessTableEntry
 struct LogTableEntry
 {
   std::string profile_name; // Refrences profile_name from ProfileTabEntry
-  const unsigned int pid;   // Partial key (with timestamp)
-  const time_t timestamp;   // Partial key (with pid)
+  unsigned int pid;         // Partial key (with timestamp)
+  time_t timestamp;         // Partial key (with pid)
   std::string type;
   std::string operation;
-  const Gtk::TreeRow row;
+  Gtk::TreeRow row;
 
   LogTableEntry(const time_t &_timestamp,
                 const std::string &_type,

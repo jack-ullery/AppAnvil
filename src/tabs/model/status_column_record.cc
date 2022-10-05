@@ -1,6 +1,8 @@
 #include "status_column_record.h"
+#include "../entries.h"
 
 #include <gtkmm/box.h>
+#include <gtkmm/cellrenderertext.h>
 #include <gtkmm/main.h>
 #include <gtkmm/treeiter.h>
 #include <gtkmm/treemodelcolumn.h>
@@ -110,7 +112,7 @@ StatusColumnRecord::get_parent_by_pid(unsigned int pid)
   for (auto iter = children.begin(); iter != children.end(); iter++) {
     unsigned int row_pid = 0;
     auto row             = *iter;
-    row.get_value(2, row_pid);
+    row.get_value(3, row_pid);
     if (row_pid == pid) {
       return row;
     }
@@ -131,7 +133,7 @@ StatusColumnRecord::get_parent_by_pid(unsigned int pid, const Gtk::TreeRow &pare
   for (auto iter = children.begin(); iter != children.end(); iter++) {
     unsigned int row_pid = 0;
     auto row             = *iter;
-    row.get_value(2, row_pid);
+    row.get_value(3, row_pid);
     if (row_pid == pid) {
       return row;
     }
@@ -151,7 +153,7 @@ StatusColumnRecord::pid_exists_in_child(unsigned int pid, const Gtk::TreeRow &pa
   for (auto iter = children.begin(); iter != children.end(); iter++) {
     unsigned int row_pid = 0;
     auto row             = *iter;
-    row.get_value(2, row_pid);
+    row.get_value(3, row_pid);
     if (row_pid == pid || (!row.children().empty() && pid_exists_in_child(pid, row))) {
       return true;
     }
@@ -181,19 +183,58 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
   for (uint i = 0; i < names.size(); i++) {
     std::unique_ptr<Gtk::TreeModelColumnBase> column_base;
 
-    if (names[i].type == ColumnHeader::STRING) {
-      // Add a visible column, and title it using the string from 'names'
-      auto model_column = Gtk::TreeModelColumn<std::string>();
-      add(model_column);
-      view->append_column(names[i].name, model_column);
-      column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
-    } else {
-      // Add a visible column, and title it using the string from 'names'
-      auto model_column = Gtk::TreeModelColumn<unsigned int>();
-      add(model_column);
-      view->append_column(names[i].name, model_column);
-      column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
-    }
+    switch(names[i].type)
+    {
+      case ColumnHeader::STRING:
+      {
+        // Add a visible column, and title it using the string from 'names'
+        auto model_column = Gtk::TreeModelColumn<std::string>();
+        add(model_column);
+        view->append_column(names[i].name, model_column);
+        column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
+      }
+      break;
+
+      case ColumnHeader::INT:
+      {
+        // Add a visible column, and title it using the string from 'names'
+        auto model_column = Gtk::TreeModelColumn<unsigned int>();
+        add(model_column);
+        view->append_column(names[i].name, model_column);
+        column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
+      }
+      break;
+
+      case ColumnHeader::PROFILE_ENTRY:
+      {
+        // Add a visible column, and title it using the string from 'names'
+        auto model_column = Gtk::TreeModelColumn<ProfileTableEntry>();
+        add(model_column);
+        view->append_column(names[i].name, model_column);
+        column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
+      }
+      break;
+
+      case ColumnHeader::PROCESS_ENTRY:
+      {
+        // Add a visible column, and title it using the string from 'names'
+        auto model_column = Gtk::TreeModelColumn<ProcessTableEntry>();
+        add(model_column);
+        view->append_column(names[i].name, model_column);
+        column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
+      }
+      break;
+
+      case ColumnHeader::LOG_ENTRY:
+      {
+        // Add a visible column, and title it using the string from 'names'
+        auto model_column = Gtk::TreeModelColumn<LogTableEntry>();
+        add(model_column);
+        view->append_column(names[i].name, model_column);
+        column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
+      }
+      break;
+    };
 
     // Set some default settings for the columns
     // Note this a Gtk::TreeViewColumn which is different then the Gtk::TreeModelColumn which we use earlier
@@ -202,6 +243,22 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
     column_view->set_resizable();
     column_view->set_min_width(MIN_COL_WIDTH);
     column_view->set_sort_column(*column_base);
+
+    if(names[i].type == ColumnHeader::PROFILE_ENTRY || 
+       names[i].type == ColumnHeader::PROCESS_ENTRY || 
+       names[i].type == ColumnHeader::LOG_ENTRY)
+    {
+      // Create a custom cell renderer which shows nothing for these entries
+      Gtk::CellRenderer *renderer = Gtk::manage(new Gtk::CellRendererText());
+      auto callback_fun = sigc::mem_fun(*this, &StatusColumnRecord::ignore_cell_render);
+
+      column_view->clear();
+      column_view->pack_start(*renderer, false);
+      column_view->set_cell_data_func(*renderer, callback_fun);
+
+      // Make this row invisible
+      column_view->set_visible(false);
+    }
   }
 }
 
@@ -290,4 +347,14 @@ StatusColumnRecord::default_filter(const Gtk::TreeModel::iterator &node)
 {
   std::ignore = node;
   return true;
+}
+
+void StatusColumnRecord::ignore_cell_render(Gtk::CellRenderer* renderer, const Gtk::TreeIter &iter)
+{
+  std::ignore = iter;
+
+  Gtk::CellRendererText* text_renderer = dynamic_cast<Gtk::CellRendererText*>(renderer);
+  if(text_renderer) {
+    text_renderer->property_text() = "";
+  }
 }

@@ -42,9 +42,9 @@ void LogsController<LogsTab, Database, Adapter>::handle_log_selected()
 
     // TODO: Get status from adapter
     // This is a temporary solution for getting the status
-    std::string status;
-    row.get_value(5, status);
-    logs->set_information(LogsTab::InformationType::LOG_STATUS, status);
+    LogTableEntry entry;
+    row.get_value(0, entry);
+    logs->set_information(LogsTab::InformationType::LOG_STATUS, entry.profile_name);
   } else {
     logs->set_information(LogsTab::InformationType::LOG_STATUS, "");
   }

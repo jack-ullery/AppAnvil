@@ -34,16 +34,18 @@ public:
 
 protected:
   // Helper function for "put_data", creates and returns a new row.
-  Gtk::TreeRow add_row(const std::string &process_name,
-                       const unsigned int &pid,
-                       const unsigned int &ppid,
-                       const std::string &user,
-                       const std::string &status);
+  ProcessTableEntry add_row(const std::string &profile_name,
+                            const std::string &process_name,
+                            const unsigned int &pid,
+                            const unsigned int &ppid,
+                            const std::string &user,
+                            const std::string &status);
 
 private:
   std::shared_ptr<Database> db;
 
-  const std::vector<ColumnHeader> col_names{ ColumnHeader("Process Name"),
+  const std::vector<ColumnHeader> col_names{ ColumnHeader("Metadata", ColumnHeader::ColumnType::PROCESS_ENTRY),
+                                             ColumnHeader("Process Name"),
                                              ColumnHeader("User"),
                                              ColumnHeader("Pid", ColumnHeader::ColumnType::INT),
                                              ColumnHeader("Status") };

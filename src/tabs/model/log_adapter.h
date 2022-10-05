@@ -40,7 +40,8 @@ protected:
 private:
   std::shared_ptr<Database> db;
 
-  const std::vector<ColumnHeader> col_names{ ColumnHeader("Time"),
+  const std::vector<ColumnHeader> col_names{ ColumnHeader("Metadata", ColumnHeader::ColumnType::LOG_ENTRY),
+                                             ColumnHeader("Time"),
                                              ColumnHeader("Type"),
                                              ColumnHeader("Operation"),
                                              ColumnHeader("Name"),

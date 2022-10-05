@@ -49,7 +49,7 @@ ProfilesController<ProfilesTab, Database, Adapter>::handle_profile_selected()
     Gtk::TreeRow row   = adapter.get_col_record()->get_row(path);
 
     std::string profile_name;
-    row.get_value(0, profile_name);
+    row.get_value(1, profile_name);
 
     auto entry_pair = adapter.get_data(profile_name);
     auto entry      = entry_pair.first;

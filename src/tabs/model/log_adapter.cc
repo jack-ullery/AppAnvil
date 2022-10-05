@@ -37,7 +37,6 @@ LogAdapter<Database, ColumnRecord>::put_data(const time_t &timestamp,
 
   // The map (indexed by pid) that we will add to
   std::map<time_t, LogTableEntry> time_map;
-  ;
 
   // Check that we actually found the map
   if (map_pair == db->log_data.end()) {
@@ -57,20 +56,21 @@ LogAdapter<Database, ColumnRecord>::put_data(const time_t &timestamp,
     return;
   }
 
-  // If not entry was found, we should create one
-  // create a new row
+  // Create a new row
   const Gtk::TreeRow row = col_record->new_row();
 
-  // clang-format off
-    row.set_value(0, format_timestamp(timestamp)); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-    row.set_value(1, type);                        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-    row.set_value(2, operation);                   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-    row.set_value(3, profile_name);                // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-    row.set_value(4, pid);                         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-    row.set_value(5, status);                      // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-    // clang-format on
-
+  // If not entry was found, we should create a new one
   LogTableEntry entry(timestamp, type, operation, profile_name, pid, row);
+
+  // clang-format off
+  row.set_value(0, entry);                       // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row.set_value(1, format_timestamp(timestamp)); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row.set_value(2, type);                        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row.set_value(3, operation);                   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row.set_value(4, profile_name);                // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row.set_value(5, pid);                         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row.set_value(6, status);                      // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  // clang-format on
 
   // Add the entry to the map
   time_map.insert({ timestamp, entry });
