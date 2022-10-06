@@ -10,10 +10,10 @@
 class InfoBox : public Gtk::Bin
 {
 public:
-  InfoBox(const std::string &header);
+  InfoBox();
 
-  // Sets the text for the `i_text` label
-  void set_text(const std::string &text);
+  // Sets the header and main text shown by the InfoBox
+  void set_text(const std::string &header, const std::string &text);
 
 private:
   // GUI Builder to parse UI from xml file

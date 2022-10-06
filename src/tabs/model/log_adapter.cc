@@ -30,7 +30,7 @@ LogAdapter<Database, ColumnRecord>::put_data(const time_t &timestamp,
                                              const std::string &operation,
                                              const std::string &profile_name,
                                              const unsigned int &pid,
-                                             const std::string &status)
+                                             const std::list<std::pair<std::string, std::string>> &metadata)
 {
   // Attempt to find an map with this profile name
   auto map_pair = db->log_data.find(profile_name);
@@ -60,7 +60,7 @@ LogAdapter<Database, ColumnRecord>::put_data(const time_t &timestamp,
   const Gtk::TreeRow row = col_record->new_row();
 
   // If not entry was found, we should create a new one
-  LogTableEntry entry(timestamp, type, operation, profile_name, pid, row);
+  LogTableEntry entry(timestamp, profile_name, pid, metadata, row);
 
   // clang-format off
   row.set_value(0, entry);                       // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
@@ -69,7 +69,6 @@ LogAdapter<Database, ColumnRecord>::put_data(const time_t &timestamp,
   row.set_value(3, operation);                   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   row.set_value(4, profile_name);                // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   row.set_value(5, pid);                         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  row.set_value(6, status);                      // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   // clang-format on
 
   // Add the entry to the map

@@ -4,6 +4,7 @@
 #include "../view/logs.h"
 #include <glibmm/main.h>
 #include <glibmm/priorities.h>
+#include <list>
 #include <memory>
 #include <sigc++/functors/mem_fun.h>
 #include <sigc++/functors/ptr_fun.h>
@@ -40,13 +41,13 @@ void LogsController<LogsTab, Database, Adapter>::handle_log_selected()
     Gtk::TreePath path = selection->get_selected_rows()[0];
     Gtk::TreeRow row   = adapter->get_col_record()->get_row(path);
 
-    // TODO: Get status from adapter
-    // This is a temporary solution for getting the status
     LogTableEntry entry;
     row.get_value(0, entry);
-    logs->set_information(LogsTab::InformationType::LOG_STATUS, entry.profile_name);
+
+    logs->set_information(entry.metadata);
   } else {
-    logs->set_information(LogsTab::InformationType::LOG_STATUS, "");
+    std::list<std::pair<std::string, std::string>> empty_list;
+    logs->set_information(empty_list);
   }
 }
 
@@ -69,13 +70,15 @@ void LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::V
   
   std::string operation;
   std::string name;
-  std::string status;
+  std::list<std::pair<std::string, std::string>> metadata;
 
   // Adapted from: https://gitlab.com/apparmor/apparmor/-/blob/master/libraries/libapparmor/include/aalogparse.h
   if(type == "STATUS") {
     name      = entry["_AUDIT_FIELD_NAME"].asString();
     operation = format_log_data(entry["_AUDIT_FIELD_OPERATION"].asString());
-    status    = format_log_data(entry["_AUDIT_FIELD_PROFILE"].asString());
+
+    std::string status = format_log_data(entry["_AUDIT_FIELD_PROFILE"].asString());
+    metadata.push_back({"Status", status});
   }
   /* Denied access event */
   else if(type == "DENIED") {
@@ -83,10 +86,18 @@ void LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::V
     operation = format_log_data(entry["_AUDIT_FIELD_OPERATION"].asString());
 
     if(operation == "capable") {
-      status = "capname: " + entry["_AUDIT_FIELD_CAPNAME"].asString() + " capability: " + entry["_AUDIT_FIELD_CAPABILITY"].asString();
+      std::string capname = entry["_AUDIT_FIELD_CAPNAME"].asString();
+      std::string capability = entry["_AUDIT_FIELD_CAPABILITY"].asString();
+
+      metadata.push_back({"Capname", capname});
+      metadata.push_back({"Capability", capability});
     }
     else {
-      status = "requested mask: " + format_log_data(entry["_AUDIT_FIELD_REQUESTED_MASK"].asString()) + " denied mask: " + format_log_data(entry["_AUDIT_FIELD_DENIED_MASK"].asString());
+      std::string requested = format_log_data(entry["_AUDIT_FIELD_REQUESTED_MASK"].asString());
+      std::string denied    = format_log_data(entry["_AUDIT_FIELD_DENIED_MASK"].asString());
+
+      metadata.push_back({"Requested Mask", requested});
+      metadata.push_back({"Denied Mask", denied});
     }
   }
   // /* Default event type */
@@ -113,15 +124,17 @@ void LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::V
     std::cerr << "Error - Unknown log type: " << type << std::endl;
     name      = entry["_AUDIT_FIELD_NAME"].asString();
     operation = format_log_data(entry["_AUDIT_FIELD_OPERATION"].asString());
-    status    = format_log_data(entry["_AUDIT_FIELD_PROFILE"].asString());
+
+    std::string status = format_log_data(entry["_AUDIT_FIELD_PROFILE"].asString());
+    metadata.push_back({"Status", status});
   }
-  
+
   adapter->put_data(timestamp,
                     type,
                     operation,
                     name,
                     stoul(pid),
-                    status);
+                    metadata);
 }
 
 template<class LogsTab, class Database, class Adapter>

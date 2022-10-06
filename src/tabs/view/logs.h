@@ -16,7 +16,7 @@ public:
     LOG_STATUS
   };
 
-  void set_information(InformationType type, std::string text);
+  void set_information(std::list<std::pair<std::string, std::string>> data);
 
 private:
   // GUI Builder to parse UI from xml file
@@ -26,7 +26,7 @@ private:
   std::unique_ptr<Gtk::Box> l_log_info;
 
   // Widgets
-  InfoBox status_info;
+  std::vector<InfoBox> info_vec;
 
   // Misc
   template<typename T_Widget>

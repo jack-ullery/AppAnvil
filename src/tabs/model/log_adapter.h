@@ -29,7 +29,7 @@ public:
                 const std::string &operation,
                 const std::string &profile_name,
                 const unsigned int &pid,
-                const std::string &status);
+                const std::list<std::pair<std::string, std::string>> &metadata);
 
   std::pair<LogTableEntry, bool> get_data(const std::string &profile_name, const time_t &timestamp);
   std::shared_ptr<ColumnRecord> get_col_record();
@@ -45,8 +45,7 @@ private:
                                              ColumnHeader("Type"),
                                              ColumnHeader("Operation"),
                                              ColumnHeader("Name"),
-                                             ColumnHeader("Pid", ColumnHeader::ColumnType::INT),
-                                             ColumnHeader("Status") };
+                                             ColumnHeader("Pid", ColumnHeader::ColumnType::INT) };
 
   const std::shared_ptr<ColumnRecord> col_record;
 

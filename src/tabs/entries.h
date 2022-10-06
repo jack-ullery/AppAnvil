@@ -58,22 +58,19 @@ struct LogTableEntry
   std::string profile_name; // Refrences profile_name from ProfileTabEntry
   unsigned int pid;         // Partial key (with timestamp)
   time_t timestamp;         // Partial key (with pid)
-  std::string type;
-  std::string operation;
+  std::list<std::pair<std::string, std::string>> metadata;
   Gtk::TreeRow row;
 
-  LogTableEntry(const time_t &_timestamp,
-                const std::string &_type,
-                const std::string &_operation,
-                const std::string &_profile_name,
-                const unsigned int &_pid,
-                const Gtk::TreeRow &_row)
-    : profile_name{ _profile_name },
-      pid{ _pid },
-      timestamp{ _timestamp },
-      type{ _type },
-      operation{ _operation },
-      row{ _row }
+  LogTableEntry(const time_t &timestamp,
+                const std::string &profile_name,
+                const unsigned int &pid,
+                const std::list<std::pair<std::string, std::string>> &metadata,
+                const Gtk::TreeRow &row)
+    : profile_name{ profile_name },
+      pid{ pid },
+      timestamp{ timestamp },
+      metadata{ metadata },
+      row{ row }
   {
   }
 
@@ -82,8 +79,6 @@ struct LogTableEntry
     : profile_name{ UNKNOWN_STR },
       pid{ UNKNOWN_UINT },
       timestamp{ UNKNOWN_UINT },
-      type{ UNKNOWN_STR },
-      operation{ UNKNOWN_STR },
       row()
   {
   }
