@@ -4,14 +4,12 @@
 #include "../view/logs.h"
 #include <glibmm/main.h>
 #include <glibmm/priorities.h>
+#include <iostream>
 #include <list>
 #include <memory>
 #include <sigc++/functors/mem_fun.h>
 #include <sigc++/functors/ptr_fun.h>
 #include <sstream>
-
-#include <iostream>
-#include <type_traits>
 
 template<class LogsTab, class Database, class Adapter>
 bool

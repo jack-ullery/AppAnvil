@@ -33,7 +33,7 @@ public:
   std::shared_ptr<ColumnRecord> get_col_record();
 
 protected:
-  // Helper function for "put_data", creates and returns a new row.
+  // Helper function for "put_data", creates a row, and table entry, before returning the table entry.
   ProcessTableEntry add_row(const std::string &profile_name,
                             const std::string &process_name,
                             const unsigned int &pid,
