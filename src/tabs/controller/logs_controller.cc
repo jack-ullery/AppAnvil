@@ -11,6 +11,7 @@
 #include <sstream>
 
 #include <iostream>
+#include <type_traits>
 
 template<class LogsTab, class Database, class Adapter>
 bool LogsController<LogsTab, Database, Adapter>::on_button_event(GdkEventButton *event)
@@ -86,16 +87,18 @@ void LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::V
     operation = format_log_data(entry["_AUDIT_FIELD_OPERATION"].asString());
 
     if(operation == "capable") {
-      std::string capname = entry["_AUDIT_FIELD_CAPNAME"].asString();
+      std::string capname = format_log_data(entry["_AUDIT_FIELD_CAPNAME"].asString());
       std::string capability = entry["_AUDIT_FIELD_CAPABILITY"].asString();
 
-      metadata.push_back({"Capname", capname});
+      metadata.push_back({"Capability Name", capname});
       metadata.push_back({"Capability", capability});
     }
     else {
+      std::string fieldName = entry["_AUDIT_FIELD_NAME"].asString();
       std::string requested = format_log_data(entry["_AUDIT_FIELD_REQUESTED_MASK"].asString());
       std::string denied    = format_log_data(entry["_AUDIT_FIELD_DENIED_MASK"].asString());
 
+      metadata.push_back({"Field Name", fieldName});
       metadata.push_back({"Requested Mask", requested});
       metadata.push_back({"Denied Mask", denied});
     }
