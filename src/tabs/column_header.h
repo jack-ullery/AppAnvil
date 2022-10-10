@@ -8,7 +8,10 @@ struct ColumnHeader
   enum ColumnType
   {
     STRING,
-    INT
+    INT,
+    PROFILE_ENTRY,
+    PROCESS_ENTRY,
+    LOG_ENTRY
   };
 
   ColumnType type;

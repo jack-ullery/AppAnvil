@@ -75,6 +75,7 @@ private:
 
   // clang-tidy complains about the `COLUMN_TYPE_STRING` macro, so we assign it here and tell clang-tidy not to look at it
   static constexpr unsigned int COLUMN_TYPE_STRING = G_TYPE_STRING; // NOLINT
+  static constexpr unsigned int COLUMN_TYPE_UINT   = G_TYPE_UINT;   // NOLINT
 };
 
 #endif // TABS_STATUS_H

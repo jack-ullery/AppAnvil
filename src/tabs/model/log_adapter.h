@@ -29,29 +29,27 @@ public:
                 const std::string &operation,
                 const std::string &profile_name,
                 const unsigned int &pid,
-                const std::string &status);
+                const std::list<std::pair<std::string, std::string>> &metadata);
 
   std::pair<LogTableEntry, bool> get_data(const std::string &profile_name, const time_t &timestamp);
   std::shared_ptr<ColumnRecord> get_col_record();
 
 protected:
-  static std::string format_log_data(const std::string &data);
   static std::string format_timestamp(const time_t &timestamp);
 
 private:
   std::shared_ptr<Database> db;
 
-  const std::vector<ColumnHeader> col_names{ ColumnHeader("Time"),
+  const std::vector<ColumnHeader> col_names{ ColumnHeader("Metadata", ColumnHeader::ColumnType::LOG_ENTRY),
+                                             ColumnHeader("Time"),
                                              ColumnHeader("Type"),
                                              ColumnHeader("Operation"),
                                              ColumnHeader("Name"),
-                                             ColumnHeader("Pid", ColumnHeader::ColumnType::INT),
-                                             ColumnHeader("Status") };
+                                             ColumnHeader("Pid", ColumnHeader::ColumnType::INT) };
 
   const std::shared_ptr<ColumnRecord> col_record;
 
 #ifdef TESTS_ENABLED
-  FRIEND_TEST(LogAdapterTest, TEST_FORMAT_LOG_DATA);
   FRIEND_TEST(LogAdapterTest, TEST_FORMAT_TIMESTAMP);
 #endif
 };

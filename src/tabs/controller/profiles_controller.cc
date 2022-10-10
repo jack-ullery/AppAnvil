@@ -48,20 +48,15 @@ ProfilesController<ProfilesTab, Database, Adapter>::handle_profile_selected()
     Gtk::TreePath path = selection->get_selected_rows()[0];
     Gtk::TreeRow row   = adapter.get_col_record()->get_row(path);
 
-    std::string profile_name;
-    row.get_value(0, profile_name);
+    ProfileTableEntry entry;
+    row.get_value(0, entry);
 
-    auto entry_pair = adapter.get_data(profile_name);
-    auto entry      = entry_pair.first;
-    bool found      = entry_pair.second;
+    uint num_log  = adapter.get_number_logs(entry.profile_name);
+    uint num_proc = adapter.get_number_processes(entry.profile_name);
+    prof->set_profile_info(
+      std::to_string(num_log) + " related logs", "Not implemented yet!", std::to_string(num_proc) + " running processes");
 
-    if (found) {
-      uint num_log  = adapter.get_number_logs(profile_name);
-      uint num_proc = adapter.get_number_processes(profile_name);
-      prof->set_profile_info(
-        std::to_string(num_log) + " related logs", "Not implemented yet!", std::to_string(num_proc) + " running processes");
-      prof->show_profile_info();
-    }
+    prof->show_profile_info();
   } else {
     prof->hide_profile_info();
   }
@@ -107,7 +102,6 @@ ProfilesController<ProfilesTab, Database, Adapter>::ProfilesController(std::shar
     prof{ StatusController<ProfilesTab>::get_tab() },
     adapter(database, prof->get_view(), prof->get_window())
 {
-
   auto func = sigc::mem_fun(*this, &ProfilesController<ProfilesTab, Database, Adapter>::refresh);
   prof->set_refresh_signal_handler(func);
 

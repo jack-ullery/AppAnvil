@@ -145,6 +145,10 @@ private:
 
   // Unless `set_visible_func` is called, this filter sets every row in the ColumnRecord to be visible when filtered
   static bool default_filter(const Gtk::TreeModel::iterator &node);
+
+  // Ignores the parameter and returns an empty string
+  // This is used by the cell renderer of columns we do not want to view
+  void ignore_cell_render(Gtk::CellRenderer *renderer, const Gtk::TreeIter &iter);
 };
 
 #endif // TABS_STATUS_COLUMN_RECORD_H

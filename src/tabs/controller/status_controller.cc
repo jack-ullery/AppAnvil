@@ -74,7 +74,7 @@ StatusController<Tab>::filter(const Gtk::TreeModel::iterator &node)
       std::string data;
       node->get_value(i, data);
       re = StatusController<Tab>::should_filter(data, info.filter_rule, info.use_regex, info.match_case, info.whole_word);
-    } else {
+    } else if (treeModel->get_column_type(i) == COLUMN_TYPE_UINT) {
       // If the column is an int, convert it to a string and see whether it matches the pattern
       // We initialize this uint to avoid a warning, this value will be overwritten by the following line
       unsigned int data = 0;

@@ -7,5 +7,7 @@
     <file preprocess="xml-stripblanks">resources/load_profile.glade</file>
     <file preprocess="xml-stripblanks">resources/profile.glade</file>
     <file preprocess="xml-stripblanks">resources/status.glade</file>
+    <file preprocess="xml-stripblanks">resources/log.glade</file>
+    <file preprocess="xml-stripblanks">resources/info_box.glade</file>
   </gresource>
 </gresources>

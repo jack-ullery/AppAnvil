@@ -3,6 +3,8 @@
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <list>
+#include <utility>
 
 #include "status_column_record_mock.h"
 
@@ -16,7 +18,7 @@ public:
                const std::string &operation,
                const std::string &profile_name,
                const unsigned int &pid,
-               const std::string &status));
+               (const std::list<std::pair<std::string, std::string>>)&metadata));
 
   MOCK_METHOD(std::shared_ptr<StatusColumnRecordMock>, get_col_record, ());
 };

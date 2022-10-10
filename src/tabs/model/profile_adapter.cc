@@ -17,10 +17,12 @@ ProfileAdapter<Database>::put_data(const std::string &profile_name, const std::s
   if (iter == db->profile_data.end()) {
     // If not entry was found, we should create one
     auto row = col_record->new_row();
-    row->set_value(0, profile_name);
-    row->set_value(1, status);
-
     ProfileTableEntry entry(profile_name, status, row);
+
+    row->set_value(0, entry);
+    row->set_value(1, profile_name);
+    row->set_value(2, status);
+
     db->profile_data.insert({ profile_name, entry });
   } else {
     // A pre-existing entry was found, so we should modify it

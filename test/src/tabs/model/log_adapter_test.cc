@@ -10,22 +10,6 @@
 #include <regex>
 #include <string>
 
-// Test for method format_log_data
-TEST_F(LogAdapterTest, TEST_FORMAT_LOG_DATA)
-{
-  std::string formatted_type      = adapter.format_log_data(sample_log_data_type);
-  std::string formatted_operation = adapter.format_log_data(sample_log_data_operation);
-  std::string formatted_status    = adapter.format_log_data(sample_log_data_status);
-
-  ASSERT_TRUE(formatted_type.find('\"') == std::string::npos) << "sample type should not contain quotation marks after formatting";
-  ASSERT_TRUE(formatted_operation.find('\"') == std::string::npos)
-    << "sample operation should not contain quotation marks after formatting";
-  ASSERT_TRUE(formatted_status.find('\"') == std::string::npos) << "sample status should not contain quotation marks after formatting";
-  EXPECT_EQ(formatted_type, "STATUS") << "error formatting sample type from log data";
-  EXPECT_EQ(formatted_operation, "profile_load") << "error formatting sample operation from log data";
-  EXPECT_EQ(formatted_status, "unconfined") << "error formatting sample status from log data";
-}
-
 // Test for method format_timestamp
 TEST_F(LogAdapterTest, TEST_FORMAT_TIMESTAMP)
 {
@@ -42,7 +26,7 @@ void
 LogAdapterTest::try_put_data(std::vector<LogAdapterTest::TestData> data_set)
 {
   for (auto data : data_set) {
-    adapter.put_data(data.timestamp, data.type, data.operation, data.profile_name, data.pid, data.status);
+    adapter.put_data(data.timestamp, data.type, data.operation, data.profile_name, data.pid, data.metadata);
   }
 }
 
@@ -68,8 +52,7 @@ LogAdapterTest::check_log_entry(LogTableEntry entry, TestData expected_data)
   ASSERT_EQ(entry.profile_name, expected_data.profile_name);
   ASSERT_EQ(entry.pid, expected_data.pid);
   ASSERT_EQ(entry.timestamp, expected_data.timestamp);
-  ASSERT_EQ(entry.type, expected_data.type);
-  ASSERT_EQ(entry.operation, expected_data.operation);
+  ASSERT_EQ(entry.metadata, expected_data.metadata);
 }
 
 void
