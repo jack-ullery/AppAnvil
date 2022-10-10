@@ -48,7 +48,7 @@ std::string
 AppArmorCaller::get_logs(AppArmorCaller *caller)
 {
   // `auditd -f` is the terminal command we use to get all of the essential logs
-  std::vector<std::string> command = {"ausearch", "-r"};
+  std::vector<std::string> command = {"dmesg"};
   std::string return_on_error = "";
   return caller->call_command(command, return_on_error);
 }

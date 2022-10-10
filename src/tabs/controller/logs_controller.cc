@@ -70,6 +70,14 @@ void LogsController<LogsTab, Database, Adapter>::add_data_to_record(const std::s
   Glib::signal_idle().connect(lambda, Glib::PRIORITY_LOW);
 }
 
+std::string convert_string_or_default(const char *c_str) {
+  if(c_str == nullptr) {
+    return "unknown";
+  }
+
+  return std::string(c_str);
+}
+
 template<class LogsTab, class Database, class Adapter>
 void LogsController<LogsTab, Database, Adapter>::add_row(const std::string &entry)
 {
@@ -80,10 +88,10 @@ void LogsController<LogsTab, Database, Adapter>::add_row(const std::string &entr
   }
 
   const long timestamp        = record.Data()->epoch;
-  const std::string type      = record.Data()->name;
+  const std::string type      = convert_string_or_default(record.Data()->name);
   const unsigned long pid     = record.Data()->pid;
-  const std::string operation = record.Data()->operation;
-  const std::string name      = record.Data()->profile;
+  const std::string operation = convert_string_or_default(record.Data()->operation);
+  const std::string name      = convert_string_or_default(record.Data()->profile);
 
   std::list<std::pair<std::string, std::string>> metadata;
 
