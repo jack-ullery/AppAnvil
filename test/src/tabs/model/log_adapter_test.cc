@@ -26,7 +26,7 @@ void
 LogAdapterTest::try_put_data(std::vector<LogAdapterTest::TestData> data_set)
 {
   for (auto data : data_set) {
-    adapter.put_data(data.timestamp, data.type, data.operation, data.profile_name, data.pid, data.status);
+    adapter.put_data(data.timestamp, data.type, data.operation, data.profile_name, data.pid, data.metadata);
   }
 }
 
@@ -52,8 +52,7 @@ LogAdapterTest::check_log_entry(LogTableEntry entry, TestData expected_data)
   ASSERT_EQ(entry.profile_name, expected_data.profile_name);
   ASSERT_EQ(entry.pid, expected_data.pid);
   ASSERT_EQ(entry.timestamp, expected_data.timestamp);
-  ASSERT_EQ(entry.type, expected_data.type);
-  ASSERT_EQ(entry.operation, expected_data.operation);
+  ASSERT_EQ(entry.metadata, expected_data.metadata);
 }
 
 void

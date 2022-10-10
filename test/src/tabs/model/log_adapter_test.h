@@ -39,7 +39,7 @@ protected:
     time_t timestamp         = (time_t)1648234140;
     std::string type         = "\"STATUS\"";
     std::string operation    = "\"profile_load\"";
-    std::string status       = "enforce";
+    std::list<std::pair<std::string, std::string>> metadata;
   };
 
   // Test objects
