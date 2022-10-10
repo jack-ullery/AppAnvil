@@ -53,9 +53,8 @@ ProfilesController<ProfilesTab, Database, Adapter>::handle_profile_selected()
 
     uint num_log  = adapter.get_number_logs(entry.profile_name);
     uint num_proc = adapter.get_number_processes(entry.profile_name);
-    prof->set_profile_info(std::to_string(num_log) + " related logs", 
-                           "Not implemented yet!", 
-                           std::to_string(num_proc) + " running processes");
+    prof->set_profile_info(
+      std::to_string(num_log) + " related logs", "Not implemented yet!", std::to_string(num_proc) + " running processes");
 
     prof->show_profile_info();
   } else {

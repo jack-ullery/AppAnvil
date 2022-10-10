@@ -5,13 +5,14 @@
 #include <stdexcept>
 
 template<class Database, class ColumnRecord>
-ProcessTableEntry ProcessAdapter<Database, ColumnRecord>::add_row(const std::string &profile_name,
-                                                                  const std::string &process_name,
-                                                                  const unsigned int &pid,
-                                                                  const unsigned int &ppid,
-                                                                  const std::string &user,
-                                                                  const std::string &status)
-    {
+ProcessTableEntry
+ProcessAdapter<Database, ColumnRecord>::add_row(const std::string &profile_name,
+                                                const std::string &process_name,
+                                                const unsigned int &pid,
+                                                const unsigned int &ppid,
+                                                const std::string &user,
+                                                const std::string &status)
+{
   Gtk::TreeRow row;
 
   if (ppid > 0) {
@@ -71,8 +72,7 @@ ProcessAdapter<Database, ColumnRecord>::put_data(const std::string &process_name
     // Add the entry to the map
     pid_map.erase(pid);
     pid_map.insert({ pid, entry });
-  } 
-  else {
+  } else {
     // If no entry was found, we should create one
     auto entry = ProcessAdapter<Database, ColumnRecord>::add_row(profile_name, process_name, pid, ppid, user, status);
 

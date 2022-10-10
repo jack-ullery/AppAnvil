@@ -3,20 +3,21 @@
 
 // TODO: Make get_widget common function somewhere
 template<typename T_Widget>
-std::unique_ptr<T_Widget> Logs::get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder)
+std::unique_ptr<T_Widget>
+Logs::get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder)
 {
   T_Widget *raw_addr = nullptr;
   builder->get_widget<T_Widget>(name, raw_addr);
   return std::unique_ptr<T_Widget>(raw_addr);
 }
 
-void Logs::set_information(std::list<std::pair<std::string, std::string>> data)
+void
+Logs::set_information(std::list<std::pair<std::string, std::string>> data)
 {
   uint index = 0;
-  for(auto pair : data)
-  {
+  for (auto pair : data) {
     // If needed, create a new InfoBox to show this pair
-    if(index >= info_vec.size()) {
+    if (index >= info_vec.size()) {
       info_vec.push_back(InfoBox());
       l_log_info->add(info_vec[index]);
     }
@@ -29,7 +30,7 @@ void Logs::set_information(std::list<std::pair<std::string, std::string>> data)
   }
 
   // Set the uninitialized info boxes to be invisible
-  while(index < info_vec.size()) {
+  while (index < info_vec.size()) {
     info_vec[index].set_visible(false);
     index++;
   }

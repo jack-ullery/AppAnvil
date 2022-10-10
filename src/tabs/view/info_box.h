@@ -1,8 +1,8 @@
 #ifndef TABS_VIEW_INFO_BOX_H
 #define TABS_VIEW_INFO_BOX_H
 
-#include <gtkmm/box.h>
 #include <gtkmm/bin.h>
+#include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/label.h>
 #include <memory>
@@ -20,7 +20,7 @@ private:
   Glib::RefPtr<Gtk::Builder> builder;
 
   // Widgets
-  std::unique_ptr<Gtk::Box>   i_box;
+  std::unique_ptr<Gtk::Box> i_box;
   std::unique_ptr<Gtk::Label> i_header;
   std::unique_ptr<Gtk::Label> i_text;
 

@@ -183,57 +183,46 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
   for (uint i = 0; i < names.size(); i++) {
     std::unique_ptr<Gtk::TreeModelColumnBase> column_base;
 
-    switch(names[i].type)
-    {
-      case ColumnHeader::STRING:
-      {
+    switch (names[i].type) {
+      case ColumnHeader::STRING: {
         // Add a visible column, and title it using the string from 'names'
         auto model_column = Gtk::TreeModelColumn<std::string>();
         add(model_column);
         view->append_column(names[i].name, model_column);
         column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
-      }
-      break;
+      } break;
 
-      case ColumnHeader::INT:
-      {
+      case ColumnHeader::INT: {
         // Add a visible column, and title it using the string from 'names'
         auto model_column = Gtk::TreeModelColumn<unsigned int>();
         add(model_column);
         view->append_column(names[i].name, model_column);
         column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
-      }
-      break;
+      } break;
 
-      case ColumnHeader::PROFILE_ENTRY:
-      {
+      case ColumnHeader::PROFILE_ENTRY: {
         // Add a visible column, and title it using the string from 'names'
         auto model_column = Gtk::TreeModelColumn<ProfileTableEntry>();
         add(model_column);
         view->append_column(names[i].name, model_column);
         column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
-      }
-      break;
+      } break;
 
-      case ColumnHeader::PROCESS_ENTRY:
-      {
+      case ColumnHeader::PROCESS_ENTRY: {
         // Add a visible column, and title it using the string from 'names'
         auto model_column = Gtk::TreeModelColumn<ProcessTableEntry>();
         add(model_column);
         view->append_column(names[i].name, model_column);
         column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
-      }
-      break;
+      } break;
 
-      case ColumnHeader::LOG_ENTRY:
-      {
+      case ColumnHeader::LOG_ENTRY: {
         // Add a visible column, and title it using the string from 'names'
         auto model_column = Gtk::TreeModelColumn<LogTableEntry>();
         add(model_column);
         view->append_column(names[i].name, model_column);
         column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
-      }
-      break;
+      } break;
     };
 
     // Set some default settings for the columns
@@ -244,13 +233,11 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
     column_view->set_min_width(MIN_COL_WIDTH);
     column_view->set_sort_column(*column_base);
 
-    if(names[i].type == ColumnHeader::PROFILE_ENTRY || 
-       names[i].type == ColumnHeader::PROCESS_ENTRY || 
-       names[i].type == ColumnHeader::LOG_ENTRY)
-    {
+    if (names[i].type == ColumnHeader::PROFILE_ENTRY || names[i].type == ColumnHeader::PROCESS_ENTRY ||
+        names[i].type == ColumnHeader::LOG_ENTRY) {
       // Create a custom cell renderer which shows nothing for these entries
       Gtk::CellRenderer *renderer = Gtk::manage(new Gtk::CellRendererText());
-      auto callback_fun = sigc::mem_fun(*this, &StatusColumnRecord::ignore_cell_render);
+      auto callback_fun           = sigc::mem_fun(*this, &StatusColumnRecord::ignore_cell_render);
 
       column_view->clear();
       column_view->pack_start(*renderer, false);
@@ -349,12 +336,13 @@ StatusColumnRecord::default_filter(const Gtk::TreeModel::iterator &node)
   return true;
 }
 
-void StatusColumnRecord::ignore_cell_render(Gtk::CellRenderer* renderer, const Gtk::TreeIter &iter)
+void
+StatusColumnRecord::ignore_cell_render(Gtk::CellRenderer *renderer, const Gtk::TreeIter &iter)
 {
   std::ignore = iter;
 
-  Gtk::CellRendererText* text_renderer = dynamic_cast<Gtk::CellRendererText*>(renderer);
-  if(text_renderer) {
+  Gtk::CellRendererText *text_renderer = dynamic_cast<Gtk::CellRendererText *>(renderer);
+  if (text_renderer) {
     text_renderer->property_text() = "";
   }
 }

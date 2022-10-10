@@ -14,7 +14,8 @@
 #include <type_traits>
 
 template<class LogsTab, class Database, class Adapter>
-bool LogsController<LogsTab, Database, Adapter>::on_button_event(GdkEventButton *event)
+bool
+LogsController<LogsTab, Database, Adapter>::on_button_event(GdkEventButton *event)
 {
   std::ignore = event;
 
@@ -23,7 +24,8 @@ bool LogsController<LogsTab, Database, Adapter>::on_button_event(GdkEventButton 
 }
 
 template<class LogsTab, class Database, class Adapter>
-bool LogsController<LogsTab, Database, Adapter>::on_key_event(GdkEventKey *event)
+bool
+LogsController<LogsTab, Database, Adapter>::on_key_event(GdkEventKey *event)
 {
   std::ignore = event;
 
@@ -32,7 +34,8 @@ bool LogsController<LogsTab, Database, Adapter>::on_key_event(GdkEventKey *event
 }
 
 template<class LogsTab, class Database, class Adapter>
-void LogsController<LogsTab, Database, Adapter>::handle_log_selected()
+void
+LogsController<LogsTab, Database, Adapter>::handle_log_selected()
 {
   // Check if there is any row selected
   auto selection    = logs->get_view()->get_selection();
@@ -53,7 +56,8 @@ void LogsController<LogsTab, Database, Adapter>::handle_log_selected()
 }
 
 template<class LogsTab, class Database, class Adapter>
-std::string LogsController<LogsTab, Database, Adapter>::format_log_data(const std::string &data)
+std::string
+LogsController<LogsTab, Database, Adapter>::format_log_data(const std::string &data)
 {
   const std::regex remove_quotes = std::regex("\\\"(\\S*)\\\"");
   std::smatch m;
@@ -62,45 +66,45 @@ std::string LogsController<LogsTab, Database, Adapter>::format_log_data(const st
 }
 
 template<class LogsTab, class Database, class Adapter>
-void LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::Value &entry)
+void
+LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::Value &entry)
 {
   // getting timestamp from json argument, retrieving important fields from json
-  const time_t timestamp      = std::stol(entry["_SOURCE_REALTIME_TIMESTAMP"].asString()) / 1000000;
-  const std::string type      = format_log_data(entry["_AUDIT_FIELD_APPARMOR"].asString());
-  const std::string pid       = entry["_PID"].asString();
-  
+  const time_t timestamp = std::stol(entry["_SOURCE_REALTIME_TIMESTAMP"].asString()) / 1000000;
+  const std::string type = format_log_data(entry["_AUDIT_FIELD_APPARMOR"].asString());
+  const std::string pid  = entry["_PID"].asString();
+
   std::string operation;
   std::string name;
   std::list<std::pair<std::string, std::string>> metadata;
 
   // Adapted from: https://gitlab.com/apparmor/apparmor/-/blob/master/libraries/libapparmor/include/aalogparse.h
-  if(type == "STATUS") {
+  if (type == "STATUS") {
     name      = entry["_AUDIT_FIELD_NAME"].asString();
     operation = format_log_data(entry["_AUDIT_FIELD_OPERATION"].asString());
 
     std::string status = format_log_data(entry["_AUDIT_FIELD_PROFILE"].asString());
-    metadata.push_back({"Status", status});
+    metadata.push_back({ "Status", status });
   }
   /* Denied access event */
-  else if(type == "DENIED") {
+  else if (type == "DENIED") {
     name      = format_log_data(entry["_AUDIT_FIELD_PROFILE"].asString());
     operation = format_log_data(entry["_AUDIT_FIELD_OPERATION"].asString());
 
-    if(operation == "capable") {
-      std::string capname = format_log_data(entry["_AUDIT_FIELD_CAPNAME"].asString());
+    if (operation == "capable") {
+      std::string capname    = format_log_data(entry["_AUDIT_FIELD_CAPNAME"].asString());
       std::string capability = entry["_AUDIT_FIELD_CAPABILITY"].asString();
 
-      metadata.push_back({"Capability Name", capname});
-      metadata.push_back({"Capability", capability});
-    }
-    else {
+      metadata.push_back({ "Capability Name", capname });
+      metadata.push_back({ "Capability", capability });
+    } else {
       std::string fieldName = entry["_AUDIT_FIELD_NAME"].asString();
       std::string requested = format_log_data(entry["_AUDIT_FIELD_REQUESTED_MASK"].asString());
       std::string denied    = format_log_data(entry["_AUDIT_FIELD_DENIED_MASK"].asString());
 
-      metadata.push_back({"Field Name", fieldName});
-      metadata.push_back({"Requested Mask", requested});
-      metadata.push_back({"Denied Mask", denied});
+      metadata.push_back({ "Field Name", fieldName });
+      metadata.push_back({ "Requested Mask", requested });
+      metadata.push_back({ "Denied Mask", denied });
     }
   }
   // /* Default event type */
@@ -129,19 +133,15 @@ void LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::V
     operation = format_log_data(entry["_AUDIT_FIELD_OPERATION"].asString());
 
     std::string status = format_log_data(entry["_AUDIT_FIELD_PROFILE"].asString());
-    metadata.push_back({"Status", status});
+    metadata.push_back({ "Status", status });
   }
 
-  adapter->put_data(timestamp,
-                    type,
-                    operation,
-                    name,
-                    stoul(pid),
-                    metadata);
+  adapter->put_data(timestamp, type, operation, name, stoul(pid), metadata);
 }
 
 template<class LogsTab, class Database, class Adapter>
-void LogsController<LogsTab, Database, Adapter>::add_data_to_record(const std::string &data)
+void
+LogsController<LogsTab, Database, Adapter>::add_data_to_record(const std::string &data)
 {
   auto json_data = std::make_shared<std::istringstream>(data);
 
@@ -151,7 +151,8 @@ void LogsController<LogsTab, Database, Adapter>::add_data_to_record(const std::s
 }
 
 template<class LogsTab, class Database, class Adapter>
-bool LogsController<LogsTab, Database, Adapter>::add_data_to_record_helper(std::shared_ptr<std::istringstream> json_data)
+bool
+LogsController<LogsTab, Database, Adapter>::add_data_to_record_helper(std::shared_ptr<std::istringstream> json_data)
 {
   // Declare some variables that will be written to
   Json::Value value;

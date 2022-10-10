@@ -1,9 +1,9 @@
 #ifndef TABS_VIEW_LOGS_H
 #define TABS_VIEW_LOGS_H
 
+#include "info_box.h"
 #include "jsoncpp/json/json.h"
 #include "status.h"
-#include "info_box.h"
 
 #include <memory>
 
@@ -12,7 +12,8 @@ class Logs : public Status
 public:
   Logs();
 
-  enum InformationType {
+  enum InformationType
+  {
     LOG_STATUS
   };
 

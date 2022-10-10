@@ -18,7 +18,7 @@ public:
                const std::string &operation,
                const std::string &profile_name,
                const unsigned int &pid,
-              (const std::list<std::pair<std::string, std::string>>) &metadata));
+               (const std::list<std::pair<std::string, std::string>>)&metadata));
 
   MOCK_METHOD(std::shared_ptr<StatusColumnRecordMock>, get_col_record, ());
 };

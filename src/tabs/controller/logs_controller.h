@@ -44,9 +44,8 @@ private:
   std::shared_ptr<Adapter> adapter;
 
 #ifdef TESTS_ENABLED
-    FRIEND_TEST(LogAdapterTest, TEST_FORMAT_LOG_DATA);
+  FRIEND_TEST(LogAdapterTest, TEST_FORMAT_LOG_DATA);
 #endif
-
 };
 
 #endif // TABS_CONTROLLER_LOGSCONTROLLER_H

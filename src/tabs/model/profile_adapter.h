@@ -34,7 +34,7 @@ private:
   std::shared_ptr<Database> db;
 
   const std::vector<ColumnHeader> col_names{ ColumnHeader("Metadata", ColumnHeader::ColumnType::PROFILE_ENTRY),
-                                             ColumnHeader("Profile"), 
+                                             ColumnHeader("Profile"),
                                              ColumnHeader("Status") };
 
   std::shared_ptr<StatusColumnRecord> col_record;

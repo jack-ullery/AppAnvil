@@ -35,9 +35,9 @@ protected:
   std::string sample_log_data_status    = "\"unconfined\"";
 
   std::string journalctl_json_snippet =
-      "{\"_SOURCE_REALTIME_TIMESTAMP\" : \"1648231725959000\",\"_AUDIT_FIELD_APPARMOR\" : \"\\\"STATUS\\\"\","
-      "\"_AUDIT_FIELD_OPERATION\" : \"\\\"profile_load\\\"\",\"_AUDIT_FIELD_NAME\" : \"nvidia_modprobe\","
-      "\"_PID\" : \"601\",\"_AUDIT_FIELD_PROFILE\" : \"\\\"unconfined\\\"\"}";
+    "{\"_SOURCE_REALTIME_TIMESTAMP\" : \"1648231725959000\",\"_AUDIT_FIELD_APPARMOR\" : \"\\\"STATUS\\\"\","
+    "\"_AUDIT_FIELD_OPERATION\" : \"\\\"profile_load\\\"\",\"_AUDIT_FIELD_NAME\" : \"nvidia_modprobe\","
+    "\"_PID\" : \"601\",\"_AUDIT_FIELD_PROFILE\" : \"\\\"unconfined\\\"\"}";
 
   int data_arg_num_lines = 2;
   std::string data_arg   = "{\"_SOURCE_REALTIME_TIMESTAMP\" : \"1648231725959000\",\"_AUDIT_FIELD_APPARMOR\" : \"\\\"STATUS\\\"\","
@@ -129,7 +129,8 @@ TEST_F(LogsControllerTest, TEST_FORMAT_LOG_DATA)
   std::string formatted_status    = logs_controller->format_log_data(sample_log_data_status);
 
   ASSERT_TRUE(formatted_type.find('\"') == std::string::npos) << "sample type should not contain quotation marks after formatting";
-  ASSERT_TRUE(formatted_operation.find('\"') == std::string::npos) << "sample operation should not contain quotation marks after formatting";
+  ASSERT_TRUE(formatted_operation.find('\"') == std::string::npos)
+    << "sample operation should not contain quotation marks after formatting";
   ASSERT_TRUE(formatted_status.find('\"') == std::string::npos) << "sample status should not contain quotation marks after formatting";
   EXPECT_EQ(formatted_type, "STATUS") << "error formatting sample type from log data";
   EXPECT_EQ(formatted_operation, "profile_load") << "error formatting sample operation from log data";
