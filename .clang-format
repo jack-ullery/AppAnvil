@@ -6,6 +6,9 @@ AlignAfterOpenBracket: Align
 AlignArrayOfStructures: Left
 AlignConsecutiveMacros: Consecutive
 AlignConsecutiveAssignments: Consecutive
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakAfterReturnType: None
+AlwaysBreakTemplateDeclarations: Yes
 BreakConstructorInitializers: BeforeColon
 ColumnLimit: 140
 PackConstructorInitializers: Never
