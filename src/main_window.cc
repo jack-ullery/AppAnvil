@@ -55,6 +55,8 @@ MainWindow::MainWindow()
   m_top_stack.add(m_tab_stack, "main_page");
   m_top_stack.add(*help, "help_page");
 
+  m_top_stack.set_transition_duration(150);
+
   // Set some default properties for titlebar
   m_headerbar.set_custom_title(m_switcher);
   m_headerbar.pack_end(m_help_button);
@@ -97,12 +99,12 @@ MainWindow::on_help_toggle()
 
   if (is_active) {
     m_switcher.hide();
-    m_top_stack.set_visible_child("help_page");
+    m_top_stack.set_visible_child("help_page", Gtk::STACK_TRANSITION_TYPE_SLIDE_DOWN);
     m_help_button.set_label("Return to application");
     m_help_button.set_always_show_image(false);
   } else {
     m_switcher.show();
-    m_top_stack.set_visible_child("main_page");
+    m_top_stack.set_visible_child("main_page", Gtk::STACK_TRANSITION_TYPE_SLIDE_UP);
     m_help_button.set_label("");
     m_help_button.set_image_from_icon_name("dialog-question");
     m_help_button.set_always_show_image(true);
