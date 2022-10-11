@@ -1,6 +1,7 @@
 #include "main_window.h"
 
 #include <gtkmm/button.h>
+#include <gtkmm/enums.h>
 #include <gtkmm/togglebutton.h>
 #include <tuple>
 
@@ -16,6 +17,10 @@ MainWindow::MainWindow()
   m_tab_stack.add(*(prof_control->get_tab()), "prof", "Profiles");
   m_tab_stack.add(*(proc_control->get_tab()), "proc", "Processes");
   m_tab_stack.add(*(logs_control->get_tab()), "logs", "Logs");
+
+  // Add a transition to the stack
+  m_tab_stack.set_transition_type(Gtk::STACK_TRANSITION_TYPE_CROSSFADE);
+  m_tab_stack.set_transition_duration(150);
 
   // Attach the stack to the stack switcher
   m_switcher.set_stack(m_tab_stack);
