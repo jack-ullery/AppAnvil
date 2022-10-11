@@ -33,7 +33,8 @@
               <object class="GtkStack" id="p_stack">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="interpolate-size">True</property>
+                <property name="transition-duration">200</property>
+                <property name="transition-type">slide-left-right</property>
                 <child>
                   <object class="GtkScrolledWindow" id="s_win">
                     <property name="name">viewProfile</property>

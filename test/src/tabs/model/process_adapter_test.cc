@@ -16,16 +16,14 @@
 #include <string>
 #include <vector>
 
-void
-ProcessAdapterTest::try_put_data(std::vector<ProcessAdapterTest::TestData> data_set)
+void ProcessAdapterTest::try_put_data(std::vector<ProcessAdapterTest::TestData> data_set)
 {
   for (auto data : data_set) {
     adapter.put_data(data.process_name, data.profile_name, data.pid, data.ppid, data.user, data.status);
   }
 }
 
-uint
-ProcessAdapterTest::entry_count()
+uint ProcessAdapterTest::entry_count()
 {
   uint num_entry = 0;
 
@@ -40,19 +38,17 @@ ProcessAdapterTest::entry_count()
   return num_entry;
 }
 
-void
-ProcessAdapterTest::check_process_entry(ProcessTableEntry entry,
-                                        const std::string &process_name,
-                                        const std::string &profile_name,
-                                        const unsigned int &pid)
+void ProcessAdapterTest::check_process_entry(ProcessTableEntry entry,
+                                             const std::string &process_name,
+                                             const std::string &profile_name,
+                                             const unsigned int &pid)
 {
   ASSERT_EQ(entry.process_name, process_name);
   ASSERT_EQ(entry.profile_name, profile_name);
   ASSERT_EQ(entry.pid, pid);
 }
 
-void
-ProcessAdapterTest::check_put_data(std::vector<ProcessAdapterTest::TestData> data_set, uint num_maps)
+void ProcessAdapterTest::check_put_data(std::vector<ProcessAdapterTest::TestData> data_set, uint num_maps)
 {
   ASSERT_TRUE(database->profile_data.empty()) << "We did not add any profile data, so this map should be empty.";
   ASSERT_TRUE(database->log_data.empty()) << "We did not add any log data, so this map should be empty.";

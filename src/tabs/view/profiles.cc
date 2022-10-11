@@ -15,16 +15,14 @@
 #include <vector>
 
 template<typename T_Widget>
-std::shared_ptr<T_Widget>
-Profiles::get_widget_shared(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder)
+std::shared_ptr<T_Widget> Profiles::get_widget_shared(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder)
 {
   T_Widget *raw_addr = nullptr;
   builder->get_widget<T_Widget>(name, raw_addr);
   return std::shared_ptr<T_Widget>(raw_addr);
 }
 
-void
-Profiles::change_status()
+void Profiles::change_status()
 {
   auto selection = Status::get_view()->get_selection();
 
@@ -49,35 +47,30 @@ Profiles::change_status()
   }
 }
 
-void
-Profiles::set_status_change_signal_handler(sigc::slot<void(std::string, std::string, std::string)> change_fun)
+void Profiles::set_status_change_signal_handler(sigc::slot<void(std::string, std::string, std::string)> change_fun)
 {
   profile_status_change_fun = std::move(change_fun);
 }
 
-void
-Profiles::set_apply_label_text(const std::string &str)
+void Profiles::set_apply_label_text(const std::string &str)
 {
   p_apply_info_text->set_text(str);
 }
 
-void
-Profiles::set_profile_info(const std::string &num_logs, const std::string &num_perms, const std::string &num_procs)
+void Profiles::set_profile_info(const std::string &num_logs, const std::string &num_perms, const std::string &num_procs)
 {
   p_num_log_label->set_text(num_logs);
   p_num_proc_label->set_text(num_procs);
   p_num_perm_label->set_text(num_perms);
 }
 
-void
-Profiles::show_profile_info()
+void Profiles::show_profile_info()
 {
   p_profile_info->show_all();
   p_change_state_toggle->set_sensitive(true);
 }
 
-void
-Profiles::hide_profile_info()
+void Profiles::hide_profile_info()
 {
   p_profile_info->hide();
   p_state_selection_box->hide();
@@ -86,8 +79,7 @@ Profiles::hide_profile_info()
   p_change_state_toggle->set_sensitive(false);
 }
 
-void
-Profiles::handle_change_state_toggle()
+void Profiles::handle_change_state_toggle()
 {
   bool active = p_change_state_toggle->get_active();
 
@@ -101,8 +93,7 @@ Profiles::handle_change_state_toggle()
   }
 }
 
-void
-Profiles::handle_load_profile_toggle()
+void Profiles::handle_load_profile_toggle()
 {
   bool active = p_load_profile_toggle->get_active();
 

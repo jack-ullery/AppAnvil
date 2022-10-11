@@ -22,16 +22,14 @@ TEST_F(LogAdapterTest, TEST_FORMAT_TIMESTAMP)
   ASSERT_TRUE(res) << "formatted zerotime does not match regex";
 }
 
-void
-LogAdapterTest::try_put_data(std::vector<LogAdapterTest::TestData> data_set)
+void LogAdapterTest::try_put_data(std::vector<LogAdapterTest::TestData> data_set)
 {
   for (auto data : data_set) {
     adapter.put_data(data.timestamp, data.type, data.operation, data.profile_name, data.pid, data.metadata);
   }
 }
 
-uint
-LogAdapterTest::entry_count()
+uint LogAdapterTest::entry_count()
 {
   uint num_entry = 0;
 
@@ -46,8 +44,7 @@ LogAdapterTest::entry_count()
   return num_entry;
 }
 
-void
-LogAdapterTest::check_log_entry(LogTableEntry entry, TestData expected_data)
+void LogAdapterTest::check_log_entry(LogTableEntry entry, TestData expected_data)
 {
   ASSERT_EQ(entry.profile_name, expected_data.profile_name);
   ASSERT_EQ(entry.pid, expected_data.pid);
@@ -55,8 +52,7 @@ LogAdapterTest::check_log_entry(LogTableEntry entry, TestData expected_data)
   ASSERT_EQ(entry.metadata, expected_data.metadata);
 }
 
-void
-LogAdapterTest::check_put_data(std::vector<LogAdapterTest::TestData> data_set, uint num_maps)
+void LogAdapterTest::check_put_data(std::vector<LogAdapterTest::TestData> data_set, uint num_maps)
 {
   ASSERT_TRUE(database->profile_data.empty()) << "We did not add any profile data, so this map should be empty.";
   ASSERT_TRUE(database->process_data.empty()) << "We did not add any process data, so this map should be empty.";

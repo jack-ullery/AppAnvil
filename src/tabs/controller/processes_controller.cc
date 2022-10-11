@@ -15,8 +15,7 @@ const std::regex unconfined_proc("^\\s*(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(unconfined
 const std::regex confined_prof("^\\s*(.+)\\s+\\((enforce|complain)\\)"); // NOLINT(cert-err58-cpp)
 
 template<class ProcessesTab, class Database, class Adapter>
-void
-ProcessesController<ProcessesTab, Database, Adapter>::add_row_from_line(const std::string &line)
+void ProcessesController<ProcessesTab, Database, Adapter>::add_row_from_line(const std::string &line)
 {
   std::smatch match;
   std::regex_search(line, match, unconfined_proc);
@@ -38,8 +37,7 @@ ProcessesController<ProcessesTab, Database, Adapter>::add_row_from_line(const st
 }
 
 template<class ProcessesTab, class Database, class Adapter>
-void
-ProcessesController<ProcessesTab, Database, Adapter>::add_data_to_record(const std::string &unconfined)
+void ProcessesController<ProcessesTab, Database, Adapter>::add_data_to_record(const std::string &unconfined)
 {
   std::stringstream data;
   data << unconfined;
@@ -53,8 +51,7 @@ ProcessesController<ProcessesTab, Database, Adapter>::add_data_to_record(const s
 }
 
 template<class ProcessesTab, class Database, class Adapter>
-void
-ProcessesController<ProcessesTab, Database, Adapter>::refresh()
+void ProcessesController<ProcessesTab, Database, Adapter>::refresh()
 {
   uint num_visible = adapter.get_col_record()->filter_rows();
   proc->set_status_label_text(" " + std::to_string(num_visible) + " matching processes");

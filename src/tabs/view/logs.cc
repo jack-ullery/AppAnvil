@@ -3,16 +3,14 @@
 
 // TODO: Make get_widget common function somewhere
 template<typename T_Widget>
-std::unique_ptr<T_Widget>
-Logs::get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder)
+std::unique_ptr<T_Widget> Logs::get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder)
 {
   T_Widget *raw_addr = nullptr;
   builder->get_widget<T_Widget>(name, raw_addr);
   return std::unique_ptr<T_Widget>(raw_addr);
 }
 
-void
-Logs::set_information(std::list<std::pair<std::string, std::string>> data)
+void Logs::set_information(std::list<std::pair<std::string, std::string>> data)
 {
   uint index = 0;
   for (auto pair : data) {

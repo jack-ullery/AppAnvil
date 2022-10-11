@@ -5,13 +5,12 @@
 #include <stdexcept>
 
 template<class Database, class ColumnRecord>
-ProcessTableEntry
-ProcessAdapter<Database, ColumnRecord>::add_row(const std::string &profile_name,
-                                                const std::string &process_name,
-                                                const unsigned int &pid,
-                                                const unsigned int &ppid,
-                                                const std::string &user,
-                                                const std::string &status)
+ProcessTableEntry ProcessAdapter<Database, ColumnRecord>::add_row(const std::string &profile_name,
+                                                                  const std::string &process_name,
+                                                                  const unsigned int &pid,
+                                                                  const unsigned int &ppid,
+                                                                  const std::string &user,
+                                                                  const std::string &status)
 {
   Gtk::TreeRow row;
 
@@ -34,13 +33,12 @@ ProcessAdapter<Database, ColumnRecord>::add_row(const std::string &profile_name,
 }
 
 template<class Database, class ColumnRecord>
-void
-ProcessAdapter<Database, ColumnRecord>::put_data(const std::string &process_name,
-                                                 const std::string &profile_name,
-                                                 const unsigned int &pid,
-                                                 const unsigned int &ppid,
-                                                 const std::string &user,
-                                                 const std::string &status)
+void ProcessAdapter<Database, ColumnRecord>::put_data(const std::string &process_name,
+                                                      const std::string &profile_name,
+                                                      const unsigned int &pid,
+                                                      const unsigned int &ppid,
+                                                      const std::string &user,
+                                                      const std::string &status)
 {
   // Attempt to find an map with this profile name
   auto map_pair = db->process_data.find(profile_name);
@@ -86,8 +84,7 @@ ProcessAdapter<Database, ColumnRecord>::put_data(const std::string &process_name
 }
 
 template<class Database, class ColumnRecord>
-std::pair<ProcessTableEntry, bool>
-ProcessAdapter<Database, ColumnRecord>::get_data(std::string profile_name, const unsigned int &pid)
+std::pair<ProcessTableEntry, bool> ProcessAdapter<Database, ColumnRecord>::get_data(std::string profile_name, const unsigned int &pid)
 {
   auto pid_map_iter = db->process_data.find(profile_name);
   if (pid_map_iter != db->process_data.end()) {
@@ -104,8 +101,7 @@ ProcessAdapter<Database, ColumnRecord>::get_data(std::string profile_name, const
 }
 
 template<class Database, class ColumnRecord>
-std::shared_ptr<ColumnRecord>
-ProcessAdapter<Database, ColumnRecord>::get_col_record()
+std::shared_ptr<ColumnRecord> ProcessAdapter<Database, ColumnRecord>::get_col_record()
 {
   return col_record;
 }

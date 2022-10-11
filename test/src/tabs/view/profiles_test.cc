@@ -8,8 +8,7 @@
 
 using ::testing::_;
 
-Glib::RefPtr<Gtk::TreeStore>
-ProfilesTest::initialize_store()
+Glib::RefPtr<Gtk::TreeStore> ProfilesTest::initialize_store()
 {
   auto first_column  = Gtk::TreeModelColumn<std::string>();
   auto second_column = Gtk::TreeModelColumn<std::string>();
@@ -29,8 +28,7 @@ ProfilesTest::initialize_store()
   return store;
 }
 
-void
-ProfilesTest::create_and_select_row(Glib::RefPtr<Gtk::TreeStore> store, std::string profile, std::string status)
+void ProfilesTest::create_and_select_row(Glib::RefPtr<Gtk::TreeStore> store, std::string profile, std::string status)
 {
   // Create a row and put some data into the first column
   auto iter = store->append();

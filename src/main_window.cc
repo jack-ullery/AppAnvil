@@ -1,6 +1,7 @@
 #include "main_window.h"
 
 #include <gtkmm/button.h>
+#include <gtkmm/enums.h>
 #include <gtkmm/togglebutton.h>
 #include <tuple>
 
@@ -16,6 +17,10 @@ MainWindow::MainWindow()
   m_tab_stack.add(*(prof_control->get_tab()), "prof", "Profiles");
   m_tab_stack.add(*(proc_control->get_tab()), "proc", "Processes");
   m_tab_stack.add(*(logs_control->get_tab()), "logs", "Logs");
+
+  // Add a transition to the stack
+  m_tab_stack.set_transition_type(Gtk::STACK_TRANSITION_TYPE_CROSSFADE);
+  m_tab_stack.set_transition_duration(150);
 
   // Attach the stack to the stack switcher
   m_switcher.set_stack(m_tab_stack);
@@ -50,6 +55,8 @@ MainWindow::MainWindow()
   m_top_stack.add(m_tab_stack, "main_page");
   m_top_stack.add(*help, "help_page");
 
+  m_top_stack.set_transition_duration(150);
+
   // Set some default properties for titlebar
   m_headerbar.set_custom_title(m_switcher);
   m_headerbar.pack_end(m_help_button);
@@ -79,25 +86,23 @@ MainWindow::MainWindow()
   prof_control->get_tab()->hide_profile_info();
 }
 
-void
-MainWindow::send_status_change(const std::string &profile, const std::string &old_status, const std::string &new_status)
+void MainWindow::send_status_change(const std::string &profile, const std::string &old_status, const std::string &new_status)
 {
   console->send_change_profile_status_message(profile, old_status, new_status);
 }
 
-void
-MainWindow::on_help_toggle()
+void MainWindow::on_help_toggle()
 {
   bool is_active = m_help_button.get_active();
 
   if (is_active) {
     m_switcher.hide();
-    m_top_stack.set_visible_child("help_page");
+    m_top_stack.set_visible_child("help_page", Gtk::STACK_TRANSITION_TYPE_SLIDE_DOWN);
     m_help_button.set_label("Return to application");
     m_help_button.set_always_show_image(false);
   } else {
     m_switcher.show();
-    m_top_stack.set_visible_child("main_page");
+    m_top_stack.set_visible_child("main_page", Gtk::STACK_TRANSITION_TYPE_SLIDE_UP);
     m_help_button.set_label("");
     m_help_button.set_image_from_icon_name("dialog-question");
     m_help_button.set_always_show_image(true);
@@ -106,14 +111,12 @@ MainWindow::on_help_toggle()
   handle_search_button_visiblity();
 }
 
-void
-MainWindow::untoggle_help()
+void MainWindow::untoggle_help()
 {
   m_help_button.set_active(false);
 }
 
-void
-MainWindow::on_search_toggle()
+void MainWindow::on_search_toggle()
 {
   std::string visible_child = m_tab_stack.get_visible_child_name();
   bool is_active            = m_search_button.get_active();
@@ -132,8 +135,7 @@ MainWindow::on_search_toggle()
   }
 }
 
-bool
-MainWindow::on_switch(GdkEvent *event)
+bool MainWindow::on_switch(GdkEvent *event)
 {
   std::ignore = event;
 
@@ -150,8 +152,7 @@ MainWindow::on_switch(GdkEvent *event)
   return false;
 }
 
-void
-MainWindow::handle_search_button_visiblity()
+void MainWindow::handle_search_button_visiblity()
 {
   bool help_is_active       = m_help_button.get_active();
   std::string visible_child = m_tab_stack.get_visible_child_name();

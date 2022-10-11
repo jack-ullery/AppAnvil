@@ -117,8 +117,7 @@ TEST_F(StatusControllerTest, GET_TAB)
 }
 
 // Recursive method to click all the checkboxes that are descendents of a Container Widget
-void
-StatusControllerTest::click_everything(Gtk::Widget *obj)
+void StatusControllerTest::click_everything(Gtk::Widget *obj)
 {
   // Attempt to cast the object as a Gtk::Button, then click it
   // This will also cast CheckButtons which are a type of Button
@@ -144,8 +143,7 @@ StatusControllerTest::click_everything(Gtk::Widget *obj)
 }
 
 // Recursive method to check whether label exists with `label_text`
-bool
-StatusControllerTest::check_label_exists(Gtk::Widget *obj, std::string label_text)
+bool StatusControllerTest::check_label_exists(Gtk::Widget *obj, std::string label_text)
 {
   // Attempt to cast the object as a Gtk::Label
   Gtk::Label *lab = dynamic_cast<Gtk::Label *>(obj);
@@ -176,8 +174,7 @@ StatusControllerTest::check_label_exists(Gtk::Widget *obj, std::string label_tex
 }
 
 // Recursive method to set change the selection text of all comboboxes
-void
-StatusControllerTest::set_combobox_text(Gtk::Widget *obj, std::string combo_text)
+void StatusControllerTest::set_combobox_text(Gtk::Widget *obj, std::string combo_text)
 {
   // Attempt to cast the object as a Gtk::Button, then click it
   // This will also cast CheckButtons which are a type of Button

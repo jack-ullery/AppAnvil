@@ -13,8 +13,7 @@ using ::testing::Sequence;
 // Expect the mutex to be locked and unlocked `num` times
 // If lock/unlock is called in the wrong order this throws an error
 // Fuerthermore, `mtx_mock` is a fake mutex which never blocks.
-void
-DispatcherMiddlemanTest::expect_locks(unsigned int num)
+void DispatcherMiddlemanTest::expect_locks(unsigned int num)
 {
   Sequence lock_calls;
 

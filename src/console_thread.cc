@@ -29,8 +29,7 @@ ConsoleThread<ProfilesController, ProcessesController, LogsController>::ConsoleT
 }
 
 template<class ProfilesController, class ProcessesController, class LogsController>
-void
-ConsoleThread<ProfilesController, ProcessesController, LogsController>::send_refresh_message(TabState new_state)
+void ConsoleThread<ProfilesController, ProcessesController, LogsController>::send_refresh_message(TabState new_state)
 {
   std::unique_lock<std::mutex> lock(task_ready_mtx);
   // Create a message with the state to refresh for, but no data
@@ -42,10 +41,10 @@ ConsoleThread<ProfilesController, ProcessesController, LogsController>::send_ref
 }
 
 template<class ProfilesController, class ProcessesController, class LogsController>
-void
-ConsoleThread<ProfilesController, ProcessesController, LogsController>::send_change_profile_status_message(const std::string &profile,
-                                                                                                           const std::string &old_status,
-                                                                                                           const std::string &new_status)
+void ConsoleThread<ProfilesController, ProcessesController, LogsController>::send_change_profile_status_message(
+  const std::string &profile,
+  const std::string &old_status,
+  const std::string &new_status)
 {
   std::unique_lock<std::mutex> lock(task_ready_mtx);
   // Create a message with the state to refresh for, but no data
@@ -56,8 +55,7 @@ ConsoleThread<ProfilesController, ProcessesController, LogsController>::send_cha
 }
 
 template<class ProfilesController, class ProcessesController, class LogsController>
-void
-ConsoleThread<ProfilesController, ProcessesController, LogsController>::send_quit_message()
+void ConsoleThread<ProfilesController, ProcessesController, LogsController>::send_quit_message()
 {
   std::unique_lock<std::mutex> lock(task_ready_mtx);
   Message message(QUIT, OTHER, {});
@@ -66,8 +64,7 @@ ConsoleThread<ProfilesController, ProcessesController, LogsController>::send_qui
 }
 
 template<class ProfilesController, class ProcessesController, class LogsController>
-void
-ConsoleThread<ProfilesController, ProcessesController, LogsController>::run_command(TabState state)
+void ConsoleThread<ProfilesController, ProcessesController, LogsController>::run_command(TabState state)
 {
   switch (state) {
     case PROFILE: {
@@ -123,8 +120,7 @@ ConsoleThread<ProfilesController, ProcessesController, LogsController>::wait_for
 }
 
 template<class ProfilesController, class ProcessesController, class LogsController>
-void
-ConsoleThread<ProfilesController, ProcessesController, LogsController>::console_caller()
+void ConsoleThread<ProfilesController, ProcessesController, LogsController>::console_caller()
 {
   bool shouldContinue = true;
 
@@ -154,8 +150,8 @@ ConsoleThread<ProfilesController, ProcessesController, LogsController>::console_
 
 // Move Assignment Operator
 template<class ProfilesController, class ProcessesController, class LogsController>
-ConsoleThread<ProfilesController, ProcessesController, LogsController> &
-ConsoleThread<ProfilesController, ProcessesController, LogsController>::operator=(ConsoleThread &&other) noexcept
+ConsoleThread<ProfilesController, ProcessesController, LogsController>
+  &ConsoleThread<ProfilesController, ProcessesController, LogsController>::operator=(ConsoleThread &&other) noexcept
 {
   std::ignore = other;
   return *this;

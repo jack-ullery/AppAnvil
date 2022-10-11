@@ -6,8 +6,7 @@
 #include <gtkmm/applicationwindow.h>
 
 // This bundles and registers all the resources from the "resources" folder for use with the unit tests.
-void
-register_resource_bundle()
+void register_resource_bundle()
 {
   Glib::RefPtr<Gio::Resource> resource_bundle = Glib::wrap(resources_get_resource());
   resource_bundle->register_global();
@@ -39,8 +38,7 @@ private:
   int return_value;
 };
 
-int
-main(int argc, char **argv)
+int main(int argc, char **argv)
 {
   // Create a GTK application to run our tests in
   auto app = Gtk::Application::create("github.com.jack-ullery.appanvil.test");

@@ -4,8 +4,7 @@
 #include <stdexcept>
 
 template<class Database>
-void
-ProfileAdapter<Database>::put_data(const std::string &profile_name, const std::string &status)
+void ProfileAdapter<Database>::put_data(const std::string &profile_name, const std::string &status)
 {
   if (col_record == nullptr) {
     throw std::runtime_error("Error: Attempted to write to ColumnRecord (Profile) before it was registered.");
@@ -34,8 +33,7 @@ ProfileAdapter<Database>::put_data(const std::string &profile_name, const std::s
 }
 
 template<class Database>
-std::pair<ProfileTableEntry, bool>
-ProfileAdapter<Database>::get_data(const std::string &profile_name)
+std::pair<ProfileTableEntry, bool> ProfileAdapter<Database>::get_data(const std::string &profile_name)
 {
   auto iter = db->profile_data.find(profile_name);
 
@@ -49,22 +47,19 @@ ProfileAdapter<Database>::get_data(const std::string &profile_name)
 }
 
 template<class Database>
-std::shared_ptr<StatusColumnRecord>
-ProfileAdapter<Database>::get_col_record()
+std::shared_ptr<StatusColumnRecord> ProfileAdapter<Database>::get_col_record()
 {
   return col_record;
 }
 
 template<class Database>
-uint
-ProfileAdapter<Database>::get_number_processes(const std::string &profile)
+uint ProfileAdapter<Database>::get_number_processes(const std::string &profile)
 {
   return db->get_number_processes(profile);
 }
 
 template<class Database>
-uint
-ProfileAdapter<Database>::get_number_logs(const std::string &profile)
+uint ProfileAdapter<Database>::get_number_logs(const std::string &profile)
 {
   return db->get_number_logs(profile);
 }

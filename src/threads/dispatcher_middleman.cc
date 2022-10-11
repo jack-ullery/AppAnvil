@@ -42,8 +42,7 @@ DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::DispatcherMid
 
 // Send methods (called from second thread)
 template<class Profiles, class Processes, class Logs, class Dispatcher, class Mutex>
-void
-DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_profiles(const std::string &confined)
+void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_profiles(const std::string &confined)
 {
   CallData data(PROFILE, confined);
   queue.push(data);
@@ -51,8 +50,7 @@ DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_profil
 }
 
 template<class Profiles, class Processes, class Logs, class Dispatcher, class Mutex>
-void
-DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_processes(const std::string &unconfined)
+void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_processes(const std::string &unconfined)
 {
   CallData data(PROCESS, unconfined);
   queue.push(data);
@@ -60,8 +58,7 @@ DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_proces
 }
 
 template<class Profiles, class Processes, class Logs, class Dispatcher, class Mutex>
-void
-DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_logs(const std::string &logs)
+void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_logs(const std::string &logs)
 {
   CallData data(LOGS, logs);
   queue.push(data);
@@ -69,8 +66,7 @@ DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_logs(c
 }
 
 template<class Profiles, class Processes, class Logs, class Dispatcher, class Mutex>
-void
-DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_prof_apply_text(const std::string &text)
+void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_prof_apply_text(const std::string &text)
 {
   CallData data(PROFILES_TEXT, text);
   queue.push(data);
@@ -79,8 +75,7 @@ DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_prof_a
 
 // Receive method (called from main thread)
 template<class Profiles, class Processes, class Logs, class Dispatcher, class Mutex>
-void
-DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::handle_signal()
+void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::handle_signal()
 {
   CallData data = queue.pop();
 

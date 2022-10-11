@@ -12,8 +12,7 @@
 #include <sstream>
 
 template<class LogsTab, class Database, class Adapter>
-bool
-LogsController<LogsTab, Database, Adapter>::on_button_event(GdkEventButton *event)
+bool LogsController<LogsTab, Database, Adapter>::on_button_event(GdkEventButton *event)
 {
   std::ignore = event;
 
@@ -22,8 +21,7 @@ LogsController<LogsTab, Database, Adapter>::on_button_event(GdkEventButton *even
 }
 
 template<class LogsTab, class Database, class Adapter>
-bool
-LogsController<LogsTab, Database, Adapter>::on_key_event(GdkEventKey *event)
+bool LogsController<LogsTab, Database, Adapter>::on_key_event(GdkEventKey *event)
 {
   std::ignore = event;
 
@@ -32,8 +30,7 @@ LogsController<LogsTab, Database, Adapter>::on_key_event(GdkEventKey *event)
 }
 
 template<class LogsTab, class Database, class Adapter>
-void
-LogsController<LogsTab, Database, Adapter>::handle_log_selected()
+void LogsController<LogsTab, Database, Adapter>::handle_log_selected()
 {
   // Check if there is any row selected
   auto selection    = logs->get_view()->get_selection();
@@ -54,8 +51,7 @@ LogsController<LogsTab, Database, Adapter>::handle_log_selected()
 }
 
 template<class LogsTab, class Database, class Adapter>
-std::string
-LogsController<LogsTab, Database, Adapter>::format_log_data(const std::string &data)
+std::string LogsController<LogsTab, Database, Adapter>::format_log_data(const std::string &data)
 {
   const std::regex remove_quotes = std::regex("\\\"(\\S*)\\\"");
   std::smatch m;
@@ -64,8 +60,7 @@ LogsController<LogsTab, Database, Adapter>::format_log_data(const std::string &d
 }
 
 template<class LogsTab, class Database, class Adapter>
-void
-LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::Value &entry)
+void LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::Value &entry)
 {
   // getting timestamp from json argument, retrieving important fields from json
   const time_t timestamp = std::stol(entry["_SOURCE_REALTIME_TIMESTAMP"].asString()) / 1000000;
@@ -138,8 +133,7 @@ LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::Value 
 }
 
 template<class LogsTab, class Database, class Adapter>
-void
-LogsController<LogsTab, Database, Adapter>::add_data_to_record(const std::string &data)
+void LogsController<LogsTab, Database, Adapter>::add_data_to_record(const std::string &data)
 {
   auto json_data = std::make_shared<std::istringstream>(data);
 
@@ -149,8 +143,7 @@ LogsController<LogsTab, Database, Adapter>::add_data_to_record(const std::string
 }
 
 template<class LogsTab, class Database, class Adapter>
-bool
-LogsController<LogsTab, Database, Adapter>::add_data_to_record_helper(std::shared_ptr<std::istringstream> json_data)
+bool LogsController<LogsTab, Database, Adapter>::add_data_to_record_helper(std::shared_ptr<std::istringstream> json_data)
 {
   // Declare some variables that will be written to
   Json::Value value;
@@ -185,8 +178,7 @@ LogsController<LogsTab, Database, Adapter>::add_data_to_record_helper(std::share
 }
 
 template<class LogsTab, class Database, class Adapter>
-void
-LogsController<LogsTab, Database, Adapter>::refresh()
+void LogsController<LogsTab, Database, Adapter>::refresh()
 {
   uint num_visible = adapter->get_col_record()->filter_rows();
   logs->set_status_label_text(" " + std::to_string(num_visible) + " logs");

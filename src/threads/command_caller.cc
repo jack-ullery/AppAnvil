@@ -4,16 +4,14 @@
 #include <iostream>
 #include <stdexcept>
 
-CommandCaller::results
-CommandCaller::call_command(const std::vector<std::string> &command)
+CommandCaller::results CommandCaller::call_command(const std::vector<std::string> &command)
 {
   results result;
   Glib::spawn_sync("/usr/sbin/", command, Glib::SpawnFlags::SPAWN_SEARCH_PATH, {}, &result.output, &result.error, &result.exit_status);
   return result;
 }
 
-std::string
-CommandCaller::call_command(const std::vector<std::string> &command, const std::string &return_on_error)
+std::string CommandCaller::call_command(const std::vector<std::string> &command, const std::string &return_on_error)
 {
   if (command.empty()) {
     throw std::invalid_argument("'command' argument must be nonempty.");
@@ -29,32 +27,28 @@ CommandCaller::call_command(const std::vector<std::string> &command, const std::
   return result.output;
 }
 
-std::string
-CommandCaller::get_status(CommandCaller *caller)
+std::string CommandCaller::get_status(CommandCaller *caller)
 {
   std::vector<std::string> command = { "pkexec", "aa-caller", "-s" };
   std::string return_on_error      = "{\"processes\": {}, \"profiles\": {}}";
   return caller->call_command(command, return_on_error);
 }
 
-std::string
-CommandCaller::get_unconfined(CommandCaller *caller)
+std::string CommandCaller::get_unconfined(CommandCaller *caller)
 {
   std::vector<std::string> command = { "pkexec", "aa-caller", "-u" };
   std::string return_on_error;
   return caller->call_command(command, return_on_error);
 }
 
-std::string
-CommandCaller::get_logs(CommandCaller *caller)
+std::string CommandCaller::get_logs(CommandCaller *caller)
 {
   std::vector<std::string> command = { "pkexec", "aa-caller", "-l" };
   std::string return_on_error;
   return caller->call_command(command, return_on_error);
 }
 
-std::string
-CommandCaller::load_profile(CommandCaller *caller, const std::string &fullFileName)
+std::string CommandCaller::load_profile(CommandCaller *caller, const std::string &fullFileName)
 {
   std::vector<std::string> command = { "pkexec", "mv", fullFileName, "/etc/apparmor.d" };
   auto result                      = caller->call_command(command);
@@ -76,8 +70,7 @@ CommandCaller::load_profile(CommandCaller *caller, const std::string &fullFileNa
   return "Success: loading porfile" + fileName;
 }
 
-std::string
-CommandCaller::disable_profile(CommandCaller *caller, const std::string &profileName)
+std::string CommandCaller::disable_profile(CommandCaller *caller, const std::string &profileName)
 {
   std::vector<std::string> command = { "pkexec", "aa-disable", profileName };
   auto result                      = caller->call_command(command);
@@ -89,11 +82,10 @@ CommandCaller::disable_profile(CommandCaller *caller, const std::string &profile
   return "Success: disabling porfile" + profileName;
 }
 
-std::string
-CommandCaller::execute_change(CommandCaller *caller,
-                              const std::string &profile,
-                              const std::string &old_status,
-                              const std::string &new_status)
+std::string CommandCaller::execute_change(CommandCaller *caller,
+                                          const std::string &profile,
+                                          const std::string &old_status,
+                                          const std::string &new_status)
 {
   std::string status_command;
 
@@ -121,43 +113,37 @@ CommandCaller::execute_change(CommandCaller *caller,
 }
 
 // Static public methods
-std::string
-CommandCaller::get_status()
+std::string CommandCaller::get_status()
 {
   CommandCaller caller;
   return get_status(&caller);
 }
 
-std::string
-CommandCaller::get_unconfined()
+std::string CommandCaller::get_unconfined()
 {
   CommandCaller caller;
   return get_unconfined(&caller);
 }
 
-std::string
-CommandCaller::get_logs()
+std::string CommandCaller::get_logs()
 {
   CommandCaller caller;
   return get_logs(&caller);
 }
 
-std::string
-CommandCaller::load_profile(const std::string &fullFileName)
+std::string CommandCaller::load_profile(const std::string &fullFileName)
 {
   CommandCaller caller;
   return load_profile(&caller, fullFileName);
 }
 
-std::string
-CommandCaller::disable_profile(const std::string &profileName)
+std::string CommandCaller::disable_profile(const std::string &profileName)
 {
   CommandCaller caller;
   return disable_profile(&caller, profileName);
 }
 
-std::string
-CommandCaller::execute_change(const std::string &profile, const std::string &old_status, const std::string &new_status)
+std::string CommandCaller::execute_change(const std::string &profile, const std::string &old_status, const std::string &new_status)
 {
   CommandCaller caller;
   return execute_change(&caller, profile, old_status, new_status);
