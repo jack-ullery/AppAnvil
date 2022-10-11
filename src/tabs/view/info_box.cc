@@ -1,16 +1,14 @@
 #include "info_box.h"
 
 template<typename T_Widget>
-std::unique_ptr<T_Widget>
-InfoBox::get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder)
+std::unique_ptr<T_Widget> InfoBox::get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder)
 {
   T_Widget *raw_addr = nullptr;
   builder->get_widget<T_Widget>(name, raw_addr);
   return std::unique_ptr<T_Widget>(raw_addr);
 }
 
-void
-InfoBox::set_text(const std::string &header, const std::string &text)
+void InfoBox::set_text(const std::string &header, const std::string &text)
 {
   i_header->set_text(header);
   i_text->set_text(text);

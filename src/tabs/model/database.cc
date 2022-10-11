@@ -1,7 +1,6 @@
 #include "database.h"
 
-uint
-Database::get_number_processes(const std::string &profile)
+uint Database::get_number_processes(const std::string &profile)
 {
   auto pid_map = process_data.find(profile);
 
@@ -13,8 +12,7 @@ Database::get_number_processes(const std::string &profile)
   return pid_map->second.size();
 }
 
-uint
-Database::get_number_logs(const std::string &profile)
+uint Database::get_number_logs(const std::string &profile)
 {
   auto pid_map = log_data.find(profile);
 

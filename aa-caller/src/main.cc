@@ -2,8 +2,7 @@
 
 #include <iostream>
 
-void
-print_usage()
+void print_usage()
 {
   std::cout << "aa-caller: A utility to do common AppArmor tasks (used by the AppAnvil Project)" << std::endl;
   std::cout << "   -s :  call \"aa-status\", to get the status of currently confined apps" << std::endl;
@@ -11,8 +10,7 @@ print_usage()
   std::cout << "   -l :  call \"dmesg\", to get all system logs" << std::endl;
 }
 
-int
-main(int argc, char **argv)
+int main(int argc, char **argv)
 {
   if (argc == 2) {
     std::string arg(argv[1]);

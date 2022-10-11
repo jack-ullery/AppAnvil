@@ -26,32 +26,28 @@ BlockingQueue<T, Deque, Mutex>::BlockingQueue(std::shared_ptr<Deque> queue, std:
 
 // Accessor Methods
 template<class T, class Deque, class Mutex>
-T
-BlockingQueue<T, Deque, Mutex>::front()
+T BlockingQueue<T, Deque, Mutex>::front()
 {
   std::lock_guard<Mutex> lock(*mtx);
   return internal_queue->front();
 }
 
 template<class T, class Deque, class Mutex>
-T
-BlockingQueue<T, Deque, Mutex>::back()
+T BlockingQueue<T, Deque, Mutex>::back()
 {
   std::lock_guard<Mutex> lock(*mtx);
   return internal_queue->back();
 }
 
 template<class T, class Deque, class Mutex>
-int
-BlockingQueue<T, Deque, Mutex>::size()
+int BlockingQueue<T, Deque, Mutex>::size()
 {
   std::lock_guard<Mutex> lock(*mtx);
   return internal_queue->size();
 }
 
 template<class T, class Deque, class Mutex>
-bool
-BlockingQueue<T, Deque, Mutex>::empty()
+bool BlockingQueue<T, Deque, Mutex>::empty()
 {
   std::lock_guard<Mutex> lock(*mtx);
   return internal_queue->empty();
@@ -59,32 +55,28 @@ BlockingQueue<T, Deque, Mutex>::empty()
 
 // Mutator Methods
 template<class T, class Deque, class Mutex>
-void
-BlockingQueue<T, Deque, Mutex>::clear()
+void BlockingQueue<T, Deque, Mutex>::clear()
 {
   std::lock_guard<Mutex> lock(*mtx);
   internal_queue->clear();
 }
 
 template<class T, class Deque, class Mutex>
-void
-BlockingQueue<T, Deque, Mutex>::push(const T &value)
+void BlockingQueue<T, Deque, Mutex>::push(const T &value)
 {
   std::lock_guard<Mutex> lock(*mtx);
   internal_queue->push_back(value);
 }
 
 template<class T, class Deque, class Mutex>
-void
-BlockingQueue<T, Deque, Mutex>::push_front(const T &value)
+void BlockingQueue<T, Deque, Mutex>::push_front(const T &value)
 {
   std::lock_guard<Mutex> lock(*mtx);
   internal_queue->push_front(value);
 }
 
 template<class T, class Deque, class Mutex>
-T
-BlockingQueue<T, Deque, Mutex>::pop()
+T BlockingQueue<T, Deque, Mutex>::pop()
 {
   std::lock_guard<Mutex> lock(*mtx);
   auto value = internal_queue->front();

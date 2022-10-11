@@ -8,8 +8,7 @@
 #include <string>
 
 template<typename T_Widget>
-std::unique_ptr<T_Widget>
-Status::get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder)
+std::unique_ptr<T_Widget> Status::get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder)
 {
   T_Widget *raw_addr = nullptr;
   builder->get_widget<T_Widget>(name, raw_addr);
@@ -17,22 +16,19 @@ Status::get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder
 }
 
 template<typename T_Widget>
-std::shared_ptr<T_Widget>
-Status::get_widget_shared(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder)
+std::shared_ptr<T_Widget> Status::get_widget_shared(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder)
 {
   T_Widget *raw_addr = nullptr;
   builder->get_widget<T_Widget>(name, raw_addr);
   return std::shared_ptr<T_Widget>(raw_addr);
 }
 
-void
-Status::set_status_label_text(const std::string &str)
+void Status::set_status_label_text(const std::string &str)
 {
   s_found_label->set_text(str);
 }
 
-void
-Status::set_refresh_signal_handler(const Glib::SignalProxyProperty::SlotType &func)
+void Status::set_refresh_signal_handler(const Glib::SignalProxyProperty::SlotType &func)
 {
   s_search->signal_search_changed().connect(func, true);
   s_use_regex->signal_clicked().connect(func, true);
@@ -40,39 +36,33 @@ Status::set_refresh_signal_handler(const Glib::SignalProxyProperty::SlotType &fu
   s_whole_word->signal_clicked().connect(func, true);
 }
 
-std::shared_ptr<Gtk::TreeView>
-Status::get_view()
+std::shared_ptr<Gtk::TreeView> Status::get_view()
 {
   return s_view;
 }
 
-std::shared_ptr<Gtk::ScrolledWindow>
-Status::get_window()
+std::shared_ptr<Gtk::ScrolledWindow> Status::get_window()
 {
   return s_win;
 }
 
-SearchInfo
-Status::get_search_info()
+SearchInfo Status::get_search_info()
 {
   SearchInfo info(s_search->get_text(), s_use_regex->get_active(), s_match_case->get_active(), s_whole_word->get_active());
   return info;
 }
 
-Glib::RefPtr<Gtk::Builder>
-Status::get_builder()
+Glib::RefPtr<Gtk::Builder> Status::get_builder()
 {
   return builder;
 }
 
-void
-Status::hide_searchbar()
+void Status::hide_searchbar()
 {
   s_searchbox->hide();
 }
 
-void
-Status::show_searchbar(const bool &should_focus)
+void Status::show_searchbar(const bool &should_focus)
 {
   s_searchbox->show();
 

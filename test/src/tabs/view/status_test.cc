@@ -29,8 +29,7 @@ TEST_F(StatusTest, VIEW_NOT_NULL)
 }
 
 // Recursive method to click all the checkboxes that are descendents of a Container Widget
-void
-StatusTest::click_everything(Gtk::Widget *obj)
+void StatusTest::click_everything(Gtk::Widget *obj)
 {
   // Attempt to cast the object as a Gtk::Button, then click it
   // This will also cast CheckButtons which are a type of Button

@@ -5,8 +5,7 @@
 #include <vector>
 
 template<typename T_Widget>
-std::unique_ptr<T_Widget>
-ProfileLoader::get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder)
+std::unique_ptr<T_Widget> ProfileLoader::get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder)
 {
   T_Widget *raw_addr = nullptr;
   builder->get_widget<T_Widget>(name, raw_addr);
@@ -26,20 +25,17 @@ ProfileLoader::ProfileLoader()
   this->add(*l_box);
 }
 
-void
-ProfileLoader::set_l_button_signal_handler(const Glib::SignalProxyProperty::SlotType &func)
+void ProfileLoader::set_l_button_signal_handler(const Glib::SignalProxyProperty::SlotType &func)
 {
   l_confirm_button->signal_clicked().connect(func, true);
 }
 
-void
-ProfileLoader::set_label_text(const std::string &str)
+void ProfileLoader::set_label_text(const std::string &str)
 {
   l_confirm_label->set_text(str);
 }
 
-Glib::RefPtr<Gio::File>
-ProfileLoader::get_file()
+Glib::RefPtr<Gio::File> ProfileLoader::get_file()
 {
   return l_filechooser_button->get_file();
 }

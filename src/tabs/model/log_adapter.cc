@@ -12,8 +12,7 @@
 #include <string>
 
 template<class Database, class ColumnRecord>
-std::string
-LogAdapter<Database, ColumnRecord>::format_timestamp(const time_t &timestamp)
+std::string LogAdapter<Database, ColumnRecord>::format_timestamp(const time_t &timestamp)
 {
   std::stringstream stream;
 
@@ -24,13 +23,12 @@ LogAdapter<Database, ColumnRecord>::format_timestamp(const time_t &timestamp)
 }
 
 template<class Database, class ColumnRecord>
-void
-LogAdapter<Database, ColumnRecord>::put_data(const time_t &timestamp,
-                                             const std::string &type,
-                                             const std::string &operation,
-                                             const std::string &profile_name,
-                                             const unsigned int &pid,
-                                             const std::list<std::pair<std::string, std::string>> &metadata)
+void LogAdapter<Database, ColumnRecord>::put_data(const time_t &timestamp,
+                                                  const std::string &type,
+                                                  const std::string &operation,
+                                                  const std::string &profile_name,
+                                                  const unsigned int &pid,
+                                                  const std::list<std::pair<std::string, std::string>> &metadata)
 {
   // Attempt to find an map with this profile name
   auto map_pair = db->log_data.find(profile_name);
@@ -80,8 +78,7 @@ LogAdapter<Database, ColumnRecord>::put_data(const time_t &timestamp,
 }
 
 template<class Database, class ColumnRecord>
-std::pair<LogTableEntry, bool>
-LogAdapter<Database, ColumnRecord>::get_data(const std::string &profile_name, const time_t &timestamp)
+std::pair<LogTableEntry, bool> LogAdapter<Database, ColumnRecord>::get_data(const std::string &profile_name, const time_t &timestamp)
 {
   auto time_map_iter = db->log_data.find(profile_name);
   if (time_map_iter != db->log_data.end()) {
@@ -98,8 +95,7 @@ LogAdapter<Database, ColumnRecord>::get_data(const std::string &profile_name, co
 }
 
 template<class Database, class ColumnRecord>
-std::shared_ptr<ColumnRecord>
-LogAdapter<Database, ColumnRecord>::get_col_record()
+std::shared_ptr<ColumnRecord> LogAdapter<Database, ColumnRecord>::get_col_record()
 {
   return col_record;
 }

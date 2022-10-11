@@ -17,8 +17,7 @@
 #include <vector>
 
 template<class ProfilesTab, class Database, class Adapter>
-bool
-ProfilesController<ProfilesTab, Database, Adapter>::on_button_event(GdkEventButton *event)
+bool ProfilesController<ProfilesTab, Database, Adapter>::on_button_event(GdkEventButton *event)
 {
   std::ignore = event;
 
@@ -27,8 +26,7 @@ ProfilesController<ProfilesTab, Database, Adapter>::on_button_event(GdkEventButt
 }
 
 template<class ProfilesTab, class Database, class Adapter>
-bool
-ProfilesController<ProfilesTab, Database, Adapter>::on_key_event(GdkEventKey *event)
+bool ProfilesController<ProfilesTab, Database, Adapter>::on_key_event(GdkEventKey *event)
 {
   std::ignore = event;
 
@@ -37,8 +35,7 @@ ProfilesController<ProfilesTab, Database, Adapter>::on_key_event(GdkEventKey *ev
 }
 
 template<class ProfilesTab, class Database, class Adapter>
-void
-ProfilesController<ProfilesTab, Database, Adapter>::handle_profile_selected()
+void ProfilesController<ProfilesTab, Database, Adapter>::handle_profile_selected()
 {
   // Check if there is any row selected
   auto selection    = prof->get_view()->get_selection();
@@ -65,8 +62,7 @@ ProfilesController<ProfilesTab, Database, Adapter>::handle_profile_selected()
 // add_data_to_record() is based on assumptions about the output of aa-status.
 // If those assumptions are incorrect, or aa-status changes, this could crash.
 template<class ProfilesTab, class Database, class Adapter>
-void
-ProfilesController<ProfilesTab, Database, Adapter>::add_data_to_record(const std::string &data)
+void ProfilesController<ProfilesTab, Database, Adapter>::add_data_to_record(const std::string &data)
 {
   Json::Value root     = StatusController<ProfilesTab>::parse_JSON(data);
   Json::Value profiles = root["profiles"];
@@ -81,8 +77,7 @@ ProfilesController<ProfilesTab, Database, Adapter>::add_data_to_record(const std
 }
 
 template<class ProfilesTab, class Database, class Adapter>
-void
-ProfilesController<ProfilesTab, Database, Adapter>::refresh()
+void ProfilesController<ProfilesTab, Database, Adapter>::refresh()
 {
   uint num_visible = adapter.get_col_record()->filter_rows();
   prof->set_status_label_text(" " + std::to_string(num_visible) + " matching profiles");
@@ -90,8 +85,7 @@ ProfilesController<ProfilesTab, Database, Adapter>::refresh()
 }
 
 template<class ProfilesTab, class Database, class Adapter>
-void
-ProfilesController<ProfilesTab, Database, Adapter>::set_apply_label_text(const std::string &str)
+void ProfilesController<ProfilesTab, Database, Adapter>::set_apply_label_text(const std::string &str)
 {
   prof->set_apply_label_text(str);
 }

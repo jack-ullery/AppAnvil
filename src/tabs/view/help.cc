@@ -4,8 +4,7 @@
 #include <vector>
 
 template<typename T_Widget>
-std::unique_ptr<T_Widget>
-Help::get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder)
+std::unique_ptr<T_Widget> Help::get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder)
 {
   T_Widget *raw_addr = nullptr;
   builder->get_widget<T_Widget>(name, raw_addr);
@@ -35,14 +34,12 @@ Help::Help()
   this->add(*h_box);
 }
 
-void
-Help::hide_searchbar()
+void Help::hide_searchbar()
 {
   h_searchbox->hide();
 }
 
-void
-Help::show_searchbar(const bool &should_focus)
+void Help::show_searchbar(const bool &should_focus)
 {
   h_searchbox->show();
 
@@ -51,21 +48,18 @@ Help::show_searchbar(const bool &should_focus)
   }
 }
 
-void
-Help::set_return_signal_handler(const Glib::SignalProxy<void>::SlotType &func)
+void Help::set_return_signal_handler(const Glib::SignalProxy<void>::SlotType &func)
 {
   h_return_button->signal_clicked().connect(func, true);
 }
 
-void
-Help::set_search_signal_handler(const Glib::SignalProxyProperty::SlotType &func)
+void Help::set_search_signal_handler(const Glib::SignalProxyProperty::SlotType &func)
 {
   h_search->signal_search_changed().connect(func, true);
 }
 
 // TODO(apparmor): Need to make searchbar more like the one used in status.cc
-void
-Help::on_search_changed()
+void Help::on_search_changed()
 {
   std::string search = h_search->get_text();
 

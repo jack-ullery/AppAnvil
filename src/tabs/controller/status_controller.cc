@@ -13,12 +13,11 @@
 #include <string>
 
 template<class Tab>
-bool
-StatusController<Tab>::should_filter(const std::string &str,
-                                     const std::string &rule,
-                                     const bool &use_regex,
-                                     const bool &match_case,
-                                     const bool &whole_word)
+bool StatusController<Tab>::should_filter(const std::string &str,
+                                          const std::string &rule,
+                                          const bool &use_regex,
+                                          const bool &match_case,
+                                          const bool &whole_word)
 {
   std::string new_str  = str;
   std::string new_rule = rule;
@@ -58,8 +57,7 @@ StatusController<Tab>::should_filter(const std::string &str,
 }
 
 template<class Tab>
-bool
-StatusController<Tab>::filter(const Gtk::TreeModel::iterator &node)
+bool StatusController<Tab>::filter(const Gtk::TreeModel::iterator &node)
 {
   const uint num_columns = tab->get_view()->get_n_columns();
   auto treeModel         = tab->get_view()->get_model();
@@ -103,8 +101,7 @@ StatusController<Tab>::filter(const Gtk::TreeModel::iterator &node)
 }
 
 template<class Tab>
-Json::Value
-StatusController<Tab>::parse_JSON(const std::string &raw_json)
+Json::Value StatusController<Tab>::parse_JSON(const std::string &raw_json)
 {
   std::stringstream stream;
   stream << raw_json;
@@ -133,8 +130,7 @@ StatusController<Tab>::StatusController(std::shared_ptr<Tab> tab)
 }
 
 template<class Tab>
-std::shared_ptr<Tab>
-StatusController<Tab>::get_tab()
+std::shared_ptr<Tab> StatusController<Tab>::get_tab()
 {
   return tab;
 }

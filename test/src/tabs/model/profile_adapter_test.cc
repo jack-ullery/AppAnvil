@@ -14,16 +14,14 @@
 #include <string>
 #include <vector>
 
-void
-ProfileAdapterTest::try_put_data(std::vector<ProfileAdapterTest::TestData> data_set)
+void ProfileAdapterTest::try_put_data(std::vector<ProfileAdapterTest::TestData> data_set)
 {
   for (auto data : data_set) {
     adapter.put_data(data.profile_name, data.status);
   }
 }
 
-uint
-ProfileAdapterTest::entry_count()
+uint ProfileAdapterTest::entry_count()
 {
   uint num_entry = 0;
 
@@ -35,15 +33,13 @@ ProfileAdapterTest::entry_count()
   return num_entry;
 }
 
-void
-ProfileAdapterTest::check_profile_entry(ProfileTableEntry entry, const std::string &profile_name, const std::string &status)
+void ProfileAdapterTest::check_profile_entry(ProfileTableEntry entry, const std::string &profile_name, const std::string &status)
 {
   ASSERT_EQ(entry.profile_name, profile_name);
   ASSERT_EQ(entry.status, status);
 }
 
-void
-ProfileAdapterTest::check_put_data(std::vector<ProfileAdapterTest::TestData> data_set)
+void ProfileAdapterTest::check_put_data(std::vector<ProfileAdapterTest::TestData> data_set)
 {
   ASSERT_TRUE(database->process_data.empty()) << "We did not add any profile data, so this map should be empty.";
   ASSERT_TRUE(database->log_data.empty()) << "We did not add any log data, so this map should be empty.";
