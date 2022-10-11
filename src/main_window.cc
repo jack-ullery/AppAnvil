@@ -145,7 +145,8 @@ bool MainWindow::on_switch(GdkEvent *event)
   } else if (visible_child == "proc") {
     console->send_refresh_message(PROCESS);
   } else if (visible_child == "logs") {
-    console->send_refresh_message(LOGS);
+    // Do not refresh logs (until improved)
+    // console->send_refresh_message(LOGS);
   }
 
   handle_search_button_visiblity();
