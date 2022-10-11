@@ -31,27 +31,15 @@ void LogAdapter<Database, ColumnRecord>::put_data(const time_t &timestamp,
                                                   const std::list<std::pair<std::string, std::string>> &metadata)
 {
   // Attempt to find an map with this profile name
-  auto map_pair = db->log_data.find(profile_name);
+  auto num_log_iter = db->log_data.find(profile_name);
 
-  // The map (indexed by pid) that we will add to
-  std::map<time_t, LogTableEntry> time_map;
-
-  // Check that we actually found the map
-  if (map_pair == db->log_data.end()) {
-    // Create new map if no previous one was found
-    time_map = std::map<time_t, LogTableEntry>();
+  // Attempt to find the number of logs already processed for this type of profile
+  uint num_logs;
+  if (num_log_iter == db->log_data.end()) {
+    // Create new integer (starting at one) if no were found
+    num_logs = 1;
   } else {
-    time_map = map_pair->second;
-  }
-
-  // Attempt to find an entry with this profile
-  auto entry_pair = time_map.find(timestamp);
-
-  // Check that we actually found the entry
-  if (entry_pair != time_map.end()) {
-    // A pre-existing entry was found, so we should return and not modify the db.
-    // This assumes that logs entries are readonly; they do not change over time.
-    return;
+    num_logs = num_log_iter->second + 1;
   }
 
   // Create a new row
@@ -69,29 +57,9 @@ void LogAdapter<Database, ColumnRecord>::put_data(const time_t &timestamp,
   row.set_value(5, pid);                         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   // clang-format on
 
-  // Add the entry to the map
-  time_map.insert({ timestamp, entry });
-
   // A weird way of updating our profile in the map (because insert_or_assign does not exist with C++11)
   db->log_data.erase(profile_name);
-  db->log_data.insert({ profile_name, time_map });
-}
-
-template<class Database, class ColumnRecord>
-std::pair<LogTableEntry, bool> LogAdapter<Database, ColumnRecord>::get_data(const std::string &profile_name, const time_t &timestamp)
-{
-  auto time_map_iter = db->log_data.find(profile_name);
-  if (time_map_iter != db->log_data.end()) {
-    auto time_map = time_map_iter->second;
-    auto iter     = time_map.find(timestamp);
-    if (iter != time_map.end()) {
-      // We actually found some data, so return the found data
-      return std::pair<LogTableEntry, bool>(iter->second, true);
-    }
-  }
-
-  // If the entry is not found
-  return std::pair<LogTableEntry, bool>(LogTableEntry(), false);
+  db->log_data.insert({ profile_name, num_logs });
 }
 
 template<class Database, class ColumnRecord>

@@ -31,7 +31,6 @@ public:
                 const unsigned int &pid,
                 const std::list<std::pair<std::string, std::string>> &metadata);
 
-  std::pair<LogTableEntry, bool> get_data(const std::string &profile_name, const time_t &timestamp);
   std::shared_ptr<ColumnRecord> get_col_record();
 
 protected:
