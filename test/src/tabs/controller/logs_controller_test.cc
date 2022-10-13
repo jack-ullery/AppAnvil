@@ -69,7 +69,7 @@ TEST_F(LogsControllerTest, TEST_ADD_ROW_FROM_JSON)
   // Should check that the arguments are correct
   EXPECT_CALL(*adapter_mock, put_data(_, _, _, _, _, _)).Times(1);
 
-  logs_controller->add_row_from_json(root);
+  EXPECT_NO_THROW(logs_controller->add_row_from_json(root));
 }
 
 // Test for method add_data_to_record with a valid argument passed
@@ -93,17 +93,24 @@ TEST_F(LogsControllerTest, TEST_ADD_DATA_TO_RECORD_VALID)
     .InSequence(add_row_calls);
 
   auto data_stream = std::make_shared<std::istringstream>(data_arg);
-  logs_controller->add_data_to_record_helper(data_stream);
+  EXPECT_NO_THROW(logs_controller->add_data_to_record_helper(data_stream));
 }
 
 // Test for method add_data_to_record with an invalid argument passed
 TEST_F(LogsControllerTest, TEST_ADD_DATA_TO_RECORD_INVALID)
 {
+  uint arbitrary_num = 42;
+
   EXPECT_CALL(*adapter_mock, put_data(_, _, _, _, _, _)).Times(0);
-  EXPECT_CALL(*adapter_mock, get_col_record()).Times(0);
+
+  EXPECT_CALL(*adapter_mock, get_col_record()).Times(1).WillOnce(Return(col_record_mock));
+  EXPECT_CALL(*col_record_mock, filter_rows()).Times(1).WillOnce(Return(arbitrary_num));
+
+  EXPECT_CALL(*logs_view_mock, set_status_label_text(::HasSubstr(std::to_string(arbitrary_num) + " logs")))
+    .Times(1);
 
   auto data_stream = std::make_shared<std::istringstream>("{test}");
-  EXPECT_THROW(logs_controller->add_data_to_record_helper(data_stream), std::invalid_argument);
+  EXPECT_NO_THROW(logs_controller->add_data_to_record_helper(data_stream));
 }
 
 // Test for method refresh()
@@ -118,7 +125,7 @@ TEST_F(LogsControllerTest, TEST_REFRESH)
 
   EXPECT_CALL(*logs_view_mock, set_status_label_text(::HasSubstr(std::to_string(arbitrary_num)))).Times(1).InSequence(refresh_sequence);
 
-  logs_controller->refresh();
+  EXPECT_NO_THROW(logs_controller->refresh());
 }
 
 // Test for method format_log_data

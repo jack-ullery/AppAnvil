@@ -23,7 +23,7 @@ TEST_F(AppArmorCallerTest, TEST_STATUS)
 
 TEST_F(AppArmorCallerTest, TEST_LOG)
 {
-  std::vector<std::string> command = { "journalctl", "-r", "_AUDIT_TYPE=1400", "--output=json" };
+  std::vector<std::string> command = { "journalctl", "-r", "_AUDIT_TYPE=1400", "--output=json", "--show-cursor" };
   EXPECT_CALL(tester, call_command(command, _)).Times(1).WillOnce(Return(test_str));
 
   std::string output = AppArmorCallerMock::get_logs(&tester);
