@@ -164,12 +164,18 @@ bool LogsController<LogsTab, Database, Adapter>::add_data_to_record_helper(std::
     // A log exists, so lets parse it using JsonCpp
     std::stringstream log_stream(line);
 
-    if (!parseFromStream(builder, log_stream, &value, &errs)) {
-      throw std::invalid_argument(errs + "\nArgument of add_data_to_record contains line with invalid JSON format.");
-    }
+    try {
+      if (!parseFromStream(builder, log_stream, &value, &errs)) {
+        throw std::invalid_argument(errs + "\nArgument of add_data_to_record contains line with invalid JSON format.");
+      }
 
-    // Create a row from the json value
-    add_row_from_json(value);
+      // Create a row from the json value
+      add_row_from_json(value);
+    }
+    catch (const std::exception &ex) {
+      std::cerr << ex.what() << line << std::endl;
+      std::cerr << "Unable to parse the following log: " << line << std::endl;
+    }
   }
 
   // Refresh the display to show an accurate count of the number of logs
