@@ -34,7 +34,7 @@ public:
    *
    * @returns std::string the raw output of `dmesg`
    */
-  static std::string get_logs();
+  static std::string get_logs(const std::string &cursor = "");
 
   /**
    * @brief Return the output of `aa-unconfined`
@@ -79,7 +79,7 @@ protected:
 
   // Dependency Injection: For unit testing
   static std::string get_status(CommandCaller *caller);
-  static std::string get_logs(CommandCaller *caller);
+  static std::string get_logs(CommandCaller *caller, const std::string &cursor = "");
   static std::string get_unconfined(CommandCaller *caller);
   static std::string load_profile(CommandCaller *caller, const std::string &fullFileName);
   static std::string disable_profile(CommandCaller *caller, const std::string &profileName);
