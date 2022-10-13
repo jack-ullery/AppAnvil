@@ -3,7 +3,6 @@
 
 #include "../../../../src/tabs/entries.h"
 #include "../../../../src/tabs/model/log_adapter.cc"
-#include "database_mock.h"
 #include "status_column_record_mock.h"
 
 #include <gmock/gmock.h>
@@ -15,7 +14,7 @@ class LogAdapterTest : public ::testing::Test
 {
 protected:
   LogAdapterTest()
-    : database{ new DatabaseMock() },
+    : database{ new Database() },
       status{ new Status() },
       adapter(database, status->get_view(), status->get_window())
   {
@@ -43,14 +42,12 @@ protected:
   };
 
   // Test objects
-  std::shared_ptr<DatabaseMock> database;
+  std::shared_ptr<Database> database;
   std::shared_ptr<Status> status;
-  LogAdapter<DatabaseMock, StatusColumnRecord> adapter;
+  LogAdapter<Database, StatusColumnRecord> adapter;
 
   // Helper methods
   void try_put_data(std::vector<LogAdapterTest::TestData> data_set);
-  uint entry_count();
-  void check_log_entry(LogTableEntry entry, TestData expected_data);
   void check_put_data(std::vector<LogAdapterTest::TestData> data_set, uint num_maps);
 };
 

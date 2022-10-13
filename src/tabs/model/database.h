@@ -13,6 +13,10 @@
 #include "profile_adapter.h"
 #include "status_column_record.h"
 
+#ifdef TESTS_ENABLED
+#include <gtest/gtest.h>
+#endif
+
 class Database
 {
 public:
@@ -38,6 +42,12 @@ private:
   friend class ProfileAdapter<Database>;
   friend class ProcessAdapter<Database, StatusColumnRecord>;
   friend class LogAdapter<Database, StatusColumnRecord>;
+
+#ifdef TESTS_ENABLED
+  friend class ProfileAdapterTest;
+  friend class ProcessAdapterTest;
+  friend class LogAdapterTest;
+#endif
 };
 
 #endif // TABS_MODEL_DATABASE_H

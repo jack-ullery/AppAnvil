@@ -5,7 +5,6 @@
 #include "../../../../src/tabs/model/database.h"
 #include "../../../../src/tabs/model/process_adapter.cc"
 #include "../../../../src/tabs/view/processes.h"
-#include "database_mock.h"
 #include "status_column_record_mock.h"
 
 // Test Fixture for Process class
@@ -14,7 +13,7 @@ class ProcessAdapterTest : public ::testing::Test
 
 protected:
   ProcessAdapterTest()
-    : database{ new DatabaseMock() },
+    : database{ new Database() },
       status{ new Status() },
       adapter(database, status->get_view(), status->get_window())
   {
@@ -35,9 +34,9 @@ protected:
   };
 
   // Test objects
-  std::shared_ptr<DatabaseMock> database;
+  std::shared_ptr<Database> database;
   std::shared_ptr<Status> status;
-  ProcessAdapter<DatabaseMock, StatusColumnRecord> adapter;
+  ProcessAdapter<Database, StatusColumnRecord> adapter;
 
   // Helper methods
   void try_put_data(std::vector<ProcessAdapterTest::TestData> data_set);
@@ -48,8 +47,5 @@ protected:
                            const unsigned int &pid);
   void check_put_data(std::vector<ProcessAdapterTest::TestData> data_set, uint num_maps);
 };
-
-// template class ProcessesController<Processes, Database, ProcessAdapterChild>;
-template class ProcessesController<Processes, DatabaseMock, ProcessAdapter<DatabaseMock, StatusColumnRecord>>;
 
 #endif // TEST_SRC_TABS_MODEL_PROCESS_ADAPTER_TEST_H
