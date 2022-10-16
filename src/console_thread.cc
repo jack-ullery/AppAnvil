@@ -10,6 +10,7 @@
 #include "threads/command_caller.h"
 
 #include <iostream>
+#include <string>
 #include <tuple>
 
 template<class ProfilesController, class ProcessesController, class LogsController>
@@ -64,6 +65,51 @@ void ConsoleThread<ProfilesController, ProcessesController, LogsController>::sen
 }
 
 template<class ProfilesController, class ProcessesController, class LogsController>
+std::basic_string<char>::size_type ConsoleThread<ProfilesController, ProcessesController, LogsController>::find_last_line(std::string input)
+{
+  if (input.length() <= 1) {
+    return std::string::npos;
+  }
+
+  // The last character might be a newline, so lets skip it
+  auto position = input.length() - 2;
+
+  while (position > 0) {
+    // We found a newline character, return the position
+    if (input[position] == '\n') {
+      return position + 1;
+    }
+
+    position--;
+  }
+
+  return 0;
+}
+
+template<class ProfilesController, class ProcessesController, class LogsController>
+std::string ConsoleThread<ProfilesController, ProcessesController, LogsController>::strip_cursor_from_logs(std::string logs)
+{
+  auto last_line_pos = find_last_line(logs);
+
+  if (last_line_pos != std::string::npos) {
+    // Attempt to find the cursor position in the last line
+    std::string last_line = logs.substr(last_line_pos);
+
+    auto cursor_pos = last_line.find_first_of(":");
+
+    if (cursor_pos != std::string::npos) {
+      // If we found the cursor, override the old cursor with the new one
+      log_cursor = last_line.substr(cursor_pos + 2);
+
+      // Erase the cursor from the logs
+      return logs.erase(last_line_pos, logs.length());
+    }
+  }
+
+  return logs;
+}
+
+template<class ProfilesController, class ProcessesController, class LogsController>
 void ConsoleThread<ProfilesController, ProcessesController, LogsController>::run_command(TabState state)
 {
   switch (state) {
@@ -78,7 +124,9 @@ void ConsoleThread<ProfilesController, ProcessesController, LogsController>::run
     } break;
 
     case LOGS: {
-      std::string logs = CommandCaller::get_logs();
+      std::string logs = CommandCaller::get_logs(log_cursor);
+      logs             = strip_cursor_from_logs(logs);
+
       dispatch_man.update_logs(logs);
     } break;
 
@@ -107,12 +155,10 @@ ConsoleThread<ProfilesController, ProcessesController, LogsController>::wait_for
     auto cv_status = cv.condition_variable::wait_until(lock, get_wait_time_point()); // Look into `wait_until`
 
     if (cv_status == std::cv_status::timeout) {
-      if (last_state != LOGS) { // TODO(logs-parse): We need to improve how logs are parsed before we can refresh them
-        // Create a message with the state to refresh for, but no data
-        Message message(REFRESH, last_state, {});
-        // Send the message to the queue, this lets the other thread know what it should do.
-        queue.push(message);
-      }
+      // Create a message with the state to refresh for, but no data
+      Message message(REFRESH, last_state, {});
+      // Send the message to the queue, this lets the other thread know what it should do.
+      queue.push(message);
     }
   }
 

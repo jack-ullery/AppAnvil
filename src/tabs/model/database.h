@@ -13,6 +13,10 @@
 #include "profile_adapter.h"
 #include "status_column_record.h"
 
+#ifdef TESTS_ENABLED
+#include <gtest/gtest.h>
+#endif
+
 class Database
 {
 public:
@@ -20,11 +24,9 @@ public:
   Database() = default;
 
   // The number of processes at this profile
-  // TODO(database): Maybe we can store and retrieve this data in the profile table entry instead?
   uint get_number_processes(const std::string &profile);
 
   // The number of processes at this profile
-  // TODO(database): Maybe we can store and retrieve this data in the profile table entry instead?
   uint get_number_logs(const std::string &profile);
 
 private:
@@ -34,13 +36,18 @@ private:
   // Each process in the returned map is indexed by the pid it was added
   std::map<std::string, std::map<uint, ProcessTableEntry>> process_data;
 
-  // Indexed by profile, returns a map of logs
-  // Each log in the returned map is indexed by the time it was added
-  std::map<std::string, std::map<time_t, LogTableEntry>> log_data;
+  // Indexed by profile, returns the number of logs found
+  std::map<std::string, uint> log_data;
 
   friend class ProfileAdapter<Database>;
   friend class ProcessAdapter<Database, StatusColumnRecord>;
   friend class LogAdapter<Database, StatusColumnRecord>;
+
+#ifdef TESTS_ENABLED
+  friend class ProfileAdapterTest;
+  friend class ProcessAdapterTest;
+  friend class LogAdapterTest;
+#endif
 };
 
 #endif // TABS_MODEL_DATABASE_H

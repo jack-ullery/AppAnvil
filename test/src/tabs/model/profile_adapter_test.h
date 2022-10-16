@@ -5,7 +5,6 @@
 #include "../../../../src/tabs/model/database.h"
 #include "../../../../src/tabs/model/profile_adapter.cc"
 #include "../../../../src/tabs/view/profiles.h"
-#include "database_mock.h"
 #include "status_column_record_mock.h"
 
 // Test Fixture for Logs class
@@ -14,7 +13,7 @@ class ProfileAdapterTest : public ::testing::Test
 
 protected:
   ProfileAdapterTest()
-    : database{ new DatabaseMock() },
+    : database{ new Database() },
       status{ new Status() },
       adapter(database, status->get_view(), status->get_window())
   {
@@ -29,9 +28,9 @@ protected:
   };
 
   // Test objects
-  std::shared_ptr<DatabaseMock> database;
+  std::shared_ptr<Database> database;
   std::shared_ptr<Status> status;
-  ProfileAdapter<DatabaseMock> adapter;
+  ProfileAdapter<Database> adapter;
 
   // Helper methods
   void try_put_data(std::vector<ProfileAdapterTest::TestData> data_set);
@@ -39,7 +38,5 @@ protected:
   void check_profile_entry(ProfileTableEntry entry, const std::string &profile_name, const std::string &status);
   void check_put_data(std::vector<ProfileAdapterTest::TestData> data_set);
 };
-
-template class ProfilesController<Profiles, DatabaseMock, ProfileAdapter<DatabaseMock>>;
 
 #endif // TEST_SRC_TABS_MODEL_PROFILE_ADAPTER_TEST_H

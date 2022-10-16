@@ -29,47 +29,27 @@ void LogAdapterTest::try_put_data(std::vector<LogAdapterTest::TestData> data_set
   }
 }
 
-uint LogAdapterTest::entry_count()
-{
-  uint num_entry = 0;
-
-  for (auto map_pair : database->log_data) {
-    auto map = map_pair.second;
-    for (auto entry : map) {
-      std::ignore = entry;
-      num_entry++;
-    }
-  }
-
-  return num_entry;
-}
-
-void LogAdapterTest::check_log_entry(LogTableEntry entry, TestData expected_data)
-{
-  ASSERT_EQ(entry.profile_name, expected_data.profile_name);
-  ASSERT_EQ(entry.pid, expected_data.pid);
-  ASSERT_EQ(entry.timestamp, expected_data.timestamp);
-  ASSERT_EQ(entry.metadata, expected_data.metadata);
-}
-
-void LogAdapterTest::check_put_data(std::vector<LogAdapterTest::TestData> data_set, uint num_maps)
+void LogAdapterTest::check_put_data(std::vector<LogAdapterTest::TestData> data_set, uint num_profs)
 {
   ASSERT_TRUE(database->profile_data.empty()) << "We did not add any profile data, so this map should be empty.";
   ASSERT_TRUE(database->process_data.empty()) << "We did not add any process data, so this map should be empty.";
   ASSERT_FALSE(database->log_data.empty()) << "We added " << data_set.size() << " instances of LogEntry, so this map should not be empty.";
 
-  ASSERT_EQ(data_set.size(), entry_count()) << "We expected exactly " << data_set.size() << " entries in the database.";
-  ASSERT_EQ(database->log_data.size(), num_maps);
+  ASSERT_EQ(database->log_data.size(), num_profs);
 
   for (auto data : data_set) {
-    // Attempt to retrieve the data
-    auto entry_pair     = adapter.get_data(data.profile_name, data.timestamp);
-    auto entry          = entry_pair.first;
-    auto did_find_entry = entry_pair.second;
-
-    ASSERT_TRUE(did_find_entry) << "The entry indexed by (" << data.profile_name << ", " << data.pid << ") could not be found";
-    check_log_entry(entry, data);
+    // Retrieve the number of logs for this profile
+    uint num_logs = database->get_number_logs(data.profile_name);
+    ASSERT_GT(num_logs, 0) << "We expected at least one log for profile: " << data.profile_name;
   }
+
+  uint total_num_logs = 0;
+  for (auto log_pair : database->log_data) {
+    total_num_logs += log_pair.second;
+  }
+
+  ASSERT_EQ(data_set.size(), total_num_logs) << "We expected there to be " << data_set.size()
+                                             << " logs recorded in the database, but a count returned " << total_num_logs << " logs.";
 }
 
 // Test for method put_data
