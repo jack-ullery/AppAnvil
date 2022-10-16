@@ -44,11 +44,12 @@ void LogAdapterTest::check_put_data(std::vector<LogAdapterTest::TestData> data_s
   }
 
   uint total_num_logs = 0;
-  for(auto log_pair : database->log_data) {
+  for (auto log_pair : database->log_data) {
     total_num_logs += log_pair.second;
   }
 
-  ASSERT_EQ(data_set.size(), total_num_logs) << "We expected there to be " << data_set.size() << " logs recorded in the database, but a count returned " << total_num_logs << " logs.";
+  ASSERT_EQ(data_set.size(), total_num_logs) << "We expected there to be " << data_set.size()
+                                             << " logs recorded in the database, but a count returned " << total_num_logs << " logs.";
 }
 
 // Test for method put_data

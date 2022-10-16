@@ -42,14 +42,14 @@ std::string AppArmorCaller::get_unconfined(AppArmorCaller *caller)
 
 std::string AppArmorCaller::get_logs(AppArmorCaller *caller)
 {
-  std::vector<std::string> command = { "journalctl", "-r", "_AUDIT_TYPE=1400", "--output=json", "--show-cursor"};
+  std::vector<std::string> command = { "journalctl", "-r", "_AUDIT_TYPE=1400", "--output=json", "--show-cursor" };
   std::string return_on_error      = "";
   return caller->call_command(command, return_on_error);
 }
 
 std::string AppArmorCaller::get_logs(AppArmorCaller *caller, const std::string &cursor)
 {
-  std::vector<std::string> command = { "journalctl", "-r", "_AUDIT_TYPE=1400", "--output=json", "--show-cursor", "--after-cursor", cursor};
+  std::vector<std::string> command = { "journalctl", "-r", "_AUDIT_TYPE=1400", "--output=json", "--show-cursor", "--after-cursor", cursor };
   std::string return_on_error      = "";
   return caller->call_command(command, return_on_error);
 }

@@ -43,9 +43,9 @@ std::string CommandCaller::get_unconfined(CommandCaller *caller)
 
 std::string CommandCaller::get_logs(CommandCaller *caller, const std::string &cursor)
 {
-  std::vector<std::string> command = { "pkexec", "aa-caller", "-l"};
+  std::vector<std::string> command = { "pkexec", "aa-caller", "-l" };
 
-  if(!cursor.empty()) {
+  if (!cursor.empty()) {
     command.push_back(cursor);
   }
 

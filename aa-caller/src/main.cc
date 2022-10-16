@@ -29,8 +29,7 @@ int main(int argc, char **argv)
       std::cout << AppArmorCaller::get_logs();
       return 0;
     }
-  }
-  else if (argc == 3) {
+  } else if (argc == 3) {
     std::string arg(argv[1]);
     std::string data(argv[2]);
 

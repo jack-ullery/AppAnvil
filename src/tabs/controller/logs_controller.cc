@@ -171,8 +171,7 @@ bool LogsController<LogsTab, Database, Adapter>::add_data_to_record_helper(std::
 
       // Create a row from the json value
       add_row_from_json(value);
-    }
-    catch (const std::exception &ex) {
+    } catch (const std::exception &ex) {
       std::cerr << ex.what() << line << std::endl;
       std::cerr << "Unable to parse the following log: " << line << std::endl;
     }

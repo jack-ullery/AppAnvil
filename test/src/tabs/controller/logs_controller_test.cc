@@ -106,8 +106,7 @@ TEST_F(LogsControllerTest, TEST_ADD_DATA_TO_RECORD_INVALID)
   EXPECT_CALL(*adapter_mock, get_col_record()).Times(1).WillOnce(Return(col_record_mock));
   EXPECT_CALL(*col_record_mock, filter_rows()).Times(1).WillOnce(Return(arbitrary_num));
 
-  EXPECT_CALL(*logs_view_mock, set_status_label_text(::HasSubstr(std::to_string(arbitrary_num) + " logs")))
-    .Times(1);
+  EXPECT_CALL(*logs_view_mock, set_status_label_text(::HasSubstr(std::to_string(arbitrary_num) + " logs"))).Times(1);
 
   auto data_stream = std::make_shared<std::istringstream>("{test}");
   EXPECT_NO_THROW(logs_controller->add_data_to_record_helper(data_stream));

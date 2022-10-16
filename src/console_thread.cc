@@ -67,23 +67,23 @@ void ConsoleThread<ProfilesController, ProcessesController, LogsController>::sen
 template<class ProfilesController, class ProcessesController, class LogsController>
 std::basic_string<char>::size_type ConsoleThread<ProfilesController, ProcessesController, LogsController>::find_last_line(std::string input)
 {
-    if(input.length() <= 1) {
-      return std::string::npos;
+  if (input.length() <= 1) {
+    return std::string::npos;
+  }
+
+  // The last character might be a newline, so lets skip it
+  auto position = input.length() - 2;
+
+  while (position > 0) {
+    // We found a newline character, return the position
+    if (input[position] == '\n') {
+      return position + 1;
     }
 
-    // The last character might be a newline, so lets skip it
-    auto position = input.length() - 2;
+    position--;
+  }
 
-    while(position > 0) {
-      // We found a newline character, return the position
-      if(input[position] == '\n') {
-        return position + 1;
-      }
-      
-      position--;
-    }
-
-    return 0;
+  return 0;
 }
 
 template<class ProfilesController, class ProcessesController, class LogsController>
@@ -91,14 +91,13 @@ std::string ConsoleThread<ProfilesController, ProcessesController, LogsControlle
 {
   auto last_line_pos = find_last_line(logs);
 
-  if(last_line_pos != std::string::npos)
-  {
+  if (last_line_pos != std::string::npos) {
     // Attempt to find the cursor position in the last line
     std::string last_line = logs.substr(last_line_pos);
 
-    auto cursor_pos = last_line.find_first_of(":"); 
+    auto cursor_pos = last_line.find_first_of(":");
 
-    if(cursor_pos != std::string::npos) {
+    if (cursor_pos != std::string::npos) {
       // If we found the cursor, override the old cursor with the new one
       log_cursor = last_line.substr(cursor_pos + 2);
 
@@ -126,7 +125,7 @@ void ConsoleThread<ProfilesController, ProcessesController, LogsController>::run
 
     case LOGS: {
       std::string logs = CommandCaller::get_logs(log_cursor);
-      logs = strip_cursor_from_logs(logs);
+      logs             = strip_cursor_from_logs(logs);
 
       dispatch_man.update_logs(logs);
     } break;
