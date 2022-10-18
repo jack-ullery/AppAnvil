@@ -1,5 +1,5 @@
-#include "common.h"
 #include "logs.h"
+#include "common.h"
 #include "info_box.h"
 
 void Logs::set_information(std::list<std::pair<std::string, std::string>> data)

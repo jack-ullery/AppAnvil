@@ -13,7 +13,7 @@ public:
   // Gets a shared pointer to a widget defined by a Gtk::Builder
   template<typename T_Widget>
   static std::shared_ptr<T_Widget> get_widget_shared(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);
-  
+
   // Gets a unique pointer to a widget defined by a Gtk::Builder
   template<typename T_Widget>
   static std::unique_ptr<T_Widget> get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);

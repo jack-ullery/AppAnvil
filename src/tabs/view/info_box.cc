@@ -1,5 +1,5 @@
-#include "common.h"
 #include "info_box.h"
+#include "common.h"
 
 void InfoBox::set_text(const std::string &header, const std::string &text)
 {

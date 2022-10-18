@@ -1,5 +1,5 @@
-#include "common.h"
 #include "profile_loader.h"
+#include "common.h"
 
 #include <iostream>
 #include <string>

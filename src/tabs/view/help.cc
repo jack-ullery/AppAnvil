@@ -1,5 +1,5 @@
-#include "common.h"
 #include "help.h"
+#include "common.h"
 
 #include <string>
 #include <vector>

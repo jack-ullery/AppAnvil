@@ -1,5 +1,5 @@
-#include "common.h"
 #include "status.h"
+#include "common.h"
 
 #include "jsoncpp/json/json.h"
 
