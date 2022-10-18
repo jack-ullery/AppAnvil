@@ -1,23 +1,16 @@
 #include "help.h"
+#include "common.h"
 
 #include <string>
 #include <vector>
 
-template<typename T_Widget>
-std::unique_ptr<T_Widget> Help::get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder)
-{
-  T_Widget *raw_addr = nullptr;
-  builder->get_widget<T_Widget>(name, raw_addr);
-  return std::unique_ptr<T_Widget>(raw_addr);
-}
-
 Help::Help()
   : builder{ Gtk::Builder::create_from_resource("/resources/help.glade") },
-    h_box{ Help::get_widget<Gtk::Box>("h_box", builder) },
-    h_label{ Help::get_widget<Gtk::Label>("h_label", builder) },
-    h_searchbox{ Help::get_widget<Gtk::Box>("h_searchbox", builder) },
-    h_search{ Help::get_widget<Gtk::SearchEntry>("h_search", builder) },
-    h_return_button{ Help::get_widget<Gtk::Button>("h_return_button", builder) },
+    h_box{ Common::get_widget<Gtk::Box>("h_box", builder) },
+    h_label{ Common::get_widget<Gtk::Label>("h_label", builder) },
+    h_searchbox{ Common::get_widget<Gtk::Box>("h_searchbox", builder) },
+    h_search{ Common::get_widget<Gtk::SearchEntry>("h_search", builder) },
+    h_return_button{ Common::get_widget<Gtk::Button>("h_return_button", builder) },
     description{ h_label->get_label() }
 {
   auto search_func = sigc::mem_fun(*this, &Help::on_search_changed);

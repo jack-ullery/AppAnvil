@@ -47,26 +47,22 @@ private:
   // Widgets
   Glib::RefPtr<Gtk::Builder> builder;
 
-  std::shared_ptr<Gtk::ToggleButton> p_change_state_toggle;
-  std::shared_ptr<Gtk::ToggleButton> p_load_profile_toggle;
+  std::unique_ptr<Gtk::ToggleButton> p_change_state_toggle;
+  std::unique_ptr<Gtk::ToggleButton> p_load_profile_toggle;
 
-  std::shared_ptr<Gtk::Stack> p_stack;
-  std::shared_ptr<Gtk::Box> p_state_selection_box;
-  std::shared_ptr<Gtk::ComboBoxText> p_status_selection;
-  std::shared_ptr<Gtk::Button> p_apply_button;
-  std::shared_ptr<Gtk::Label> p_apply_info_text;
+  std::unique_ptr<Gtk::Stack> p_stack;
+  std::unique_ptr<Gtk::Box> p_state_selection_box;
+  std::unique_ptr<Gtk::ComboBoxText> p_status_selection;
+  std::unique_ptr<Gtk::Button> p_apply_button;
+  std::unique_ptr<Gtk::Label> p_apply_info_text;
 
-  std::shared_ptr<Gtk::Box> p_profile_info;
-  std::shared_ptr<Gtk::Label> p_num_log_label;
-  std::shared_ptr<Gtk::Label> p_num_proc_label;
-  std::shared_ptr<Gtk::Label> p_num_perm_label;
+  std::unique_ptr<Gtk::Box> p_profile_info;
+  std::unique_ptr<Gtk::Label> p_num_log_label;
+  std::unique_ptr<Gtk::Label> p_num_proc_label;
+  std::unique_ptr<Gtk::Label> p_num_perm_label;
 
   // Profile Loader page, which is added to the stack
   std::unique_ptr<ProfileLoader> loader;
-
-  // Misc
-  template<typename T_Widget>
-  static std::shared_ptr<T_Widget> get_widget_shared(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);
 
 #ifdef TESTS_ENABLED
   FRIEND_TEST(ProfilesTest, CHECK_APPLY_LABEL_TEXT);

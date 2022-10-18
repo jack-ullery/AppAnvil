@@ -30,9 +30,6 @@ private:
   std::unique_ptr<Gtk::FileChooser> l_filechooser_button;
   std::unique_ptr<Gtk::Label> l_confirm_label;
   std::unique_ptr<Gtk::Button> l_confirm_button;
-
-  template<typename T_Widget>
-  static std::unique_ptr<T_Widget> get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);
 };
 
 #endif // TABS_PROFILES_H

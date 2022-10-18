@@ -28,10 +28,6 @@ private:
 
   // Widgets
   std::vector<InfoBox> info_vec;
-
-  // Misc
-  template<typename T_Widget>
-  static std::unique_ptr<T_Widget> get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);
 };
 
 #endif // TABS_VIEW_LOGS_H

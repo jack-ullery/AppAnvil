@@ -1,4 +1,5 @@
 #include "status.h"
+#include "common.h"
 
 #include "jsoncpp/json/json.h"
 
@@ -6,22 +7,6 @@
 #include <regex>
 #include <sstream>
 #include <string>
-
-template<typename T_Widget>
-std::unique_ptr<T_Widget> Status::get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder)
-{
-  T_Widget *raw_addr = nullptr;
-  builder->get_widget<T_Widget>(name, raw_addr);
-  return std::unique_ptr<T_Widget>(raw_addr);
-}
-
-template<typename T_Widget>
-std::shared_ptr<T_Widget> Status::get_widget_shared(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder)
-{
-  T_Widget *raw_addr = nullptr;
-  builder->get_widget<T_Widget>(name, raw_addr);
-  return std::shared_ptr<T_Widget>(raw_addr);
-}
 
 void Status::set_status_label_text(const std::string &str)
 {
@@ -73,15 +58,15 @@ void Status::show_searchbar(const bool &should_focus)
 
 Status::Status(const std::string &glade_resource)
   : builder{ Gtk::Builder::create_from_resource(glade_resource) },
-    s_view{ Status::get_widget_shared<Gtk::TreeView>("s_view", builder) },
-    s_win{ Status::get_widget_shared<Gtk::ScrolledWindow>("s_win", builder) },
-    s_box{ Status::get_widget<Gtk::Box>("s_box", builder) },
-    s_searchbox{ Status::get_widget<Gtk::Box>("s_searchbox", builder) },
-    s_search{ Status::get_widget<Gtk::SearchEntry>("s_search", builder) },
-    s_use_regex{ Status::get_widget<Gtk::CheckButton>("s_use_regex", builder) },
-    s_match_case{ Status::get_widget<Gtk::CheckButton>("s_match_case", builder) },
-    s_whole_word{ Status::get_widget<Gtk::CheckButton>("s_whole_word", builder) },
-    s_found_label{ Status::get_widget<Gtk::Label>("s_found_label", builder) }
+    s_view{ Common::get_widget_shared<Gtk::TreeView>("s_view", builder) },
+    s_win{ Common::get_widget_shared<Gtk::ScrolledWindow>("s_win", builder) },
+    s_box{ Common::get_widget<Gtk::Box>("s_box", builder) },
+    s_searchbox{ Common::get_widget<Gtk::Box>("s_searchbox", builder) },
+    s_search{ Common::get_widget<Gtk::SearchEntry>("s_search", builder) },
+    s_use_regex{ Common::get_widget<Gtk::CheckButton>("s_use_regex", builder) },
+    s_match_case{ Common::get_widget<Gtk::CheckButton>("s_match_case", builder) },
+    s_whole_word{ Common::get_widget<Gtk::CheckButton>("s_whole_word", builder) },
+    s_found_label{ Common::get_widget<Gtk::Label>("s_found_label", builder) }
 {
   s_view->set_activate_on_single_click(true);
 
