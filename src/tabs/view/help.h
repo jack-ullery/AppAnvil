@@ -49,9 +49,6 @@ private:
   // The text that is shown
   // const std::string description;
   const std::string description;
-
-  template<typename T_Widget>
-  static std::unique_ptr<T_Widget> get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);
 };
 
 #endif // TABS_VIEW_HELP_H

@@ -1,14 +1,6 @@
+#include "common.h"
 #include "logs.h"
 #include "info_box.h"
-
-// TODO: Make get_widget common function somewhere
-template<typename T_Widget>
-std::unique_ptr<T_Widget> Logs::get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder)
-{
-  T_Widget *raw_addr = nullptr;
-  builder->get_widget<T_Widget>(name, raw_addr);
-  return std::unique_ptr<T_Widget>(raw_addr);
-}
 
 void Logs::set_information(std::list<std::pair<std::string, std::string>> data)
 {
@@ -37,7 +29,7 @@ void Logs::set_information(std::list<std::pair<std::string, std::string>> data)
 Logs::Logs()
   : Status("/resources/log.glade"),
     builder{ Status::get_builder() },
-    l_log_info{ Logs::get_widget<Gtk::Box>("l_log_info", builder) },
+    l_log_info{ Common::get_widget<Gtk::Box>("l_log_info", builder) },
     info_vec()
 {
   this->show_all();

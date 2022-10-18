@@ -1,3 +1,4 @@
+#include "common.h"
 #include "profiles.h"
 #include "../model/status_column_record.h"
 
@@ -13,14 +14,6 @@
 #include <string>
 #include <tuple>
 #include <vector>
-
-template<typename T_Widget>
-std::shared_ptr<T_Widget> Profiles::get_widget_shared(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder)
-{
-  T_Widget *raw_addr = nullptr;
-  builder->get_widget<T_Widget>(name, raw_addr);
-  return std::shared_ptr<T_Widget>(raw_addr);
-}
 
 void Profiles::change_status()
 {
@@ -109,17 +102,17 @@ void Profiles::handle_load_profile_toggle()
 Profiles::Profiles()
   : Status("/resources/profile.glade"),
     builder{ Status::get_builder() },
-    p_change_state_toggle{ get_widget_shared<Gtk::ToggleButton>("p_change_state_toggle", builder) },
-    p_load_profile_toggle{ get_widget_shared<Gtk::ToggleButton>("p_load_profile_toggle", builder) },
-    p_stack{ get_widget_shared<Gtk::Stack>("p_stack", builder) },
-    p_state_selection_box{ get_widget_shared<Gtk::Box>("p_state_selection_box", builder) },
-    p_status_selection{ get_widget_shared<Gtk::ComboBoxText>("p_status_selection", builder) },
-    p_apply_button{ get_widget_shared<Gtk::Button>("p_apply_button", builder) },
-    p_apply_info_text{ get_widget_shared<Gtk::Label>("p_apply_info_text", builder) },
-    p_profile_info{ get_widget_shared<Gtk::Box>("p_profile_info", builder) },
-    p_num_log_label{ get_widget_shared<Gtk::Label>("p_num_log_label", builder) },
-    p_num_proc_label{ get_widget_shared<Gtk::Label>("p_num_proc_label", builder) },
-    p_num_perm_label{ get_widget_shared<Gtk::Label>("p_num_perm_label", builder) },
+    p_change_state_toggle{ Common::get_widget_shared<Gtk::ToggleButton>("p_change_state_toggle", builder) },
+    p_load_profile_toggle{ Common::get_widget_shared<Gtk::ToggleButton>("p_load_profile_toggle", builder) },
+    p_stack{ Common::get_widget_shared<Gtk::Stack>("p_stack", builder) },
+    p_state_selection_box{ Common::get_widget_shared<Gtk::Box>("p_state_selection_box", builder) },
+    p_status_selection{ Common::get_widget_shared<Gtk::ComboBoxText>("p_status_selection", builder) },
+    p_apply_button{ Common::get_widget_shared<Gtk::Button>("p_apply_button", builder) },
+    p_apply_info_text{ Common::get_widget_shared<Gtk::Label>("p_apply_info_text", builder) },
+    p_profile_info{ Common::get_widget_shared<Gtk::Box>("p_profile_info", builder) },
+    p_num_log_label{ Common::get_widget_shared<Gtk::Label>("p_num_log_label", builder) },
+    p_num_proc_label{ Common::get_widget_shared<Gtk::Label>("p_num_proc_label", builder) },
+    p_num_perm_label{ Common::get_widget_shared<Gtk::Label>("p_num_perm_label", builder) },
     loader{ new ProfileLoader() }
 {
   // Add tabs to the stack pane

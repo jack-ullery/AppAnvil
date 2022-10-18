@@ -53,9 +53,7 @@ public:
   void set_refresh_signal_handler(const Glib::SignalProxyProperty::SlotType &func);
 
   SearchInfo get_search_info();
-
   void hide_searchbar();
-
   void show_searchbar(const bool &should_focus);
 
 protected:
@@ -79,12 +77,6 @@ private:
   std::unique_ptr<Gtk::CheckButton> s_match_case;
   std::unique_ptr<Gtk::CheckButton> s_whole_word;
   std::unique_ptr<Gtk::Label> s_found_label;
-
-  // Misc
-  template<typename T_Widget>
-  static std::shared_ptr<T_Widget> get_widget_shared(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);
-  template<typename T_Widget>
-  static std::unique_ptr<T_Widget> get_widget(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);
 
   // clang-tidy complains about the `COLUMN_TYPE_STRING` macro, so we assign it here and tell clang-tidy not to look at it
   static constexpr unsigned int COLUMN_TYPE_STRING = G_TYPE_STRING; // NOLINT

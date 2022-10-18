@@ -64,10 +64,6 @@ private:
   // Profile Loader page, which is added to the stack
   std::unique_ptr<ProfileLoader> loader;
 
-  // Misc
-  template<typename T_Widget>
-  static std::shared_ptr<T_Widget> get_widget_shared(Glib::ustring name, const Glib::RefPtr<Gtk::Builder> &builder);
-
 #ifdef TESTS_ENABLED
   FRIEND_TEST(ProfilesTest, CHECK_APPLY_LABEL_TEXT);
   FRIEND_TEST(ProfilesTest, CHANGE_STATUS_WIDGETS_INVISIBLE_WHEN_NO_ROWS_SELECTED);
