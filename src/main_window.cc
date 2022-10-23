@@ -40,10 +40,6 @@ MainWindow::MainWindow()
   auto help_toggle_fun = sigc::mem_fun(*this, &MainWindow::on_help_toggle);
   m_help_button.signal_toggled().connect(help_toggle_fun, true);
 
-  // Simulate clicking the help toggle button (m_help_button), whenever somebody presses the bottom button on the help page
-  auto activate_help_toggle_fun = sigc::mem_fun(*this, &MainWindow::untoggle_help);
-  help->set_return_signal_handler(activate_help_toggle_fun);
-
   // Configure settings related to 'Search' button
   m_search_button.set_image_from_icon_name("edit-find-symbolic");
 
@@ -109,11 +105,6 @@ void MainWindow::on_help_toggle()
   }
 
   handle_search_button_visiblity();
-}
-
-void MainWindow::untoggle_help()
-{
-  m_help_button.set_active(false);
 }
 
 void MainWindow::on_search_toggle()

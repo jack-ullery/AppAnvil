@@ -10,7 +10,6 @@ Help::Help()
     h_label{ Common::get_widget<Gtk::Label>("h_label", builder) },
     h_searchbox{ Common::get_widget<Gtk::Box>("h_searchbox", builder) },
     h_search{ Common::get_widget<Gtk::SearchEntry>("h_search", builder) },
-    h_return_button{ Common::get_widget<Gtk::Button>("h_return_button", builder) },
     description{ h_label->get_label() }
 {
   auto search_func = sigc::mem_fun(*this, &Help::on_search_changed);
@@ -39,11 +38,6 @@ void Help::show_searchbar(const bool &should_focus)
   if (should_focus) {
     h_search->grab_focus();
   }
-}
-
-void Help::set_return_signal_handler(const Glib::SignalProxy<void>::SlotType &func)
-{
-  h_return_button->signal_clicked().connect(func, true);
 }
 
 void Help::set_search_signal_handler(const Glib::SignalProxyProperty::SlotType &func)

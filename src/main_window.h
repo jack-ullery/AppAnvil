@@ -42,14 +42,6 @@ protected:
   // Signal handlers:
 
   /**
-   * @brief Untoggles the button that controls the 'Help' page.
-   *
-   * @details
-   * This function is used as a signal handler in the 'Help' page
-   */
-  void untoggle_help();
-
-  /**
    * @brief Makes the 'Help' page visible whenever toggled.
    *
    * @details
