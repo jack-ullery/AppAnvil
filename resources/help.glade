@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.2 -->
+<!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
   <object class="GtkBox" id="h_box">
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
+    <property name="can-focus">False</property>
     <property name="hexpand">True</property>
     <property name="vexpand">True</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkScrolledWindow">
         <property name="visible">True</property>
-        <property name="can_focus">True</property>
+        <property name="can-focus">True</property>
         <property name="hexpand">True</property>
         <property name="vexpand">True</property>
-        <property name="shadow_type">in</property>
+        <property name="shadow-type">in</property>
         <child>
           <object class="GtkViewport">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="valign">start</property>
             <child>
               <object class="GtkLabel" id="h_label">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="halign">start</property>
                 <property name="valign">start</property>
-                <property name="margin_left">10</property>
-                <property name="margin_right">10</property>
-                <property name="margin_top">10</property>
-                <property name="margin_bottom">10</property>
+                <property name="margin-start">10</property>
+                <property name="margin-end">10</property>
+                <property name="margin-top">10</property>
+                <property name="margin-bottom">10</property>
                 <property name="hexpand">False</property>
                 <property name="vexpand">False</property>
-                <property name="label" translatable="yes">&lt;b&gt;What is AppAnvil?&lt;/b&gt;
+                <property name="label" translatable="yes">&lt;span size="large" weight="bold"&gt;What is AppAnvil?&lt;/span&gt;
 AppAnvil is a graphical user interface (GUI) designed to facilitate the use of AppArmor.
 
-&lt;b&gt;What is AppArmor?&lt;/b&gt;
+&lt;span size="large" weight="bold"&gt;What is AppArmor?&lt;/span&gt;
 AppArmor is a Linux security module that protects your system from potential threats by imposing Mandatory Access Control (MAC). It allows the user to secure individual applications by defining and restricting what resources an application can access or share.
 
-&lt;b&gt;What is a profile?&lt;/b&gt;
+&lt;span size="large" weight="bold"&gt;What is a profile?&lt;/span&gt;
 Profiles are the user-defined restrictions for an application. They determine what resources applications can access or share. 
 
 One use case for a profile is to block access to sensitive files.
@@ -50,7 +50,7 @@ One use case for a profile is to block access to sensitive files.
 
 You can change the mode of your profile(s) under the 'Profile' tab.
 
-&lt;b&gt;What information do logs contain?&lt;/b&gt;
+&lt;span size="large" weight="bold"&gt;What information do logs contain?&lt;/span&gt;
 Logs contain information for each AppArmor event, which make them useful for debugging.
 
 &lt;u&gt;Logs contain:&lt;/u&gt;
@@ -69,11 +69,11 @@ Logs contain information for each AppArmor event, which make them useful for deb
     
 You can access log information under the 'Logs' tab.
 
-&lt;b&gt;How do I monitor specific processes?&lt;/b&gt;
+&lt;span size="large" weight="bold"&gt;How do I monitor specific processes?&lt;/span&gt;
 You can monitor processes with existing AppArmor profiles under the 'Processes' tab.</property>
-                <property name="use_markup">True</property>
+                <property name="use-markup">True</property>
                 <property name="wrap">True</property>
-                <property name="wrap_mode">word-char</property>
+                <property name="wrap-mode">word-char</property>
                 <property name="selectable">True</property>
               </object>
             </child>
@@ -89,17 +89,17 @@ You can monitor processes with existing AppArmor profiles under the 'Processes' 
     <child>
       <object class="GtkBox" id="h_searchbox">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="can-focus">False</property>
         <child>
           <object class="GtkSearchEntry" id="h_search">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="margin_left">10</property>
-            <property name="margin_right">10</property>
-            <property name="margin_top">5</property>
-            <property name="primary_icon_name">edit-find-symbolic</property>
-            <property name="primary_icon_activatable">False</property>
-            <property name="primary_icon_sensitive">False</property>
+            <property name="can-focus">True</property>
+            <property name="margin-start">10</property>
+            <property name="margin-end">10</property>
+            <property name="margin-top">5</property>
+            <property name="primary-icon-name">edit-find-symbolic</property>
+            <property name="primary-icon-activatable">False</property>
+            <property name="primary-icon-sensitive">False</property>
           </object>
           <packing>
             <property name="expand">True</property>
@@ -112,37 +112,6 @@ You can monitor processes with existing AppArmor profiles under the 'Processes' 
         <property name="expand">False</property>
         <property name="fill">True</property>
         <property name="position">1</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <child>
-          <object class="GtkButton" id="h_return_button">
-            <property name="label" translatable="yes">Return to main application</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="halign">baseline</property>
-            <property name="margin_left">10</property>
-            <property name="margin_right">10</property>
-            <property name="margin_top">5</property>
-            <property name="margin_bottom">5</property>
-            <property name="hexpand">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="pack_type">end</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-      </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">2</property>
       </packing>
     </child>
   </object>
