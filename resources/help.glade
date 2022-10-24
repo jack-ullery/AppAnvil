@@ -33,13 +33,13 @@
                 <property name="margin-bottom">10</property>
                 <property name="hexpand">False</property>
                 <property name="vexpand">False</property>
-                <property name="label" translatable="yes">&lt;span size="large" weight="bold"&gt;What is AppAnvil?&lt;/span&gt;
+                <property name="label" translatable="yes">&lt;span size="110%" weight="bold"&gt;What is AppAnvil?&lt;/span&gt;
 AppAnvil is a graphical user interface (GUI) designed to facilitate the use of AppArmor.
 
-&lt;span size="large" weight="bold"&gt;What is AppArmor?&lt;/span&gt;
+&lt;span size="110%" weight="bold"&gt;What is AppArmor?&lt;/span&gt;
 AppArmor is a Linux security module that protects your system from potential threats by imposing Mandatory Access Control (MAC). It allows the user to secure individual applications by defining and restricting what resources an application can access or share.
 
-&lt;span size="large" weight="bold"&gt;What is a profile?&lt;/span&gt;
+&lt;span size="110%" weight="bold"&gt;What is a profile?&lt;/span&gt;
 Profiles are the user-defined restrictions for an application. They determine what resources applications can access or share. 
 
 One use case for a profile is to block access to sensitive files.
@@ -50,7 +50,7 @@ One use case for a profile is to block access to sensitive files.
 
 You can change the mode of your profile(s) under the 'Profile' tab.
 
-&lt;span size="large" weight="bold"&gt;What information do logs contain?&lt;/span&gt;
+&lt;span size="110%" weight="bold"&gt;What information do logs contain?&lt;/span&gt;
 Logs contain information for each AppArmor event, which make them useful for debugging.
 
 &lt;u&gt;Logs contain:&lt;/u&gt;
@@ -69,7 +69,7 @@ Logs contain information for each AppArmor event, which make them useful for deb
     
 You can access log information under the 'Logs' tab.
 
-&lt;span size="large" weight="bold"&gt;How do I monitor specific processes?&lt;/span&gt;
+&lt;span size="110%" weight="bold"&gt;How do I monitor specific processes?&lt;/span&gt;
 You can monitor processes with existing AppArmor profiles under the 'Processes' tab.</property>
                 <property name="use-markup">True</property>
                 <property name="wrap">True</property>
