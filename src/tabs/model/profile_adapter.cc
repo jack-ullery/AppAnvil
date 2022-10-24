@@ -27,6 +27,8 @@ void ProfileAdapter<Database>::put_data(const std::string &profile_name, const s
     // A pre-existing entry was found, so we should modify it
     ProfileTableEntry entry = iter->second;
     entry.status            = status;
+    entry.row->set_value(2, status);
+
     db->profile_data.erase(profile_name);
     db->profile_data.insert({ profile_name, entry });
   }
