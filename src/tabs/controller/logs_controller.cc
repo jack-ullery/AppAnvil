@@ -79,8 +79,8 @@ void LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::V
     std::string status = format_log_data(entry["_AUDIT_FIELD_PROFILE"].asString());
     metadata.push_back({ "Status", status });
   }
-  /* Denied access event */
-  else if (type == "DENIED") {
+  /* Either the Denied or Audited access event */
+  else if (type == "DENIED" || type == "AUDIT") {
     name      = format_log_data(entry["_AUDIT_FIELD_PROFILE"].asString());
     operation = format_log_data(entry["_AUDIT_FIELD_OPERATION"].asString());
 
@@ -108,10 +108,6 @@ void LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::V
   // else if(type == "ERROR") {
 
   // }
-  // /* Audited event */
-  // else if(type == "AUDIT") {
-
-  // }
   // /* Complain mode event */
   // else if(type == "ALLOWED") {
 
@@ -121,7 +117,7 @@ void LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::V
 
   // }
   else {
-    std::cerr << "Error - Unknown log type: " << type << std::endl;
+    std::cerr << "Error - Unknown log type (" << type << ") : " << entry << std::endl;
     name      = entry["_AUDIT_FIELD_NAME"].asString();
     operation = format_log_data(entry["_AUDIT_FIELD_OPERATION"].asString());
 
