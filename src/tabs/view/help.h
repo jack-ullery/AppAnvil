@@ -28,7 +28,6 @@ public:
 
   void hide_searchbar();
   void show_searchbar(const bool &should_focus);
-  void set_return_signal_handler(const Glib::SignalProxy<void>::SlotType &func);
 
 protected:
   // Signal handlers
@@ -44,7 +43,6 @@ private:
   std::unique_ptr<Gtk::Label> h_label;
   std::unique_ptr<Gtk::Box> h_searchbox;
   std::unique_ptr<Gtk::SearchEntry> h_search;
-  std::unique_ptr<Gtk::Button> h_return_button;
 
   // The text that is shown
   // const std::string description;
