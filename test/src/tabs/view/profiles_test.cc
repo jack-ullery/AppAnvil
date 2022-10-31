@@ -10,11 +10,13 @@ using ::testing::_;
 
 Glib::RefPtr<Gtk::TreeStore> ProfilesTest::initialize_store()
 {
-  auto first_column  = Gtk::TreeModelColumn<std::string>();
+  auto first_column  = Gtk::TreeModelColumn<ProfileTableEntry>();
   auto second_column = Gtk::TreeModelColumn<std::string>();
+  auto third_column  = Gtk::TreeModelColumn<std::string>();
 
   record.add(first_column);
   record.add(second_column);
+  record.add(third_column);
 
   auto view = pc.get_view();
   EXPECT_FALSE(view == nullptr) << "`pc.get_view()` should not return a nullptr";
@@ -32,8 +34,8 @@ void ProfilesTest::create_and_select_row(Glib::RefPtr<Gtk::TreeStore> store, std
 {
   // Create a row and put some data into the first column
   auto iter = store->append();
-  iter->set_value(0, profile);
-  iter->set_value(1, status);
+  iter->set_value(1, profile);
+  iter->set_value(2, status);
 
   // Get the path to the newly created row
   auto path = store->get_path(iter);
