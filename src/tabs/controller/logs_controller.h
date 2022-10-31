@@ -36,7 +36,7 @@ public:
 protected:
   static std::string format_log_data(const std::string &data);
 
-  bool add_data_to_record_helper(std::shared_ptr<std::istringstream> json_data);
+  bool add_data_to_record_helper(const std::shared_ptr<std::istringstream> &json_data);
   void add_row_from_json(const Json::Value &entry);
 
 private:

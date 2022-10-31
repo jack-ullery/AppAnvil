@@ -26,6 +26,9 @@
 constexpr int DEFAULT_WINDOW_WIDTH  = 1200;
 constexpr int DEFAULT_WINDOW_HEIGHT = 742;
 
+// Duration in milliseconds
+constexpr int DEFAULT_TRANSITION_DURATION = 150;
+
 class MainWindow : public Gtk::ApplicationWindow
 {
 public:

@@ -1,4 +1,6 @@
 #include "main_window.h"
+
+// NOLINTNEXTLINE(bugprone-suspicious-include)
 #include "resource.autogen.c"
 
 #include <gtkmm/application.h>

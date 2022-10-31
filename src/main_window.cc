@@ -20,7 +20,7 @@ MainWindow::MainWindow()
 
   // Add a transition to the stack
   m_tab_stack.set_transition_type(Gtk::STACK_TRANSITION_TYPE_CROSSFADE);
-  m_tab_stack.set_transition_duration(150);
+  m_tab_stack.set_transition_duration(DEFAULT_TRANSITION_DURATION);
 
   // Attach the stack to the stack switcher
   m_switcher.set_stack(m_tab_stack);
@@ -51,7 +51,7 @@ MainWindow::MainWindow()
   m_top_stack.add(m_tab_stack, "main_page");
   m_top_stack.add(*help, "help_page");
 
-  m_top_stack.set_transition_duration(150);
+  m_top_stack.set_transition_duration(DEFAULT_TRANSITION_DURATION);
 
   // Set some default properties for titlebar
   m_headerbar.set_custom_title(m_switcher);
@@ -89,7 +89,7 @@ void MainWindow::send_status_change(const std::string &profile, const std::strin
 
 void MainWindow::on_help_toggle()
 {
-  bool is_active = m_help_button.get_active();
+  const bool is_active = m_help_button.get_active();
 
   if (is_active) {
     m_switcher.hide();
@@ -109,8 +109,8 @@ void MainWindow::on_help_toggle()
 
 void MainWindow::on_search_toggle()
 {
-  std::string visible_child = m_tab_stack.get_visible_child_name();
-  bool is_active            = m_search_button.get_active();
+  const std::string visible_child = m_tab_stack.get_visible_child_name();
+  const bool is_active            = m_search_button.get_active();
 
   if (is_active) {
     // Show the searchbars, and determine which searchbar should be focused
@@ -130,7 +130,7 @@ bool MainWindow::on_switch(GdkEvent *event)
 {
   std::ignore = event;
 
-  std::string visible_child = m_tab_stack.get_visible_child_name();
+  const std::string visible_child = m_tab_stack.get_visible_child_name();
   if (visible_child == "prof") {
     console->send_refresh_message(PROFILE);
   } else if (visible_child == "proc") {
@@ -146,8 +146,8 @@ bool MainWindow::on_switch(GdkEvent *event)
 
 void MainWindow::handle_search_button_visiblity()
 {
-  bool help_is_active       = m_help_button.get_active();
-  std::string visible_child = m_tab_stack.get_visible_child_name();
+  const bool help_is_active       = m_help_button.get_active();
+  const std::string visible_child = m_tab_stack.get_visible_child_name();
 
   if (visible_child == "profile_loader" && !help_is_active) {
     m_search_button.hide();

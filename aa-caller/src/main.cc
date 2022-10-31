@@ -14,17 +14,22 @@ void print_usage()
 
 int main(int argc, char **argv)
 {
+  // NOLINTBEGIN(cppcoreguidelines-pro-bounds-pointer-arithmetic)
   if (argc == 2) {
     std::string arg(argv[1]);
     if (arg == "-s") {
       // Argument for: "get_status"
       std::cout << AppArmorCaller::get_status();
       return 0;
-    } else if (arg == "-u") {
+    }
+    
+    if (arg == "-u") {
       // Argument for: "get_unconfined"
       std::cout << AppArmorCaller::get_unconfined();
       return 0;
-    } else if (arg == "-l") {
+    }
+    
+    if (arg == "-l") {
       // Argument for: "get_logs"
       std::cout << AppArmorCaller::get_logs();
       return 0;
@@ -42,4 +47,5 @@ int main(int argc, char **argv)
 
   print_usage();
   return 1;
+  // NOLINTEND(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 }

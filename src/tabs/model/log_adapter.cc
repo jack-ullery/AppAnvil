@@ -2,9 +2,9 @@
 #include "database.h"
 #include "status_column_record.h"
 
+#include <gtest/gtest.h>
 #include <bits/types/time_t.h>
 #include <cstddef>
-#include <gtest/gtest.h>
 #include <gtkmm/treeiter.h>
 #include <iomanip>
 #include <regex>
@@ -16,7 +16,8 @@ std::string LogAdapter<Database, ColumnRecord>::format_timestamp(const time_t &t
 {
   std::stringstream stream;
 
-  auto *tm = localtime(&timestamp);
+  std::tm bt {};
+  auto *tm = localtime_r(&timestamp, &bt);
   stream << std::put_time(tm, "%F %T");
 
   return stream.str() + '\t';
@@ -34,11 +35,8 @@ void LogAdapter<Database, ColumnRecord>::put_data(const time_t &timestamp,
   auto num_log_iter = db->log_data.find(profile_name);
 
   // Attempt to find the number of logs already processed for this type of profile
-  uint num_logs;
-  if (num_log_iter == db->log_data.end()) {
-    // Create new integer (starting at one) if no were found
-    num_logs = 1;
-  } else {
+  uint num_logs = 1;
+  if (num_log_iter != db->log_data.end()) {
     num_logs = num_log_iter->second + 1;
   }
 

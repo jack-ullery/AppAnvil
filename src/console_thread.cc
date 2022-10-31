@@ -18,11 +18,9 @@ ConsoleThread<ProfilesController, ProcessesController, LogsController>::ConsoleT
                                                                                       std::shared_ptr<ProcessesController> proc,
                                                                                       std::shared_ptr<LogsController> logs)
   : last_state{ PROFILE },
-    dispatch_man(std::move(prof), std::move(proc), std::move(logs))
+    dispatch_man(std::move(prof), std::move(proc), std::move(logs)),
+    asynchronous_thread(std::async(std::launch::async, &ConsoleThread<ProfilesController, ProcessesController, LogsController>::console_caller, this))
 {
-  asynchronous_thread =
-    std::async(std::launch::async, &ConsoleThread<ProfilesController, ProcessesController, LogsController>::console_caller, this);
-
   // Get all the important data at startup
   send_refresh_message(PROFILE);
   send_refresh_message(PROCESS);
@@ -95,7 +93,7 @@ std::string ConsoleThread<ProfilesController, ProcessesController, LogsControlle
     // Attempt to find the cursor position in the last line
     std::string last_line = logs.substr(last_line_pos);
 
-    auto cursor_pos = last_line.find_first_of(":");
+    auto cursor_pos = last_line.find_first_of(':');
 
     if (cursor_pos != std::string::npos) {
       // If we found the cursor, override the old cursor with the new one

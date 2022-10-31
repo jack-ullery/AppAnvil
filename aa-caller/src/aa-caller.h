@@ -12,6 +12,16 @@
 class AppArmorCaller
 {
 public:
+  // Default constructor and destructor
+  AppArmorCaller() = default;
+  virtual ~AppArmorCaller() = default;
+
+  // Copy/move constructors and operators
+  AppArmorCaller(const AppArmorCaller &)            = default;
+  AppArmorCaller(AppArmorCaller &&)                 = delete;
+  AppArmorCaller &operator=(const AppArmorCaller &) = default;
+  AppArmorCaller &operator=(AppArmorCaller &&)      = delete;
+
   /**
    * @brief Return the output of `aa-status --json`
    *

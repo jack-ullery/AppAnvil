@@ -96,7 +96,9 @@ std::string CommandCaller::execute_change(CommandCaller *caller,
 
   if (new_status == old_status) {
     return "'" + profile + "' already set to " + new_status + ".";
-  } else if (new_status == "enforce") {
+  } 
+
+  if (new_status == "enforce") {
     status_command = "aa-enforce";
   } else if (new_status == "complain") {
     status_command = "aa-complain";

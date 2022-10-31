@@ -77,7 +77,7 @@ void LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::V
     operation = format_log_data(entry["_AUDIT_FIELD_OPERATION"].asString());
 
     std::string status = format_log_data(entry["_AUDIT_FIELD_PROFILE"].asString());
-    metadata.push_back({ "Status", status });
+    metadata.emplace_back("Status", status);
   }
   /* Either the Denied or Audited access event */
   else if (type == "DENIED" || type == "AUDIT") {
@@ -88,16 +88,16 @@ void LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::V
       std::string capname    = format_log_data(entry["_AUDIT_FIELD_CAPNAME"].asString());
       std::string capability = entry["_AUDIT_FIELD_CAPABILITY"].asString();
 
-      metadata.push_back({ "Capability Name", capname });
-      metadata.push_back({ "Capability", capability });
+      metadata.emplace_back("Capability Name", capname);
+      metadata.emplace_back("Capability", capability);
     } else {
       std::string fieldName = entry["_AUDIT_FIELD_NAME"].asString();
       std::string requested = format_log_data(entry["_AUDIT_FIELD_REQUESTED_MASK"].asString());
       std::string denied    = format_log_data(entry["_AUDIT_FIELD_DENIED_MASK"].asString());
 
-      metadata.push_back({ "Field Name", fieldName });
-      metadata.push_back({ "Requested Mask", requested });
-      metadata.push_back({ "Denied Mask", denied });
+      metadata.emplace_back("Field Name", fieldName);
+      metadata.emplace_back("Requested Mask", requested);
+      metadata.emplace_back("Denied Mask", denied);
     }
   }
   // /* Default event type */
@@ -122,7 +122,7 @@ void LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::V
     operation = format_log_data(entry["_AUDIT_FIELD_OPERATION"].asString());
 
     std::string status = format_log_data(entry["_AUDIT_FIELD_PROFILE"].asString());
-    metadata.push_back({ "Status", status });
+    metadata.emplace_back("Status", status);
   }
 
   adapter->put_data(timestamp, type, operation, name, stoul(pid), metadata);
@@ -139,7 +139,7 @@ void LogsController<LogsTab, Database, Adapter>::add_data_to_record(const std::s
 }
 
 template<class LogsTab, class Database, class Adapter>
-bool LogsController<LogsTab, Database, Adapter>::add_data_to_record_helper(std::shared_ptr<std::istringstream> json_data)
+bool LogsController<LogsTab, Database, Adapter>::add_data_to_record_helper(const std::shared_ptr<std::istringstream> &json_data)
 {
   // Declare some variables that will be written to
   Json::Value value;
@@ -147,7 +147,8 @@ bool LogsController<LogsTab, Database, Adapter>::add_data_to_record_helper(std::
   JSONCPP_STRING errs;
 
   // gets each log entry (in json format, separated by \n), parses the json, and calls add_row_from_json to add each individual entry
-  for (uint i = 0; i < 127; i++) {
+  constexpr uint num_logs_batch = 127;
+  for (uint i = 0; i < num_logs_batch; i++) {
     // Get the next line (if it exists)
     std::string line;
     if (!std::getline(*json_data, line)) {
