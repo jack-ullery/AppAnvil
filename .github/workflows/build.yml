@@ -16,7 +16,7 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt-get update 1> /dev/null
-        sudo apt upgrade 1> /dev/null
+        sudo apt-get upgrade 1> /dev/null
         sudo apt-get install libgtkmm-3.0-dev libjsoncpp-dev libgtest-dev libgmock-dev clang-tidy cppcheck clang-format 1> /dev/null
     
     - name: Configure CMake
@@ -51,7 +51,7 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt-get update 1> /dev/null
-        sudo apt upgrade 1> /dev/null
+        sudo apt-get upgrade 1> /dev/null
         sudo apt-get install xvfb libgtkmm-3.0-dev libjsoncpp-dev 1> /dev/null
 
     - name: Download Binary Artifacts

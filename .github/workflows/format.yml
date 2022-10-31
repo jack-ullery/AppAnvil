@@ -21,7 +21,7 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt-get update 1> /dev/null
-        sudo apt upgrade 1> /dev/null
+        sudo apt-get upgrade 1> /dev/null
         sudo apt-get install clang-format 1> /dev/null
 
     - name: Format Code
