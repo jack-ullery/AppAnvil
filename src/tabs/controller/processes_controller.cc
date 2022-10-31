@@ -12,7 +12,7 @@
 const std::regex unconfined_proc("^\\s*(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(unconfined|\\S+ \\(\\S+\\))\\s+(\\S+)"); // NOLINT(cert-err58-cpp)
 
 // TODO(regex): This is pretty buggy currently, we should fix it
-const std::regex confined_prof("^\\s*(.+)\\s+\\((enforce|complain)\\)"); // NOLINT(cert-err58-cpp)
+const std::regex confined_prof("^\\s*(.+)\\s+\\((enforce|complain|audit)\\)"); // NOLINT(cert-err58-cpp)
 
 template<class ProcessesTab, class Database, class Adapter>
 void ProcessesController<ProcessesTab, Database, Adapter>::add_row_from_line(const std::string &line)

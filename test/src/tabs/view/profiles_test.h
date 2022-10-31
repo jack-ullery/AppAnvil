@@ -1,6 +1,7 @@
 #ifndef TEST_SRC_TABS_CONTROLLER_PROFILES_MOCK_TEST_H
 #define TEST_SRC_TABS_CONTROLLER_PROFILES_MOCK_TEST_H
 
+#include "../../../../src/tabs/entries.h"
 #include "../../../../src/tabs/view/profiles.h"
 
 #include <gmock/gmock.h>

@@ -94,14 +94,16 @@ std::string CommandCaller::execute_change(CommandCaller *caller,
 {
   std::string status_command;
 
-  if (new_status == "enforce" && old_status != "enforce") {
-    status_command = "aa-enforce";
-  } else if (new_status == "complain" && old_status != "complain") {
-    status_command = "aa-complain";
-  } else if (new_status == "disable" && old_status != "disabled") {
-    status_command = "aa-disable";
-  } else if (new_status == old_status) {
+  if (new_status == old_status) {
     return "'" + profile + "' already set to " + new_status + ".";
+  } else if (new_status == "enforce") {
+    status_command = "aa-enforce";
+  } else if (new_status == "complain") {
+    status_command = "aa-complain";
+  } else if (new_status == "audit") {
+    status_command = "aa-audit";
+  } else if (new_status == "disabled") {
+    status_command = "aa-disable";
   } else {
     return "Error: Illegal arguments passed to CommandCaller::execute_change.";
   }

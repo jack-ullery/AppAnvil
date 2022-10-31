@@ -388,7 +388,8 @@
             <items>
               <item id="combo_enforce" translatable="yes">Enforce</item>
               <item id="combo_complain" translatable="yes">Complain</item>
-              <item id="combo_unconfine" translatable="yes">Disabled</item>
+              <item id="combo_audit" translatable="yes">Audit</item>
+              <item id="combo_unconfined" translatable="yes">Disabled</item>
             </items>
             <child internal-child="entry">
               <object class="GtkEntry">
