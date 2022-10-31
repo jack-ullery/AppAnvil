@@ -11,11 +11,12 @@ Checks: 'clang-diagnostic-*,
          hicpp-*,
          linuxkernel-*,
          llvm-*,
-         llvmlibc-*,
          misc-*,
          performance-*,
          portability-*,
          readability-*,
+         -bugprone-easily-swappable-parameters,
+         -readability-identifier-length, 
          -llvm-header-guard*,
          -misc-non-private-member-variables-in-classes*'
 WarningsAsErrors: ''
