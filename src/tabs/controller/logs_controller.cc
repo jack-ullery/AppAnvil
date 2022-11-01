@@ -8,7 +8,6 @@
 #include <list>
 #include <memory>
 #include <sigc++/functors/mem_fun.h>
-#include <sigc++/functors/ptr_fun.h>
 #include <sstream>
 
 template<class LogsTab, class Database, class Adapter>
