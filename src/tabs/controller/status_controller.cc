@@ -59,9 +59,9 @@ bool StatusController<Tab>::should_filter(const std::string &str,
 template<class Tab>
 bool StatusController<Tab>::filter(const Gtk::TreeModel::iterator &node)
 {
-  const int num_columns  = tab->get_view()->get_n_columns();
-  auto treeModel         = tab->get_view()->get_model();
-  SearchInfo info        = tab->get_search_info();
+  const int num_columns = tab->get_view()->get_n_columns();
+  auto treeModel        = tab->get_view()->get_model();
+  SearchInfo info       = tab->get_search_info();
 
   // If one column of the tree row has a string that matches the pattern, then make this node visible
   for (int i = 0; i < num_columns; i++) {

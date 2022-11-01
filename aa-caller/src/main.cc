@@ -22,13 +22,13 @@ int main(int argc, char **argv)
       std::cout << AppArmorCaller::get_status();
       return 0;
     }
-    
+
     if (arg == "-u") {
       // Argument for: "get_unconfined"
       std::cout << AppArmorCaller::get_unconfined();
       return 0;
     }
-    
+
     if (arg == "-l") {
       // Argument for: "get_logs"
       std::cout << AppArmorCaller::get_logs();

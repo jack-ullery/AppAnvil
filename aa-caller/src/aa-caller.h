@@ -13,7 +13,7 @@ class AppArmorCaller
 {
 public:
   // Default constructor and destructor
-  AppArmorCaller() = default;
+  AppArmorCaller()          = default;
   virtual ~AppArmorCaller() = default;
 
   // Copy/move constructors and operators

@@ -16,9 +16,8 @@
 class CommandCaller
 {
 public:
-
   // Default constructor and destructor
-  CommandCaller() = default;
+  CommandCaller()          = default;
   virtual ~CommandCaller() = default;
 
   // Declare implicit copy and move constructors

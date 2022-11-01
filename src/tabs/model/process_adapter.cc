@@ -84,7 +84,8 @@ void ProcessAdapter<Database, ColumnRecord>::put_data(const std::string &process
 }
 
 template<class Database, class ColumnRecord>
-std::pair<ProcessTableEntry, bool> ProcessAdapter<Database, ColumnRecord>::get_data(const std::string &profile_name, const unsigned int &pid)
+std::pair<ProcessTableEntry, bool> ProcessAdapter<Database, ColumnRecord>::get_data(const std::string &profile_name,
+                                                                                    const unsigned int &pid)
 {
   auto pid_map_iter = db->process_data.find(profile_name);
   if (pid_map_iter != db->process_data.end()) {

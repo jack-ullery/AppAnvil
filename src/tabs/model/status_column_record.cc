@@ -142,7 +142,7 @@ bool StatusColumnRecord::pid_exists_in_child(unsigned int pid, const Gtk::TreeRo
   auto children = parent.children();
 
   for (auto iter = children.begin(); iter != children.end(); iter++) {
-    unsigned int row_pid = 0;
+    unsigned int row_pid    = 0;
     const Gtk::TreeRow &row = *iter;
 
     row.get_value(3, row_pid);
