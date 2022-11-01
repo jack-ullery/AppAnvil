@@ -2,7 +2,6 @@
 #include "database.h"
 #include "status_column_record.h"
 
-#include <gtest/gtest.h>
 #include <bits/types/time_t.h>
 #include <cstddef>
 #include <gtkmm/treeiter.h>
