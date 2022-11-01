@@ -8,6 +8,7 @@
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treemodelsort.h>
 #include <memory>
+#include <sigc++/functors/ptr_fun.h>
 #include <tuple>
 #include <vector>
 
@@ -141,8 +142,9 @@ bool StatusColumnRecord::pid_exists_in_child(unsigned int pid, const Gtk::TreeRo
   auto children = parent.children();
 
   for (auto iter = children.begin(); iter != children.end(); iter++) {
-    unsigned int row_pid = 0;
-    auto row             = *iter;
+    unsigned int row_pid    = 0;
+    const Gtk::TreeRow &row = *iter;
+
     row.get_value(3, row_pid);
     if (row_pid == pid || (!row.children().empty() && pid_exists_in_child(pid, row))) {
       return true;
@@ -217,7 +219,7 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
 
     // Set some default settings for the columns
     // Note this a Gtk::TreeViewColumn which is different then the Gtk::TreeModelColumn which we use earlier
-    auto *column_view = view->get_column(i);
+    auto *column_view = view->get_column(static_cast<int>(i));
     column_view->set_reorderable();
     column_view->set_resizable();
     column_view->set_min_width(MIN_COL_WIDTH);
@@ -226,8 +228,9 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
     if (names[i].type == ColumnHeader::PROFILE_ENTRY || names[i].type == ColumnHeader::PROCESS_ENTRY ||
         names[i].type == ColumnHeader::LOG_ENTRY) {
       // Create a custom cell renderer which shows nothing for these entries
+      // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
       Gtk::CellRenderer *renderer = Gtk::manage(new Gtk::CellRendererText());
-      auto callback_fun           = sigc::mem_fun(*this, &StatusColumnRecord::ignore_cell_render);
+      auto callback_fun           = sigc::ptr_fun(&StatusColumnRecord::ignore_cell_render);
 
       column_view->clear();
       column_view->pack_start(*renderer, false);
@@ -324,8 +327,8 @@ void StatusColumnRecord::ignore_cell_render(Gtk::CellRenderer *renderer, const G
 {
   std::ignore = iter;
 
-  Gtk::CellRendererText *text_renderer = dynamic_cast<Gtk::CellRendererText *>(renderer);
-  if (text_renderer) {
+  auto *text_renderer = dynamic_cast<Gtk::CellRendererText *>(renderer);
+  if (text_renderer != nullptr) {
     text_renderer->property_text() = "";
   }
 }

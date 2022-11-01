@@ -16,6 +16,16 @@
 class CommandCaller
 {
 public:
+  // Default constructor and destructor
+  CommandCaller()          = default;
+  virtual ~CommandCaller() = default;
+
+  // Declare implicit copy and move constructors
+  CommandCaller(const CommandCaller &)            = default;
+  CommandCaller(CommandCaller &&)                 = delete;
+  CommandCaller &operator=(const CommandCaller &) = default;
+  CommandCaller &operator=(CommandCaller &&)      = delete;
+
   /**
    * @brief Return the output of `aa-status --json`
    *

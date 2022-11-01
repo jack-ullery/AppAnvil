@@ -148,7 +148,7 @@ private:
 
   // Ignores the parameter and returns an empty string
   // This is used by the cell renderer of columns we do not want to view
-  void ignore_cell_render(Gtk::CellRenderer *renderer, const Gtk::TreeIter &iter);
+  static void ignore_cell_render(Gtk::CellRenderer *renderer, const Gtk::TreeIter &iter);
 };
 
 #endif // TABS_STATUS_COLUMN_RECORD_H

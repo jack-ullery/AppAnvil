@@ -28,7 +28,7 @@ public:
                 const std::string &user,
                 const std::string &status);
 
-  std::pair<ProcessTableEntry, bool> get_data(std::string profile_name, const unsigned int &pid);
+  std::pair<ProcessTableEntry, bool> get_data(const std::string &profile_name, const unsigned int &pid);
 
   std::shared_ptr<ColumnRecord> get_col_record();
 

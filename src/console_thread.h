@@ -83,9 +83,6 @@ private:
   std::basic_string<char>::size_type find_last_line(std::string input);
   std::string strip_cursor_from_logs(std::string logs);
 
-  // Representation of the extra thread
-  std::future<void> asynchronous_thread;
-
   // Member fields
   BlockingQueue<Message, std::deque<Message>, std::mutex> queue;
   TabState last_state{ PROFILE };
@@ -93,6 +90,9 @@ private:
 
   // DispatcherMiddleman used to communicate results with main thread
   DispatcherMiddleman<ProfilesController, ProcessesController, LogsController, Glib::Dispatcher, std::mutex> dispatch_man;
+
+  // Representation of the extra thread
+  std::future<void> asynchronous_thread;
 
   // Synchronization Primitives
   std::mutex task_ready_mtx;

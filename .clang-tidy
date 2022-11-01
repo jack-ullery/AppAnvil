@@ -1,0 +1,32 @@
+---
+Checks: 'clang-diagnostic-*,
+         clang-analyzer-*,
+         -*,
+         bugprone-*,
+         cert-*,
+         clang-analyzer-*,
+         concurrency-*,
+         cppcoreguidelines-*,
+         google-*,
+         hicpp-*,
+         linuxkernel-*,
+         llvm-*,
+         misc-*,
+         performance-*,
+         portability-*,
+         readability-*,
+         -bugprone-easily-swappable-parameters,
+         -readability-identifier-length, 
+         -llvm-header-guard*,
+         -misc-const-correctness,
+         -misc-no-recursion'
+WarningsAsErrors: ''
+HeaderFilterRegex: './src/.*'
+AnalyzeTemporaryDtors: false
+FormatStyle:     none
+CheckOptions:
+  - key:    misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic
+    value:  'true'
+
+...
+

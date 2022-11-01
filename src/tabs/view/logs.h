@@ -17,7 +17,7 @@ public:
     LOG_STATUS
   };
 
-  void set_information(std::list<std::pair<std::string, std::string>> data);
+  void set_information(const std::list<std::pair<std::string, std::string>> &data);
 
 private:
   // GUI Builder to parse UI from xml file

@@ -89,9 +89,7 @@ if(${USE_CLANG_TIDY})
     message(WARNING "Could not find clang-tidy installation. Please install clang-tidy if you want to use it for static analysis.")
   else()
     message(STATUS "Adding clang-tidy to build")
-    set(CMAKE_CXX_CLANG_TIDY clang-tidy;
-      -checks=-*,bugprone-*,cert-*,clang-analyzer-*,concurrency-*,cppcoreguidelines-*,google-*,hicpp-*,linuxkernel-*,llvm-*,llvmlibc-*,misc-*,performance-*,portability-*,readability-*,-llvm-header-guard*,-misc-non-private-member-variables-in-classes*;
-      -header-filter=./src/.*
+    set(CMAKE_CXX_CLANG_TIDY clang-tidy; --config-file ${CMAKE_CURRENT_BINARY_DIR}/.clang-tidy
     )
   endif()
 
