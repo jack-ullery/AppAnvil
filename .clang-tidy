@@ -18,7 +18,8 @@ Checks: 'clang-diagnostic-*,
          -bugprone-easily-swappable-parameters,
          -readability-identifier-length, 
          -llvm-header-guard*,
-         -misc-const-correctness'
+         -misc-const-correctness,
+         -misc-no-recursion'
 WarningsAsErrors: ''
 HeaderFilterRegex: './src/.*'
 AnalyzeTemporaryDtors: false
