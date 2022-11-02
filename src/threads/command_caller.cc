@@ -3,6 +3,7 @@
 #include <glibmm/spawn.h>
 #include <iostream>
 #include <stdexcept>
+#include <sys/stat.h>
 
 CommandCaller::results CommandCaller::call_command(const std::vector<std::string> &command)
 {
@@ -87,6 +88,12 @@ std::string CommandCaller::disable_profile(CommandCaller *caller, const std::str
   return "Success: disabling porfile" + profileName;
 }
 
+bool file_exists(const std::string &location)
+{
+  struct stat buffer{};
+  return (stat (location.c_str(), &buffer) == 0);
+}
+
 std::string CommandCaller::execute_change(CommandCaller *caller,
                                           const std::string &profile,
                                           const std::string &old_status,
@@ -110,8 +117,21 @@ std::string CommandCaller::execute_change(CommandCaller *caller,
     return "Error: Illegal arguments passed to CommandCaller::execute_change.";
   }
 
+  // Attempt to locate the profile in possible locations
+  const std::vector<std::string> possible_profile_locations{"/etc/apparmor.d/", "/var/lib/snapd/apparmor/profiles/"};
+  std::string profile_location;
+
+  for(const std::string &location : possible_profile_locations) {
+    bool exists = file_exists(location + profile);
+  
+    if(exists) {
+      profile_location = location;
+      break;
+    }
+  }
+
   // command to change the profile to the provided status
-  std::vector<std::string> command = { "pkexec", status_command, profile };
+  std::vector<std::string> command = { "pkexec", status_command, "-d", profile_location, profile };
   auto result                      = caller->call_command(command);
 
   if (result.exit_status != 0) {
