@@ -88,7 +88,7 @@ std::string CommandCaller::disable_profile(CommandCaller *caller, const std::str
   return "Success: disabling porfile" + profileName;
 }
 
-bool file_exists(const std::string &location)
+bool CommandCaller::file_exists(const std::string &location)
 {
   struct stat buffer{};
   return (stat (location.c_str(), &buffer) == 0);
