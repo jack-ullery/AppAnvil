@@ -98,6 +98,9 @@ protected:
                                     const std::string &old_status,
                                     const std::string &new_status);
 
+  // Helper function
+  static bool file_exists(const std::string &location);
+
 #ifdef TESTS_ENABLED
   FRIEND_TEST(CommandCallerTest, TEST_UNCONF);
   FRIEND_TEST(CommandCallerTest, TEST_LOG);

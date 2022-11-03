@@ -184,11 +184,24 @@ set(CPACK_PACKAGE_CONTACT "Jack Ullery")
 set(CPACK_INSTALL_SCRIPT "cmake_install.cmake")
 include(CPack)
 
-#### Create install target to modify pkexec ####
+#### Set install target to also modify pkexec ####
 install(
   FILES ${PKEXEC_POLICY}
   DESTINATION /usr/share/polkit-1/actions/
 )
+
+#### Set install target to make snap profiles modifiable ####
+# This creates symbolic links in `/var/lib/snapd/apparmor/profiles`, to make it easier to modify these profiles
+
+set(PROFILE_SUBDIRS abi abstractions disable force-complain local tunables)
+foreach(SUBDIR ${PROFILE_SUBDIRS})
+  install(CODE "execute_process(
+    COMMAND bash -c \"
+      test -d /var/lib/snapd/apparmor/profiles &&
+      ! (test -d /var/lib/snapd/apparmor/profiles/${SUBDIR}) &&
+      sudo ln -s /etc/apparmor.d/${SUBDIR} /var/lib/snapd/apparmor/profiles
+    \")")
+endforeach( SUBDIR )
 
 #### Creating uninstall target (copying code from CMake FAQ) ####
 if(NOT TARGET uninstall)
