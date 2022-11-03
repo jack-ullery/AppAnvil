@@ -90,8 +90,9 @@ std::string CommandCaller::disable_profile(CommandCaller *caller, const std::str
 
 bool CommandCaller::file_exists(const std::string &location)
 {
-  struct stat buffer{};
-  return (stat (location.c_str(), &buffer) == 0);
+  struct stat buffer
+  {};
+  return (stat(location.c_str(), &buffer) == 0);
 }
 
 std::string CommandCaller::execute_change(CommandCaller *caller,
@@ -118,13 +119,13 @@ std::string CommandCaller::execute_change(CommandCaller *caller,
   }
 
   // Attempt to locate the profile in possible locations
-  const std::vector<std::string> possible_profile_locations{"/etc/apparmor.d/", "/var/lib/snapd/apparmor/profiles/"};
+  const std::vector<std::string> possible_profile_locations{ "/etc/apparmor.d/", "/var/lib/snapd/apparmor/profiles/" };
   std::string profile_location;
 
-  for(const std::string &location : possible_profile_locations) {
+  for (const std::string &location : possible_profile_locations) {
     bool exists = file_exists(location + profile);
-  
-    if(exists) {
+
+    if (exists) {
       profile_location = location;
       break;
     }
