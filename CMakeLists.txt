@@ -27,8 +27,11 @@ set(
   ${PROJECT_SOURCE_DIR}/tabs/view/processes.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/logs.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/profile_loader.cc
+  ${PROJECT_SOURCE_DIR}/tabs/view/profile_modify.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/help.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/info_box.cc
+  ${PROJECT_SOURCE_DIR}/tabs/view/switch_box.cc
+  ${PROJECT_SOURCE_DIR}/tabs/view/switch_row.cc
 )
 
 ### All the code globbed together for easy formatting ###

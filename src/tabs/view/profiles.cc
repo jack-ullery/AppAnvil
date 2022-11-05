@@ -4,6 +4,7 @@
 
 #include "jsoncpp/json/json.h"
 #include "profile_loader.h"
+#include "profile_modify.h"
 #include "status.h"
 
 #include <giomm.h>
@@ -79,6 +80,7 @@ void Profiles::handle_change_state_toggle()
   if (active) {
     // We cannot have two toggles active at the same time, and the current version of GTKmm does not seem to have button groups
     p_load_profile_toggle->set_active(false);
+    p_modify_profile_toggle->set_active(false);
     p_state_selection_box->show_all();
   } else {
     // Hide the state selection, when not in use
@@ -93,7 +95,22 @@ void Profiles::handle_load_profile_toggle()
   if (active) {
     // We cannot have two toggles active at the same time, and the current version of GTKmm does not seem to have button groups
     p_change_state_toggle->set_active(false);
+    p_modify_profile_toggle->set_active(false);
     p_stack->set_visible_child("loadProfile");
+  } else {
+    p_stack->set_visible_child("viewProfile");
+  }
+}
+
+void Profiles::handle_modify_profile_toggle()
+{
+  bool active = p_modify_profile_toggle->get_active();
+
+  if (active) {
+    // We cannot have two toggles active at the same time, and the current version of GTKmm does not seem to have button groups
+    p_change_state_toggle->set_active(false);
+    p_load_profile_toggle->set_active(false);
+    p_stack->set_visible_child("modifyProfile");
   } else {
     p_stack->set_visible_child("viewProfile");
   }
@@ -104,6 +121,7 @@ Profiles::Profiles()
     builder{ Status::get_builder() },
     p_change_state_toggle{ Common::get_widget<Gtk::ToggleButton>("p_change_state_toggle", builder) },
     p_load_profile_toggle{ Common::get_widget<Gtk::ToggleButton>("p_load_profile_toggle", builder) },
+    p_modify_profile_toggle{ Common::get_widget<Gtk::ToggleButton>("p_modify_profile_toggle", builder) },
     p_stack{ Common::get_widget<Gtk::Stack>("p_stack", builder) },
     p_state_selection_box{ Common::get_widget<Gtk::Box>("p_state_selection_box", builder) },
     p_status_selection{ Common::get_widget<Gtk::ComboBoxText>("p_status_selection", builder) },
@@ -113,10 +131,12 @@ Profiles::Profiles()
     p_num_log_label{ Common::get_widget<Gtk::Label>("p_num_log_label", builder) },
     p_num_proc_label{ Common::get_widget<Gtk::Label>("p_num_proc_label", builder) },
     p_num_perm_label{ Common::get_widget<Gtk::Label>("p_num_perm_label", builder) },
-    loader{ new ProfileLoader() }
+    loader{ new ProfileLoader() },
+    modifier{ new ProfileModify() }
 {
   // Add tabs to the stack pane
   p_stack->add(*loader, "loadProfile");
+  p_stack->add(*modifier, "modifyProfile");
 
   // Configure the button used for changing a profiles confinement
   auto change_state_toggle_fun = sigc::mem_fun(*this, &Profiles::handle_change_state_toggle);
@@ -125,6 +145,10 @@ Profiles::Profiles()
   // Configure the button used for loading a profile
   auto load_profile_toggle_fun = sigc::mem_fun(*this, &Profiles::handle_load_profile_toggle);
   p_load_profile_toggle->signal_toggled().connect(load_profile_toggle_fun);
+
+  // Configure the button used for loading a profile
+  auto modify_profile_toggle_fun = sigc::mem_fun(*this, &Profiles::handle_modify_profile_toggle);
+  p_modify_profile_toggle->signal_toggled().connect(modify_profile_toggle_fun);
 
   // Set the function to be called when the apply button is pressed
   auto change_fun = sigc::mem_fun(*this, &Profiles::change_status);

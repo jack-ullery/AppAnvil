@@ -151,6 +151,25 @@
                     <property name="position">2</property>
                   </packing>
                 </child>
+                <child>
+                  <object class="GtkToggleButton" id="p_modify_profile_toggle">
+                    <property name="label" translatable="yes">  Modify Profile</property>
+                    <property name="width-request">100</property>
+                    <property name="visible">True</property>
+                    <property name="app-paintable">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">True</property>
+                    <property name="halign">center</property>
+                    <property name="margin-top">10</property>
+                    <property name="image">modify_profile_icon</property>
+                    <property name="always-show-image">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -563,5 +582,10 @@
         <property name="position">4</property>
       </packing>
     </child>
+  </object>
+  <object class="GtkImage" id="modify_profile_icon">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">accessories-text-editor</property>
   </object>
 </interface>

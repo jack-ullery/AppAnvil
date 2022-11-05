@@ -2,6 +2,7 @@
 #define TABS_PROFILES_H
 
 #include "profile_loader.h"
+#include "profile_modify.h"
 #include "status.h"
 
 #include <gtkmm/box.h>
@@ -40,6 +41,7 @@ protected:
 
   void handle_load_profile_toggle();
   void handle_change_state_toggle();
+  void handle_modify_profile_toggle();
 
 private:
   sigc::slot<void(std::string, std::string, std::string)> profile_status_change_fun;
@@ -49,6 +51,7 @@ private:
 
   std::unique_ptr<Gtk::ToggleButton> p_change_state_toggle;
   std::unique_ptr<Gtk::ToggleButton> p_load_profile_toggle;
+  std::unique_ptr<Gtk::ToggleButton> p_modify_profile_toggle;
 
   std::unique_ptr<Gtk::Stack> p_stack;
   std::unique_ptr<Gtk::Box> p_state_selection_box;
@@ -61,8 +64,9 @@ private:
   std::unique_ptr<Gtk::Label> p_num_proc_label;
   std::unique_ptr<Gtk::Label> p_num_perm_label;
 
-  // Profile Loader page, which is added to the stack
+  // Additional pages, which are added to the stack
   std::unique_ptr<ProfileLoader> loader;
+  std::unique_ptr<ProfileModify> modifier;
 
 #ifdef TESTS_ENABLED
   FRIEND_TEST(ProfilesTest, CHECK_APPLY_LABEL_TEXT);
