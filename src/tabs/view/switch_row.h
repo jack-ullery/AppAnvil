@@ -9,7 +9,7 @@
 class SwitchRow : public Gtk::VBox
 {
 public:
-  SwitchRow(const std::string &title, const std::string &subtitle);
+  SwitchRow(const std::string &title, const bool &active);
 
 private:
   // GUI Builder to parse UI from xml file
@@ -18,7 +18,6 @@ private:
   // Widgets
   std::unique_ptr<Gtk::Box> switch_row;
   std::unique_ptr<Gtk::Label> switch_title;
-  std::unique_ptr<Gtk::Label> switch_subtitle;
   std::unique_ptr<Gtk::Switch> switch_toggle;
 };
 

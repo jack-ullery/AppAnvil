@@ -5,11 +5,11 @@
 SwitchBox::SwitchBox(const std::vector<string_tuple> &tuples)
 {
   for(auto tuple : tuples) {
-    const std::string &title    = std::get<0>(tuple);
-    const std::string &subtitle = std::get<1>(tuple);
-    // const std::string &id       = std::get<2>(tuple);
+    const std::string &title = std::get<0>(tuple);
+    const std::string &id    = std::get<1>(tuple);
+    const bool &active       = std::get<2>(tuple);
 
-    auto ptr = std::shared_ptr<SwitchRow>(new SwitchRow(title, subtitle));
+    auto ptr = std::shared_ptr<SwitchRow>(new SwitchRow(title, active));
     switch_list.push_back(ptr);
     this->add(*ptr);
   }

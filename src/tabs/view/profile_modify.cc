@@ -1,6 +1,7 @@
 #include "profile_modify.h"
 #include "switch_box.h"
 #include "switch_row.h"
+#include "../../threads/command_caller.h"
 
 #include <gtkmm/label.h>
 #include <memory>
@@ -33,9 +34,19 @@ ProfileModify::ProfileModify(const std::string &profile_name)
   m_box->add(header);
 
   //// Create the switch boxes ////
-  std::shared_ptr<SwitchBox> ptr(new SwitchBox(rows));
-  switch_box_list.push_back(ptr);
-  m_box->add(*ptr);
+
+  // Switch box for each abstraction
+  std::vector<std::string> abstractions = CommandCaller::get_abstractions();
+
+  std::vector<string_tuple> abstraction_vector;
+  for(std::string abstraction : abstractions) {
+    const std::string &title = abstraction;
+    abstraction_vector.emplace_back(title, abstraction, false);
+  }
+
+  std::shared_ptr<SwitchBox> abstraction_box(new SwitchBox(abstraction_vector));
+  switch_box_list.push_back(abstraction_box);
+  m_box->add(*abstraction_box);
 
   m_box->set_halign(Gtk::ALIGN_START);
   m_box->set_valign(Gtk::ALIGN_START);

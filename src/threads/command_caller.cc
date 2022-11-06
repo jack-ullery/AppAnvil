@@ -1,5 +1,6 @@
 #include "command_caller.h"
 
+#include <filesystem>
 #include <glibmm/spawn.h>
 #include <iostream>
 #include <stdexcept>
@@ -88,13 +89,6 @@ std::string CommandCaller::disable_profile(CommandCaller *caller, const std::str
   return "Success: disabling porfile" + profileName;
 }
 
-bool CommandCaller::file_exists(const std::string &location)
-{
-  struct stat buffer
-  {};
-  return (stat(location.c_str(), &buffer) == 0);
-}
-
 std::string CommandCaller::execute_change(CommandCaller *caller,
                                           const std::string &profile,
                                           const std::string &old_status,
@@ -177,4 +171,23 @@ std::string CommandCaller::execute_change(const std::string &profile, const std:
 {
   CommandCaller caller;
   return execute_change(&caller, profile, old_status, new_status);
+}
+
+bool CommandCaller::file_exists(const std::string &location)
+{
+  return std::filesystem::exists(location);
+}
+
+// TODO(multiple-locations) handle different abstractions in multiple profile locations
+std::vector<std::string> CommandCaller::get_abstractions(const std::string &path)
+{
+    std::vector<std::string> found = {};
+
+    auto dir_iter = std::filesystem::directory_iterator(path);
+    for (const auto &entry : dir_iter) {
+      auto abstraction = entry.path().filename();
+      found.push_back(abstraction);
+    }
+
+    return found;
 }

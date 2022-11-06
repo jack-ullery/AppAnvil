@@ -10,7 +10,7 @@
 #include <string>
 
 // Tuple of constant strings, used as an argument for the SwitchBox
-typedef std::tuple<const std::string, const std::string, const std::string> string_tuple;
+typedef std::tuple<const std::string, const std::string, const bool> string_tuple;
 
 class SwitchBox : public Gtk::VBox
 {

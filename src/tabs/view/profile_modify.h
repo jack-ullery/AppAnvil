@@ -22,12 +22,6 @@ private:
   // Widgets
   Gtk::Label header;
   std::list<std::shared_ptr<SwitchBox>> switch_box_list;
-
-  // Rows for each box (title, subtitle, id)
-  std::vector<string_tuple> rows {
-    string_tuple("Example Title", "First",  "Example Id"),
-    string_tuple("Example Title", "Second", "Example Id")
-  };
 };
 
 #endif

@@ -75,6 +75,12 @@ public:
 
   static std::string disable_profile(const std::string &profileName);
 
+  // Returns true if the file at the path
+  static bool file_exists(const std::string &location);
+
+  // Gets a vector of abstractions located at a path (default "/etc/apparmor.d")
+  static std::vector<std::string> get_abstractions(const std::string &path = "/etc/apparmor.d/abstractions");
+
 protected:
   struct results
   {
@@ -97,9 +103,6 @@ protected:
                                     const std::string &profile,
                                     const std::string &old_status,
                                     const std::string &new_status);
-
-  // Helper function
-  static bool file_exists(const std::string &location);
 
 #ifdef TESTS_ENABLED
   FRIEND_TEST(CommandCallerTest, TEST_UNCONF);
