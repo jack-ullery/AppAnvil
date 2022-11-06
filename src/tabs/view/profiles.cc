@@ -62,6 +62,7 @@ void Profiles::show_profile_info()
 {
   p_profile_info->show_all();
   p_change_state_toggle->set_sensitive(true);
+  p_modify_profile_toggle->set_sensitive(true);
 }
 
 void Profiles::hide_profile_info()
@@ -71,6 +72,9 @@ void Profiles::hide_profile_info()
 
   p_change_state_toggle->set_active(false);
   p_change_state_toggle->set_sensitive(false);
+
+  p_modify_profile_toggle->set_active(false);
+  p_modify_profile_toggle->set_sensitive(false);
 }
 
 void Profiles::handle_change_state_toggle()
@@ -110,7 +114,23 @@ void Profiles::handle_modify_profile_toggle()
     // We cannot have two toggles active at the same time, and the current version of GTKmm does not seem to have button groups
     p_change_state_toggle->set_active(false);
     p_load_profile_toggle->set_active(false);
-    p_stack->set_visible_child("modifyProfile");
+
+    auto selection = Status::get_view()->get_selection();
+
+    if (selection->count_selected_rows() == 1) {
+      auto row = *selection->get_selected();
+
+      std::string profile_name;
+      row->get_value(1, profile_name);
+
+      if(!modifiers.contains(profile_name)) {
+        auto profile_modify = std::shared_ptr<ProfileModify>(new ProfileModify(profile_name));
+        modifiers.insert_or_assign(profile_name, profile_modify);
+        p_stack->add(*profile_modify, "modifyProfile_" + profile_name);
+      }
+
+      p_stack->set_visible_child("modifyProfile_" + profile_name);
+    }
   } else {
     p_stack->set_visible_child("viewProfile");
   }
@@ -131,12 +151,10 @@ Profiles::Profiles()
     p_num_log_label{ Common::get_widget<Gtk::Label>("p_num_log_label", builder) },
     p_num_proc_label{ Common::get_widget<Gtk::Label>("p_num_proc_label", builder) },
     p_num_perm_label{ Common::get_widget<Gtk::Label>("p_num_perm_label", builder) },
-    loader{ new ProfileLoader() },
-    modifier{ new ProfileModify() }
+    loader{ new ProfileLoader() }
 {
   // Add tabs to the stack pane
   p_stack->add(*loader, "loadProfile");
-  p_stack->add(*modifier, "modifyProfile");
 
   // Configure the button used for changing a profiles confinement
   auto change_state_toggle_fun = sigc::mem_fun(*this, &Profiles::handle_change_state_toggle);

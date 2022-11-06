@@ -66,7 +66,7 @@ private:
 
   // Additional pages, which are added to the stack
   std::unique_ptr<ProfileLoader> loader;
-  std::unique_ptr<ProfileModify> modifier;
+  std::map<std::string, std::shared_ptr<ProfileModify>> modifiers;
 
 #ifdef TESTS_ENABLED
   FRIEND_TEST(ProfilesTest, CHECK_APPLY_LABEL_TEXT);

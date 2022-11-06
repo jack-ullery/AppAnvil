@@ -9,7 +9,7 @@
 #include <pangomm/fontdescription.h>
 #include <pangomm/layout.h>
 
-ProfileModify::ProfileModify()
+ProfileModify::ProfileModify(const std::string &profile_name)
   : m_box{ new Gtk::VBox() }
 {
   //// Set values for the "header" widget ////
@@ -41,4 +41,6 @@ ProfileModify::ProfileModify()
   m_box->set_valign(Gtk::ALIGN_START);
 
   this->add(*m_box);
+
+  this->show_all();
 }

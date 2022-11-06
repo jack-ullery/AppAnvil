@@ -7,12 +7,13 @@
 #include <gtkmm/scrolledwindow.h>
 #include <list>
 #include <memory>
+#include <string>
 #include <tuple>
 
 class ProfileModify : public Gtk::ScrolledWindow
 {
 public:
-  ProfileModify();
+  explicit ProfileModify(const std::string &profile_name);
 
 private:
   // VBox which holds all the widgets
