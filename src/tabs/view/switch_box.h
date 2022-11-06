@@ -7,11 +7,16 @@
 #include <gtkmm/builder.h>
 #include <gtkmm/label.h>
 #include <gtkmm/switch.h>
+#include <string>
+
+// Tuple of constant strings, used as an argument for the SwitchBox
+typedef std::tuple<const std::string, const std::string, const std::string> string_tuple;
 
 class SwitchBox : public Gtk::VBox
 {
 public:
-  SwitchBox();
+  // Main constructor
+  explicit SwitchBox(const std::vector<string_tuple> &tuples);
 
 private:
   std::list<std::shared_ptr<SwitchRow>> switch_list;
