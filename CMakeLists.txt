@@ -152,6 +152,7 @@ include_directories(
 
 #### Set Compiler Options ####
 set(CMAKE_CXX_FLAGS " -Wall -Wextra")
+set(CXX_STANDARD 20)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
