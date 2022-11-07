@@ -38,14 +38,6 @@
 #include <unordered_map>
 #include <string>
 
-#include "parser.h"
-#include "profile.h"
-#include "parser_include.h"
-#include "parser_yacc.h"
-#include "lib.h"
-#include "policy_cache.h"
-#include "file_cache.h"
-
 #ifdef PDEBUG
 #undef PDEBUG
 #endif
@@ -260,14 +252,14 @@ ID 		{ID_CHARS}|(,{ID_CHARS}|\\[ ]|\\\t|\\\"|\\!|\\,)
 IDS		{ID}+
 INC_ID 		[^ \t\r\n"!,<>]|(,[^ \t\r\n"!,<>]|\\[ ]|\\\t|\\\"|\\!|\\,)
 INC_IDS		{INC_ID}+
-POST_VAR_ID_CHARS	[^ \t\n"!,]{-}[=\+]
+POST_VAR_ID_CHARS	[^ \t\n"!,=\+]
 POST_VAR_ID 	{POST_VAR_ID_CHARS}|(,{POST_VAR_ID_CHARS}|\\[ ]|\\\t|\\\"|\\!|\\,|\\\(|\\\))
-LIST_VALUE_ID_CHARS	([^ \t\n"!,]{-}[()]|\\[ ]|\\\t|\\\"|\\!|\\,|\\\(|\\\))
+LIST_VALUE_ID_CHARS	([^ \t\n"!,()]|\\[ ]|\\\t|\\\"|\\!|\\,|\\\(|\\\))
 LIST_VALUE_QUOTED_ID_CHARS [^\0"]|\\\"
 LIST_VALUE_ID	{LIST_VALUE_ID_CHARS}+
 QUOTED_LIST_VALUE_ID	\"{LIST_VALUE_QUOTED_ID_CHARS}+\"
-ID_CHARS_NOEQ	[^ \t\n"!,]{-}[=)]
-LEADING_ID_CHARS_NOEQ [^ \t\n"!,]{-}[=()+&]
+ID_CHARS_NOEQ	[^ \t\n"!,=)]
+LEADING_ID_CHARS_NOEQ [^ \t\n"!,=()+&]
 ID_NOEQ		{ID_CHARS_NOEQ}|(,{ID_CHARS_NOEQ})
 IDS_NOEQ	{LEADING_ID_CHARS_NOEQ}{ID_NOEQ}*
 ALLOWED_QUOTED_ID 	[^\0"]|\\\"
@@ -432,7 +424,7 @@ GT		>
 }
 
 <EXTCOND_MODE>{
-	{EQUALS}{WS}*/[^(\n]{-}{WS} { BEGIN_AND_RETURN(SUB_VALUE, TOK_EQUALS);}
+	{EQUALS}{WS}*/[^(\n] { BEGIN_AND_RETURN(SUB_VALUE, TOK_EQUALS);}
 
 	{EQUALS} { RETURN_TOKEN(TOK_EQUALS); }
 
