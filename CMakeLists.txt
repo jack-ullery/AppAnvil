@@ -169,6 +169,7 @@ target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${jsoncpp_DIRS})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${GTKMM_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} PUBLIC jsoncpp)
 target_link_libraries(${PROJECT_NAME} PUBLIC pthread)
+target_link_libraries(${PROJECT_NAME} PUBLIC apparmor-parser-dev)
 
 pkg_check_modules(GTEST gtest)
 pkg_check_modules(GMOCK gmock)

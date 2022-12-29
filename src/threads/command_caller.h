@@ -78,6 +78,9 @@ public:
   // Returns true if the file at the path
   static bool file_exists(const std::string &location);
 
+  // Attempt to locate the profile in possible locations
+  static std::string locate_profile(const std::string &profile, const std::vector<std::string> &possible_profile_locations = {"/etc/apparmor.d/", "/var/lib/snapd/apparmor/profiles/"});
+
   // Gets a vector of abstractions located at a path (default "/etc/apparmor.d")
   static std::vector<std::string> get_abstractions(const std::string &path = "/etc/apparmor.d/abstractions");
 
