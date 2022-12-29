@@ -60,6 +60,7 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
   target_link_libraries(${TEST_NAME} PUBLIC jsoncpp)
   target_link_libraries(${TEST_NAME} PUBLIC ${GTKMM_LIBRARIES})
   target_link_libraries(${TEST_NAME} PUBLIC "aa-caller_dev")
+  target_link_libraries(${TEST_NAME} PUBLIC apparmor-parser-dev)
 
   # Create target "report", which should run the unit-tests and generate a code coverage report  
   add_custom_target(
