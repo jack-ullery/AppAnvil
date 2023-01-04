@@ -21,6 +21,9 @@ private:
 
   // VBox which holds all the widgets
   std::unique_ptr<Gtk::Box> m_box;
+
+  // Widgets
+  std::unique_ptr<Gtk::Label> m_title;
 };
 
 #endif
