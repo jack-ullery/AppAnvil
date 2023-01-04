@@ -1,7 +1,6 @@
 #ifndef TABS_PROFILE_MODIFY_H
 #define TABS_PROFILE_MODIFY_H
 
-#include "switch_box.h"
 #include <gtkmm/box.h>
 #include <gtkmm/label.h>
 #include <gtkmm/scrolledwindow.h>
@@ -21,7 +20,6 @@ private:
 
   // Widgets
   Gtk::Label header;
-  std::list<std::shared_ptr<SwitchBox>> switch_box_list;
 };
 
 #endif

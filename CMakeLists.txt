@@ -30,8 +30,6 @@ set(
   ${PROJECT_SOURCE_DIR}/tabs/view/profile_modify.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/help.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/info_box.cc
-  ${PROJECT_SOURCE_DIR}/tabs/view/switch_box.cc
-  ${PROJECT_SOURCE_DIR}/tabs/view/switch_row.cc
 )
 
 ### All the code globbed together for easy formatting ###
