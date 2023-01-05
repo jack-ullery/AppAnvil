@@ -56,6 +56,7 @@
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+                <property name="hexpand">True</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkLabel">
@@ -81,15 +82,12 @@
                 </child>
                 <child>
                   <object class="GtkBox" id="m_abstraction_box">
+                    <property name="width-request">200</property>
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="halign">baseline</property>
                     <property name="margin-start">20</property>
                     <property name="hexpand">True</property>
                     <property name="orientation">vertical</property>
-                    <child>
-                      <placeholder/>
-                    </child>
                     <child>
                       <placeholder/>
                     </child>

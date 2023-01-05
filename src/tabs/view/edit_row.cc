@@ -10,5 +10,9 @@ EditRow::EditRow(const std::string &title)
   edit_title->set_label(title);
 
   this->set_hexpand(true);
+  this->set_vexpand(true);
+  this->set_halign(Gtk::ALIGN_START);
+  this->set_valign(Gtk::ALIGN_START);
+
   this->add(*edit_row);
 }
