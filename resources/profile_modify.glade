@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.38.2 -->
+<!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
-  <requires lib="adwaita-1" version="1.0"/>
   <object class="GtkBox" id="m_box">
     <property name="width-request">200</property>
     <property name="height-request">200</property>
@@ -81,13 +80,13 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkBox" id="m_abstraction_box">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
+                    <property name="halign">baseline</property>
+                    <property name="margin-start">20</property>
+                    <property name="hexpand">True</property>
                     <property name="orientation">vertical</property>
-                    <child>
-                      <placeholder/>
-                    </child>
                     <child>
                       <placeholder/>
                     </child>
