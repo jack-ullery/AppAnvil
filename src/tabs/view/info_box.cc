@@ -15,5 +15,5 @@ InfoBox::InfoBox()
 {
   i_header->set_text("");
   i_text->set_text("");
-  this->add(*i_box);
+  this->append(*i_box);
 }

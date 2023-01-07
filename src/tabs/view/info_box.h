@@ -1,13 +1,12 @@
 #ifndef TABS_VIEW_INFO_BOX_H
 #define TABS_VIEW_INFO_BOX_H
 
-#include <gtkmm/bin.h>
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/label.h>
 #include <memory>
 
-class InfoBox : public Gtk::Bin
+class InfoBox : public Gtk::Box
 {
 public:
   InfoBox();

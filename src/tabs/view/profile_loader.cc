@@ -15,7 +15,7 @@ ProfileLoader::ProfileLoader()
   l_box->set_hexpand();
   l_box->set_vexpand();
 
-  this->add(*l_box);
+  this->append(*l_box);
 }
 
 void ProfileLoader::set_l_button_signal_handler(const Glib::SignalProxyProperty::SlotType &func)

@@ -2,6 +2,7 @@
 
 #include <gtkmm/button.h>
 #include <gtkmm/enums.h>
+#include <gtkmm/gestureclick.h>
 #include <gtkmm/togglebutton.h>
 #include <tuple>
 
@@ -19,16 +20,18 @@ MainWindow::MainWindow()
   m_tab_stack.add(*(logs_control->get_tab()), "logs", "Logs");
 
   // Add a transition to the stack
-  m_tab_stack.set_transition_type(Gtk::STACK_TRANSITION_TYPE_CROSSFADE);
+  m_tab_stack.set_transition_type(Gtk::StackTransitionType::CROSSFADE);
   m_tab_stack.set_transition_duration(DEFAULT_TRANSITION_DURATION);
 
   // Attach the stack to the stack switcher
   m_switcher.set_stack(m_tab_stack);
 
   // Connect the stackswitcher to the 'on_switch' method
+  auto switcher_controller = Gtk::GestureClick::create();
   auto focus = sigc::mem_fun(*this, &MainWindow::on_switch);
-  m_switcher.signal_event().connect(focus, true);
-  on_switch(NULL);
+  switcher_controller->signal_pressed().connect(focus, true);
+  m_switcher.add_controller(switcher_controller);
+  on_switch(0, 0, 0);
 
   // Connect the profile tab to the `send_status_change` method
   auto change_fun = sigc::mem_fun(*this, &MainWindow::send_status_change);
@@ -54,29 +57,27 @@ MainWindow::MainWindow()
   m_top_stack.set_transition_duration(DEFAULT_TRANSITION_DURATION);
 
   // Set some default properties for titlebar
-  m_headerbar.set_custom_title(m_switcher);
+  m_headerbar.set_title_widget(m_switcher);
   m_headerbar.pack_end(m_help_button);
   m_headerbar.pack_end(m_search_button);
 
-  m_headerbar.set_title("AppAnvil");
-  m_headerbar.set_subtitle("GUI for AppArmor");
+  /// m_headerbar.set_title("AppAnvil");
+  /// m_headerbar.set_subtitle("GUI for AppArmor");
   m_headerbar.set_hexpand(true);
-  m_headerbar.set_show_close_button(true);
+  m_headerbar.set_show_title_buttons(true);
 
   // Set the icon
-  auto builder         = Gtk::Builder::create_from_resource("/resources/icon.glade");
-  Gtk::Image *icon_ptr = nullptr;
-  builder->get_widget<Gtk::Image>("icon", icon_ptr);
-  this->set_icon(icon_ptr->get_pixbuf());
+  /// auto builder         = Gtk::Builder::create_from_resource("/resources/icon.glade");
+  /// Gtk::Image *icon_ptr = builder->get_widget<Gtk::Image>("icon");
+  /// this->set_icon(icon_ptr->get_pixbuf());
 
   // Set some default settings for the window
-  this->set_default_size(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
-  this->add_events(Gdk::EventMask::ENTER_NOTIFY_MASK);
+  /// this->set_default_size(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+  /// this->add_events(Gdk::EventMask::ENTER_NOTIFY_MASK);
 
   // Add and show all children
   this->set_titlebar(m_headerbar);
-  this->add(m_top_stack);
-  this->show_all();
+  this->set_child(m_top_stack);
 
   // Hide the side info in the Profiles Tab
   prof_control->get_tab()->hide_profile_info();
@@ -93,15 +94,15 @@ void MainWindow::on_help_toggle()
 
   if (is_active) {
     m_switcher.hide();
-    m_top_stack.set_visible_child("help_page", Gtk::STACK_TRANSITION_TYPE_SLIDE_DOWN);
+    m_top_stack.set_visible_child("help_page", Gtk::StackTransitionType::SLIDE_DOWN);
     m_help_button.set_label("Return to application");
-    m_help_button.set_always_show_image(false);
+    /// m_help_button.set_always_show_image(false);
   } else {
     m_switcher.show();
-    m_top_stack.set_visible_child("main_page", Gtk::STACK_TRANSITION_TYPE_SLIDE_UP);
+    m_top_stack.set_visible_child("main_page", Gtk::StackTransitionType::SLIDE_UP);
     m_help_button.set_label("");
     m_help_button.set_image_from_icon_name("dialog-question");
-    m_help_button.set_always_show_image(true);
+    /// m_help_button.set_always_show_image(true);
   }
 
   handle_search_button_visiblity();
@@ -126,10 +127,8 @@ void MainWindow::on_search_toggle()
   }
 }
 
-bool MainWindow::on_switch(GdkEvent *event)
+void MainWindow::on_switch(int, double, double)
 {
-  std::ignore = event;
-
   const std::string visible_child = m_tab_stack.get_visible_child_name();
   if (visible_child == "prof") {
     console->send_refresh_message(PROFILE);
@@ -141,7 +140,6 @@ bool MainWindow::on_switch(GdkEvent *event)
   }
 
   handle_search_button_visiblity();
-  return false;
 }
 
 void MainWindow::handle_search_button_visiblity()

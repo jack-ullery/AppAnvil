@@ -59,7 +59,7 @@ void Profiles::set_profile_info(const std::string &num_logs, const std::string &
 
 void Profiles::show_profile_info()
 {
-  p_profile_info->show_all();
+  p_profile_info->show();
   p_change_state_toggle->set_sensitive(true);
 }
 
@@ -79,7 +79,7 @@ void Profiles::handle_change_state_toggle()
   if (active) {
     // We cannot have two toggles active at the same time, and the current version of GTKmm does not seem to have button groups
     p_load_profile_toggle->set_active(false);
-    p_state_selection_box->show_all();
+    p_state_selection_box->show();
   } else {
     // Hide the state selection, when not in use
     p_state_selection_box->hide();
@@ -116,7 +116,7 @@ Profiles::Profiles()
     loader{ new ProfileLoader() }
 {
   // Add tabs to the stack pane
-  p_stack->add(*loader, "loadProfile");
+  p_stack->append(*loader, "loadProfile");
 
   // Configure the button used for changing a profiles confinement
   auto change_state_toggle_fun = sigc::mem_fun(*this, &Profiles::handle_change_state_toggle);
@@ -129,8 +129,6 @@ Profiles::Profiles()
   // Set the function to be called when the apply button is pressed
   auto change_fun = sigc::mem_fun(*this, &Profiles::change_status);
   p_apply_button->signal_clicked().connect(change_fun);
-
-  this->show_all();
 
   this->hide_profile_info();
   p_state_selection_box->hide();

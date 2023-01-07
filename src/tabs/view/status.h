@@ -3,13 +3,10 @@
 
 #include "../column_header.h"
 #include "../search_info.h"
-#include "jsoncpp/json/json.h"
 
-#include <glibmm/refptr.h>
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/checkbutton.h>
-#include <gtkmm/comboboxtext.h>
 #include <gtkmm/enums.h>
 #include <gtkmm/label.h>
 #include <gtkmm/scrolledwindow.h>
@@ -59,11 +56,11 @@ public:
 protected:
   explicit Status(const std::string &glade_resource);
 
-  Glib::RefPtr<Gtk::Builder> get_builder();
+  std::shared_ptr<Gtk::Builder> get_builder();
 
 private:
   // GUI Builder to parse UI from xml file
-  Glib::RefPtr<Gtk::Builder> builder;
+  std::shared_ptr<Gtk::Builder> builder;
 
   // Container Widgets
   std::shared_ptr<Gtk::TreeView> s_view;

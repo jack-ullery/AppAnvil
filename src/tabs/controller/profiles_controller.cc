@@ -17,7 +17,7 @@
 #include <vector>
 
 template<class ProfilesTab, class Database, class Adapter>
-bool ProfilesController<ProfilesTab, Database, Adapter>::on_button_event(GdkEventButton *event)
+bool ProfilesController<ProfilesTab, Database, Adapter>::on_button_event(GdkEvent *event)
 {
   std::ignore = event;
 
@@ -26,7 +26,7 @@ bool ProfilesController<ProfilesTab, Database, Adapter>::on_button_event(GdkEven
 }
 
 template<class ProfilesTab, class Database, class Adapter>
-bool ProfilesController<ProfilesTab, Database, Adapter>::on_key_event(GdkEventKey *event)
+bool ProfilesController<ProfilesTab, Database, Adapter>::on_key_event(GdkEvent *event)
 {
   std::ignore = event;
 

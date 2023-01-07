@@ -30,6 +30,4 @@ Logs::Logs()
   : Status("/resources/log.glade"),
     builder{ Status::get_builder() },
     l_log_info{ Common::get_widget<Gtk::Box>("l_log_info", builder) }
-{
-  this->show_all();
-}
+{   }

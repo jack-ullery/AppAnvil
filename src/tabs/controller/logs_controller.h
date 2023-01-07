@@ -25,8 +25,8 @@ public:
   explicit LogsController(std::shared_ptr<Adapter> adapter, std::shared_ptr<LogsTab> logs);
 
   void handle_log_selected();
-  bool on_key_event(GdkEventKey *event);
-  bool on_button_event(GdkEventButton *event);
+  bool on_key_event(GdkEvent *event);
+  bool on_button_event(GdkEvent *event);
 
   virtual void add_data_to_record(const std::string &data);
 

@@ -61,10 +61,9 @@ protected:
    * @brief Calls refresh() on the visible tab when the stackswitcher is pressed.
    *
    * @details
-   * We must have 'GDKEvent*' as a parameter so that it can be the signal handler for m_switcher.signal_event().
-   * However, we never use this parameter.
+   * None of the arguments of this function are used, but they are required by the EventController.
    */
-  bool on_switch(GdkEvent *event);
+  void on_switch(int, double, double);
 
   void send_status_change(const std::string &profile, const std::string &old_status, const std::string &new_status);
 
@@ -76,9 +75,6 @@ private:
   typedef LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord>> LogsControllerInstance;
 
   typedef ConsoleThread<ProfilesControllerInstance, ProcessesControllerInstance, LogsControllerInstance> ConsoleThreadInstance;
-
-  // GUI Builder to parse UI from xml file
-  Glib::RefPtr<Gtk::Builder> builder;
 
   // Member widgets:
   Gtk::Stack m_top_stack;

@@ -110,7 +110,7 @@ endif()
 
 #### Include GTKmm Libraries ####
 find_package(PkgConfig)
-pkg_check_modules(GTKMM gtkmm-3.0)
+pkg_check_modules(GTKMM gtkmm-4.0)
 
 #### Include jsoncpp libraries ####
 pkg_check_modules(JSONCPP jsoncpp)
@@ -179,7 +179,7 @@ install(
 )
 
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libgtkmm-3.0-dev,libjsoncpp-dev")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libgtkmm-4.0-dev,libjsoncpp-dev")
 set(CPACK_PACKAGE_CONTACT "Jack Ullery")
 set(CPACK_INSTALL_SCRIPT "cmake_install.cmake")
 include(CPack)

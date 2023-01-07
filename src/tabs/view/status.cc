@@ -79,7 +79,7 @@ Status::Status(const std::string &glade_resource)
   s_searchbox->set_no_show_all(true);
   hide_searchbar();
 
-  this->add(*s_box);
+  this->append(*s_box);
 }
 
 Status::Status()

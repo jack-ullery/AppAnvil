@@ -23,7 +23,7 @@ Help::Help()
   h_searchbox->set_no_show_all(true);
   hide_searchbar();
 
-  this->add(*h_box);
+  this->append(*h_box);
 }
 
 void Help::hide_searchbar()

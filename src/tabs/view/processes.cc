@@ -2,7 +2,4 @@
 
 #include <string>
 
-Processes::Processes()
-{
-  this->show_all();
-}
+Processes::Processes() = default;

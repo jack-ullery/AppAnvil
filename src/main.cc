@@ -24,6 +24,5 @@ int main()
   register_resource_bundle();
 
   // Shows the window and returns when it is closed.
-  MainWindow win;
-  return app->run(win);
+  return app->make_window_and_run<MainWindow>();
 }

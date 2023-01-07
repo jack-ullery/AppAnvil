@@ -11,7 +11,7 @@
 #include <sstream>
 
 template<class LogsTab, class Database, class Adapter>
-bool LogsController<LogsTab, Database, Adapter>::on_button_event(GdkEventButton *event)
+bool LogsController<LogsTab, Database, Adapter>::on_button_event(GdkEvent *event)
 {
   std::ignore = event;
 
@@ -20,7 +20,7 @@ bool LogsController<LogsTab, Database, Adapter>::on_button_event(GdkEventButton 
 }
 
 template<class LogsTab, class Database, class Adapter>
-bool LogsController<LogsTab, Database, Adapter>::on_key_event(GdkEventKey *event)
+bool LogsController<LogsTab, Database, Adapter>::on_key_event(GdkEvent *event)
 {
   std::ignore = event;
 

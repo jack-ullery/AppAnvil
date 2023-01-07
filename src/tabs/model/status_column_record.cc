@@ -3,7 +3,6 @@
 
 #include <gtkmm/box.h>
 #include <gtkmm/cellrenderertext.h>
-#include <gtkmm/main.h>
 #include <gtkmm/treeiter.h>
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treemodelsort.h>
@@ -42,12 +41,12 @@ Gtk::TreeRow StatusColumnRecord::new_row()
   return *(store->append());
 }
 
-Gtk::TreeRow StatusColumnRecord::new_child_row(const Gtk::TreeRow &parent)
+Gtk::TreeRow StatusColumnRecord::new_child_row(Gtk::TreeRow &parent)
 {
   return *(store->append(parent.children()));
 }
 
-Gtk::TreeRow StatusColumnRecord::get_row(const Gtk::TreePath &path)
+Gtk::TreeRow StatusColumnRecord::get_row(Gtk::TreePath &path)
 {
   return *(sort_model->get_iter(path));
 }
@@ -97,7 +96,7 @@ uint StatusColumnRecord::filter_rows()
   return num_visible;
 }
 
-Gtk::TreeRow StatusColumnRecord::get_parent_by_pid(unsigned int pid)
+Gtk::TreeConstRow StatusColumnRecord::get_parent_by_pid(unsigned int pid)
 {
   Gtk::TreeRow parentRow;
   auto children = store->children();
@@ -117,10 +116,10 @@ Gtk::TreeRow StatusColumnRecord::get_parent_by_pid(unsigned int pid)
   return parentRow;
 }
 
-Gtk::TreeRow StatusColumnRecord::get_parent_by_pid(unsigned int pid, const Gtk::TreeRow &parent)
+Gtk::TreeConstRow StatusColumnRecord::get_parent_by_pid(unsigned int pid, const Gtk::TreeConstRow &parent)
 {
   Gtk::TreeRow parentRow;
-  auto children = parent->children();
+  const auto &children = parent.children();
 
   for (auto iter = children.begin(); iter != children.end(); iter++) {
     unsigned int row_pid = 0;
@@ -137,13 +136,13 @@ Gtk::TreeRow StatusColumnRecord::get_parent_by_pid(unsigned int pid, const Gtk::
   return parentRow;
 }
 
-bool StatusColumnRecord::pid_exists_in_child(unsigned int pid, const Gtk::TreeRow &parent)
+bool StatusColumnRecord::pid_exists_in_child(unsigned int pid, const Gtk::TreeConstRow &parent)
 {
-  auto children = parent.children();
+  const auto &children = parent.children();
 
   for (auto iter = children.begin(); iter != children.end(); iter++) {
     unsigned int row_pid    = 0;
-    const Gtk::TreeRow &row = *iter;
+    const auto &row = *iter;
 
     row.get_value(3, row_pid);
     if (row_pid == pid || (!row.children().empty() && pid_exists_in_child(pid, row))) {
@@ -252,19 +251,19 @@ void StatusColumnRecord::remember_scrollbar_position()
 void StatusColumnRecord::reset_scrollbar_position()
 {
   // Adjust the ScrolledWindow to its previous position
-  while (Gtk::Main::events_pending()) {
-    Gtk::Main::iteration();
-  }
+  /// while (Gtk::Main::events_pending()) {
+  ///   Gtk::Main::iteration();
+  /// }
 
   win->get_vadjustment()->set_value(last_vadjustment_value);
   win->get_hadjustment()->set_value(last_hadjustment_value);
 }
 
-void StatusColumnRecord::remember_children_rows(const Gtk::TreeModel::Children &children)
+void StatusColumnRecord::remember_children_rows(const Gtk::TreeModel::ConstChildren &children)
 {
   for (const auto &row : children) {
     // Get the path
-    Gtk::TreePath path = sort_model->get_path(row);
+    Gtk::TreePath path = sort_model->get_path(row.get_iter());
     // If the row is expanded, and not contained in the map
     bool isExpanded = view->row_expanded(path);
     bool exists     = significant_rows.find(path) != significant_rows.end();
@@ -279,11 +278,11 @@ void StatusColumnRecord::remember_children_rows(const Gtk::TreeModel::Children &
   }
 }
 
-void StatusColumnRecord::reselect_children_rows(const Gtk::TreeModel::Children &children)
+void StatusColumnRecord::reselect_children_rows(const Gtk::TreeModel::ConstChildren &children)
 {
   for (const auto &row : children) {
     // Get the path
-    Gtk::TreePath path = sort_model->get_path(row);
+    Gtk::TreePath path = sort_model->get_path(row.get_iter());
 
     // If this row has the same data as the previously selected row (when this ColumnRecord was last cleared), then select it
     auto row_pair = significant_rows.find(path);
@@ -323,9 +322,9 @@ bool StatusColumnRecord::default_filter(const Gtk::TreeModel::iterator &node)
   return true;
 }
 
-void StatusColumnRecord::ignore_cell_render(Gtk::CellRenderer *renderer, const Gtk::TreeIter &iter)
+void StatusColumnRecord::ignore_cell_render(Gtk::CellRenderer *renderer, const Gtk::TreeIter<std::string> &iter)
 {
-  std::ignore = iter;
+  // std::ignore = iter;
 
   auto *text_renderer = dynamic_cast<Gtk::CellRendererText *>(renderer);
   if (text_renderer != nullptr) {
