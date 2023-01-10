@@ -1,45 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.38.2 -->
 <interface>
-  <requires lib="gtk+" version="3.24"/>
+  <requires lib="gtk" version="4.0"/>
   <object class="GtkBox" id="i_box">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
     <property name="halign">end</property>
     <property name="valign">start</property>
     <property name="margin-bottom">10</property>
-    <property name="hexpand">False</property>
-    <property name="vexpand">False</property>
+    <property name="hexpand">0</property>
+    <property name="vexpand">0</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkLabel" id="i_header">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
         <property name="halign">end</property>
         <property name="margin-bottom">5</property>
-        <property name="label" translatable="yes">Header</property>
+        <property name="label" translatable="1">Header</property>
         <attributes>
-          <attribute name="scale" value="1.1000000000000001"/>
+          <attribute name="scale" value="1.1000000000000001"></attribute>
         </attributes>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">0</property>
-      </packing>
     </child>
     <child>
       <object class="GtkLabel" id="i_text">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
         <property name="halign">end</property>
-        <property name="label" translatable="yes">Placeholder text</property>
+        <property name="label" translatable="1">Placeholder text</property>
       </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">1</property>
-      </packing>
     </child>
   </object>
 </interface>
