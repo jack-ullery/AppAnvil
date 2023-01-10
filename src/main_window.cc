@@ -67,12 +67,12 @@ MainWindow::MainWindow()
   m_headerbar.set_show_title_buttons(true);
 
   // Set the icon
-  /// auto builder         = Gtk::Builder::create_from_resource("/resources/icon.glade");
+  /// auto builder         = Gtk::Builder::create_from_resource("/resources/icon.ui");
   /// Gtk::Image *icon_ptr = builder->get_widget<Gtk::Image>("icon");
   /// this->set_icon(icon_ptr->get_pixbuf());
 
   // Set some default settings for the window
-  /// this->set_default_size(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+  this->set_default_size(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
   /// this->add_events(Gdk::EventMask::ENTER_NOTIFY_MASK);
 
   // Add and show all children

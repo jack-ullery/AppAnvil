@@ -96,6 +96,6 @@ Status::Status(const std::string &glade_resource)
 }
 
 Status::Status()
-  : Status("/resources/status.glade")
+  : Status("/resources/status.ui")
 {
 }

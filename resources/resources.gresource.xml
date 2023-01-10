@@ -2,12 +2,12 @@
 <gresources>
   <gresource>
     <file>resources/icon.svg</file>
-    <file preprocess="xml-stripblanks">resources/icon.glade</file>
-    <file preprocess="xml-stripblanks">resources/help.glade</file>
-    <file preprocess="xml-stripblanks">resources/load_profile.glade</file>
-    <file preprocess="xml-stripblanks">resources/profile.glade</file>
-    <file preprocess="xml-stripblanks">resources/status.glade</file>
-    <file preprocess="xml-stripblanks">resources/log.glade</file>
-    <file preprocess="xml-stripblanks">resources/info_box.glade</file>
+    <file preprocess="xml-stripblanks">resources/icon.ui</file>
+    <file preprocess="xml-stripblanks">resources/help.ui</file>
+    <file preprocess="xml-stripblanks">resources/load_profile.ui</file>
+    <file preprocess="xml-stripblanks">resources/profile.ui</file>
+    <file preprocess="xml-stripblanks">resources/status.ui</file>
+    <file preprocess="xml-stripblanks">resources/log.ui</file>
+    <file preprocess="xml-stripblanks">resources/info_box.ui</file>
   </gresource>
 </gresources>

@@ -5,7 +5,7 @@
 #include <vector>
 
 Help::Help()
-  : builder{ Gtk::Builder::create_from_resource("/resources/help.glade") },
+  : builder{ Gtk::Builder::create_from_resource("/resources/help.ui") },
     h_box{ Common::get_widget<Gtk::Box>("h_box", builder) },
     h_label{ Common::get_widget<Gtk::Label>("h_label", builder) },
     h_searchbox{ Common::get_widget<Gtk::Box>("h_searchbox", builder) },
