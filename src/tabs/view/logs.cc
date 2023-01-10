@@ -9,7 +9,7 @@ void Logs::set_information(const std::list<std::pair<std::string, std::string>> 
     // If needed, create a new InfoBox to show this pair
     if (index >= info_vec.size()) {
       info_vec.emplace_back();
-      l_log_info->add(info_vec[index]);
+      l_log_info->append(info_vec[index]);
     }
 
     // Set the header and text of the next Info Box using data from the pair

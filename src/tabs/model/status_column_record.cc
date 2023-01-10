@@ -96,7 +96,7 @@ uint StatusColumnRecord::filter_rows()
   return num_visible;
 }
 
-Gtk::TreeConstRow StatusColumnRecord::get_parent_by_pid(unsigned int pid)
+Gtk::TreeRow StatusColumnRecord::get_parent_by_pid(unsigned int pid)
 {
   Gtk::TreeRow parentRow;
   auto children = store->children();
@@ -116,15 +116,16 @@ Gtk::TreeConstRow StatusColumnRecord::get_parent_by_pid(unsigned int pid)
   return parentRow;
 }
 
-Gtk::TreeConstRow StatusColumnRecord::get_parent_by_pid(unsigned int pid, const Gtk::TreeConstRow &parent)
+Gtk::TreeRow StatusColumnRecord::get_parent_by_pid(unsigned int pid, Gtk::TreeRow &parent)
 {
   Gtk::TreeRow parentRow;
-  const auto &children = parent.children();
+  auto &children = parent.children();
 
   for (auto iter = children.begin(); iter != children.end(); iter++) {
     unsigned int row_pid = 0;
-    auto row             = *iter;
+    Gtk::TreeRow &row    = *iter;
     row.get_value(3, row_pid);
+
     if (row_pid == pid) {
       return row;
     }
@@ -136,13 +137,13 @@ Gtk::TreeConstRow StatusColumnRecord::get_parent_by_pid(unsigned int pid, const 
   return parentRow;
 }
 
-bool StatusColumnRecord::pid_exists_in_child(unsigned int pid, const Gtk::TreeConstRow &parent)
+bool StatusColumnRecord::pid_exists_in_child(unsigned int pid, Gtk::TreeRow &parent)
 {
-  const auto &children = parent.children();
+  auto &children = parent.children();
 
   for (auto iter = children.begin(); iter != children.end(); iter++) {
     unsigned int row_pid    = 0;
-    const auto &row = *iter;
+    Gtk::TreeRow &row       = *iter;
 
     row.get_value(3, row_pid);
     if (row_pid == pid || (!row.children().empty() && pid_exists_in_child(pid, row))) {
@@ -151,14 +152,6 @@ bool StatusColumnRecord::pid_exists_in_child(unsigned int pid, const Gtk::TreeCo
   }
 
   return false;
-}
-
-/*
-    Protected Methods
-*/
-StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Status> &tab, const std::vector<ColumnHeader> &names)
-  : StatusColumnRecord(tab->get_view(), tab->get_window(), names)
-{
 }
 
 /*
@@ -229,7 +222,7 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
       // Create a custom cell renderer which shows nothing for these entries
       // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
       Gtk::CellRenderer *renderer = Gtk::manage(new Gtk::CellRendererText());
-      auto callback_fun           = sigc::ptr_fun(&StatusColumnRecord::ignore_cell_render);
+      const Gtk::TreeViewColumn::SlotTreeCellData& callback_fun = sigc::ptr_fun(&StatusColumnRecord::ignore_cell_render);
 
       column_view->clear();
       column_view->pack_start(*renderer, false);
@@ -316,16 +309,14 @@ void StatusColumnRecord::reselect_rows()
   reset_scrollbar_position();
 }
 
-bool StatusColumnRecord::default_filter(const Gtk::TreeModel::iterator &node)
+bool StatusColumnRecord::default_filter(const Gtk::TreeModel::const_iterator &node)
 {
   std::ignore = node;
   return true;
 }
 
-void StatusColumnRecord::ignore_cell_render(Gtk::CellRenderer *renderer, const Gtk::TreeIter<std::string> &iter)
+void StatusColumnRecord::ignore_cell_render(Gtk::CellRenderer *renderer, [[maybe_unused]] const Gtk::TreeModel::const_iterator &iter)
 {
-  // std::ignore = iter;
-
   auto *text_renderer = dynamic_cast<Gtk::CellRendererText *>(renderer);
   if (text_renderer != nullptr) {
     text_renderer->property_text() = "";

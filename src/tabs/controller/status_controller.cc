@@ -57,7 +57,7 @@ bool StatusController<Tab>::should_filter(const std::string &str,
 }
 
 template<class Tab>
-bool StatusController<Tab>::filter(const Gtk::TreeModel::iterator &node)
+bool StatusController<Tab>::filter(const Gtk::TreeModel::const_iterator &node)
 {
   const int num_columns = tab->get_view()->get_n_columns();
   auto treeModel        = tab->get_view()->get_model();

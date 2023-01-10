@@ -5,6 +5,8 @@
 #include "status.h"
 
 #include <gtkmm/box.h>
+#include <gtkmm/comboboxtext.h>
+#include <gtkmm/label.h>
 #include <gtkmm/stack.h>
 #include <gtkmm/togglebutton.h>
 #include <memory>

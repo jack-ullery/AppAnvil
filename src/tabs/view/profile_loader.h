@@ -5,6 +5,7 @@
 #include <gtkmm/enums.h>
 #include <gtkmm/filechooser.h>
 #include <gtkmm/filechooserdialog.h>
+#include <gtkmm/label.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/searchentry.h>
 #include <memory>

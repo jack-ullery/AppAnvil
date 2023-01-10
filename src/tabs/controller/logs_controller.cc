@@ -11,24 +11,6 @@
 #include <sstream>
 
 template<class LogsTab, class Database, class Adapter>
-bool LogsController<LogsTab, Database, Adapter>::on_button_event(GdkEvent *event)
-{
-  std::ignore = event;
-
-  handle_log_selected();
-  return false;
-}
-
-template<class LogsTab, class Database, class Adapter>
-bool LogsController<LogsTab, Database, Adapter>::on_key_event(GdkEvent *event)
-{
-  std::ignore = event;
-
-  handle_log_selected();
-  return false;
-}
-
-template<class LogsTab, class Database, class Adapter>
 void LogsController<LogsTab, Database, Adapter>::handle_log_selected()
 {
   // Check if there is any row selected
@@ -205,12 +187,9 @@ LogsController<LogsTab, Database, Adapter>::LogsController(std::shared_ptr<Datab
   auto filter_fun = sigc::mem_fun(*this, &LogsController::filter);
   adapter->get_col_record()->set_visible_func(filter_fun);
 
-  // When a key/button is pressed or released, check if the selection has changed
-  auto button_event_fun = sigc::mem_fun(*this, &LogsController::on_button_event);
-  logs->get_view()->signal_button_release_event().connect(button_event_fun, true);
-
-  auto key_event_fun = sigc::mem_fun(*this, &LogsController::on_key_event);
-  logs->get_view()->signal_key_release_event().connect(key_event_fun, true);
+  // When the cursor has changed, call `handle_log_selected()`
+  auto cursor_event_fun = sigc::mem_fun(*this, &LogsController::handle_log_selected);
+  logs->get_view()->signal_cursor_changed().connect(cursor_event_fun, true);
 
   logs->get_view()->set_activate_on_single_click(true);
 }

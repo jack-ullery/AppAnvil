@@ -3,6 +3,8 @@
 
 #include "jsoncpp/json/json.h"
 
+#include <gtkmm/gestureclick.h>
+#include <gtkmm/gesturesingle.h>
 #include <iostream>
 #include <regex>
 #include <sstream>
@@ -15,10 +17,21 @@ void Status::set_status_label_text(const std::string &str)
 
 void Status::set_refresh_signal_handler(const Glib::SignalProxyProperty::SlotType &func)
 {
+  // When the search text changes
   s_search->signal_search_changed().connect(func, true);
-  s_use_regex->signal_clicked().connect(func, true);
-  s_match_case->signal_clicked().connect(func, true);
-  s_whole_word->signal_clicked().connect(func, true);
+
+  // Wrap 'func' with a lambda expression so that it is compatible with the 'signal_pressed' event
+  auto wrapped_func = [func](int, double, double){
+    func();
+  };
+
+  // Gesture for when any checkboxes are clicked
+  auto gesture = Gtk::GestureClick::create();
+  gesture->signal_pressed().connect(wrapped_func, true);
+
+  s_use_regex->add_controller(gesture);
+  s_match_case->add_controller(gesture);
+  s_whole_word->add_controller(gesture);
 }
 
 std::shared_ptr<Gtk::TreeView> Status::get_view()
@@ -70,16 +83,16 @@ Status::Status(const std::string &glade_resource)
 {
   s_view->set_activate_on_single_click(true);
 
-  s_win->set_shadow_type(Gtk::ShadowType::SHADOW_NONE);
-  s_win->set_policy(Gtk::PolicyType::POLICY_AUTOMATIC, Gtk::PolicyType::POLICY_AUTOMATIC);
+  /// s_win->set_shadow_type(Gtk::ShadowType::SHADOW_NONE);
+  /// s_win->set_policy(Gtk::PolicyType::POLICY_AUTOMATIC, Gtk::PolicyType::POLICY_AUTOMATIC);
   s_win->set_hexpand();
   s_win->set_vexpand();
 
   // Make the searchbox invisible, until show_searchbar() is called
-  s_searchbox->set_no_show_all(true);
+  /// s_searchbox->set_no_show_all(true);
   hide_searchbar();
 
-  this->append(*s_box);
+  this->set_child(*s_box);
 }
 
 Status::Status()

@@ -100,12 +100,9 @@ public:
   uint filter_rows();
 
   void reselect_rows();
-  Gtk::TreeConstRow get_parent_by_pid(unsigned int pid);
-  Gtk::TreeConstRow get_parent_by_pid(unsigned int pid, const Gtk::TreeConstRow &parent);
-  bool pid_exists_in_child(unsigned int pid, const Gtk::TreeConstRow &parent);
-
-protected:
-  StatusColumnRecord(const std::shared_ptr<Status> &tab, const std::vector<ColumnHeader> &names);
+  Gtk::TreeRow get_parent_by_pid(unsigned int pid);
+  Gtk::TreeRow get_parent_by_pid(unsigned int pid, Gtk::TreeRow &parent);
+  bool pid_exists_in_child(unsigned int pid, Gtk::TreeRow &parent);
 
 private:
   struct RowData
@@ -144,11 +141,11 @@ private:
   void reselect_children_rows(const Gtk::TreeModel::ConstChildren &children);
 
   // Unless `set_visible_func` is called, this filter sets every row in the ColumnRecord to be visible when filtered
-  static bool default_filter(const Gtk::TreeModel::iterator &node);
+  static bool default_filter(const Gtk::TreeModel::const_iterator &node);
 
   // Ignores the parameter and returns an empty string
   // This is used by the cell renderer of columns we do not want to view
-  static void ignore_cell_render(Gtk::CellRenderer *renderer, const Gtk::TreeIter<std::string> &iter);
+  static void ignore_cell_render(Gtk::CellRenderer *renderer, const Gtk::TreeModel::const_iterator &iter);
 };
 
 #endif // TABS_STATUS_COLUMN_RECORD_H

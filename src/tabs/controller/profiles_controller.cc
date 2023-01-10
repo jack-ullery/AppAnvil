@@ -9,30 +9,13 @@
 #include <cstddef>
 #include <giomm.h>
 #include <glibmm.h>
+#include <gtkmm/eventcontroller.h>
 #include <gtkmm/treeiter.h>
 #include <gtkmm/treepath.h>
 #include <memory>
 #include <string>
 #include <tuple>
 #include <vector>
-
-template<class ProfilesTab, class Database, class Adapter>
-bool ProfilesController<ProfilesTab, Database, Adapter>::on_button_event(GdkEvent *event)
-{
-  std::ignore = event;
-
-  handle_profile_selected();
-  return false;
-}
-
-template<class ProfilesTab, class Database, class Adapter>
-bool ProfilesController<ProfilesTab, Database, Adapter>::on_key_event(GdkEvent *event)
-{
-  std::ignore = event;
-
-  handle_profile_selected();
-  return false;
-}
 
 template<class ProfilesTab, class Database, class Adapter>
 void ProfilesController<ProfilesTab, Database, Adapter>::handle_profile_selected()
@@ -102,12 +85,9 @@ ProfilesController<ProfilesTab, Database, Adapter>::ProfilesController(std::shar
   auto filter_fun = sigc::mem_fun(*this, &ProfilesController::filter);
   adapter.get_col_record()->set_visible_func(filter_fun);
 
-  // When a key/button is pressed or released, check if the selection has changed
-  auto button_event_fun = sigc::mem_fun(*this, &ProfilesController::on_button_event);
-  prof->get_view()->signal_button_release_event().connect(button_event_fun, true);
-
-  auto key_event_fun = sigc::mem_fun(*this, &ProfilesController::on_key_event);
-  prof->get_view()->signal_key_release_event().connect(key_event_fun, true);
+  // When the cursor has changed, call `handle_profile_selected()`
+  auto cursor_event_fun = sigc::mem_fun(*this, &ProfilesController<ProfilesTab, Database, Adapter>::handle_profile_selected);
+  prof->get_view()->signal_cursor_changed().connect(cursor_event_fun, true);
 
   prof->get_view()->set_activate_on_single_click(true);
 }

@@ -46,7 +46,7 @@ protected:
    *
    * @returns `true` if the TreeRow should be shown, `false` if it should not
    */
-  bool filter(const Gtk::TreeModel::iterator &node);
+  bool filter(const Gtk::TreeModel::const_iterator &node);
 
   /**
    * @brief Decide whether a string should be visible

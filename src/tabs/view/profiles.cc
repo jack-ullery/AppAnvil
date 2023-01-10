@@ -27,8 +27,8 @@ void Profiles::change_status()
     // Get the status that we intend to switch to
     std::string new_status = p_status_selection->get_active_text();
 
-    row->get_value(1, profile_path);
-    row->get_value(2, old_status);
+    row.get_value(1, profile_path);
+    row.get_value(2, old_status);
 
     // Convert the status strings to lower case.
     transform(old_status.begin(), old_status.end(), old_status.begin(), ::tolower);
@@ -116,7 +116,7 @@ Profiles::Profiles()
     loader{ new ProfileLoader() }
 {
   // Add tabs to the stack pane
-  p_stack->append(*loader, "loadProfile");
+  p_stack->add(*loader, "loadProfile");
 
   // Configure the button used for changing a profiles confinement
   auto change_state_toggle_fun = sigc::mem_fun(*this, &Profiles::handle_change_state_toggle);

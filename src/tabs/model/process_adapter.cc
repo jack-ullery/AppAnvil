@@ -23,11 +23,11 @@ ProcessTableEntry ProcessAdapter<Database, ColumnRecord>::add_row(const std::str
 
   ProcessTableEntry entry(process_name, profile_name, pid, row);
 
-  row->set_value(0, entry);        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  row->set_value(1, process_name); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  row->set_value(2, user);         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  row->set_value(3, pid);          // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  row->set_value(4, status);       // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row.set_value(0, entry);        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row.set_value(1, process_name); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row.set_value(2, user);         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row.set_value(3, pid);          // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row.set_value(4, status);       // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
   return entry;
 }
@@ -64,8 +64,8 @@ void ProcessAdapter<Database, ColumnRecord>::put_data(const std::string &process
     entry.process_name      = process_name;
     entry.profile_name      = profile_name;
 
-    entry.row->set_value(2, user);   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-    entry.row->set_value(4, status); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    entry.row.set_value(2, user);   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+    entry.row.set_value(4, status); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
     // Add the entry to the map
     pid_map.erase(pid);

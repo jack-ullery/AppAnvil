@@ -40,7 +40,7 @@ void LogAdapter<Database, ColumnRecord>::put_data(const time_t &timestamp,
   }
 
   // Create a new row
-  const Gtk::TreeRow row = col_record->new_row();
+  Gtk::TreeRow row = col_record->new_row();
 
   // If not entry was found, we should create a new one
   LogTableEntry entry(timestamp, profile_name, pid, metadata, row);

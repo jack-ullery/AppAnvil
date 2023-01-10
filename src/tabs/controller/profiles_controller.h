@@ -24,8 +24,6 @@ public:
   void set_apply_label_text(const std::string &str);
 
 protected:
-  bool on_button_event(GdkEvent *event);
-  bool on_key_event(GdkEvent *event);
   void handle_profile_selected();
 
 private:
