@@ -1,6 +1,7 @@
 #ifndef SRC_THREADS_LOG_READER_H
 #define SRC_THREADS_LOG_READER_H
 
+#include <forward_list>
 #include <fstream>
 #include <memory>
 #include <string>
@@ -10,12 +11,12 @@
 class LogReader
 {
   public:
-    explicit LogReader(const std::string &log_source = "/var/log/kern.log");
+    LogReader(const std::initializer_list<std::string> &log_sources = {"/var/log/kern.log", "/var/log/dmesg"});
 
     std::list<std::shared_ptr<LogRecord>> read_logs();
 
   private:
-    std::ifstream logFile;
+    std::forward_list<std::ifstream> log_files;
 };
 
 #endif
