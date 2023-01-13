@@ -53,12 +53,14 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
   target_compile_definitions(${TEST_NAME} PUBLIC -DTESTS_ENABLED)
 
   target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
+  target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${LIBAPPARMOR_INCLUDE_DIRS})
 
   target_link_libraries(${TEST_NAME} PUBLIC gtest)
   target_link_libraries(${TEST_NAME} PUBLIC gmock)
   target_link_libraries(${TEST_NAME} PUBLIC pthread)
   target_link_libraries(${TEST_NAME} PUBLIC jsoncpp)
   target_link_libraries(${TEST_NAME} PUBLIC ${GTKMM_LIBRARIES})
+  target_link_libraries(${TEST_NAME} PUBLIC ${LIBAPPARMOR_LIBRARIES})
   target_link_libraries(${TEST_NAME} PUBLIC "aa-caller_dev")
 
   # Create target "report", which should run the unit-tests and generate a code coverage report  

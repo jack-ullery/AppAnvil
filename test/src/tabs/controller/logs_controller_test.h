@@ -10,7 +10,7 @@
 #include <gtest/gtest.h>
 #include <memory>
 
-class LogsControllerChild : public LogsController<LogsMock, Database, LogAdapterMock>
+class LogsControllerChild : public LogsController<LogsMock, Database, LogAdapterMock, LogRecord>
 {
 public:
   FRIEND_TEST(LogsControllerTest, TEST_ADD_ROW_FROM_JSON);

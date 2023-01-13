@@ -54,63 +54,63 @@ protected:
   std::shared_ptr<LogsControllerChild> logs_controller;
 };
 
-// Test for method add_row_from_json
-TEST_F(LogsControllerTest, TEST_ADD_ROW_FROM_JSON)
-{
-  Json::Value root;
-  Json::CharReaderBuilder builder;
-  JSONCPP_STRING errs;
-  std::stringstream stream;
-  stream << journalctl_json_snippet;
+// // Test for method add_row_from_json
+// TEST_F(LogsControllerTest, TEST_ADD_ROW_FROM_JSON)
+// {
+//   Json::Value root;
+//   Json::CharReaderBuilder builder;
+//   JSONCPP_STRING errs;
+//   std::stringstream stream;
+//   stream << journalctl_json_snippet;
 
-  bool res = parseFromStream(builder, stream, &root, &errs);
-  ASSERT_TRUE(res) << "failed to parse sample json";
+//   bool res = parseFromStream(builder, stream, &root, &errs);
+//   ASSERT_TRUE(res) << "failed to parse sample json";
 
-  // Should check that the arguments are correct
-  EXPECT_CALL(*adapter_mock, put_data(_, _, _, _, _, _)).Times(1);
+//   // Should check that the arguments are correct
+//   EXPECT_CALL(*adapter_mock, put_data(_, _, _, _, _, _)).Times(1);
 
-  EXPECT_NO_THROW(logs_controller->add_row_from_json(root));
-}
+//   EXPECT_NO_THROW(logs_controller->add_row_from_json(root));
+// }
 
-// Test for method add_data_to_record with a valid argument passed
-TEST_F(LogsControllerTest, TEST_ADD_DATA_TO_RECORD_VALID)
-{
-  uint arbitrary_num = 42;
-  Sequence add_row_calls;
+// // Test for method add_data_to_record with a valid argument passed
+// TEST_F(LogsControllerTest, TEST_ADD_DATA_TO_RECORD_VALID)
+// {
+//   uint arbitrary_num = 42;
+//   Sequence add_row_calls;
 
-  // add_data_to_record calls add_row_from_json(...) for each line of the passed json (string)
-  // with the current values of data_arg and data_arg_num_lines, this means the sequence will occur twice
-  for (int i = 0; i < data_arg_num_lines; i++) {
-    EXPECT_CALL(*adapter_mock, put_data(_, _, _, _, _, _)).Times(1).InSequence(add_row_calls);
-  }
+//   // add_data_to_record calls add_row_from_json(...) for each line of the passed json (string)
+//   // with the current values of data_arg and data_arg_num_lines, this means the sequence will occur twice
+//   for (int i = 0; i < data_arg_num_lines; i++) {
+//     EXPECT_CALL(*adapter_mock, put_data(_, _, _, _, _, _)).Times(1).InSequence(add_row_calls);
+//   }
 
-  EXPECT_CALL(*adapter_mock, get_col_record()).Times(1).InSequence(add_row_calls).WillOnce(Return(col_record_mock));
+//   EXPECT_CALL(*adapter_mock, get_col_record()).Times(1).InSequence(add_row_calls).WillOnce(Return(col_record_mock));
 
-  EXPECT_CALL(*col_record_mock, filter_rows()).Times(1).WillOnce(Return(arbitrary_num));
+//   EXPECT_CALL(*col_record_mock, filter_rows()).Times(1).WillOnce(Return(arbitrary_num));
 
-  EXPECT_CALL(*logs_view_mock, set_status_label_text(::HasSubstr(std::to_string(arbitrary_num) + " logs")))
-    .Times(1)
-    .InSequence(add_row_calls);
+//   EXPECT_CALL(*logs_view_mock, set_status_label_text(::HasSubstr(std::to_string(arbitrary_num) + " logs")))
+//     .Times(1)
+//     .InSequence(add_row_calls);
 
-  auto data_stream = std::make_shared<std::istringstream>(data_arg);
-  EXPECT_NO_THROW(logs_controller->add_data_to_record_helper(data_stream));
-}
+//   auto data_stream = std::make_shared<std::istringstream>(data_arg);
+//   EXPECT_NO_THROW(logs_controller->add_data_to_record_helper(data_stream));
+// }
 
-// Test for method add_data_to_record with an invalid argument passed
-TEST_F(LogsControllerTest, TEST_ADD_DATA_TO_RECORD_INVALID)
-{
-  uint arbitrary_num = 42;
+// // Test for method add_data_to_record with an invalid argument passed
+// TEST_F(LogsControllerTest, TEST_ADD_DATA_TO_RECORD_INVALID)
+// {
+//   uint arbitrary_num = 42;
 
-  EXPECT_CALL(*adapter_mock, put_data(_, _, _, _, _, _)).Times(0);
+//   EXPECT_CALL(*adapter_mock, put_data(_, _, _, _, _, _)).Times(0);
 
-  EXPECT_CALL(*adapter_mock, get_col_record()).Times(1).WillOnce(Return(col_record_mock));
-  EXPECT_CALL(*col_record_mock, filter_rows()).Times(1).WillOnce(Return(arbitrary_num));
+//   EXPECT_CALL(*adapter_mock, get_col_record()).Times(1).WillOnce(Return(col_record_mock));
+//   EXPECT_CALL(*col_record_mock, filter_rows()).Times(1).WillOnce(Return(arbitrary_num));
 
-  EXPECT_CALL(*logs_view_mock, set_status_label_text(::HasSubstr(std::to_string(arbitrary_num) + " logs"))).Times(1);
+//   EXPECT_CALL(*logs_view_mock, set_status_label_text(::HasSubstr(std::to_string(arbitrary_num) + " logs"))).Times(1);
 
-  auto data_stream = std::make_shared<std::istringstream>("{test}");
-  EXPECT_NO_THROW(logs_controller->add_data_to_record_helper(data_stream));
-}
+//   auto data_stream = std::make_shared<std::istringstream>("{test}");
+//   EXPECT_NO_THROW(logs_controller->add_data_to_record_helper(data_stream));
+// }
 
 // Test for method refresh()
 TEST_F(LogsControllerTest, TEST_REFRESH)

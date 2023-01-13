@@ -37,7 +37,7 @@ protected:
 
   std::string profiles_arg  = "string argument for 'profiles.add_data()'";
   std::string processes_arg = "string argument for 'processes.add_data()'";
-  std::string logs_arg      = "string argument for 'logs.add_data()'";
+  std::list<std::shared_ptr<LogRecord>> logs_arg;
 
   std::shared_ptr<GlibDispatcherMock> disp;
   std::shared_ptr<ProfilesStatusMock> prof;
