@@ -10,13 +10,13 @@
 
 class LogReader
 {
-  public:
-    LogReader(const std::initializer_list<std::string> &log_sources = {"/var/log/kern.log", "/var/log/dmesg"});
+public:
+  LogReader(const std::initializer_list<std::string> &log_sources = { "/var/log/kern.log", "/var/log/dmesg" });
 
-    std::list<std::shared_ptr<LogRecord>> read_logs();
+  std::list<std::shared_ptr<LogRecord>> read_logs();
 
-  private:
-    std::forward_list<std::ifstream> log_files;
+private:
+  std::forward_list<std::ifstream> log_files;
 };
 
 #endif

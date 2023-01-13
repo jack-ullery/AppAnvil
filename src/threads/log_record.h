@@ -6,55 +6,56 @@
 
 // We want to use aalogparse.h from the libapparmor-dev library (which was written in C)
 // We need to mark this header with `extern "C"` so that it is compiled as C code and not C++
-extern "C" {
-  // Unfortunately the header contains the reserved keywords like "namespace" as a variable name
-  // Unlike C, "namespace" is a reserved keyword in C++
-  // Therefore, we need to make a minor modification to the header file, so that our C++ code will compile.
-  #define namespace namespace_variable    // NOLINT
-  #define class     class_variable        // NOLINT
-  #include <aalogparse/aalogparse.h>
-  #undef class
-  #undef namespace
+extern "C"
+{
+// Unfortunately the header contains the reserved keywords like "namespace" as a variable name
+// Unlike C, "namespace" is a reserved keyword in C++
+// Therefore, we need to make a minor modification to the header file, so that our C++ code will compile.
+#define namespace namespace_variable // NOLINT
+#define class class_variable         // NOLINT
+#include <aalogparse/aalogparse.h>
+#undef class
+#undef namespace
 }
 
 class LogRecord
 {
-  public:
-    // Initializes this class based on the data from a single log
-    explicit LogRecord(const std::string &log);
-    
-    // Custom destructor. Calls free_record() on record_data
-    ~LogRecord();
+public:
+  // Initializes this class based on the data from a single log
+  explicit LogRecord(const std::string &log);
 
-    // Whether or not this log is a valid AppArmor log that was parsed correctly, not some other type of log
-    bool valid() const;
+  // Custom destructor. Calls free_record() on record_data
+  ~LogRecord();
 
-    //// Accessors - these call record_data directly ////
-    long timestamp() const;
+  // Whether or not this log is a valid AppArmor log that was parsed correctly, not some other type of log
+  bool valid() const;
 
-    aa_record_event_type event_type() const;
-    std::string event_type_string() const;
+  //// Accessors - these call record_data directly ////
+  long timestamp() const;
 
-    ulong pid() const;
+  aa_record_event_type event_type() const;
+  std::string event_type_string() const;
 
-    std::string operation() const;    
-    std::string profile() const;
-    std::string name() const;
+  ulong pid() const;
 
-    std::string capname() const;
-    std::string capability() const;
+  std::string operation() const;
+  std::string profile() const;
+  std::string name() const;
 
-    std::string requested_mask() const;
-    std::string denied_mask() const;
+  std::string capname() const;
+  std::string capability() const;
 
-    // Deletes copy/move constructors and operators
-    LogRecord(const LogRecord &)            = delete;
-    LogRecord(LogRecord &&)                 = delete;
-    LogRecord &operator=(const LogRecord &) = delete;
-    LogRecord &operator=(LogRecord &&)      = delete;
+  std::string requested_mask() const;
+  std::string denied_mask() const;
 
-  private: 
-    aa_log_record *record_data;
+  // Deletes copy/move constructors and operators
+  LogRecord(const LogRecord &)            = delete;
+  LogRecord(LogRecord &&)                 = delete;
+  LogRecord &operator=(const LogRecord &) = delete;
+  LogRecord &operator=(LogRecord &&)      = delete;
+
+private:
+  aa_log_record *record_data;
 };
 
 #endif

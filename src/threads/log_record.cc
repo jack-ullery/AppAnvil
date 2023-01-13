@@ -4,8 +4,8 @@
 LogRecord::LogRecord(const std::string &log)
 {
   // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
-  char *log_char = const_cast<char*>(log.c_str());
-  record_data = parse_record(log_char);
+  char *log_char = const_cast<char *>(log.c_str());
+  record_data    = parse_record(log_char);
 }
 
 LogRecord::~LogRecord()
@@ -15,8 +15,7 @@ LogRecord::~LogRecord()
 
 bool LogRecord::valid() const
 {
-  return (record_data->event != AA_RECORD_INVALID) &&
-         (record_data->event != AA_RECORD_ERROR);
+  return (record_data->event != AA_RECORD_INVALID) && (record_data->event != AA_RECORD_ERROR);
 }
 
 long LogRecord::timestamp() const
@@ -31,27 +30,26 @@ aa_record_event_type LogRecord::event_type() const
 
 std::string LogRecord::event_type_string() const
 {
-  switch(record_data->event)
-  {
-    case AA_RECORD_INVALID: 
+  switch (record_data->event) {
+    case AA_RECORD_INVALID:
       return "INVALID";
 
-    case AA_RECORD_ERROR: 
+    case AA_RECORD_ERROR:
       return "ERROR";
 
-    case AA_RECORD_AUDIT: 
+    case AA_RECORD_AUDIT:
       return "AUDIT";
 
-    case AA_RECORD_ALLOWED: 
+    case AA_RECORD_ALLOWED:
       return "ALLOWED";
 
-    case AA_RECORD_DENIED: 
+    case AA_RECORD_DENIED:
       return "DENIED";
 
-    case AA_RECORD_HINT: 
+    case AA_RECORD_HINT:
       return "HINT";
 
-    case AA_RECORD_STATUS: 
+    case AA_RECORD_STATUS:
       return "STATUS";
   }
 

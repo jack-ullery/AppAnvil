@@ -63,11 +63,11 @@ template<class LogsTab, class Database, class Adapter, class LogRecord>
 void LogsController<LogsTab, Database, Adapter, LogRecord>::add_row(const std::shared_ptr<LogRecord> &record)
 {
   // getting timestamp from json argument, retrieving important fields from json
-  const time_t      timestamp   = record->timestamp();
-  const auto        type        = record->event_type();
+  const time_t timestamp        = record->timestamp();
+  const auto type               = record->event_type();
   const std::string type_string = record->event_type_string();
-  const ulong       pid         = record->pid();
-  std::string       operation   = record->operation();
+  const ulong pid               = record->pid();
+  std::string operation         = record->operation();
 
   std::string name;
   std::list<std::pair<std::string, std::string>> metadata;
@@ -81,7 +81,7 @@ void LogsController<LogsTab, Database, Adapter, LogRecord>::add_row(const std::s
   }
   /* Either the Denied or Audited access event */
   else if (type == AA_RECORD_DENIED || type == AA_RECORD_AUDIT) {
-    name      = record->profile();
+    name = record->profile();
 
     if (operation == "capable") {
       // std::string capname    = format_log_data(entry["_AUDIT_FIELD_CAPNAME"].asString());

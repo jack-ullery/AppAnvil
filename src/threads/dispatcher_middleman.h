@@ -52,16 +52,18 @@ protected:
 
     std::string string;
     std::list<std::shared_ptr<LogRecord>> logs;
-    
+
     CallData(CallType a, const std::string &b)
-      : type{a},
-        string{b}
-    { }
+      : type{ a },
+        string{ b }
+    {
+    }
 
     CallData(CallType a, const std::list<std::shared_ptr<LogRecord>> &b)
-      : type{a},
-        logs{b}
-    { }
+      : type{ a },
+        logs{ b }
+    {
+    }
   };
 
   // Receive method (called from main thread)

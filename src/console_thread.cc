@@ -18,7 +18,8 @@ ConsoleThread<ProfilesController, ProcessesController, LogsController>::ConsoleT
                                                                                       std::shared_ptr<LogsController> logs)
   : last_state{ PROFILE },
     dispatch_man(std::move(prof), std::move(proc), std::move(logs)),
-    asynchronous_thread(std::async(std::launch::async, &ConsoleThread<ProfilesController, ProcessesController, LogsController>::console_caller, this))
+    asynchronous_thread(
+      std::async(std::launch::async, &ConsoleThread<ProfilesController, ProcessesController, LogsController>::console_caller, this))
 {
   // Get all the important data at startup
   send_refresh_message(PROFILE);
