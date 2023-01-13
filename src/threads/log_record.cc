@@ -3,6 +3,7 @@
 
 LogRecord::LogRecord(const std::string &log)
 {
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-type-const-cast)
   char *log_char = const_cast<char*>(log.c_str());
   record_data = parse_record(log_char);
 }
