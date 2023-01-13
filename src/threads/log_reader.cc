@@ -5,15 +5,16 @@ LogReader::LogReader(const std::string &log_source)
   : logFile(log_source, std::ifstream::in)
 {   }
 
-std::list<LogRecord> LogReader::read_logs()
+std::list<std::shared_ptr<LogRecord>> LogReader::read_logs()
 {
-  std::list<LogRecord> logs;  
+  std::list<std::shared_ptr<LogRecord>> logs;  
 
   std::string log_data;
   while (std::getline(logFile, log_data)) {
-    if(log_data.find("audit: type=1400") != std::string::npos) {
-        LogRecord log(log_data);
-        logs.push_back(log);
+    auto log = std::make_shared<LogRecord>(log_data);
+
+    if(log->valid()) {
+      logs.push_back(log);
     }
   }
 

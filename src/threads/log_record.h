@@ -26,11 +26,32 @@ class LogRecord
     // Custom destructor. Calls free_record() on record_data
     ~LogRecord();
 
-    // Declares copy/move constructors and operators
-    LogRecord(const LogRecord &)            = default;
-    LogRecord(LogRecord &&)                 = default;
-    LogRecord &operator=(const LogRecord &) = default;
-    LogRecord &operator=(LogRecord &&)      = default;
+    // Whether or not this log is a valid AppArmor log that was parsed correctly, not some other type of log
+    bool valid() const;
+
+    //// Accessors - these call record_data directly ////
+    long timestamp() const;
+
+    aa_record_event_type event_type() const;
+    std::string event_type_string() const;
+
+    ulong pid() const;
+
+    std::string operation() const;    
+    std::string profile() const;
+    std::string name() const;
+
+    std::string capname() const;
+    std::string capability() const;
+
+    std::string requested_mask() const;
+    std::string denied_mask() const;
+
+    // Deletes copy/move constructors and operators
+    LogRecord(const LogRecord &)            = delete;
+    LogRecord(LogRecord &&)                 = delete;
+    LogRecord &operator=(const LogRecord &) = delete;
+    LogRecord &operator=(LogRecord &&)      = delete;
 
   private: 
     aa_log_record *record_data;

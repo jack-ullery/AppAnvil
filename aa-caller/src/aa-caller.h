@@ -33,26 +33,6 @@ public:
   static std::string get_status();
 
   /**
-   * @brief Return the output of `journalctl`
-   *
-   * @details
-   * Returns the output of `journalctl` to get a list of system logs.
-   *
-   * @returns std::string the raw output of `dmesg`
-   */
-  static std::string get_logs();
-
-  /**
-   * @brief Return the output of `journalctl` for logs after a specified cursor.
-   *
-   * @details
-   * Returns the output of `journalctl` to get a list of system logs, after a cursor.
-   *
-   * @returns std::string the raw output of `dmesg`
-   */
-  static std::string get_logs(const std::string &cursor);
-
-  /**
    * @brief Return the output of `aa-unconfined`
    *
    * @details
@@ -76,8 +56,6 @@ protected:
 
   // Dependency Injection: For unit testing
   static std::string get_status(AppArmorCaller *caller);
-  static std::string get_logs(AppArmorCaller *caller);
-  static std::string get_logs(AppArmorCaller *caller, const std::string &cursor);
   static std::string get_unconfined(AppArmorCaller *caller);
 };
 

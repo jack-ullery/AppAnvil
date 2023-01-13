@@ -37,16 +37,6 @@ public:
   static std::string get_status();
 
   /**
-   * @brief Return the output of `dmesg`
-   *
-   * @details
-   * Returns the output of `dmesg` to get a list of system logs.
-   *
-   * @returns std::string the raw output of `dmesg`
-   */
-  static std::string get_logs(const std::string &cursor = "");
-
-  /**
    * @brief Return the output of `aa-unconfined`
    *
    * @details
@@ -89,7 +79,6 @@ protected:
 
   // Dependency Injection: For unit testing
   static std::string get_status(CommandCaller *caller);
-  static std::string get_logs(CommandCaller *caller, const std::string &cursor = "");
   static std::string get_unconfined(CommandCaller *caller);
   static std::string load_profile(CommandCaller *caller, const std::string &fullFileName);
   static std::string disable_profile(CommandCaller *caller, const std::string &profileName);
@@ -103,7 +92,6 @@ protected:
 
 #ifdef TESTS_ENABLED
   FRIEND_TEST(CommandCallerTest, TEST_UNCONF);
-  FRIEND_TEST(CommandCallerTest, TEST_LOG);
   FRIEND_TEST(CommandCallerTest, TEST_STATUS);
   FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_EE);
   FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_CC);

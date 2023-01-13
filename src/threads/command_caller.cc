@@ -42,18 +42,6 @@ std::string CommandCaller::get_unconfined(CommandCaller *caller)
   return caller->call_command(command, return_on_error);
 }
 
-std::string CommandCaller::get_logs(CommandCaller *caller, const std::string &cursor)
-{
-  std::vector<std::string> command = { "pkexec", "aa-caller", "-l" };
-
-  if (!cursor.empty()) {
-    command.push_back(cursor);
-  }
-
-  std::string return_on_error;
-  return caller->call_command(command, return_on_error);
-}
-
 std::string CommandCaller::load_profile(CommandCaller *caller, const std::string &fullFileName)
 {
   std::vector<std::string> command = { "pkexec", "mv", fullFileName, "/etc/apparmor.d" };
@@ -153,12 +141,6 @@ std::string CommandCaller::get_unconfined()
 {
   CommandCaller caller;
   return get_unconfined(&caller);
-}
-
-std::string CommandCaller::get_logs(const std::string &cursor)
-{
-  CommandCaller caller;
-  return get_logs(&caller, cursor);
 }
 
 std::string CommandCaller::load_profile(const std::string &fullFileName)

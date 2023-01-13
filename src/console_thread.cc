@@ -9,7 +9,6 @@
 #include "tabs/view/profiles.h"
 #include "threads/command_caller.h"
 
-#include <iostream>
 #include <string>
 #include <tuple>
 
@@ -19,8 +18,7 @@ ConsoleThread<ProfilesController, ProcessesController, LogsController>::ConsoleT
                                                                                       std::shared_ptr<LogsController> logs)
   : last_state{ PROFILE },
     dispatch_man(std::move(prof), std::move(proc), std::move(logs)),
-    asynchronous_thread(
-      std::async(std::launch::async, &ConsoleThread<ProfilesController, ProcessesController, LogsController>::console_caller, this))
+    asynchronous_thread(std::async(std::launch::async, &ConsoleThread<ProfilesController, ProcessesController, LogsController>::console_caller, this))
 {
   // Get all the important data at startup
   send_refresh_message(PROFILE);
@@ -64,51 +62,6 @@ void ConsoleThread<ProfilesController, ProcessesController, LogsController>::sen
 }
 
 template<class ProfilesController, class ProcessesController, class LogsController>
-std::basic_string<char>::size_type ConsoleThread<ProfilesController, ProcessesController, LogsController>::find_last_line(std::string input)
-{
-  if (input.length() <= 1) {
-    return std::string::npos;
-  }
-
-  // The last character might be a newline, so lets skip it
-  auto position = input.length() - 2;
-
-  while (position > 0) {
-    // We found a newline character, return the position
-    if (input[position] == '\n') {
-      return position + 1;
-    }
-
-    position--;
-  }
-
-  return 0;
-}
-
-template<class ProfilesController, class ProcessesController, class LogsController>
-std::string ConsoleThread<ProfilesController, ProcessesController, LogsController>::strip_cursor_from_logs(std::string logs)
-{
-  auto last_line_pos = find_last_line(logs);
-
-  if (last_line_pos != std::string::npos) {
-    // Attempt to find the cursor position in the last line
-    std::string last_line = logs.substr(last_line_pos);
-
-    auto cursor_pos = last_line.find_first_of(':');
-
-    if (cursor_pos != std::string::npos) {
-      // If we found the cursor, override the old cursor with the new one
-      log_cursor = last_line.substr(cursor_pos + 2);
-
-      // Erase the cursor from the logs
-      return logs.erase(last_line_pos, logs.length());
-    }
-  }
-
-  return logs;
-}
-
-template<class ProfilesController, class ProcessesController, class LogsController>
 void ConsoleThread<ProfilesController, ProcessesController, LogsController>::run_command(TabState state)
 {
   switch (state) {
@@ -123,9 +76,8 @@ void ConsoleThread<ProfilesController, ProcessesController, LogsController>::run
     } break;
 
     case LOGS: {
-      std::string logs = CommandCaller::get_logs(log_cursor);
-      logs             = strip_cursor_from_logs(logs);
-
+      auto logs = log_reader.read_logs();
+      // const std::list<std::shared_ptr<LogRecord>> logs;
       dispatch_man.update_logs(logs);
     } break;
 
@@ -211,4 +163,4 @@ ConsoleThread<ProfilesController, ProcessesController, LogsController>::~Console
 
 template class ConsoleThread<ProfilesController<Profiles, Database, ProfileAdapter<Database>>,
                              ProcessesController<Processes, Database, ProcessAdapter<Database, StatusColumnRecord>>,
-                             LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord>>>;
+                             LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord>, LogRecord>>;

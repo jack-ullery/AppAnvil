@@ -1,17 +1,18 @@
 #include "logs_controller.h"
+#include "../../threads/log_record.h"
 #include "../model/database.h"
 #include "../model/status_column_record.h"
 #include "../view/logs.h"
+
 #include <glibmm/main.h>
 #include <glibmm/priorities.h>
-#include <iostream>
 #include <list>
 #include <memory>
 #include <sigc++/functors/mem_fun.h>
 #include <sstream>
 
-template<class LogsTab, class Database, class Adapter>
-bool LogsController<LogsTab, Database, Adapter>::on_button_event(GdkEventButton *event)
+template<class LogsTab, class Database, class Adapter, class LogRecord>
+bool LogsController<LogsTab, Database, Adapter, LogRecord>::on_button_event(GdkEventButton *event)
 {
   std::ignore = event;
 
@@ -19,8 +20,8 @@ bool LogsController<LogsTab, Database, Adapter>::on_button_event(GdkEventButton 
   return false;
 }
 
-template<class LogsTab, class Database, class Adapter>
-bool LogsController<LogsTab, Database, Adapter>::on_key_event(GdkEventKey *event)
+template<class LogsTab, class Database, class Adapter, class LogRecord>
+bool LogsController<LogsTab, Database, Adapter, LogRecord>::on_key_event(GdkEventKey *event)
 {
   std::ignore = event;
 
@@ -28,8 +29,8 @@ bool LogsController<LogsTab, Database, Adapter>::on_key_event(GdkEventKey *event
   return false;
 }
 
-template<class LogsTab, class Database, class Adapter>
-void LogsController<LogsTab, Database, Adapter>::handle_log_selected()
+template<class LogsTab, class Database, class Adapter, class LogRecord>
+void LogsController<LogsTab, Database, Adapter, LogRecord>::handle_log_selected()
 {
   // Check if there is any row selected
   auto selection    = logs->get_view()->get_selection();
@@ -49,8 +50,8 @@ void LogsController<LogsTab, Database, Adapter>::handle_log_selected()
   }
 }
 
-template<class LogsTab, class Database, class Adapter>
-std::string LogsController<LogsTab, Database, Adapter>::format_log_data(const std::string &data)
+template<class LogsTab, class Database, class Adapter, class LogRecord>
+std::string LogsController<LogsTab, Database, Adapter, LogRecord>::format_log_data(const std::string &data)
 {
   const std::regex remove_quotes = std::regex("\\\"(\\S*)\\\"");
   std::smatch m;
@@ -58,41 +59,40 @@ std::string LogsController<LogsTab, Database, Adapter>::format_log_data(const st
   return m[1];
 }
 
-template<class LogsTab, class Database, class Adapter>
-void LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::Value &entry)
+template<class LogsTab, class Database, class Adapter, class LogRecord>
+void LogsController<LogsTab, Database, Adapter, LogRecord>::add_row(const std::shared_ptr<LogRecord> &record)
 {
   // getting timestamp from json argument, retrieving important fields from json
-  const time_t timestamp = std::stol(entry["_SOURCE_REALTIME_TIMESTAMP"].asString()) / 1000000;
-  const std::string type = format_log_data(entry["_AUDIT_FIELD_APPARMOR"].asString());
-  const std::string pid  = entry["_PID"].asString();
+  const time_t      timestamp   = record->timestamp();
+  const auto        type        = record->event_type();
+  const std::string type_string = record->event_type_string();
+  const ulong       pid         = record->pid();
+  std::string       operation   = record->operation();
 
-  std::string operation;
   std::string name;
   std::list<std::pair<std::string, std::string>> metadata;
 
   // Adapted from: https://gitlab.com/apparmor/apparmor/-/blob/master/libraries/libapparmor/include/aalogparse.h
-  if (type == "STATUS") {
-    name      = entry["_AUDIT_FIELD_NAME"].asString();
-    operation = format_log_data(entry["_AUDIT_FIELD_OPERATION"].asString());
+  if (type == AA_RECORD_STATUS) {
+    name = record->name();
 
-    std::string status = format_log_data(entry["_AUDIT_FIELD_PROFILE"].asString());
+    std::string status = record->profile();
     metadata.emplace_back("Status", status);
   }
   /* Either the Denied or Audited access event */
-  else if (type == "DENIED" || type == "AUDIT") {
-    name      = format_log_data(entry["_AUDIT_FIELD_PROFILE"].asString());
-    operation = format_log_data(entry["_AUDIT_FIELD_OPERATION"].asString());
+  else if (type == AA_RECORD_DENIED || type == AA_RECORD_AUDIT) {
+    name      = record->profile();
 
     if (operation == "capable") {
-      std::string capname    = format_log_data(entry["_AUDIT_FIELD_CAPNAME"].asString());
-      std::string capability = entry["_AUDIT_FIELD_CAPABILITY"].asString();
+      // std::string capname    = format_log_data(entry["_AUDIT_FIELD_CAPNAME"].asString());
+      // std::string capability = entry["_AUDIT_FIELD_CAPABILITY"].asString();
 
-      metadata.emplace_back("Capability Name", capname);
-      metadata.emplace_back("Capability", capability);
+      // metadata.emplace_back("Capability Name", capname);
+      // metadata.emplace_back("Capability", capability);
     } else {
-      std::string fieldName = entry["_AUDIT_FIELD_NAME"].asString();
-      std::string requested = format_log_data(entry["_AUDIT_FIELD_REQUESTED_MASK"].asString());
-      std::string denied    = format_log_data(entry["_AUDIT_FIELD_DENIED_MASK"].asString());
+      std::string fieldName = record->name();
+      std::string requested = record->requested_mask();
+      std::string denied    = record->denied_mask();
 
       metadata.emplace_back("Field Name", fieldName);
       metadata.emplace_back("Requested Mask", requested);
@@ -115,91 +115,72 @@ void LogsController<LogsTab, Database, Adapter>::add_row_from_json(const Json::V
   // else if(type == "HINT") {
 
   // }
-  else {
-    std::cerr << "Error - Unknown log type (" << type << ") : " << entry << std::endl;
-    name      = entry["_AUDIT_FIELD_NAME"].asString();
-    operation = format_log_data(entry["_AUDIT_FIELD_OPERATION"].asString());
 
-    std::string status = format_log_data(entry["_AUDIT_FIELD_PROFILE"].asString());
-    metadata.emplace_back("Status", status);
-  }
-
-  adapter->put_data(timestamp, type, operation, name, stoul(pid), metadata);
+  adapter->put_data(timestamp, type_string, operation, name, pid, metadata);
 }
 
-template<class LogsTab, class Database, class Adapter>
-void LogsController<LogsTab, Database, Adapter>::add_data_to_record(const std::string &data)
+template<class LogsTab, class Database, class Adapter, class LogRecord>
+void LogsController<LogsTab, Database, Adapter, LogRecord>::add_data_to_record(const std::list<std::shared_ptr<LogRecord>> &data)
 {
-  auto json_data = std::make_shared<std::istringstream>(data);
-
-  auto lambda = [&, json_data]() -> bool { return add_data_to_record_helper(json_data); };
-
+  auto lambda = [&, data]() -> bool { return add_data_to_record_helper(data.begin(), data.end()); };
   Glib::signal_idle().connect(lambda, Glib::PRIORITY_LOW);
 }
 
-template<class LogsTab, class Database, class Adapter>
-bool LogsController<LogsTab, Database, Adapter>::add_data_to_record_helper(const std::shared_ptr<std::istringstream> &json_data)
+template<class LogsTab, class Database, class Adapter, class LogRecord>
+bool LogsController<LogsTab, Database, Adapter, LogRecord>::add_data_to_record_helper(const record_iter &begin, const record_iter &end)
 {
-  // Declare some variables that will be written to
-  Json::Value value;
-  Json::CharReaderBuilder builder;
-  JSONCPP_STRING errs;
+  typename std::list<std::shared_ptr<LogRecord>>::const_iterator iter = begin;
 
   // gets each log entry (in json format, separated by \n), parses the json, and calls add_row_from_json to add each individual entry
   constexpr uint num_logs_batch = 127;
   for (uint i = 0; i < num_logs_batch; i++) {
-    // Get the next line (if it exists)
-    std::string line;
-    if (!std::getline(*json_data, line)) {
-      // We exhausted the input stream, which means no more logs exist
+    // Check if we exhausted the list of logs
+    if (iter == end) {
       // Return false to disconnect the signal handler
       refresh();
       return false;
     }
 
-    // A log exists, so lets parse it using JsonCpp
-    std::stringstream log_stream(line);
+    // Retrieve and pop the next log
+    std::shared_ptr<LogRecord> log = *iter;
+    iter++;
 
-    try {
-      if (!parseFromStream(builder, log_stream, &value, &errs)) {
-        throw std::invalid_argument(errs + "\nArgument of add_data_to_record contains line with invalid JSON format.");
-      }
-
-      // Create a row from the json value
-      add_row_from_json(value);
-    } catch (const std::exception &ex) {
-      std::cerr << ex.what() << line << std::endl;
-      std::cerr << "Unable to parse the following log: " << line << std::endl;
-    }
+    add_row(log);
   }
 
   // Refresh the display to show an accurate count of the number of logs
   refresh();
-  return true;
+
+  // Then continue signal processing
+  auto lambda = [&, iter, end]() -> bool { return add_data_to_record_helper(iter, end); };
+  Glib::signal_idle().connect(lambda, Glib::PRIORITY_LOW);
+
+  // Disconnect the current signal handler
+  return false;
 }
 
-template<class LogsTab, class Database, class Adapter>
-void LogsController<LogsTab, Database, Adapter>::refresh()
+template<class LogsTab, class Database, class Adapter, class LogRecord>
+void LogsController<LogsTab, Database, Adapter, LogRecord>::refresh()
 {
   uint num_visible = adapter->get_col_record()->filter_rows();
   logs->set_status_label_text(" " + std::to_string(num_visible) + " logs");
 }
 
 // For unit testing
-template<class LogsTab, class Database, class Adapter>
-LogsController<LogsTab, Database, Adapter>::LogsController(std::shared_ptr<Adapter> adapter, std::shared_ptr<LogsTab> logs)
+template<class LogsTab, class Database, class Adapter, class LogRecord>
+LogsController<LogsTab, Database, Adapter, LogRecord>::LogsController(std::shared_ptr<Adapter> adapter, std::shared_ptr<LogsTab> logs)
   : logs{ std::move(logs) },
     adapter{ std::move(adapter) }
 {
 }
 
 // For production
-template<class LogsTab, class Database, class Adapter>
-LogsController<LogsTab, Database, Adapter>::LogsController(std::shared_ptr<Database> database)
+template<class LogsTab, class Database, class Adapter, class LogRecord>
+LogsController<LogsTab, Database, Adapter, LogRecord>::LogsController(std::shared_ptr<Database> database)
   : logs{ StatusController<LogsTab>::get_tab() },
     adapter{ new Adapter(database, logs->get_view(), logs->get_window()) }
 {
-  auto func = sigc::mem_fun(*this, &LogsController<LogsTab, Database, Adapter>::refresh);
+  auto func = sigc::mem_fun(*this, &LogsController<LogsTab, Database, Adapter, LogRecord>::refresh);
   logs->set_refresh_signal_handler(func);
 
   auto filter_fun = sigc::mem_fun(*this, &LogsController::filter);
@@ -217,4 +198,4 @@ LogsController<LogsTab, Database, Adapter>::LogsController(std::shared_ptr<Datab
 
 // Used to avoid linker errors
 // For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
-template class LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord>>;
+template class LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord>, LogRecord>;
