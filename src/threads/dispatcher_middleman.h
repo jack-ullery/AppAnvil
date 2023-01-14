@@ -2,6 +2,7 @@
 #define SRC_THREADS_DISPATCHER_MIDDLEMAN_H
 
 #include "blocking_queue.h"
+#include "log_record.h"
 
 #include <glibmm/dispatcher.h>
 #include <memory>
@@ -32,7 +33,7 @@ public:
   // Send methods (called from second thread)
   void update_profiles(const std::string &confined);
   void update_processes(const std::string &unconfined);
-  void update_logs(const std::string &logs);
+  void update_logs(const std::list<std::shared_ptr<LogRecord>> &logs);
   void update_prof_apply_text(const std::string &text);
 
 protected:
@@ -48,11 +49,19 @@ protected:
   struct CallData
   {
     CallType type;
-    std::string arg_1;
+
+    std::string string;
+    std::list<std::shared_ptr<LogRecord>> logs;
 
     CallData(CallType a, const std::string &b)
-      : type(a),
-        arg_1(b)
+      : type{ a },
+        string{ b }
+    {
+    }
+
+    CallData(CallType a, const std::list<std::shared_ptr<LogRecord>> &b)
+      : type{ a },
+        logs{ b }
     {
     }
   };

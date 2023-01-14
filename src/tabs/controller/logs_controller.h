@@ -1,8 +1,7 @@
-#ifndef TABS_CONTROLLER_LOGSCONTROLLER_H
-#define TABS_CONTROLLER_LOGSCONTROLLER_H
+#ifndef TABS_CONTROLLER_LOGS_CONTROLLER_H
+#define TABS_CONTROLLER_LOGS_CONTROLLER_H
 
 #include "../model/status_column_record.h"
-#include "jsoncpp/json/json.h"
 #include "status_controller.h"
 
 #include <memory>
@@ -15,7 +14,7 @@
 #include <gtest/gtest.h>
 #endif
 
-template<class LogsTab, class Database, class Adapter>
+template<class LogsTab, class Database, class Adapter, class LogRecord>
 class LogsController : public StatusController<LogsTab>
 {
 public:
@@ -28,16 +27,19 @@ public:
   bool on_key_event(GdkEventKey *event);
   bool on_button_event(GdkEventButton *event);
 
-  virtual void add_data_to_record(const std::string &data);
+  virtual void add_data_to_record(const std::list<std::shared_ptr<LogRecord>> &data);
 
   unsigned int num_visible_rows();
   void refresh();
 
 protected:
+  typedef typename std::list<std::shared_ptr<LogRecord>>::const_iterator record_iter;
+
+  // TODO(maybe remove): This removes quotes from data (which we may not need to do anymore)
   static std::string format_log_data(const std::string &data);
 
-  bool add_data_to_record_helper(const std::shared_ptr<std::istringstream> &json_data);
-  void add_row_from_json(const Json::Value &entry);
+  bool add_data_to_record_helper(const record_iter &begin, const record_iter &end);
+  void add_row(const std::shared_ptr<LogRecord> &record);
 
 private:
   std::shared_ptr<LogsTab> logs;
@@ -48,4 +50,4 @@ private:
 #endif
 };
 
-#endif // TABS_CONTROLLER_LOGSCONTROLLER_H
+#endif // TABS_CONTROLLER_LOGS_CONTROLLER_H

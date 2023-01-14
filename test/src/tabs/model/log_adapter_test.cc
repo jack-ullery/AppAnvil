@@ -18,8 +18,7 @@ TEST_F(LogAdapterTest, TEST_FORMAT_TIMESTAMP)
 
   bool res = std::regex_match(formatted_timestamp, timestamp_regex);
   ASSERT_TRUE(res) << "formatted timestamp does not match regex";
-  res = std::regex_match(formatted_zerotime, timestamp_regex);
-  ASSERT_TRUE(res) << "formatted zerotime does not match regex";
+  ASSERT_EQ(formatted_zerotime, "Unknown") << "if 'timestamp == 0', then assume we do not know when the log was made";
 }
 
 void LogAdapterTest::try_put_data(std::vector<LogAdapterTest::TestData> data_set)

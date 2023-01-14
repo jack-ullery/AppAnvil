@@ -12,15 +12,6 @@ TEST_F(CommandCallerTest, TEST_STATUS)
   EXPECT_EQ(output, test_str);
 }
 
-TEST_F(CommandCallerTest, TEST_LOG)
-{
-  std::vector<std::string> command = { "pkexec", "aa-caller", "-l" };
-  EXPECT_CALL(tester, call_command(command, _)).Times(1).WillOnce(Return(test_str));
-
-  std::string output = CommandCallerMock::get_logs(&tester);
-  EXPECT_EQ(output, test_str);
-}
-
 TEST_F(CommandCallerTest, TEST_UNCONF)
 {
   std::vector<std::string> command = { "pkexec", "aa-caller", "-u" };

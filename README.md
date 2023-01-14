@@ -20,6 +20,7 @@ The AppAnvil project aims to create an intuitive graphical interface for monitor
 ## Run Time
 * GTKmm (libgtkmm-3.0-dev)
 * JsonCpp (libjsoncpp-dev)
+* libapparmor (libapparmor-dev)
 * apparmor-utils
 
 ## Compile Time
