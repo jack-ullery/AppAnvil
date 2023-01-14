@@ -13,7 +13,7 @@
 template<class Database, class ColumnRecord>
 std::string LogAdapter<Database, ColumnRecord>::format_timestamp(const time_t &timestamp)
 {
-  if(timestamp == 0) {
+  if (timestamp == 0) {
     return "Unknown";
   }
 

@@ -64,7 +64,7 @@ ulong LogRecord::pid() const
 // Converts the parameter to a string (or an empty string if it is a nullptr)
 std::string convert_to_string(const char *ptr)
 {
-  if(ptr == nullptr) {
+  if (ptr == nullptr) {
     return "";
   }
   return std::string(ptr);
@@ -88,7 +88,7 @@ std::string LogRecord::name() const
 // Attempts to emplace key/value pair to a list (if the 'value' is not null)
 void attempt_emplace_pair(std::list<std::pair<std::string, std::string>> &metadata, std::string key, char *value)
 {
-  if(value != nullptr) {
+  if (value != nullptr) {
     metadata.emplace_back(key, value);
   }
 }

@@ -78,8 +78,7 @@ void LogsController<LogsTab, Database, Adapter, LogRecord>::add_row(const std::s
 
     std::string status = record->profile();
     metadata.emplace_front("Status", status);
-  }
-  else {
+  } else {
     profile_name = record->profile();
 
     std::string name = record->name();
