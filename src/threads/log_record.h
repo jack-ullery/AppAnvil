@@ -1,6 +1,7 @@
 #ifndef SRC_THREADS_LOG_RECORD_H
 #define SRC_THREADS_LOG_RECORD_H
 
+#include <forward_list>
 #include <list>
 #include <string>
 
@@ -30,7 +31,7 @@ public:
   // Whether or not this log is a valid AppArmor log that was parsed correctly, not some other type of log
   bool valid() const;
 
-  //// Accessors - these call record_data directly ////
+  // Accessors - these methods call record_data directly
   long timestamp() const;
 
   aa_record_event_type event_type() const;
@@ -42,11 +43,8 @@ public:
   std::string profile() const;
   std::string name() const;
 
-  std::string capname() const;
-  std::string capability() const;
-
-  std::string requested_mask() const;
-  std::string denied_mask() const;
+  // This method returns a list of additional log information that cannot be otherwise queried from the above accessors
+  std::list<std::pair<std::string, std::string>> get_metadata() const;
 
   // Deletes copy/move constructors and operators
   LogRecord(const LogRecord &)            = delete;

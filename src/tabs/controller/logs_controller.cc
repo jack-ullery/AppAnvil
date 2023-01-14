@@ -69,54 +69,24 @@ void LogsController<LogsTab, Database, Adapter, LogRecord>::add_row(const std::s
   const ulong pid               = record->pid();
   std::string operation         = record->operation();
 
-  std::string name;
-  std::list<std::pair<std::string, std::string>> metadata;
+  std::string profile_name;
+  std::list<std::pair<std::string, std::string>> metadata = record->get_metadata();
 
   // Adapted from: https://gitlab.com/apparmor/apparmor/-/blob/master/libraries/libapparmor/include/aalogparse.h
   if (type == AA_RECORD_STATUS) {
-    name = record->name();
+    profile_name = record->name();
 
     std::string status = record->profile();
-    metadata.emplace_back("Status", status);
+    metadata.emplace_front("Status", status);
   }
-  /* Either the Denied or Audited access event */
-  else if (type == AA_RECORD_DENIED || type == AA_RECORD_AUDIT) {
-    name = record->profile();
+  else {
+    profile_name = record->profile();
 
-    if (operation == "capable") {
-      // std::string capname    = format_log_data(entry["_AUDIT_FIELD_CAPNAME"].asString());
-      // std::string capability = entry["_AUDIT_FIELD_CAPABILITY"].asString();
-
-      // metadata.emplace_back("Capability Name", capname);
-      // metadata.emplace_back("Capability", capability);
-    } else {
-      std::string fieldName = record->name();
-      std::string requested = record->requested_mask();
-      std::string denied    = record->denied_mask();
-
-      metadata.emplace_back("Field Name", fieldName);
-      metadata.emplace_back("Requested Mask", requested);
-      metadata.emplace_back("Denied Mask", denied);
-    }
+    std::string name = record->name();
+    metadata.emplace_front("Name", name);
   }
-  // /* Default event type */
-  // else if(type == "INVALID") {
 
-  // }
-  // /* Internal AA error */
-  // else if(type == "ERROR") {
-
-  // }
-  // /* Complain mode event */
-  // else if(type == "ALLOWED") {
-
-  // }
-  // /* Process tracking info */
-  // else if(type == "HINT") {
-
-  // }
-
-  adapter->put_data(timestamp, type_string, operation, name, pid, metadata);
+  adapter->put_data(timestamp, type_string, operation, profile_name, pid, metadata);
 }
 
 template<class LogsTab, class Database, class Adapter, class LogRecord>

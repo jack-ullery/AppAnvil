@@ -11,7 +11,7 @@
 class LogReader
 {
 public:
-  LogReader(const std::initializer_list<std::string> &log_sources = { "/var/log/kern.log", "/var/log/dmesg" });
+  LogReader(const std::initializer_list<std::string> &log_sources = { "/var/log/kern.log", "/var/log/dmesg", "/var/log/syslog" });
 
   std::list<std::shared_ptr<LogRecord>> read_logs();
 
