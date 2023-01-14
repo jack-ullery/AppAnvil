@@ -14,7 +14,7 @@ std::list<std::shared_ptr<LogRecord>> LogReader::read_logs()
 
   std::string log_data;
   for (std::ifstream &log_file : log_files) {
-    while (std::getline(log_file, log_data)) {
+    while (log_file.is_open() && std::getline(log_file, log_data)) {
       auto log = std::make_shared<LogRecord>(log_data);
 
       if (log->valid()) {
