@@ -1,5 +1,5 @@
-#ifndef TABS_STATUS_H
-#define TABS_STATUS_H
+#ifndef TABS_STATUS_CONTROLLER_H
+#define TABS_STATUS_CONTROLLER_H
 
 #include "../column_header.h"
 #include "jsoncpp/json/json.h"
@@ -78,4 +78,4 @@ private:
   static constexpr unsigned int COLUMN_TYPE_UINT   = G_TYPE_UINT;   // NOLINT
 };
 
-#endif // TABS_STATUS_H
+#endif // TABS_STATUS_CONTROLLER_H

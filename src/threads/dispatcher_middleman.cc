@@ -58,7 +58,7 @@ void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_p
 }
 
 template<class Profiles, class Processes, class Logs, class Dispatcher, class Mutex>
-void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_logs(const std::string &logs)
+void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_logs(const std::list<std::shared_ptr<LogRecord>> &logs)
 {
   CallData data(LOGS, logs);
   queue.push(data);
@@ -81,19 +81,19 @@ void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::handle_s
 
   switch (data.type) {
     case PROFILE:
-      prof->add_data_to_record(data.arg_1);
+      prof->add_data_to_record(data.string);
       break;
 
     case PROCESS:
-      proc->add_data_to_record(data.arg_1);
+      proc->add_data_to_record(data.string);
       break;
 
     case LOGS:
-      logs->add_data_to_record(data.arg_1);
+      logs->add_data_to_record(data.logs);
       break;
 
     case PROFILES_TEXT:
-      prof->set_apply_label_text(data.arg_1);
+      prof->set_apply_label_text(data.string);
       break;
 
     case NONE:
@@ -106,6 +106,6 @@ void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::handle_s
 // For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
 template class DispatcherMiddleman<ProfilesController<Profiles, Database, ProfileAdapter<Database>>,
                                    ProcessesController<Processes, Database, ProcessAdapter<Database, StatusColumnRecord>>,
-                                   LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord>>,
+                                   LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord>, LogRecord>,
                                    Glib::Dispatcher,
                                    std::mutex>;

@@ -21,6 +21,7 @@ The AppAnvil project aims to create an intuitive graphical interface for monitor
 * GTKmm (libgtkmm-3.0-dev)
 * JsonCpp (libjsoncpp-dev)
 * [libapparmor-parser-dev](https://github.com/jack-ullery/libapparmor-parser-dev)
+* libapparmor (libapparmor-dev)
 * apparmor-utils
 
 ## Compile Time

@@ -40,20 +40,6 @@ std::string AppArmorCaller::get_unconfined(AppArmorCaller *caller)
   return caller->call_command(command, return_on_error);
 }
 
-std::string AppArmorCaller::get_logs(AppArmorCaller *caller)
-{
-  std::vector<std::string> command = { "journalctl", "-r", "_AUDIT_TYPE=1400", "--output=json", "--show-cursor" };
-  std::string return_on_error;
-  return caller->call_command(command, return_on_error);
-}
-
-std::string AppArmorCaller::get_logs(AppArmorCaller *caller, const std::string &cursor)
-{
-  std::vector<std::string> command = { "journalctl", "-r", "_AUDIT_TYPE=1400", "--output=json", "--show-cursor", "--after-cursor", cursor };
-  std::string return_on_error;
-  return caller->call_command(command, return_on_error);
-}
-
 // Static public methods
 std::string AppArmorCaller::get_status()
 {
@@ -65,16 +51,4 @@ std::string AppArmorCaller::get_unconfined()
 {
   AppArmorCaller caller;
   return get_unconfined(&caller);
-}
-
-std::string AppArmorCaller::get_logs()
-{
-  AppArmorCaller caller;
-  return get_logs(&caller);
-}
-
-std::string AppArmorCaller::get_logs(const std::string &cursor)
-{
-  AppArmorCaller caller;
-  return get_logs(&caller, cursor);
 }

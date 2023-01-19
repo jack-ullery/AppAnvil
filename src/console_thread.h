@@ -4,6 +4,7 @@
 #include "tabs/model/status_column_record.h"
 #include "threads/blocking_queue.h"
 #include "threads/dispatcher_middleman.h"
+#include "threads/log_reader.h"
 
 #include <chrono>
 #include <condition_variable>
@@ -80,13 +81,13 @@ private:
   Message wait_for_message();
   void run_command(TabState state);
 
-  std::basic_string<char>::size_type find_last_line(std::string input);
-  std::string strip_cursor_from_logs(std::string logs);
-
   // Member fields
   BlockingQueue<Message, std::deque<Message>, std::mutex> queue;
   TabState last_state{ PROFILE };
   std::string log_cursor;
+
+  // Used to read logs from files, assumes this process has read permission to the logs
+  LogReader log_reader;
 
   // DispatcherMiddleman used to communicate results with main thread
   DispatcherMiddleman<ProfilesController, ProcessesController, LogsController, Glib::Dispatcher, std::mutex> dispatch_man;
