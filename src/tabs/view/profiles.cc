@@ -1,5 +1,6 @@
 #include "profiles.h"
 #include "../model/status_column_record.h"
+#include "../../threads/command_caller.h"
 #include "common.h"
 
 #include "jsoncpp/json/json.h"
@@ -124,9 +125,13 @@ void Profiles::handle_modify_profile_toggle()
       row->get_value(1, profile_name);
 
       if(!modifiers.contains(profile_name)) {
-        auto profile_modify = std::shared_ptr<ProfileModify>(new ProfileModify(profile_name));
-        modifiers.insert_or_assign(profile_name, profile_modify);
-        p_stack->add(*profile_modify, "modifyProfile_" + profile_name);
+        auto profile_pair = profile_map.find(profile_name);
+
+        if(profile_pair != profile_map.end()) {
+          auto profile_modify = std::shared_ptr<ProfileModify>(new ProfileModify(profile_pair->second));
+          modifiers.insert_or_assign(profile_name, profile_modify);
+          p_stack->add(*profile_modify, "modifyProfile_" + profile_name);
+        }
       }
 
       p_stack->set_visible_child("modifyProfile_" + profile_name);
@@ -151,7 +156,8 @@ Profiles::Profiles()
     p_num_log_label{ Common::get_widget<Gtk::Label>("p_num_log_label", builder) },
     p_num_proc_label{ Common::get_widget<Gtk::Label>("p_num_proc_label", builder) },
     p_num_perm_label{ Common::get_widget<Gtk::Label>("p_num_perm_label", builder) },
-    loader{ new ProfileLoader() }
+    loader{ new ProfileLoader() },
+    profile_map{CommandCaller::get_profiles()}
 {
   // Add tabs to the stack pane
   p_stack->add(*loader, "loadProfile");

@@ -1,6 +1,9 @@
 #ifndef SRC_THREADS_COMMAND_CALLER
 #define SRC_THREADS_COMMAND_CALLER
 
+#include <apparmor_parser.hh>
+#include <apparmor_profile.hh>
+#include <map>
 #include <string>
 #include <vector>
 
@@ -59,7 +62,7 @@ public:
   static std::string execute_change(const std::string &profile, const std::string &old_status, const std::string &new_status);
 
   /*
-    loadprofile
+    loads a profile given its file name, puts it into enforce mode
   */
   static std::string load_profile(const std::string &fullFileName);
 
@@ -69,10 +72,14 @@ public:
   static bool file_exists(const std::string &location);
 
   // Attempt to locate the profile in possible locations
-  static std::string locate_profile(const std::string &profile, const std::vector<std::string> &possible_profile_locations = {"/etc/apparmor.d/", "/var/lib/snapd/apparmor/profiles/"});
+  static std::string locate_profile(const std::string &profile, const std::initializer_list<std::string> &possible_profile_locations = {"/etc/apparmor.d/", "/var/lib/snapd/apparmor/profiles/"});
 
   // Gets a vector of abstractions located at a path (default "/etc/apparmor.d")
   static std::vector<std::string> get_abstractions(const std::string &path = "/etc/apparmor.d/abstractions");
+
+  // Returns a map (indexed by profile name) for each AppArmor::Profile found at certain directories
+  // This function attempts to parse every file at specified locations to search for profiles
+  static std::map<std::string, AppArmor::Profile> get_profiles(const std::initializer_list<std::string> &possible_profile_locations = {"/etc/apparmor.d/", "/var/lib/snapd/apparmor/profiles/"});
 
 protected:
   struct results

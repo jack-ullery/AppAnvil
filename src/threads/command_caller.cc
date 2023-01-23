@@ -1,6 +1,8 @@
 #include "command_caller.h"
 
+#include <apparmor_parser.hh>
 #include <filesystem>
+#include <fstream>
 #include <glibmm/spawn.h>
 #include <iostream>
 #include <stdexcept>
@@ -77,7 +79,7 @@ std::string CommandCaller::disable_profile(CommandCaller *caller, const std::str
   return "Success: disabling porfile" + profileName;
 }
 
-std::string CommandCaller::locate_profile(const std::string &profile, const std::vector<std::string> &possible_profile_locations)
+std::string CommandCaller::locate_profile(const std::string &profile, const std::initializer_list<std::string> &possible_profile_locations)
 {
   for (const std::string &location : possible_profile_locations) {
     bool exists = file_exists(location + profile);
@@ -175,4 +177,29 @@ std::vector<std::string> CommandCaller::get_abstractions(const std::string &path
     }
 
     return found;
+}
+
+std::map<std::string, AppArmor::Profile> CommandCaller::get_profiles(const std::initializer_list<std::string> &possible_profile_locations)
+{
+  std::map<std::string, AppArmor::Profile> found_profiles;
+
+  // Iterate over every directory
+  for(const auto &path : possible_profile_locations) {
+    // Iterate over every file in a directory
+    auto files = std::filesystem::directory_iterator(path);
+    for (const auto &entry : files) {
+      // Attempt to parse file in directory
+      std::fstream stream(entry.path());
+      AppArmor::Parser parsed(stream);
+
+      // Add each profile found in the file
+      auto profile_list = parsed.getProfileList();
+      for(auto &profile : profile_list)
+      {
+        found_profiles.insert_or_assign(profile.name(), profile);
+      }
+    }
+  }
+
+  return found_profiles;
 }
