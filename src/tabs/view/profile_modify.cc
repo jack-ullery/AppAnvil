@@ -47,15 +47,11 @@ void ProfileModify::intialize_abstractions(const std::unique_ptr<AppArmor::Profi
   }
 }
 
-#include <iostream>
-
 void ProfileModify::intialize_file_rules(const std::unique_ptr<AppArmor::Profile> &profile)
 {
   if(profile != nullptr)
   {
     auto rules = profile->getFileRules();
-
-    std::cout << "rules: " << rules.size() << std::endl;
 
     for(AppArmor::FileRule &rule : rules) {
       std::string title = rule.getFilename();
@@ -69,8 +65,6 @@ void ProfileModify::intialize_file_rules(const std::unique_ptr<AppArmor::Profile
       // Also we will want to retrieve the widget later and delete it, if the abstraction is removed
       auto rule_ptr = std::make_shared<AppArmor::FileRule>(rule);
       file_rule_map.emplace(rule_ptr, label);
-
-      std::cout << title << std::endl;
     }
   }
 }
