@@ -1,6 +1,6 @@
 #include "profiles.h"
-#include "../model/status_column_record.h"
 #include "../../threads/command_caller.h"
+#include "../model/status_column_record.h"
 #include "common.h"
 
 #include "jsoncpp/json/json.h"
@@ -11,7 +11,6 @@
 #include <giomm.h>
 #include <glibmm.h>
 #include <gtkmm/box.h>
-#include <iostream>
 #include <memory>
 #include <string>
 #include <tuple>

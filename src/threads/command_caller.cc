@@ -189,14 +189,22 @@ std::map<std::string, AppArmor::Profile> CommandCaller::get_profiles(const std::
     auto files = std::filesystem::directory_iterator(path);
     for (const auto &entry : files) {
       // Attempt to parse file in directory
-      std::fstream stream(entry.path());
-      AppArmor::Parser parsed(stream);
+      try {
+        if(entry.is_regular_file()){
+          std::ifstream stream(entry.path());
+          AppArmor::Parser parsed(stream);
 
-      // Add each profile found in the file
-      auto profile_list = parsed.getProfileList();
-      for(auto &profile : profile_list)
-      {
-        found_profiles.insert_or_assign(profile.name(), profile);
+          // Add each profile found in the file
+          auto profile_list = parsed.getProfileList();
+          for(auto &profile : profile_list)
+          {
+            found_profiles.insert_or_assign(profile.name(), profile);
+          }
+        }
+      }
+      catch(const std::exception &ex) {
+        std::cerr << "Error reading file: " << entry.path() << std::endl;
+        std::cerr << "\tMessage: " << ex.what() << std::endl;
       }
     }
   }
