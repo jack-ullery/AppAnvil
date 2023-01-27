@@ -17,15 +17,8 @@ void ProfileModify::intialize_abstractions(const AppArmor::Profile &profile)
   auto abstractions = profile.getAbstractions();
 
   for(const std::string &abstraction : abstractions) {
-    auto label = std::make_shared<EditRow>(abstraction);
-    label->set_halign(Gtk::ALIGN_START);
-
-    m_abstraction_box->pack_end(*label);
-
-    // Insert the widget into the map
-    // This ensures it is not deleted before it is drawn
-    // Also we will want to retrieve the widget later and delete it, if the abstraction is removed
-    abstraction_map.emplace(abstraction, label);
+    auto edit_row = abstraction_record->new_row();
+    edit_row->set_value(0, abstraction);
   }
 }
 
@@ -52,15 +45,16 @@ ProfileModify::ProfileModify(const AppArmor::Profile &profile)
   : builder{ Gtk::Builder::create_from_resource("/resources/profile_modify.glade") },
     m_box{ Common::get_widget<Gtk::Box>("m_box", builder) },
     m_title{ Common::get_widget<Gtk::Label>("m_title", builder) },
-    m_abstraction_box{ Common::get_widget<Gtk::Box>("m_abstraction_box", builder) },
-    m_file_rule_box{ Common::get_widget<Gtk::Box>("m_file_rule_box", builder) }
+    m_file_rule_box{ Common::get_widget<Gtk::Box>("m_file_rule_box", builder) },
+    m_abstraction_view{ Common::get_widget_shared<Gtk::TreeView>("m_abstraction_view", builder) },
+    abstraction_record{ EditColumnRecord::create(m_abstraction_view, column_header_names)}
 {
   const auto &profile_name = profile.name();
   m_title->set_label(profile_name);
 
   // Left justify the children of this box
-  m_abstraction_box->set_halign(Gtk::ALIGN_START);
-  m_abstraction_box->set_valign(Gtk::ALIGN_START);
+  m_abstraction_view->set_halign(Gtk::ALIGN_START);
+  m_abstraction_view->set_valign(Gtk::ALIGN_START);
 
   // Initialize the lists of abstractions and file_rules using the parsed profile
   intialize_abstractions(profile);

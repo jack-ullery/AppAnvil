@@ -7,11 +7,15 @@
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/label.h>
+#include <gtkmm/listbox.h>
 #include <gtkmm/scrolledwindow.h>
+#include <gtkmm/treeview.h>
 #include <list>
 #include <memory>
 #include <string>
 #include <tuple>
+
+#include "../model/edit_column_record.h"
 
 class ProfileModify : public Gtk::ScrolledWindow
 {
@@ -24,6 +28,9 @@ protected:
   void intialize_file_rules(const AppArmor::Profile &profile);
 
 private:
+  // Names of the columns
+  const std::vector<std::string> column_header_names{"Abstraction"};
+
   // GUI Builder to parse UI from xml file
   Glib::RefPtr<Gtk::Builder> builder;
 
@@ -31,14 +38,16 @@ private:
   std::unique_ptr<Gtk::Box> m_box;
 
   // Widgets
-  std::unique_ptr<Gtk::Label> m_title;
-  std::unique_ptr<Gtk::Box>   m_abstraction_box;
-  std::unique_ptr<Gtk::Box>   m_file_rule_box;
+  std::unique_ptr<Gtk::Label>    m_title;
+  std::unique_ptr<Gtk::Box>      m_file_rule_box;
 
-  // Container of added abstractions
+  std::shared_ptr<Gtk::TreeView> m_abstraction_view;
+
+  // Column Records: Interface for adding/removing data from TreeView
+  std::shared_ptr<EditColumnRecord> abstraction_record;
+
+  // Containers for added abstractions and file rules
   std::map<std::string, std::shared_ptr<Gtk::Widget>> abstraction_map;
-
-  // Container of added file rules
   std::map<std::shared_ptr<AppArmor::FileRule>, std::shared_ptr<Gtk::Widget>> file_rule_map;
 };
 

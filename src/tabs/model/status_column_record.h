@@ -14,11 +14,11 @@
 #include <map>
 #include <memory>
 
-constexpr int MIN_COL_WIDTH = 20;
-
 class StatusColumnRecord : public Gtk::TreeModel::ColumnRecord
 {
 public:
+  constexpr static int MIN_COL_WIDTH = 20;
+
   /**
    * @brief Create a new StatusColumnRecord object.
    *
