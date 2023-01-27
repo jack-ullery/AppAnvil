@@ -228,9 +228,8 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
     if (names[i].type == ColumnHeader::PROFILE_ENTRY || names[i].type == ColumnHeader::PROCESS_ENTRY ||
         names[i].type == ColumnHeader::LOG_ENTRY) {
       // Create a custom cell renderer which shows nothing for these entries
-      // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
-      Gtk::CellRenderer *renderer = Gtk::manage(new Gtk::CellRendererText());
-      auto callback_fun           = sigc::ptr_fun(&StatusColumnRecord::ignore_cell_render);
+      auto *renderer    = Gtk::make_managed<Gtk::CellRendererText>();
+      auto callback_fun = sigc::ptr_fun(&StatusColumnRecord::ignore_cell_render);
 
       column_view->clear();
       column_view->pack_start(*renderer, false);
