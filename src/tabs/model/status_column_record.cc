@@ -220,7 +220,7 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
     // Set some default settings for the columns
     // Note this a Gtk::TreeViewColumn which is different then the Gtk::TreeModelColumn which we use earlier
     auto *column_view = view->get_column(static_cast<int>(i));
-    column_view->set_reorderable();
+    column_view->set_reorderable(false);
     column_view->set_resizable();
     column_view->set_min_width(MIN_COL_WIDTH);
     column_view->set_sort_column(*column_base);
