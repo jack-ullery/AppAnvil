@@ -6,6 +6,9 @@
 #include <apparmor_profile.hh>
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
+#include <gtkmm/button.h>
+#include <gtkmm/grid.h>
+#include <gtkmm/image.h>
 #include <gtkmm/label.h>
 #include <gtkmm/scrolledwindow.h>
 #include <list>
@@ -27,18 +30,24 @@ private:
   // GUI Builder to parse UI from xml file
   Glib::RefPtr<Gtk::Builder> builder;
 
+  // Functions to create certain reused Gtk Widgets
+  // Each function returns a pointer that will be freed by Gtk
+  static Gtk::Label* create_label(const std::string &text);
+  static Gtk::Button* create_image_button(const std::string &image_name);
+
   // VBox which holds all the widgets
   std::unique_ptr<Gtk::Box> m_box;
 
   // Widgets
   std::unique_ptr<Gtk::Label> m_title;
-  std::unique_ptr<Gtk::Box>   m_abstraction_box;
-  std::unique_ptr<Gtk::Box>   m_file_rule_box;
+  std::unique_ptr<Gtk::Grid>  m_abstraction_grid;
+  std::unique_ptr<Gtk::Grid>  m_file_rule_grid;
 
-  // Container of added abstractions
-  std::map<std::string, std::shared_ptr<Gtk::Widget>> abstraction_map;
+  // Typedef a tuple of widgets
+  typedef std::tuple<std::shared_ptr<Gtk::Widget>, std::shared_ptr<Gtk::Widget>, std::shared_ptr<Gtk::Widget>> widget_tuple;
 
-  // Container of added file rules
+  // Container of added abstractions and file rules
+  std::map<std::string, widget_tuple> abstraction_map;
   std::map<std::shared_ptr<AppArmor::FileRule>, std::shared_ptr<Gtk::Widget>> file_rule_map;
 };
 
