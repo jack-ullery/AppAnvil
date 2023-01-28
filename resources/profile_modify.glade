@@ -20,186 +20,219 @@
       </packing>
     </child>
     <child>
-      <object class="GtkScrolledWindow">
+      <object class="GtkStack" id="m_stack">
         <property name="visible">True</property>
-        <property name="can-focus">True</property>
-        <property name="hscrollbar-policy">never</property>
+        <property name="can-focus">False</property>
+        <property name="hexpand">True</property>
+        <property name="vexpand">True</property>
         <child>
-          <object class="GtkViewport">
+          <object class="GtkScrolledWindow">
             <property name="visible">True</property>
-            <property name="can-focus">False</property>
+            <property name="can-focus">True</property>
             <property name="hexpand">True</property>
-            <property name="shadow-type">none</property>
+            <property name="vexpand">True</property>
+            <property name="hscrollbar-policy">never</property>
             <child>
-              <object class="GtkBox">
+              <object class="GtkViewport">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="orientation">vertical</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
                 <child>
-                  <object class="GtkLabel" id="m_title">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="tooltip-text" translatable="yes">The name of this profile</property>
-                    <property name="halign">start</property>
-                    <property name="margin-start">10</property>
-                    <property name="margin-end">10</property>
-                    <property name="margin-top">10</property>
-                    <property name="margin-bottom">5</property>
-                    <property name="hexpand">False</property>
-                    <property name="label" translatable="yes">Profile Name</property>
-                    <property name="selectable">True</property>
-                    <attributes>
-                      <attribute name="weight" value="bold"/>
-                      <attribute name="variant" value="title-caps"/>
-                      <attribute name="scale" value="1.3999999999999999"/>
-                    </attributes>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkStack" id="m_stack">
+                  <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="margin-start">10</property>
                     <property name="margin-end">15</property>
                     <property name="margin-bottom">5</property>
+                    <property name="hexpand">True</property>
+                    <property name="orientation">vertical</property>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkLabel" id="m_title_1">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="hexpand">True</property>
-                        <property name="orientation">vertical</property>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="halign">start</property>
-                            <property name="margin-top">10</property>
-                            <property name="margin-bottom">5</property>
-                            <property name="label" translatable="yes">Abstractions</property>
-                            <property name="selectable">True</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                              <attribute name="variant" value="title-caps"/>
-                              <attribute name="scale" value="1.2"/>
-                            </attributes>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <!-- n-columns=3 n-rows=1 -->
-                          <object class="GtkGrid" id="m_abstraction_grid">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="halign">start</property>
-                            <property name="margin-start">10</property>
-                            <property name="row-spacing">4</property>
-                            <property name="column-spacing">2</property>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">2</property>
-                          </packing>
-                        </child>
+                        <property name="tooltip-text" translatable="yes">The name of this profile</property>
+                        <property name="halign">start</property>
+                        <property name="margin-end">10</property>
+                        <property name="margin-top">10</property>
+                        <property name="margin-bottom">5</property>
+                        <property name="hexpand">False</property>
+                        <property name="label" translatable="yes">Profile Name</property>
+                        <property name="selectable">True</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                          <attribute name="variant" value="title-caps"/>
+                          <attribute name="scale" value="1.3999999999999999"/>
+                        </attributes>
                       </object>
                       <packing>
-                        <property name="name">abstractions</property>
-                        <property name="title" translatable="yes">Abstractions</property>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkLabel">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="orientation">vertical</property>
-                        <child>
-                          <object class="GtkLabel">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="halign">start</property>
-                            <property name="margin-top">10</property>
-                            <property name="margin-bottom">5</property>
-                            <property name="label" translatable="yes">File Rules</property>
-                            <property name="selectable">True</property>
-                            <attributes>
-                              <attribute name="weight" value="normal"/>
-                              <attribute name="variant" value="title-caps"/>
-                              <attribute name="scale" value="1.2"/>
-                            </attributes>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <!-- n-columns=4 n-rows=1 -->
-                          <object class="GtkGrid" id="m_file_rule_grid">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="halign">start</property>
-                            <property name="margin-start">10</property>
-                            <property name="row-spacing">4</property>
-                            <property name="column-spacing">2</property>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                            <child>
-                              <placeholder/>
-                            </child>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
+                        <property name="halign">start</property>
+                        <property name="margin-top">10</property>
+                        <property name="margin-bottom">5</property>
+                        <property name="label" translatable="yes">Abstractions</property>
+                        <property name="selectable">True</property>
+                        <attributes>
+                          <attribute name="weight" value="normal"/>
+                          <attribute name="variant" value="title-caps"/>
+                          <attribute name="scale" value="1.2"/>
+                        </attributes>
                       </object>
                       <packing>
-                        <property name="name">file_rule</property>
-                        <property name="title" translatable="yes">File Rules</property>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
                         <property name="position">1</property>
                       </packing>
                     </child>
+                    <child>
+                      <!-- n-columns=3 n-rows=1 -->
+                      <object class="GtkGrid" id="m_abstraction_grid">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="margin-start">10</property>
+                        <property name="row-spacing">4</property>
+                        <property name="column-spacing">2</property>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
                   </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
                 </child>
               </object>
             </child>
           </object>
+          <packing>
+            <property name="name">abstractions</property>
+            <property name="title" translatable="yes">Abstractions</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkScrolledWindow">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="hexpand">True</property>
+            <property name="vexpand">True</property>
+            <property name="hscrollbar-policy">never</property>
+            <child>
+              <object class="GtkViewport">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="margin-start">10</property>
+                    <property name="margin-end">15</property>
+                    <property name="margin-bottom">5</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkLabel" id="m_title_2">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="tooltip-text" translatable="yes">The name of this profile</property>
+                        <property name="halign">start</property>
+                        <property name="margin-end">10</property>
+                        <property name="margin-top">10</property>
+                        <property name="margin-bottom">5</property>
+                        <property name="hexpand">False</property>
+                        <property name="label" translatable="yes">Profile Name</property>
+                        <property name="selectable">True</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                          <attribute name="variant" value="title-caps"/>
+                          <attribute name="scale" value="1.3999999999999999"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="margin-top">10</property>
+                        <property name="margin-bottom">5</property>
+                        <property name="label" translatable="yes">File Rules</property>
+                        <property name="selectable">True</property>
+                        <attributes>
+                          <attribute name="weight" value="normal"/>
+                          <attribute name="variant" value="title-caps"/>
+                          <attribute name="scale" value="1.2"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <!-- n-columns=4 n-rows=1 -->
+                      <object class="GtkGrid" id="m_file_rule_grid">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="margin-start">10</property>
+                        <property name="row-spacing">4</property>
+                        <property name="column-spacing">2</property>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="name">file_rule</property>
+            <property name="title" translatable="yes">File Rules</property>
+            <property name="position">1</property>
+          </packing>
         </child>
       </object>
       <packing>
-        <property name="expand">True</property>
+        <property name="expand">False</property>
         <property name="fill">True</property>
         <property name="position">1</property>
       </packing>

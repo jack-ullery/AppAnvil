@@ -94,12 +94,14 @@ void ProfileModify::intialize_file_rules(const AppArmor::Profile &profile)
 ProfileModify::ProfileModify(const AppArmor::Profile &profile)
   : builder{ Gtk::Builder::create_from_resource("/resources/profile_modify.glade") },
     m_box{ Common::get_widget<Gtk::Box>("m_box", builder) },
-    m_title{ Common::get_widget<Gtk::Label>("m_title", builder) },
+    m_title_1{ Common::get_widget<Gtk::Label>("m_title_1", builder) },
+    m_title_2{ Common::get_widget<Gtk::Label>("m_title_2", builder) },
     m_abstraction_grid{ Common::get_widget<Gtk::Grid>("m_abstraction_grid", builder) },
     m_file_rule_grid{ Common::get_widget<Gtk::Grid>("m_file_rule_grid", builder) }
 {
   const auto &profile_name = profile.name();
-  m_title->set_label(profile_name);
+  m_title_1->set_label(profile_name);
+  m_title_2->set_label(profile_name);
 
   // Left justify the children of this box
   m_abstraction_grid->set_halign(Gtk::ALIGN_START);

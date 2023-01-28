@@ -39,7 +39,8 @@ private:
   std::unique_ptr<Gtk::Box> m_box;
 
   // Widgets
-  std::unique_ptr<Gtk::Label> m_title;
+  std::unique_ptr<Gtk::Label> m_title_1;
+  std::unique_ptr<Gtk::Label> m_title_2;
   std::unique_ptr<Gtk::Grid>  m_abstraction_grid;
   std::unique_ptr<Gtk::Grid>  m_file_rule_grid;
 
