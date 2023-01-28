@@ -127,7 +127,7 @@ void Profiles::handle_modify_profile_toggle()
         auto profile_pair = profile_map.find(profile_name);
 
         if(profile_pair != profile_map.end()) {
-          auto profile_modify = std::shared_ptr<ProfileModify>(new ProfileModify(profile_pair->second));
+          auto profile_modify = std::make_shared<ProfileModify>(profile_pair->second);
           modifiers.insert_or_assign(profile_name, profile_modify);
           p_stack->add(*profile_modify, "modifyProfile_" + profile_name);
         }
@@ -155,7 +155,7 @@ Profiles::Profiles()
     p_num_log_label{ Common::get_widget<Gtk::Label>("p_num_log_label", builder) },
     p_num_proc_label{ Common::get_widget<Gtk::Label>("p_num_proc_label", builder) },
     p_num_perm_label{ Common::get_widget<Gtk::Label>("p_num_perm_label", builder) },
-    loader{ new ProfileLoader() },
+    loader{ std::make_unique<ProfileLoader>() },
     profile_map{CommandCaller::get_profiles()}
 {
   // Add tabs to the stack pane

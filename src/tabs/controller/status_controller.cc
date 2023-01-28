@@ -119,7 +119,7 @@ Json::Value StatusController<Tab>::parse_JSON(const std::string &raw_json)
 
 template<class Tab>
 StatusController<Tab>::StatusController()
-  : tab{ new Tab() }
+  : tab{ std::make_shared<Tab>() }
 {
 }
 

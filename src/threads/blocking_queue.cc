@@ -1,5 +1,4 @@
 #include "blocking_queue.h"
-
 #include "../console_thread.h"
 #include "../tabs/controller/logs_controller.h"
 #include "../tabs/controller/processes_controller.h"
@@ -10,10 +9,12 @@
 #include "../tabs/view/processes.h"
 #include "../tabs/view/profiles.h"
 
+#include <memory>
+
 template<class T, class Deque, class Mutex>
 BlockingQueue<T, Deque, Mutex>::BlockingQueue()
   : internal_queue{ std::make_shared<Deque>() },
-    mtx{ new Mutex() }
+    mtx{ std::make_shared<Mutex>() }
 {
 }
 
