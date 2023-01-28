@@ -10,6 +10,5 @@
     <file preprocess="xml-stripblanks">resources/status.glade</file>
     <file preprocess="xml-stripblanks">resources/log.glade</file>
     <file preprocess="xml-stripblanks">resources/info_box.glade</file>
-    <file preprocess="xml-stripblanks">resources/edit_row.glade</file>
   </gresource>
 </gresources>

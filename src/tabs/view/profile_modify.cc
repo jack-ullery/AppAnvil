@@ -1,6 +1,5 @@
 #include "common.h"
 #include "../../threads/command_caller.h"
-#include "edit_row.h"
 #include "profile_modify.h"
 
 #include <apparmor_file_rule.hh>
