@@ -22,6 +22,7 @@ Gtk::Label* ProfileModify::create_label(const std::string &text)
   label->set_halign(Gtk::ALIGN_START);
   label->set_margin_right(LABEL_RIGHT_MARGIN);
   label->set_ellipsize(Pango::EllipsizeMode::ELLIPSIZE_END);
+  label->set_selectable();
   return label;
 }
 
@@ -38,10 +39,23 @@ void ProfileModify::intialize_abstractions(const AppArmor::Profile &profile)
 
   int row = 0;
   for(const std::string &abstraction : abstractions) {
-    auto *label       = create_label(abstraction);
+    // Find the last slash, and use that information to extract the filename from the abstraction
+    auto pos = abstraction.find_last_of('/');
+    if(pos == std::string::npos) {
+      pos = 0;
+    }
+    else {
+      pos++;
+    }
+    
+    std::string trimmed = abstraction.substr(pos);
+
+    // Create the widgets to display in this row
+    auto *label       = create_label(trimmed);
     auto *image_edit  = create_image_button("edit-symbolic");
     auto *image_trash = create_image_button("edit-delete-symbolic");   
 
+    // Add the widgets to the grid
     m_abstraction_grid->insert_row(row);
     m_abstraction_grid->attach(*label, 0, row);
     m_abstraction_grid->attach(*image_edit, 1, row);
