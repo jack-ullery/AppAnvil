@@ -60,8 +60,26 @@ void Profiles::set_profile_info(const std::string &num_logs, const std::string &
 void Profiles::show_profile_info()
 {
   p_profile_info->show_all();
-  p_change_state_toggle->set_sensitive(true);
-  p_modify_profile_toggle->set_sensitive(true);
+
+  // See if their is a profile selected
+  auto selection = Status::get_view()->get_selection();
+  if (selection->count_selected_rows() == 1) {
+    // Allow the user to change the state of the profile
+    p_change_state_toggle->set_sensitive(true);
+
+    // Get the profile from the selected row
+    std::string profile_name;
+    auto row = *selection->get_selected();
+    row->get_value(1, profile_name);
+
+    // If the profile has been parsed, allow us to modify it
+    if(profile_map.contains(profile_name)) {
+      p_modify_profile_toggle->set_sensitive(true);
+    }
+    else {
+      p_modify_profile_toggle->set_sensitive(false);
+    }
+  }
 }
 
 void Profiles::hide_profile_info()
