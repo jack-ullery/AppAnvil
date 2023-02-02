@@ -51,11 +51,10 @@ void Profiles::set_apply_label_text(const std::string &str)
   p_apply_info_text->set_text(str);
 }
 
-void Profiles::set_profile_info(const std::string &num_logs, const std::string &num_perms, const std::string &num_procs)
+void Profiles::set_profile_info(const std::string &num_logs, const std::string &num_procs)
 {
   p_num_log_label->set_text(num_logs);
   p_num_proc_label->set_text(num_procs);
-  p_num_perm_label->set_text(num_perms);
 }
 
 void Profiles::show_profile_info()
@@ -154,7 +153,6 @@ Profiles::Profiles()
     p_profile_info{ Common::get_widget<Gtk::Box>("p_profile_info", builder) },
     p_num_log_label{ Common::get_widget<Gtk::Label>("p_num_log_label", builder) },
     p_num_proc_label{ Common::get_widget<Gtk::Label>("p_num_proc_label", builder) },
-    p_num_perm_label{ Common::get_widget<Gtk::Label>("p_num_perm_label", builder) },
     loader{ std::make_unique<ProfileLoader>() },
     profile_map{CommandCaller::get_profiles()}
 {

@@ -29,7 +29,7 @@ public:
    */
   void set_apply_label_text(const std::string &str);
 
-  void set_profile_info(const std::string &num_logs, const std::string &num_perms, const std::string &num_procs);
+  void set_profile_info(const std::string &num_logs, const std::string &num_procs);
 
   void show_profile_info();
   void hide_profile_info();
@@ -62,7 +62,6 @@ private:
   std::unique_ptr<Gtk::Box> p_profile_info;
   std::unique_ptr<Gtk::Label> p_num_log_label;
   std::unique_ptr<Gtk::Label> p_num_proc_label;
-  std::unique_ptr<Gtk::Label> p_num_perm_label;
 
   // Additional pages, which are added to the stack
   std::unique_ptr<ProfileLoader> loader;
