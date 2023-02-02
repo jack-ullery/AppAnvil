@@ -9,6 +9,7 @@
 #include <gtkmm/enums.h>
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
+#include <iostream>
 #include <memory>
 #include <string>
 #include <unordered_set>
@@ -33,6 +34,32 @@ Gtk::Button* ProfileModify::create_image_button(const std::string &image_name)
   return image;
 }
 
+Gtk::Button* ProfileModify::create_edit_button(const std::string &name)
+{
+  auto *image = create_image_button("edit-symbolic");
+
+  // Create lambda to be called when button is clicked
+  auto on_clicked = [name](){
+    std::cout << "Edit Clicked (this function is not implemented): " << name << std::endl;
+  };
+  image->signal_clicked().connect(on_clicked);
+
+  return image;
+}
+
+Gtk::Button* ProfileModify::create_delete_button(const std::string &name)
+{
+  auto *image = create_image_button("edit-delete-symbolic");
+
+  // Create lambda to be called when button is clicked
+  auto on_clicked = [name](){
+    std::cout << "Delete Clicked (this function is not implemented): " << name << std::endl;
+  };
+  image->signal_clicked().connect(on_clicked);
+
+  return image;
+}
+
 void ProfileModify::intialize_abstractions(const AppArmor::Profile &profile)
 {
   auto abstractions = profile.getAbstractions();
@@ -47,13 +74,13 @@ void ProfileModify::intialize_abstractions(const AppArmor::Profile &profile)
     else {
       pos++;
     }
-    
+
     std::string trimmed = abstraction.substr(pos);
 
     // Create the widgets to display in this row
     auto *label       = create_label(trimmed);
-    auto *image_edit  = create_image_button("edit-symbolic");
-    auto *image_trash = create_image_button("edit-delete-symbolic");   
+    auto *image_edit  = create_edit_button(abstraction);
+    auto *image_trash = create_delete_button(abstraction);
 
     // Add the widgets to the grid
     m_abstraction_grid->insert_row(row);
@@ -76,8 +103,8 @@ void ProfileModify::intialize_file_rules(const AppArmor::Profile &profile)
 
     auto *file_label  = create_label(filename);
     auto *mode_label  = create_label(filemode);
-    auto *image_edit  = create_image_button("edit-symbolic");
-    auto *image_trash = create_image_button("edit-delete-symbolic");
+    auto *image_edit  = create_edit_button(filename);
+    auto *image_trash = create_delete_button(filename);
 
     mode_label->set_halign(Gtk::ALIGN_END);
 

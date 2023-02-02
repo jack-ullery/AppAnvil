@@ -34,6 +34,8 @@ private:
   // Each function returns a pointer that will be freed by Gtk
   static Gtk::Label* create_label(const std::string &text);
   static Gtk::Button* create_image_button(const std::string &image_name);
+  static Gtk::Button* create_edit_button(const std::string &name);
+  static Gtk::Button* create_delete_button(const std::string &name);
 
   // VBox which holds all the widgets
   std::unique_ptr<Gtk::Box> m_box;
