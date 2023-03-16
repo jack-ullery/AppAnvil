@@ -2,8 +2,6 @@
 #include "../model/database.h"
 #include "../model/profile_adapter.h"
 #include "../view/profiles.h"
-
-#include "jsoncpp/json/json.h"
 #include "status_controller.h"
 
 #include <cstddef>
@@ -11,6 +9,7 @@
 #include <glibmm.h>
 #include <gtkmm/treeiter.h>
 #include <gtkmm/treepath.h>
+#include <json/json.h>
 #include <memory>
 #include <string>
 #include <tuple>

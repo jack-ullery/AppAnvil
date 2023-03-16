@@ -5,9 +5,8 @@
 #include "../view/processes.h"
 #include "../view/profiles.h"
 
-#include "jsoncpp/json/json.h"
-
 #include <iostream>
+#include <json/json.h>
 #include <regex>
 #include <sstream>
 #include <string>
