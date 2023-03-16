@@ -2,7 +2,6 @@
 #define TABS_VIEW_LOGS_H
 
 #include "info_box.h"
-#include "jsoncpp/json/json.h"
 #include "status.h"
 
 #include <memory>
