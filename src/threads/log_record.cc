@@ -120,6 +120,6 @@ std::list<std::pair<std::string, std::string>> LogRecord::get_metadata() const
   attempt_emplace_pair(metadata, "File System Type", record_data->fs_type);
   attempt_emplace_pair(metadata, "Flags", record_data->flags);
   attempt_emplace_pair(metadata, "Source Name", record_data->src_name);
-  attempt_emplace_pair(metadata, "Class", record_data->class_variable);
+  // attempt_emplace_pair(metadata, "Class", record_data->class_variable);
   return metadata;
 }
