@@ -4,8 +4,9 @@
 #include <gtkmm/treeiter.h>
 #include <string>
 
-constexpr auto UNKNOWN_STR  = "unknown";
-constexpr uint UNKNOWN_UINT = -1;
+constexpr auto UNKNOWN_STR    = "unknown";
+constexpr uint UNKNOWN_UINT   = -1;
+constexpr time_t UNKNOWN_TIME = -1;
 
 struct ProfileTableEntry
 {
@@ -78,7 +79,7 @@ struct LogTableEntry
   LogTableEntry()
     : profile_name{ UNKNOWN_STR },
       pid{ UNKNOWN_UINT },
-      timestamp{ UNKNOWN_UINT },
+      timestamp{ UNKNOWN_TIME },
       row()
   {
   }

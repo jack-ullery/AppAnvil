@@ -1,11 +1,11 @@
 #include "logs_controller_test.h"
 #include "../model/status_column_record_mock.h"
 #include "../model/tree_row_mock.h"
-#include "jsoncpp/json/json.h"
 
 #include <gmock/gmock-matchers.h>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <json/json.h>
 #include <sstream>
 #include <string>
 
