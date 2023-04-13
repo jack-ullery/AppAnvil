@@ -1,0 +1,26 @@
+name: appanvil
+base: core20
+version: '0.2'
+summary: A graphical user interface for the AppArmor access control system
+description: |
+  AppAnvil aims to create an intuitive graphical interface for monitoring 
+  and configuring AppArmor. In particular, we want it to be easy to monitor
+  and deploy profiles, change a profile's permissions, and to parse system logs.
+
+grade: devel # must be 'stable' to release into candidate/stable channels
+confinement: devmode # use 'strict' once you have the right plugs and slots
+
+parts:
+  appanvil:
+    plugin: cmake
+    source: https://github.com/jack-ullery/AppAnvil.git
+    build-packages:
+      - pkg-config
+      - libgtkmm-3.0-dev
+      - libjsoncpp-dev
+      - libapparmor-dev
+    stage-packages:
+      - libgtkmm-3.0-dev
+      - libjsoncpp-dev
+      - libapparmor-dev
+      - apparmor-utils
