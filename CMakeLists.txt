@@ -209,7 +209,7 @@ foreach(SUBDIR ${PROFILE_SUBDIRS})
     COMMAND bash -c \"
       test -d /var/lib/snapd/apparmor/profiles &&
       ! (test -d /var/lib/snapd/apparmor/profiles/${SUBDIR}) &&
-      sudo ln -s /etc/apparmor.d/${SUBDIR} /var/lib/snapd/apparmor/profiles
+      ln -s /etc/apparmor.d/${SUBDIR} /var/lib/snapd/apparmor/profiles
     \")")
 endforeach( SUBDIR )
 

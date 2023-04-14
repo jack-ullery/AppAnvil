@@ -1,5 +1,5 @@
 name: appanvil
-base: core20
+base: core22
 version: '0.2'
 summary: A graphical user interface for the AppArmor access control system
 description: |
@@ -24,3 +24,5 @@ parts:
       - libjsoncpp-dev
       - libapparmor-dev
       - apparmor-utils
+    cmake-parameters:
+      - -DCMAKE_INSTALL_PREFIX=/usr
