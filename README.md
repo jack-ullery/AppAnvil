@@ -16,18 +16,39 @@ By default, AppArmor is not easy to configure, running silently in the backgroun
 
 The AppAnvil project aims to create an intuitive graphical interface for monitoring and configuring AppArmor. In particular, we want it to be easy to monitor and deploy profiles, change a profile’s permissions, and to parse system logs.
 
-# Dependencies
-## Run Time
-* GTKmm (libgtkmm-3.0-dev)
-* JsonCpp (libjsoncpp-dev)
-* libapparmor (libapparmor-dev)
+## Dependencies
+### Run Time
+* GTKmm
+* JsonCpp
+* libapparmor
 * apparmor-utils
 
-## Compile Time
-* cmake
-* g++ (or another equivalent c++ compiler)
+#### Install commands (Ubuntu)
+```
+sudo apt install libgtkmm-3.0-dev libjsoncpp-dev libapparmor-dev apparmor-utils
+```
 
-## Optional
+#### Install commands (OpenSUSE)
+```
+sudo zypper in gtkmm3-devel jsoncpp-devel libapparmor-devel apparmor-utils
+```
+
+### Compile Time
+* CMake
+* PkgConfig
+* clang (or another equivalent c++ compiler)
+
+#### Install commands (Ubuntu)
+```
+sudo apt install pkg-config cmake clang
+```
+
+#### Install commands (OpenSUSE)
+```
+sudo zypper in cmake clang
+```
+
+### Optional
 A GUI builder
 * glade 
 
@@ -39,8 +60,18 @@ Code beautifier/formatter
 * clang-format
 
 Unit Tests
-* googletest (libgtest-dev)
-* googlemock (libgmock-dev)
+* googletest
+* googlemock
+
+#### Install commands (Ubuntu)
+```
+sudo apt install glade cppcheck clang-tidy clang-format libgtest-dev libgmock-dev
+```
+
+#### Install commands (OpenSUSE)
+```
+sudo zypper in glade cppcheck clang gtest gmock
+```
 
 # Compilation Instructions
 ### Prebuild
