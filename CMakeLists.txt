@@ -3,7 +3,7 @@ cmake_minimum_required (VERSION 3.16.3)
 project (appanvil)
 
 #### Set Source Code #####
-set(PROJECT_SOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/src)
+set(PROJECT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 ### Sources that need to be built ###
 set(
@@ -37,18 +37,18 @@ set(
 ### All the code globbed together for easy formatting ###
 # We include this so it can be affected by clang-format
 file(GLOB_RECURSE FORMAT_SOURCES
-  ${CMAKE_CURRENT_BINARY_DIR}/src/*.cc
-  ${CMAKE_CURRENT_BINARY_DIR}/src/*.h
-  ${CMAKE_CURRENT_BINARY_DIR}/src/*.inl
-  ${CMAKE_CURRENT_BINARY_DIR}/test/src/*.cc
-  ${CMAKE_CURRENT_BINARY_DIR}/test/src/*.h
-  ${CMAKE_CURRENT_BINARY_DIR}/test/src/*.inl
-  ${CMAKE_CURRENT_BINARY_DIR}/aa-caller/src/*.cc
-  ${CMAKE_CURRENT_BINARY_DIR}/aa-caller/src/*.h
-  ${CMAKE_CURRENT_BINARY_DIR}/aa-caller/src/*.inl
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/*.inl
+  ${CMAKE_CURRENT_SOURCE_DIR}/test/src/*.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/test/src/*.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/test/src/*.inl
+  ${CMAKE_CURRENT_SOURCE_DIR}/aa-caller/src/*.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/aa-caller/src/*.h
+  ${CMAKE_CURRENT_SOURCE_DIR}/aa-caller/src/*.inl
 )
 
-set(PROJECT_RESOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/resources)
+set(PROJECT_RESOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/resources)
 set(XML_GRESOURCE ${PROJECT_RESOURCE_DIR}/resources.gresource.xml)
 set(RESOURCE_BUNDLE_OUTPUT ${PROJECT_RESOURCE_DIR}/resource.autogen.c)
 
@@ -92,8 +92,7 @@ if(${USE_CLANG_TIDY})
     message(WARNING "Could not find clang-tidy installation. Please install clang-tidy if you want to use it for static analysis.")
   else()
     message(STATUS "Adding clang-tidy to build")
-    set(CMAKE_CXX_CLANG_TIDY clang-tidy; --config-file ${CMAKE_CURRENT_BINARY_DIR}/.clang-tidy
-    )
+    set(CMAKE_CXX_CLANG_TIDY clang-tidy; --config-file ${CMAKE_CURRENT_SOURCE_DIR}/.clang-tidy)
   endif()
 
   unset(USE_CLANG_TIDY CACHE)
@@ -126,7 +125,7 @@ pkg_check_modules(LIBAPPARMOR libapparmor)
 # This gets the list of dependencies for ${XML_GRESOURCE} when cmake is called.
 # If a dependency is added to the ${XML_GRESOURCE} file, you should run cmake again
 execute_process(
-  COMMAND glib-compile-resources ${XML_GRESOURCE} --generate-dependencies 
+  COMMAND glib-compile-resources ${XML_GRESOURCE} --generate-dependencies
   OUTPUT_VARIABLE GLADE_RESOURCES
   RESULT_VARIABLE GLIB_RETURN_VALUE
   OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -142,7 +141,11 @@ endif()
 
 add_custom_command(
   OUTPUT ${RESOURCE_BUNDLE_OUTPUT}
-  COMMAND glib-compile-resources --target=${RESOURCE_BUNDLE_OUTPUT} --generate-source ${XML_GRESOURCE}
+  COMMAND glib-compile-resources
+            --target=${RESOURCE_BUNDLE_OUTPUT}
+            --sourcedir=${CMAKE_CURRENT_SOURCE_DIR}
+            --generate-source
+            ${XML_GRESOURCE}
   DEPENDS ${XML_GRESOURCE} ${GLADE_RESOURCES} 
   COMMENT "Generating Glib Resource Bundle."
   VERBATIM
@@ -157,8 +160,8 @@ include_directories(
 set(CMAKE_CXX_FLAGS " -Wall -Wextra")
 set(CMAKE_CXX_STANDARD 20)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dist)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lib)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # set(CMAKE_LINK_WHAT_YOU_USE TRUE)
@@ -168,11 +171,11 @@ add_executable(${PROJECT_NAME} ${RESOURCE_BUNDLE_OUTPUT} ${SOURCES} ${PROJECT_SO
 
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${LIBAPPARMOR_INCLUDE_DIRS})
-target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${jsoncpp_DIRS})
+target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${JSONCPP_INCLUDE_DIRS})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC ${GTKMM_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${LIBAPPARMOR_LIBRARIES})
-target_link_libraries(${PROJECT_NAME} PUBLIC jsoncpp)
+target_link_libraries(${PROJECT_NAME} PUBLIC ${JSONCPP_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} PUBLIC pthread)
 target_link_libraries(${PROJECT_NAME} PUBLIC apparmor-parser-dev)
 
@@ -217,9 +220,9 @@ endforeach( SUBDIR )
 if(NOT TARGET uninstall)
   configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake"
     IMMEDIATE @ONLY)
 
   add_custom_target(uninstall
-    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake)
 endif()

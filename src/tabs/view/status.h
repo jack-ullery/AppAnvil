@@ -3,7 +3,6 @@
 
 #include "../column_header.h"
 #include "../search_info.h"
-#include "jsoncpp/json/json.h"
 
 #include <glibmm/refptr.h>
 #include <gtkmm/box.h>

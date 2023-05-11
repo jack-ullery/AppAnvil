@@ -3,7 +3,6 @@
 #include "../../../../src/tabs/model/database.h"
 #include "../../../../src/tabs/model/profile_adapter.h"
 #include "../../../../src/tabs/view/profiles.h"
-#include "jsoncpp/json/json.h"
 
 #include <cstddef>
 #include <gmock/gmock-matchers.h>

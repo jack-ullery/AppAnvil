@@ -3,7 +3,6 @@
 #include "../model/status_column_record.h"
 #include "common.h"
 
-#include "jsoncpp/json/json.h"
 #include "profile_loader.h"
 #include "profile_modify.h"
 #include "status.h"

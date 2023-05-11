@@ -62,7 +62,7 @@ std::string LogsController<LogsTab, Database, Adapter, LogRecord>::format_log_da
 template<class LogsTab, class Database, class Adapter, class LogRecord>
 void LogsController<LogsTab, Database, Adapter, LogRecord>::add_row(const std::shared_ptr<LogRecord> &record)
 {
-  // getting timestamp from json argument, retrieving important fields from json
+  // retrieving important fields from record
   const time_t timestamp        = record->timestamp();
   const auto type               = record->event_type();
   const std::string type_string = record->event_type_string();

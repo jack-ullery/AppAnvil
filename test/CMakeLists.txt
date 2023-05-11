@@ -54,11 +54,12 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
 
   target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
   target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${LIBAPPARMOR_INCLUDE_DIRS})
+  target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${JSONCPP_INCLUDE_DIRS})
 
   target_link_libraries(${TEST_NAME} PUBLIC gtest)
   target_link_libraries(${TEST_NAME} PUBLIC gmock)
   target_link_libraries(${TEST_NAME} PUBLIC pthread)
-  target_link_libraries(${TEST_NAME} PUBLIC jsoncpp)
+  target_link_libraries(${TEST_NAME} PUBLIC ${JSONCPP_LIBRARIES})
   target_link_libraries(${TEST_NAME} PUBLIC ${GTKMM_LIBRARIES})
   target_link_libraries(${TEST_NAME} PUBLIC ${LIBAPPARMOR_LIBRARIES})
   target_link_libraries(${TEST_NAME} PUBLIC "aa-caller_dev")

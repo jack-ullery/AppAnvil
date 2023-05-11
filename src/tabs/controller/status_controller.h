@@ -2,13 +2,13 @@
 #define TABS_STATUS_CONTROLLER_H
 
 #include "../column_header.h"
-#include "jsoncpp/json/json.h"
 
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/enums.h>
 #include <gtkmm/label.h>
 #include <gtkmm/searchentry.h>
+#include <json/json.h>
 #include <memory>
 
 template<class Tab>
