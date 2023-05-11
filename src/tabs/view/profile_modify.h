@@ -1,9 +1,8 @@
 #ifndef TABS_PROFILE_MODIFY_H
 #define TABS_PROFILE_MODIFY_H
 
-#include <apparmor_file_rule.hh>
-#include <apparmor_parser.hh>
-#include <apparmor_profile.hh>
+#include <libappanvil/apparmor_parser.hh>
+#include <libappanvil/tree/FileRule.hh>
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
@@ -51,7 +50,7 @@ private:
 
   // Container of added abstractions and file rules
   std::map<std::string, widget_tuple> abstraction_map;
-  std::map<std::shared_ptr<AppArmor::FileRule>, std::shared_ptr<Gtk::Widget>> file_rule_map;
+  std::map<std::shared_ptr<AppArmor::Tree::FileRule>, std::shared_ptr<Gtk::Widget>> file_rule_map;
 };
 
 #endif

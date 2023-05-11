@@ -1,8 +1,7 @@
 #ifndef SRC_THREADS_COMMAND_CALLER
 #define SRC_THREADS_COMMAND_CALLER
 
-#include <apparmor_parser.hh>
-#include <apparmor_profile.hh>
+#include <libappanvil/apparmor_parser.hh>
 #include <map>
 #include <string>
 #include <vector>
@@ -67,9 +66,6 @@ public:
   static std::string load_profile(const std::string &fullFileName);
 
   static std::string disable_profile(const std::string &profileName);
-
-  // Returns true if the file at the path
-  static bool file_exists(const std::string &location);
 
   // Attempt to locate the profile in possible locations
   static std::string locate_profile(const std::string &profile, const std::initializer_list<std::string> &possible_profile_locations = {"/etc/apparmor.d/", "/var/lib/snapd/apparmor/profiles/"});

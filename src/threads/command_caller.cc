@@ -1,6 +1,5 @@
 #include "command_caller.h"
 
-#include <apparmor_parser.hh>
 #include <filesystem>
 #include <fstream>
 #include <glibmm/spawn.h>
@@ -82,7 +81,7 @@ std::string CommandCaller::disable_profile(CommandCaller *caller, const std::str
 std::string CommandCaller::locate_profile(const std::string &profile, const std::initializer_list<std::string> &possible_profile_locations)
 {
   for (const std::string &location : possible_profile_locations) {
-    bool exists = file_exists(location + profile);
+    bool exists = std::filesystem::exists(location + profile);
 
     if (exists) {
       return location;
@@ -160,11 +159,6 @@ std::string CommandCaller::execute_change(const std::string &profile, const std:
   return execute_change(&caller, profile, old_status, new_status);
 }
 
-bool CommandCaller::file_exists(const std::string &location)
-{
-  return std::filesystem::exists(location);
-}
-
 // TODO(multiple-locations) handle different abstractions in multiple profile locations
 std::vector<std::string> CommandCaller::get_abstractions(const std::string &path)
 {
@@ -186,28 +180,30 @@ std::map<std::string, AppArmor::Profile> CommandCaller::get_profiles(const std::
   // Iterate over every directory
   for(const auto &path : possible_profile_locations) {
     // Iterate over every file in a directory
-    auto files = std::filesystem::directory_iterator(path);
-    for (const auto &entry : files) {
-      // Attempt to parse file in directory
-      try {
-        if(entry.is_regular_file()){
-          std::ifstream stream(entry.path());
-          AppArmor::Parser parsed(stream);
+    bool exists = std::filesystem::exists(path);
+    if(exists) {
+      auto files = std::filesystem::directory_iterator(path);
+      for (const auto &entry : files) {
+        // Attempt to parse file in directory
+        try {
+          if(entry.is_regular_file()){
+            AppArmor::Parser parsed(entry.path());
 
-          // Add each profile found in the file
-          auto profile_list = parsed.getProfileList();
-          for(auto &profile : profile_list)
-          {
-            found_profiles.insert_or_assign(profile.name(), profile);
+            // Add each profile found in the file
+            auto profile_list = parsed.getProfileList();
+            for(auto &profile : profile_list)
+            {
+              found_profiles.insert_or_assign(profile.name(), profile);
+            }
           }
         }
-      }
-      catch(const std::exception &ex) {
-        std::cerr << "Error reading file: " << entry.path() << std::endl;
-        std::cerr << "\tMessage: " << ex.what() << std::endl;
+        catch(const std::exception &ex) {
+          std::cerr << "Error reading file: " << entry.path() << std::endl;
+          std::cerr << "\tMessage: " << ex.what() << std::endl;
+        }
       }
     }
-  }
+ }
 
   return found_profiles;
 }

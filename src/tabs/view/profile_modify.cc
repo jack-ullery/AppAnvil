@@ -2,9 +2,7 @@
 #include "../../threads/command_caller.h"
 #include "profile_modify.h"
 
-#include <apparmor_file_rule.hh>
-#include <apparmor_parser.hh>
-#include <apparmor_profile.hh>
+#include <libappanvil/apparmor_parser.hh>
 #include <gtkmm/button.h>
 #include <gtkmm/enums.h>
 #include <gtkmm/image.h>
@@ -65,9 +63,10 @@ void ProfileModify::intialize_abstractions(const AppArmor::Profile &profile)
   auto abstractions = profile.getAbstractions();
 
   int row = 0;
-  for(const std::string &abstraction : abstractions) {
+  for(const auto &abstraction : abstractions) {
     // Find the last slash, and use that information to extract the filename from the abstraction
-    auto pos = abstraction.find_last_of('/');
+    std::string abstraction_str = abstraction.getPath();
+    auto pos = abstraction_str.find_last_of('/');
     if(pos == std::string::npos) {
       pos = 0;
     }
@@ -75,12 +74,12 @@ void ProfileModify::intialize_abstractions(const AppArmor::Profile &profile)
       pos++;
     }
 
-    std::string trimmed = abstraction.substr(pos);
+    std::string trimmed = abstraction_str.substr(pos);
 
     // Create the widgets to display in this row
     auto *label       = create_label(trimmed);
-    auto *image_edit  = create_edit_button(abstraction);
-    auto *image_trash = create_delete_button(abstraction);
+    auto *image_edit  = create_edit_button(abstraction_str);
+    auto *image_trash = create_delete_button(abstraction_str);
 
     // Add the widgets to the grid
     m_abstraction_grid->insert_row(row);

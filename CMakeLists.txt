@@ -112,13 +112,20 @@ endif()
 
 #### Include GTKmm Libraries ####
 find_package(PkgConfig)
-pkg_check_modules(GTKMM gtkmm-3.0)
+pkg_check_modules(GTKMM REQUIRED gtkmm-3.0)
 
 #### Include jsoncpp libraries ####
-pkg_check_modules(JSONCPP jsoncpp)
+pkg_check_modules(JSONCPP REQUIRED jsoncpp)
 
 #### Libapparmor used for parsing kernel logs ####
-pkg_check_modules(LIBAPPARMOR libapparmor)
+pkg_check_modules(LIBAPPARMOR REQUIRED libapparmor)
+
+#### Libappanvil custom library for parsing/editing profiles ####
+find_library(LIBAPPANVIL libappanvil.a  libappanvil-dev.a  libappanvil-devel.a
+                         libappanvil.so libappanvil-dev.so libappanvil-devel.so
+                         libappanvil libappanvil-dev libappanvil-devel
+            PATH_SUFFIXES libappanvil
+            REQUIRED)
 
 #### Package the .gresource.xml resource bundle ####
 
@@ -177,7 +184,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC ${GTKMM_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${LIBAPPARMOR_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${JSONCPP_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} PUBLIC pthread)
-target_link_libraries(${PROJECT_NAME} PUBLIC apparmor-parser-dev)
+target_link_libraries(${PROJECT_NAME} PUBLIC ${LIBAPPANVIL})
 
 pkg_check_modules(GTEST gtest)
 pkg_check_modules(GMOCK gmock)
