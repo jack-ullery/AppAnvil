@@ -28,6 +28,7 @@ pkg_check_modules(GTKMM gtkmm-3.0)
 
 pkg_check_modules(GTEST gtest)
 pkg_check_modules(GMOCK gmock)
+pkg_check_modules(LIBAPPANVIL REQUIRED libappanvil)
 
 if(${GTEST_FOUND} AND ${GMOCK_FOUND})
   message(STATUS "Adding unit tests to build")
@@ -55,6 +56,7 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
   target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
   target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${LIBAPPARMOR_INCLUDE_DIRS})
   target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${JSONCPP_INCLUDE_DIRS})
+  target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${LIBAPPANVIL_INCLUDE_DIRS})
 
   target_link_libraries(${TEST_NAME} PUBLIC gtest)
   target_link_libraries(${TEST_NAME} PUBLIC gmock)
@@ -63,7 +65,7 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
   target_link_libraries(${TEST_NAME} PUBLIC ${GTKMM_LIBRARIES})
   target_link_libraries(${TEST_NAME} PUBLIC ${LIBAPPARMOR_LIBRARIES})
   target_link_libraries(${TEST_NAME} PUBLIC "aa-caller_dev")
-  target_link_libraries(${TEST_NAME} PUBLIC apparmor-parser-dev)
+  target_link_libraries(${TEST_NAME} PUBLIC ${LIBAPPANVIL_LIBRARIES})
 
   # Create target "report", which should run the unit-tests and generate a code coverage report  
   add_custom_target(
