@@ -163,18 +163,20 @@ TEST_F(ProfilesTest, CHANGE_STATUS_ROW_SELECTED)
 TEST_F(ProfilesTest, SHOW_PROFILE_INFO_MAKES_CHANGE_TOGGLE_VISIBLE)
 {
   ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) << "This toggle should always be visible";
-
   ASSERT_FALSE(pc.p_change_state_toggle->get_sensitive()) << "This toggle should not be enabled by default";
-
   ASSERT_FALSE(pc.p_change_state_toggle->get_active()) << "This toggle should not be active by default";
 
-  // This should make the toggle visible
+  // Create and select a row
+  auto profile_name = "Test_Profile_Name";
+  auto old_status   = "fake_status";
+  auto store = initialize_store();
+  create_and_select_row(store, profile_name, old_status);
+
+  // This should make the toggle visible, since a row is selected
   pc.show_profile_info();
 
   ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) << "This toggle should always be visible";
-
   ASSERT_TRUE(pc.p_change_state_toggle->get_sensitive()) << "This toggle should be enabled after `show_profile_info()` is called";
-
   ASSERT_FALSE(pc.p_change_state_toggle->get_active()) << "This toggle should be active after `show_profile_info()` is called";
 }
 
