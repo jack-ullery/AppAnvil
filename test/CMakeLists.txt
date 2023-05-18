@@ -35,7 +35,11 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
 
   add_custom_command(
     OUTPUT ${RESOURCE_BUNDLE_OUTPUT}
-    COMMAND glib-compile-resources --target=${RESOURCE_BUNDLE_OUTPUT} --generate-source ${XML_GRESOURCE}
+    COMMAND glib-compile-resources
+              --target=${RESOURCE_BUNDLE_OUTPUT}
+              --sourcedir=${CMAKE_CURRENT_SOURCE_DIR}
+              --generate-source
+              ${XML_GRESOURCE}
     DEPENDS ${XML_GRESOURCE} ${GLADE_RESOURCES} 
     COMMENT "Generating Glib Resource Bundle."
     VERBATIM
@@ -47,8 +51,9 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
   set_target_properties(${TEST_NAME} PROPERTIES CXX_CLANG_TIDY "")
 
   # Set the flags for the "test" target
-  set_target_properties(${TEST_NAME} PROPERTIES COMPILE_FLAGS " -fprofile-arcs -ftest-coverage -Wall -Wextra -g")
-  set_target_properties(${TEST_NAME} PROPERTIES LINK_FLAGS    " -fprofile-arcs -ftest-coverage")
+  set_target_properties(${TEST_NAME} PROPERTIES CMAKE_CXX_FLAGS "-fprofile-arcs -ftest-coverage -Wall -Wextra -g")
+  set_target_properties(${TEST_NAME} PROPERTIES CMAKE_C_FLAGS   "-fprofile-arcs -ftest-coverage -g")
+  set_target_properties(${TEST_NAME} PROPERTIES LINK_FLAGS      "-fprofile-arcs -ftest-coverage")
 
   # Define the "TESTS_ENABLED" preprocessor flag for the "test" target
   target_compile_definitions(${TEST_NAME} PUBLIC -DTESTS_ENABLED)
