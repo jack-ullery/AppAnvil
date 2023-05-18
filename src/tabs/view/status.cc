@@ -82,5 +82,12 @@ Status::Status(const std::string &glade_resource)
 
 Status::Status()
   : Status("/resources/status.glade")
+{ }
+
+Status::~Status()
 {
+  // This stops a segfault
+  //   (I believe this object might be freed twice somehow)
+  // TODO(builder-leakage): Check that this object is actually deleted and freed
+  std::ignore = builder.release();
 }
