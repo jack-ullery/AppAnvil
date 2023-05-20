@@ -2,6 +2,7 @@
 #include "../../threads/command_caller.h"
 #include "profile_modify.h"
 
+#include <exception>
 #include <libappanvil/apparmor_parser.hh>
 #include <gtkmm/button.h>
 #include <gtkmm/enums.h>
@@ -32,38 +33,51 @@ Gtk::Button* ProfileModify::create_image_button(const std::string &image_name)
   return image;
 }
 
-Gtk::Button* ProfileModify::create_edit_button(const std::string &name)
+template<AppArmor::RuleDerived RuleType>
+Gtk::Button* ProfileModify::create_edit_button(RuleType &rule)
 {
   auto *image = create_image_button("edit-symbolic");
 
-  // Create lambda to be called when button is clicked
-  auto on_clicked = [name](){
-    std::cout << "Edit Clicked (this function is not implemented): " << name << std::endl;
-  };
-  image->signal_clicked().connect(on_clicked);
+  // // Create lambda to be called when button is clicked
+  // auto on_clicked = [name](){
+  //   std::cout << "Edit Clicked (this function is not implemented): " << name << std::endl;
+  // };
+  // image->signal_clicked().connect(on_clicked);
 
   return image;
 }
 
-Gtk::Button* ProfileModify::create_delete_button(const std::string &name)
+template<AppArmor::RuleDerived RuleType>
+Gtk::Button* ProfileModify::create_delete_button(RuleType &rule, const std::string &name)
 {
   auto *image = create_image_button("edit-delete-symbolic");
 
   // Create lambda to be called when button is clicked
-  auto on_clicked = [name](){
-    std::cout << "Delete Clicked (this function is not implemented): " << name << std::endl;
+  auto on_clicked = [this, &rule](){
+    handle_delete<RuleType>(rule);
   };
   image->signal_clicked().connect(on_clicked);
 
   return image;
 }
 
-void ProfileModify::intialize_abstractions(const AppArmor::Profile &profile)
+template<AppArmor::RuleDerived RuleType>
+void ProfileModify::handle_delete(RuleType &rule)
 {
+  try {
+    parser.removeRule(profile, rule);
+  } catch (std::domain_error ex) {
+    std::cerr << ex.what() << std::endl;
+  }
+}
+
+void ProfileModify::intialize_abstractions()
+{
+  // m_abstraction_grid->clear();
   auto abstractions = profile.getAbstractions();
 
   int row = 0;
-  for(const auto &abstraction : abstractions) {
+  for(auto &abstraction : abstractions) {
     // Find the last slash, and use that information to extract the filename from the abstraction
     std::string abstraction_str = abstraction.getPath();
     auto pos = abstraction_str.find_last_of('/');
@@ -78,8 +92,8 @@ void ProfileModify::intialize_abstractions(const AppArmor::Profile &profile)
 
     // Create the widgets to display in this row
     auto *label       = create_label(trimmed);
-    auto *image_edit  = create_edit_button(abstraction_str);
-    auto *image_trash = create_delete_button(abstraction_str);
+    auto *image_edit  = create_edit_button(abstraction);
+    auto *image_trash = create_delete_button(abstraction, abstraction_str);
 
     // Add the widgets to the grid
     m_abstraction_grid->insert_row(row);
@@ -91,19 +105,19 @@ void ProfileModify::intialize_abstractions(const AppArmor::Profile &profile)
   }
 }
 
-void ProfileModify::intialize_file_rules(const AppArmor::Profile &profile)
+void ProfileModify::intialize_file_rules()
 {
   auto rules = profile.getFileRules();
 
   int row = 0;
-  for(const auto &rule : rules) {
+  for(AppArmor::Tree::FileRule &rule : rules) {
     const std::string filename = rule.getFilename();
     const std::string filemode = rule.getFilemode();
 
     auto *file_label  = create_label(filename);
     auto *mode_label  = create_label(filemode);
-    auto *image_edit  = create_edit_button(filename);
-    auto *image_trash = create_delete_button(filename);
+    auto *image_edit  = create_edit_button(rule);
+    auto *image_trash = create_delete_button(rule, filename);
 
     mode_label->set_halign(Gtk::ALIGN_END);
 
@@ -117,13 +131,15 @@ void ProfileModify::intialize_file_rules(const AppArmor::Profile &profile)
   }
 }
 
-ProfileModify::ProfileModify(const AppArmor::Profile &profile)
+ProfileModify::ProfileModify(AppArmor::Parser &parser, AppArmor::Profile &profile)
   : builder{ Gtk::Builder::create_from_resource("/resources/profile_modify.glade") },
     m_box{ Common::get_widget<Gtk::Box>("m_box", builder) },
     m_title_1{ Common::get_widget<Gtk::Label>("m_title_1", builder) },
     m_title_2{ Common::get_widget<Gtk::Label>("m_title_2", builder) },
     m_abstraction_grid{ Common::get_widget<Gtk::Grid>("m_abstraction_grid", builder) },
-    m_file_rule_grid{ Common::get_widget<Gtk::Grid>("m_file_rule_grid", builder) }
+    m_file_rule_grid{ Common::get_widget<Gtk::Grid>("m_file_rule_grid", builder) },
+    parser{ parser },
+    profile{ profile }
 {
   const auto &profile_name = profile.name();
   m_title_1->set_label(profile_name);
@@ -134,8 +150,8 @@ ProfileModify::ProfileModify(const AppArmor::Profile &profile)
   m_abstraction_grid->set_valign(Gtk::ALIGN_START);
 
   // Initialize the lists of abstractions and file_rules using the parsed profile
-  intialize_abstractions(profile);
-  intialize_file_rules(profile);
+  intialize_abstractions();
+  intialize_file_rules();
 
   this->add(*m_box);
   this->show_all();

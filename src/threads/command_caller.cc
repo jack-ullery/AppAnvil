@@ -173,9 +173,9 @@ std::vector<std::string> CommandCaller::get_abstractions(const std::string &path
     return found;
 }
 
-std::map<std::string, AppArmor::Profile> CommandCaller::get_profiles(const std::initializer_list<std::string> &possible_profile_locations)
+std::map<std::string, CommandCaller::parser_profile_pair> CommandCaller::get_profiles(const std::initializer_list<std::string> &possible_profile_locations)
 {
-  std::map<std::string, AppArmor::Profile> found_profiles;
+  std::map<std::string, std::pair<AppArmor::Parser, AppArmor::Profile>> found_profiles;
 
   // Iterate over every directory
   for(const auto &path : possible_profile_locations) {
@@ -193,7 +193,8 @@ std::map<std::string, AppArmor::Profile> CommandCaller::get_profiles(const std::
             auto profile_list = parsed.getProfileList();
             for(auto &profile : profile_list)
             {
-              found_profiles.insert_or_assign(profile.name(), profile);
+              parser_profile_pair tuple{parsed, profile};
+              found_profiles.insert_or_assign(profile.name(), tuple);
             }
           }
         }

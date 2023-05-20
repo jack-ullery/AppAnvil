@@ -68,7 +68,7 @@ private:
   std::map<std::string, std::shared_ptr<ProfileModify>> modifiers;
 
   // Map of all known profiles
-  std::map<std::string, AppArmor::Profile> profile_map;
+  std::map<std::string, std::pair<AppArmor::Parser, AppArmor::Profile>> profile_map;
 
 #ifdef TESTS_ENABLED
   FRIEND_TEST(ProfilesTest, CHECK_APPLY_LABEL_TEXT);

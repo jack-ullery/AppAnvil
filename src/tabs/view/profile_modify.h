@@ -2,6 +2,7 @@
 #define TABS_PROFILE_MODIFY_H
 
 #include <libappanvil/apparmor_parser.hh>
+#include <libappanvil/tree/AbstractionRule.hh>
 #include <libappanvil/tree/FileRule.hh>
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
@@ -18,12 +19,12 @@
 class ProfileModify : public Gtk::ScrolledWindow
 {
 public:
-  explicit ProfileModify(const AppArmor::Profile &profile);
+  explicit ProfileModify(AppArmor::Parser &parser, AppArmor::Profile &profile);
 
 protected:
   // Non-static helper functions
-  void intialize_abstractions(const AppArmor::Profile &profile);
-  void intialize_file_rules(const AppArmor::Profile &profile);
+  void intialize_abstractions();
+  void intialize_file_rules();
 
 private:
   // GUI Builder to parse UI from xml file
@@ -33,8 +34,16 @@ private:
   // Each function returns a pointer that will be freed by Gtk
   static Gtk::Label* create_label(const std::string &text);
   static Gtk::Button* create_image_button(const std::string &image_name);
-  static Gtk::Button* create_edit_button(const std::string &name);
-  static Gtk::Button* create_delete_button(const std::string &name);
+
+  template<AppArmor::RuleDerived RuleType>
+  Gtk::Button* create_edit_button(RuleType &rule);
+
+  template<AppArmor::RuleDerived RuleType>
+  Gtk::Button* create_delete_button(RuleType &rule, const std::string &name);
+
+  // Helper functions that will be called when Profile rules should be changed
+  template<AppArmor::RuleDerived RuleType>
+  void handle_delete(RuleType &rule);
 
   // VBox which holds all the widgets
   std::unique_ptr<Gtk::Box> m_box;
@@ -47,6 +56,10 @@ private:
 
   // Typedef a tuple of widgets
   typedef std::tuple<std::shared_ptr<Gtk::Widget>, std::shared_ptr<Gtk::Widget>, std::shared_ptr<Gtk::Widget>> widget_tuple;
+
+  // Fields used for reading and modifying the profile
+  AppArmor::Parser parser;
+  AppArmor::Profile profile;
 
   // Container of added abstractions and file rules
   std::map<std::string, widget_tuple> abstraction_map;
