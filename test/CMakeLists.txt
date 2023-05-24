@@ -53,9 +53,18 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
   set_target_properties(${TEST_NAME} PROPERTIES CXX_CLANG_TIDY "")
 
   # Set the flags for the "test" target
-  set_target_properties(${TEST_NAME} PROPERTIES CMAKE_CXX_FLAGS "-fprofile-arcs -ftest-coverage -Wall -Wextra -g")
-  set_target_properties(${TEST_NAME} PROPERTIES CMAKE_C_FLAGS   "-fprofile-arcs -ftest-coverage -g")
-  set_target_properties(${TEST_NAME} PROPERTIES LINK_FLAGS      "-fprofile-arcs -ftest-coverage")
+  target_compile_options(${TEST_NAME} PUBLIC 
+    "-fprofile-arcs"
+    "-ftest-coverage"
+    "-Wall" 
+    "-Wextra"
+    "-g"
+  )
+
+  target_link_options(${TEST_NAME} PUBLIC 
+    "-fprofile-arcs"
+    "-ftest-coverage"
+  )
 
   # Define the "TESTS_ENABLED" preprocessor flag for the "test" target
   target_compile_definitions(${TEST_NAME} PUBLIC -DTESTS_ENABLED)
@@ -71,6 +80,7 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
 
   target_link_libraries(${TEST_NAME} PUBLIC gtest)
   target_link_libraries(${TEST_NAME} PUBLIC gmock)
+  target_link_libraries(${TEST_NAME} PUBLIC gcov)
   target_link_libraries(${TEST_NAME} PUBLIC pthread)
   target_link_libraries(${TEST_NAME} PUBLIC ${JSONCPP_LIBRARIES})
   target_link_libraries(${TEST_NAME} PUBLIC ${GTKMM_LIBRARIES})
@@ -81,32 +91,37 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
   # Create target "report", which should run the unit-tests and generate a code coverage report  
   add_custom_target(
     LCOV_BASE
-    COMMAND lcov -c -i --no-external --exclude */test/* --exclude *.c -d ${CMAKE_BINARY_DIR} -o ${REPORT_FILES_DIR}/base_coverage.info
+    COMMAND lcov -c -i --no-external --exclude */test/* --exclude *.c -d ${CMAKE_SOURCE_DIR} -o ${REPORT_FILES_DIR}/base_coverage.info 1> /dev/null
     DEPENDS ${TEST_NAME}
+    COMMENT "Create baseline coverage file"
   )
 
   add_custom_target(
     TEST_DATA
-    COMMAND ${CMAKE_BINARY_DIR}/dist/${TEST_NAME}
+    COMMAND ${CMAKE_SOURCE_DIR}/dist/${TEST_NAME}
     DEPENDS LCOV_BASE
+    COMMENT "Running unit tests"
   )
 
   add_custom_target(
     LCOV_TEST
-    COMMAND lcov -c --no-external --exclude */test/* --exclude *.c -d ${CMAKE_BINARY_DIR} -o ${REPORT_FILES_DIR}/test_coverage.info
+    COMMAND lcov -c --no-external --exclude */test/* --exclude *.c -d ${CMAKE_SOURCE_DIR} -o ${REPORT_FILES_DIR}/test_coverage.info 1> /dev/null
     DEPENDS TEST_DATA
+    COMMENT "Capture coverage after running tests"
   )
 
   add_custom_target(
     LCOV
     COMMAND lcov -a ${REPORT_FILES_DIR}/base_coverage.info -a ${REPORT_FILES_DIR}/test_coverage.info -o ${REPORT_FILES_DIR}/total_coverage.info
     DEPENDS LCOV_TEST
+    COMMENT "Compare difference in coverage from baseline"
   )
 
   add_custom_target(
     report
     DEPENDS LCOV
     COMMAND genhtml ${REPORT_FILES_DIR}/total_coverage.info --output-directory ${PROJECT_SOURCE_DIR}/../report
+    COMMENT "Generate HTML report"
   )
 
 else()
