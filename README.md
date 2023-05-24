@@ -63,14 +63,17 @@ Unit Tests
 * googletest
 * googlemock
 
+Code Coverage
+* lcov
+
 #### Install commands (Ubuntu)
 ```
-sudo apt install glade cppcheck clang-tidy clang-format libgtest-dev libgmock-dev
+sudo apt install glade cppcheck clang-tidy clang-format libgtest-dev libgmock-dev lcov
 ```
 
 #### Install commands (OpenSUSE)
 ```
-sudo zypper in glade cppcheck clang gtest gmock
+sudo zypper in glade cppcheck clang gtest gmock lcov
 ```
 
 # Compilation Instructions
