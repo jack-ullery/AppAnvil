@@ -16,7 +16,8 @@
 // Size of right-margin (pixels) for labels created by following method 
 constexpr int LABEL_RIGHT_MARGIN = 8;
 
-Gtk::Label* ProfileModify::create_label(const std::string &text)
+template<class AppArmorParser>
+Gtk::Label* ProfileModifyImpl<AppArmorParser>::create_label(const std::string &text)
 {
   auto *label = Gtk::make_managed<Gtk::Label>(text);
   label->set_halign(Gtk::ALIGN_START);
@@ -26,15 +27,17 @@ Gtk::Label* ProfileModify::create_label(const std::string &text)
   return label;
 }
 
-Gtk::Button* ProfileModify::create_image_button(const std::string &image_name)
+template<class AppArmorParser>
+Gtk::Button* ProfileModifyImpl<AppArmorParser>::create_image_button(const std::string &image_name)
 {
   auto *image = Gtk::make_managed<Gtk::Button>();
   image->set_image_from_icon_name(image_name);
   return image;
 }
 
+template<class AppArmorParser>
 template<AppArmor::RuleDerived RuleType>
-Gtk::Button* ProfileModify::create_edit_button(RuleType &rule)
+Gtk::Button* ProfileModifyImpl<AppArmorParser>::create_edit_button(RuleType &rule)
 {
   auto *image = create_image_button("edit-symbolic");
 
@@ -47,8 +50,9 @@ Gtk::Button* ProfileModify::create_edit_button(RuleType &rule)
   return image;
 }
 
+template<class AppArmorParser>
 template<AppArmor::RuleDerived RuleType>
-Gtk::Button* ProfileModify::create_delete_button(RuleType &rule, const std::string &name)
+Gtk::Button* ProfileModifyImpl<AppArmorParser>::create_delete_button(RuleType &rule, const std::string &name)
 {
   auto *image = create_image_button("edit-delete-symbolic");
 
@@ -61,20 +65,22 @@ Gtk::Button* ProfileModify::create_delete_button(RuleType &rule, const std::stri
   return image;
 }
 
+template<class AppArmorParser>
 template<AppArmor::RuleDerived RuleType>
-void ProfileModify::handle_delete(RuleType &rule)
+void ProfileModifyImpl<AppArmorParser>::handle_delete(RuleType &rule)
 {
   try {
-    parser.removeRule(profile, rule);
+    parser->removeRule(*profile, rule);
   } catch (std::domain_error ex) {
     std::cerr << ex.what() << std::endl;
   }
 }
 
-void ProfileModify::intialize_abstractions()
+template<class AppArmorParser>
+void ProfileModifyImpl<AppArmorParser>::intialize_abstractions()
 {
   // m_abstraction_grid->clear();
-  auto abstractions = profile.getAbstractions();
+  auto abstractions = profile->getAbstractions();
 
   int row = 0;
   for(auto &abstraction : abstractions) {
@@ -105,9 +111,10 @@ void ProfileModify::intialize_abstractions()
   }
 }
 
-void ProfileModify::intialize_file_rules()
+template<class AppArmorParser>
+void ProfileModifyImpl<AppArmorParser>::intialize_file_rules()
 {
-  auto rules = profile.getFileRules();
+  auto rules = profile->getFileRules();
 
   int row = 0;
   for(AppArmor::Tree::FileRule &rule : rules) {
@@ -131,7 +138,9 @@ void ProfileModify::intialize_file_rules()
   }
 }
 
-ProfileModify::ProfileModify(AppArmor::Parser &parser, AppArmor::Profile &profile)
+template<class AppArmorParser>
+ProfileModifyImpl<AppArmorParser>::ProfileModifyImpl(std::shared_ptr<AppArmorParser> parser, 
+                                                                      std::shared_ptr<AppArmor::Profile> profile)
   : builder{ Gtk::Builder::create_from_resource("/resources/profile_modify.glade") },
     m_box{ Common::get_widget<Gtk::Box>("m_box", builder) },
     m_title_1{ Common::get_widget<Gtk::Label>("m_title_1", builder) },
@@ -141,7 +150,7 @@ ProfileModify::ProfileModify(AppArmor::Parser &parser, AppArmor::Profile &profil
     parser{ parser },
     profile{ profile }
 {
-  const auto &profile_name = profile.name();
+  const auto &profile_name = profile->name();
   m_title_1->set_label(profile_name);
   m_title_2->set_label(profile_name);
 
@@ -156,3 +165,5 @@ ProfileModify::ProfileModify(AppArmor::Parser &parser, AppArmor::Profile &profil
   this->add(*m_box);
   this->show_all();
 }
+
+template class ProfileModifyImpl<AppArmor::Parser>;

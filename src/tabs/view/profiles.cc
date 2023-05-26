@@ -143,8 +143,11 @@ void Profiles::handle_modify_profile_toggle()
         auto profile_pair = profile_map.find(profile_name);
 
         if(profile_pair != profile_map.end()) {
-          CommandCaller::parser_profile_pair tuple = profile_pair->second;
-          auto profile_modify = std::make_shared<ProfileModify>(tuple.first, tuple.second);
+          CommandCaller::parser_profile_pair tuple  = profile_pair->second;
+          auto parser  = std::make_shared<AppArmor::Parser>(tuple.first);
+          auto profile = std::make_shared<AppArmor::Profile>(tuple.second);
+
+          auto profile_modify = std::make_shared<ProfileModify>(parser, profile);
           modifiers.insert_or_assign(profile_name, profile_modify);
           p_stack->add(*profile_modify, "modifyProfile_" + profile_name);
         }

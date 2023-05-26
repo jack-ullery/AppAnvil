@@ -20,10 +20,12 @@
 #include <gtest/gtest.h>
 #endif
 
-class ProfileModify : public Gtk::ScrolledWindow
+template<class AppArmorParser>
+class ProfileModifyImpl : public Gtk::ScrolledWindow
 {
 public:
-  explicit ProfileModify(AppArmor::Parser &parser, AppArmor::Profile &profile);
+  ProfileModifyImpl(std::shared_ptr<AppArmorParser> parser, 
+                    std::shared_ptr<AppArmor::Profile> profile);
 
 protected:
   // Non-static helper functions
@@ -62,8 +64,8 @@ private:
   typedef std::tuple<std::shared_ptr<Gtk::Widget>, std::shared_ptr<Gtk::Widget>, std::shared_ptr<Gtk::Widget>> widget_tuple;
 
   // Fields used for reading and modifying the profile
-  AppArmor::Parser parser;
-  AppArmor::Profile profile;
+  std::shared_ptr<AppArmorParser> parser;
+  std::shared_ptr<AppArmor::Profile> profile;
 
   // Container of added abstractions and file rules
   std::map<std::string, widget_tuple> abstraction_map;
@@ -72,7 +74,10 @@ private:
   #ifdef TESTS_ENABLED
     FRIEND_TEST(ProfileModifyTest, TEST_CONSTRUCTOR);
     FRIEND_TEST(ProfileModifyTest, TEST_DELETE_BUTTON);
+    FRIEND_TEST(ProfileModifyTest, TEST_DELETE_BUTTON_WITH_EXCEPTION);
   #endif
 };
+
+typedef ProfileModifyImpl<AppArmor::Parser> ProfileModify;
 
 #endif

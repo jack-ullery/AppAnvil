@@ -1,38 +1,13 @@
 #include <filesystem>
+#include <stdexcept>
 
 #include "profile_modify_test.h"
 
 ProfileModifyTest::ProfileModifyTest()
-  : parser{create_parser(filename, temp_filename)},
-    profile{get_first_profile(parser)},
+  : parser{std::make_shared<::testing::StrictMock<AppArmorParserMock>>()},
+    profile{std::make_shared<AppArmor::Profile>("example_profile", AppArmor::Tree::RuleList())},
     pm(parser, profile)
 {   }
-
-ProfileModifyTest::~ProfileModifyTest()
-{
-  std::filesystem::remove(temp_filename);
-}
-
-AppArmor::Parser ProfileModifyTest::create_parser(const std::string &filename, const std::string &temp_filename)
-{
-  std::filesystem::remove(temp_filename);
-  std::filesystem::copy_file(filename, temp_filename);
-  return AppArmor::Parser(temp_filename);
-}
-
-AppArmor::Profile ProfileModifyTest::get_first_profile(const AppArmor::Parser &parser)
-{
-  auto profile_list = parser.getProfileList();
-  EXPECT_NE(profile_list.size(), 0) << "There should be a profile";
-  return profile_list.front();
-}
-
-inline AppArmor::Tree::FileRule get_file_rule(const AppArmor::Profile &profile, bool first = true)
-{
-  auto rule_list = profile.getFileRules();
-  EXPECT_NE(rule_list.size(), 0) << "There should be at least one file rule";
-  return (first)? rule_list.front() : rule_list.back();
-}
 
 TEST_F(ProfileModifyTest, TEST_CONSTRUCTOR)
 {
@@ -43,8 +18,37 @@ TEST_F(ProfileModifyTest, TEST_CONSTRUCTOR)
 TEST_F(ProfileModifyTest, TEST_DELETE_BUTTON)
 {
   std::string button_name = "expected_button_name";
-  auto frule = get_file_rule(profile);
 
+  // Create the delete button for a FileRule
   Gtk::Button *button;
-  EXPECT_NO_THROW(button = pm.create_delete_button(frule, button_name));
+  ASSERT_NO_THROW(button = pm.create_delete_button(frule, button_name));
+  ASSERT_NE(button, nullptr) << "Created button should not be nullptr";
+
+  // Click the button
+  // We assume that pm.removeRule() should be called
+  EXPECT_CALL(*parser, removeRule(*profile, frule)).Times(1);
+  ASSERT_NO_THROW(button->clicked());
 }
+
+TEST_F(ProfileModifyTest, TEST_DELETE_BUTTON_WITH_EXCEPTION)
+{
+  std::string button_name = "expected_button_name";
+
+  // Create the delete button for a FileRule
+  Gtk::Button *button;
+  ASSERT_NO_THROW(button = pm.create_delete_button(frule, button_name));
+  ASSERT_NE(button, nullptr) << "Created button should not be nullptr";
+
+  // Click the button
+  // This time pm.removeRule() will throw a std::domain_error exception
+  // Ensure that this does not crash the program
+  EXPECT_CALL(*parser, removeRule(*profile, frule))
+    .Times(1)
+    .WillRepeatedly(::testing::Throw(std::domain_error("example exception")));
+
+  ASSERT_NO_THROW(button->clicked());
+}
+
+// To fix linker issues
+#include "tabs/view/profile_modify.cc"
+template class ProfileModifyImpl<AppArmorParserMock>;

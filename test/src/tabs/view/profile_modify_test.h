@@ -6,6 +6,7 @@
 #include <libappanvil/tree/AbstractionRule.hh>
 #include <libappanvil/tree/FileRule.hh>
 
+#include "../../libs/apparmor_parser_mock.h"
 #include "tabs/view/profile_modify.h"
 
 // Test Fixture for Process class
@@ -13,17 +14,13 @@ class ProfileModifyTest : public ::testing::Test
 {
   protected:
     ProfileModifyTest();
-    ~ProfileModifyTest();
 
-    static AppArmor::Parser create_parser(const std::string &filename, const std::string &temp_filename);
-    static AppArmor::Profile get_first_profile(const AppArmor::Parser &parser);
+    std::shared_ptr<::testing::StrictMock<AppArmorParserMock>> parser;
+    std::shared_ptr<AppArmor::Profile> profile;
+    ProfileModifyImpl<AppArmorParserMock> pm;
 
-    const std::string filename = EXAMPLE_PROFILE_SOURCE_DIR "/test1.sd";
-    const std::string temp_filename = EXAMPLE_PROFILE_SOURCE_DIR "/temp.sd";
-
-    AppArmor::Parser parser;
-    AppArmor::Profile profile;
-    ProfileModify pm;
+    // Test values
+    AppArmor::Tree::FileRule frule;
 };
 
 #endif // TEST_SRC_TABS_VIEW_PROFILE_MODIFY_TEST_H

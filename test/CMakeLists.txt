@@ -69,8 +69,6 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
   target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${LIBAPPANVIL_INCLUDE_DIRS})
   target_include_directories(${TEST_NAME} PRIVATE ${PROJECT_SOURCE_DIR})
 
-  message(STATUS "${PROJECT_SOURCE_DIR}")
-
   target_link_libraries(${TEST_NAME} PUBLIC gtest)
   target_link_libraries(${TEST_NAME} PUBLIC gmock)
   target_link_libraries(${TEST_NAME} PUBLIC pthread)
