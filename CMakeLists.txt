@@ -136,6 +136,7 @@ execute_process(
 
 # This ensures that ${GLADE_RESOURCES} uses semicolons instead of newline characters as seperators
 string(REGEX REPLACE "\n" ";" GLADE_RESOURCES "${GLADE_RESOURCES}")
+string(REGEX REPLACE "resources/" "${PROJECT_RESOURCE_DIR}/" GLADE_RESOURCES "${GLADE_RESOURCES}")
 
 # If glib-compile-resources did not complete succesfully, throw a fatal error
 if (NOT GLIB_RETURN_VALUE EQUAL 0)

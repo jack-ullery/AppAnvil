@@ -3,18 +3,18 @@ cmake_minimum_required (VERSION 3.16.3)
 
 set(
   TEST_SOURCES
-  ./src/test_runner.cc
-  ./src/tabs/controller/logs_controller_test.cc
-  ./src/tabs/controller/status_controller_test.cc
-  ./src/tabs/model/log_adapter_test.cc
-  ./src/tabs/model/process_adapter_test.cc
-  ./src/tabs/model/profile_adapter_test.cc
-  ./src/tabs/view/status_test.cc
-  ./src/tabs/view/profiles_test.cc
-  ./src/threads/command_caller.cc
-  ./src/threads/dispatcher_middleman.cc
-  ./src/threads/blocking_queue.cc
-  ./aa-caller/aa-caller.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/test_runner.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/tabs/controller/logs_controller_test.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/tabs/controller/status_controller_test.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/tabs/model/log_adapter_test.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/tabs/model/process_adapter_test.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/tabs/model/profile_adapter_test.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/tabs/view/status_test.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/tabs/view/profiles_test.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/threads/command_caller.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/threads/dispatcher_middleman.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/threads/blocking_queue.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/aa-caller/aa-caller.cc
 )
 
 set(REPORT_FILES_DIR ${CMAKE_BINARY_DIR}/test/CMakeFiles/${TEST_NAME}.dir)
@@ -37,7 +37,7 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
     OUTPUT ${RESOURCE_BUNDLE_OUTPUT}
     COMMAND glib-compile-resources
               --target=${RESOURCE_BUNDLE_OUTPUT}
-              --sourcedir=${CMAKE_CURRENT_SOURCE_DIR}
+              --sourcedir=${CMAKE_SOURCE_DIR}
               --generate-source
               ${XML_GRESOURCE}
     DEPENDS ${XML_GRESOURCE} ${GLADE_RESOURCES} 
