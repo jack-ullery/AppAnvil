@@ -16,6 +16,10 @@
 #include <string>
 #include <tuple>
 
+#ifdef TESTS_ENABLED
+#include <gtest/gtest.h>
+#endif
+
 class ProfileModify : public Gtk::ScrolledWindow
 {
 public:
@@ -25,10 +29,6 @@ protected:
   // Non-static helper functions
   void intialize_abstractions();
   void intialize_file_rules();
-
-private:
-  // GUI Builder to parse UI from xml file
-  Glib::RefPtr<Gtk::Builder> builder;
 
   // Functions to create certain reused Gtk Widgets
   // Each function returns a pointer that will be freed by Gtk
@@ -44,6 +44,10 @@ private:
   // Helper functions that will be called when Profile rules should be changed
   template<AppArmor::RuleDerived RuleType>
   void handle_delete(RuleType &rule);
+
+private:
+  // GUI Builder to parse UI from xml file
+  Glib::RefPtr<Gtk::Builder> builder;
 
   // VBox which holds all the widgets
   std::unique_ptr<Gtk::Box> m_box;
@@ -64,6 +68,11 @@ private:
   // Container of added abstractions and file rules
   std::map<std::string, widget_tuple> abstraction_map;
   std::map<std::shared_ptr<AppArmor::Tree::FileRule>, std::shared_ptr<Gtk::Widget>> file_rule_map;
+
+  #ifdef TESTS_ENABLED
+    FRIEND_TEST(ProfileModifyTest, TEST_CONSTRUCTOR);
+    FRIEND_TEST(ProfileModifyTest, TEST_DELETE_BUTTON);
+  #endif
 };
 
 #endif

@@ -11,6 +11,7 @@ set(
   ${CMAKE_CURRENT_SOURCE_DIR}/src/tabs/model/profile_adapter_test.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/tabs/view/status_test.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/tabs/view/profiles_test.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/tabs/view/profile_modify_test.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/threads/command_caller.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/threads/dispatcher_middleman.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/threads/blocking_queue.cc
@@ -18,6 +19,7 @@ set(
 )
 
 set(REPORT_FILES_DIR ${CMAKE_BINARY_DIR}/test/CMakeFiles/${TEST_NAME}.dir)
+set(EXAMPLE_PROFILE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/example_profiles)
 
 #====================================
 
@@ -58,10 +60,16 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
   # Define the "TESTS_ENABLED" preprocessor flag for the "test" target
   target_compile_definitions(${TEST_NAME} PUBLIC -DTESTS_ENABLED)
 
+  # Set the location of profiles as a global variable for the tests
+  target_compile_definitions(${TEST_NAME} PUBLIC -DEXAMPLE_PROFILE_SOURCE_DIR="${EXAMPLE_PROFILE_SOURCE_DIR}")
+
   target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
   target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${LIBAPPARMOR_INCLUDE_DIRS})
   target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${JSONCPP_INCLUDE_DIRS})
   target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${LIBAPPANVIL_INCLUDE_DIRS})
+  target_include_directories(${TEST_NAME} PRIVATE ${PROJECT_SOURCE_DIR})
+
+  message(STATUS "${PROJECT_SOURCE_DIR}")
 
   target_link_libraries(${TEST_NAME} PUBLIC gtest)
   target_link_libraries(${TEST_NAME} PUBLIC gmock)
