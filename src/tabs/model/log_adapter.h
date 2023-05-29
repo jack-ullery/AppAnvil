@@ -19,7 +19,7 @@ class LogAdapter
 {
 public:
   // Initializes the database adapter
-  LogAdapter(std::shared_ptr<Database> db, const std::shared_ptr<Gtk::TreeView> &view, const std::shared_ptr<Gtk::ScrolledWindow> &win);
+  LogAdapter(std::shared_ptr<Database> db, const std::shared_ptr<Gtk::TreeView> &view);
 
   // For unit-tests
   LogAdapter(std::shared_ptr<Database> db, std::shared_ptr<ColumnRecord> mock);

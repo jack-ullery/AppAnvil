@@ -60,7 +60,7 @@ void ProcessesController<ProcessesTab, Database, Adapter>::refresh()
 template<class ProcessesTab, class Database, class Adapter>
 ProcessesController<ProcessesTab, Database, Adapter>::ProcessesController(std::shared_ptr<Database> database)
   : proc{ StatusController<ProcessesTab>::get_tab() },
-    adapter(database, proc->get_view(), proc->get_window())
+    adapter(database, proc->get_view())
 {
   // Set the Processes<ColumnRecord>::refresh function to be called whenever
   // the searchbar and checkboxes are updated

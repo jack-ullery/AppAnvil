@@ -145,7 +145,7 @@ LogsController<LogsTab, Database, Adapter, LogRecord>::LogsController(std::share
 template<class LogsTab, class Database, class Adapter, class LogRecord>
 LogsController<LogsTab, Database, Adapter, LogRecord>::LogsController(std::shared_ptr<Database> database)
   : logs{ StatusController<LogsTab>::get_tab() },
-    adapter{ std::make_shared<Adapter>(database, logs->get_view(), logs->get_window()) }
+    adapter{ std::make_shared<Adapter>(database, logs->get_view()) }
 {
   auto func = sigc::mem_fun(*this, &LogsController<LogsTab, Database, Adapter, LogRecord>::refresh);
   logs->set_refresh_signal_handler(func);

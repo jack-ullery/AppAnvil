@@ -92,7 +92,7 @@ template<class ProfilesTab, class Database, class Adapter>
 ProfilesController<ProfilesTab, Database, Adapter>::ProfilesController(std::shared_ptr<Database> database)
   : StatusController<ProfilesTab>(),
     prof{ StatusController<ProfilesTab>::get_tab() },
-    adapter(database, prof->get_view(), prof->get_window())
+    adapter(database, prof->get_view())
 {
   auto func = sigc::mem_fun(*this, &ProfilesController<ProfilesTab, Database, Adapter>::refresh);
   prof->set_refresh_signal_handler(func);
