@@ -98,7 +98,12 @@ public:
   bool pid_exists_in_child(unsigned int pid, const Gtk::TreeRow &parent);
 
 protected:
+  // Used by unit-test, the create() method should be used in production code
   StatusColumnRecord(const std::shared_ptr<Status> &tab, const std::vector<ColumnHeader> &names);
+
+  // Called during the create() method, does not initialize certain fields
+  explicit StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view,
+                              const std::vector<ColumnHeader> &names);
 
 private:
   struct RowData
@@ -113,8 +118,6 @@ private:
     }
   };
 
-  explicit StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view,
-                              const std::vector<ColumnHeader> &names);
   Glib::RefPtr<Gtk::TreeStore> store;
   std::shared_ptr<Gtk::TreeView> view;
 

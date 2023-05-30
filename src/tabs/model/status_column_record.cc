@@ -7,6 +7,7 @@
 #include <gtkmm/treeiter.h>
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treemodelsort.h>
+#include <iostream>
 #include <memory>
 #include <sigc++/functors/ptr_fun.h>
 #include <tuple>
@@ -136,9 +137,6 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Status> &tab, const
 {
 }
 
-/*
-    Private Methods
-*/
 StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view,
                                        const std::vector<ColumnHeader> &names)
   : view{ view },
@@ -148,6 +146,7 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
     std::unique_ptr<Gtk::TreeModelColumnBase> column_base;
 
     switch (names[i].type) {
+      default:
       case ColumnHeader::STRING: {
         // Add a visible column, and title it using the string from 'names'
         auto model_column = Gtk::TreeModelColumn<std::string>();
@@ -192,27 +191,35 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
     // Set some default settings for the columns
     // Note this a Gtk::TreeViewColumn which is different then the Gtk::TreeModelColumn which we use earlier
     auto *column_view = view->get_column(static_cast<int>(i));
-    column_view->set_reorderable(false);
-    column_view->set_resizable();
-    column_view->set_min_width(MIN_COL_WIDTH);
-    column_view->set_sort_column(*column_base);
+    if(column_view != nullptr) {
+      column_view->set_reorderable(false);
+      column_view->set_resizable();
+      column_view->set_min_width(MIN_COL_WIDTH);
+      column_view->set_sort_column(*column_base);
 
-    if (names[i].type == ColumnHeader::PROFILE_ENTRY || names[i].type == ColumnHeader::PROCESS_ENTRY ||
-        names[i].type == ColumnHeader::LOG_ENTRY) {
-      // Create a custom cell renderer which shows nothing for these entries
-      auto *renderer    = Gtk::make_managed<Gtk::CellRendererText>();
-      auto callback_fun = sigc::ptr_fun(&StatusColumnRecord::ignore_cell_render);
+      if (names[i].type == ColumnHeader::PROFILE_ENTRY || names[i].type == ColumnHeader::PROCESS_ENTRY ||
+          names[i].type == ColumnHeader::LOG_ENTRY) {
+        // Create a custom cell renderer which shows nothing for these entries
+        auto *renderer    = Gtk::make_managed<Gtk::CellRendererText>();
+        auto callback_fun = sigc::ptr_fun(&StatusColumnRecord::ignore_cell_render);
 
-      column_view->clear();
-      column_view->pack_start(*renderer, false);
-      column_view->set_cell_data_func(*renderer, callback_fun);
+        column_view->clear();
+        column_view->pack_start(*renderer, false);
+        column_view->set_cell_data_func(*renderer, callback_fun);
 
-      // Make this row invisible
-      column_view->set_visible(false);
+        // Make this row invisible
+        column_view->set_visible(false);
+      }
+    }
+    else {
+      std::cerr << "Could not create column (" << i << ") with header: " << names[i].name << std::endl;
     }
   }
 }
 
+/*
+    Private Methods
+*/
 bool StatusColumnRecord::default_filter(const Gtk::TreeModel::iterator &node)
 {
   std::ignore = node;
