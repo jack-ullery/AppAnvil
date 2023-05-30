@@ -93,28 +93,21 @@
                       </packing>
                     </child>
                     <child>
-                      <!-- n-columns=3 n-rows=1 -->
-                      <object class="GtkGrid" id="m_abstraction_grid">
+                      <object class="GtkTreeView" id="m_abstraction_view">
                         <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="halign">start</property>
-                        <property name="margin-start">10</property>
-                        <property name="row-spacing">4</property>
-                        <property name="column-spacing">2</property>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
+                        <property name="can-focus">True</property>
+                        <property name="hscroll-policy">natural</property>
+                        <property name="vscroll-policy">natural</property>
+                        <property name="reorderable">True</property>
+                        <property name="enable-grid-lines">both</property>
+                        <child internal-child="selection">
+                          <object class="GtkTreeSelection"/>
                         </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
-                        <property name="position">2</property>
+                        <property name="position">3</property>
                       </packing>
                     </child>
                   </object>
@@ -192,31 +185,21 @@
                       </packing>
                     </child>
                     <child>
-                      <!-- n-columns=4 n-rows=1 -->
-                      <object class="GtkGrid" id="m_file_rule_grid">
+                      <object class="GtkTreeView" id="m_file_rule_view">
                         <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="halign">start</property>
-                        <property name="margin-start">10</property>
-                        <property name="row-spacing">4</property>
-                        <property name="column-spacing">2</property>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
-                        </child>
-                        <child>
-                          <placeholder/>
+                        <property name="can-focus">True</property>
+                        <property name="hscroll-policy">natural</property>
+                        <property name="vscroll-policy">natural</property>
+                        <property name="reorderable">True</property>
+                        <property name="enable-grid-lines">both</property>
+                        <child internal-child="selection">
+                          <object class="GtkTreeSelection"/>
                         </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
-                        <property name="position">2</property>
+                        <property name="position">3</property>
                       </packing>
                     </child>
                   </object>

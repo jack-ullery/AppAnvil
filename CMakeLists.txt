@@ -22,6 +22,7 @@ set(
   ${PROJECT_SOURCE_DIR}/tabs/model/log_adapter.cc
   ${PROJECT_SOURCE_DIR}/tabs/controller/status_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/controller/profiles_controller.cc
+  ${PROJECT_SOURCE_DIR}/tabs/controller/profile_modify_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/controller/processes_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/controller/logs_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/status.cc

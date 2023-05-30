@@ -11,6 +11,7 @@
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
 #include <gtkmm/scrolledwindow.h>
+#include <gtkmm/treeview.h>
 #include <list>
 #include <memory>
 #include <string>
@@ -27,11 +28,10 @@ public:
   ProfileModifyImpl(std::shared_ptr<AppArmorParser> parser, 
                     std::shared_ptr<AppArmor::Profile> profile);
 
-protected:
-  // Non-static helper functions
-  void intialize_abstractions();
-  void intialize_file_rules();
+  std::shared_ptr<Gtk::TreeView> get_abstraction_view();
+  std::shared_ptr<Gtk::TreeView> get_file_rule_view();
 
+protected:
   // Functions to create certain reused Gtk Widgets
   // Each function returns a pointer that will be freed by Gtk
   static Gtk::Label* create_label(const std::string &text);
@@ -57,8 +57,8 @@ private:
   // Widgets
   std::unique_ptr<Gtk::Label> m_title_1;
   std::unique_ptr<Gtk::Label> m_title_2;
-  std::unique_ptr<Gtk::Grid>  m_abstraction_grid;
-  std::unique_ptr<Gtk::Grid>  m_file_rule_grid;
+  std::shared_ptr<Gtk::TreeView> m_abstraction_view;
+  std::shared_ptr<Gtk::TreeView> m_file_rule_view;
 
   // Typedef a tuple of widgets
   typedef std::tuple<std::shared_ptr<Gtk::Widget>, std::shared_ptr<Gtk::Widget>, std::shared_ptr<Gtk::Widget>> widget_tuple;

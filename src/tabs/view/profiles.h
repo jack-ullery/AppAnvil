@@ -1,6 +1,7 @@
 #ifndef TABS_PROFILES_H
 #define TABS_PROFILES_H
 
+#include "../controller/profile_modify_controller.h"
 #include "profile_loader.h"
 #include "profile_modify.h"
 #include "status.h"
@@ -65,7 +66,7 @@ private:
 
   // Additional pages, which are added to the stack
   std::unique_ptr<ProfileLoader> loader;
-  std::map<std::string, std::shared_ptr<ProfileModify>> modifiers;
+  std::map<std::string, std::shared_ptr<ProfileModifyController>> modifiers;
 
   // Map of all known profiles
   std::map<std::string, std::pair<AppArmor::Parser, AppArmor::Profile>> profile_map;

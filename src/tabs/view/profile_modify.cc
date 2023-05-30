@@ -77,65 +77,15 @@ void ProfileModifyImpl<AppArmorParser>::handle_delete(RuleType &rule)
 }
 
 template<class AppArmorParser>
-void ProfileModifyImpl<AppArmorParser>::intialize_abstractions()
+std::shared_ptr<Gtk::TreeView> ProfileModifyImpl<AppArmorParser>::get_abstraction_view()
 {
-  // m_abstraction_grid->clear();
-  auto abstractions = profile->getAbstractions();
-
-  int row = 0;
-  for(auto &abstraction : abstractions) {
-    // Find the last slash, and use that information to extract the filename from the abstraction
-    std::string abstraction_str = abstraction.getPath();
-    auto pos = abstraction_str.find_last_of('/');
-    if(pos == std::string::npos) {
-      pos = 0;
-    }
-    else {
-      pos++;
-    }
-
-    std::string trimmed = abstraction_str.substr(pos);
-
-    // Create the widgets to display in this row
-    auto *label       = create_label(trimmed);
-    auto *image_edit  = create_edit_button(abstraction);
-    auto *image_trash = create_delete_button(abstraction, abstraction_str);
-
-    // Add the widgets to the grid
-    m_abstraction_grid->insert_row(row);
-    m_abstraction_grid->attach(*label, 0, row);
-    m_abstraction_grid->attach(*image_edit, 1, row);
-    m_abstraction_grid->attach(*image_trash, 2, row);
-
-    row++;
-  }
+  return m_abstraction_view;
 }
 
 template<class AppArmorParser>
-void ProfileModifyImpl<AppArmorParser>::intialize_file_rules()
+std::shared_ptr<Gtk::TreeView> ProfileModifyImpl<AppArmorParser>::get_file_rule_view()
 {
-  auto rules = profile->getFileRules();
-
-  int row = 0;
-  for(AppArmor::Tree::FileRule &rule : rules) {
-    const std::string filename = rule.getFilename();
-    const std::string filemode = rule.getFilemode();
-
-    auto *file_label  = create_label(filename);
-    auto *mode_label  = create_label(filemode);
-    auto *image_edit  = create_edit_button(rule);
-    auto *image_trash = create_delete_button(rule, filename);
-
-    mode_label->set_halign(Gtk::ALIGN_END);
-
-    m_file_rule_grid->insert_row(row);
-    m_file_rule_grid->attach(*file_label, 0, row);
-    m_file_rule_grid->attach(*mode_label, 1, row);
-    m_file_rule_grid->attach(*image_edit, 2, row);
-    m_file_rule_grid->attach(*image_trash, 3, row);
-
-    row++;
-  }
+  return m_file_rule_view;
 }
 
 template<class AppArmorParser>
@@ -145,22 +95,14 @@ ProfileModifyImpl<AppArmorParser>::ProfileModifyImpl(std::shared_ptr<AppArmorPar
     m_box{ Common::get_widget<Gtk::Box>("m_box", builder) },
     m_title_1{ Common::get_widget<Gtk::Label>("m_title_1", builder) },
     m_title_2{ Common::get_widget<Gtk::Label>("m_title_2", builder) },
-    m_abstraction_grid{ Common::get_widget<Gtk::Grid>("m_abstraction_grid", builder) },
-    m_file_rule_grid{ Common::get_widget<Gtk::Grid>("m_file_rule_grid", builder) },
+    m_abstraction_view{ Common::get_widget<Gtk::TreeView>("m_abstraction_view", builder) },
+    m_file_rule_view{ Common::get_widget<Gtk::TreeView>("m_file_rule_view", builder) },
     parser{ parser },
     profile{ profile }
 {
   const auto &profile_name = profile->name();
   m_title_1->set_label(profile_name);
   m_title_2->set_label(profile_name);
-
-  // Left justify the children of this box
-  m_abstraction_grid->set_halign(Gtk::ALIGN_START);
-  m_abstraction_grid->set_valign(Gtk::ALIGN_START);
-
-  // Initialize the lists of abstractions and file_rules using the parsed profile
-  intialize_abstractions();
-  intialize_file_rules();
 
   this->add(*m_box);
   this->show_all();
