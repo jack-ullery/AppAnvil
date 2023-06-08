@@ -110,7 +110,8 @@ Json::Value StatusController<Tab>::parse_JSON(const std::string &raw_json)
   JSONCPP_STRING errs;
 
   if (!parseFromStream(builder, stream, &root, &errs)) {
-    throw std::invalid_argument(errs + "\nArgument of parse_JSON is not in valid JSON format.");
+    std::cerr << errs << std::endl 
+              << "Argument of parse_JSON is not in valid JSON format." << std::endl;
   }
 
   return root;
