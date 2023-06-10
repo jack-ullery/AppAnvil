@@ -146,10 +146,17 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
     std::unique_ptr<Gtk::TreeModelColumnBase> column_base;
 
     switch (names[i].type) {
-      default:
       case ColumnHeader::STRING: {
         // Add a visible column, and title it using the string from 'names'
         auto model_column = Gtk::TreeModelColumn<std::string>();
+        add(model_column);
+        view->append_column(names[i].name, model_column);
+        column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
+      } break;
+
+      case ColumnHeader::BOOLEAN: {
+        // Add a visible column, and title it using the string from 'names'
+        auto model_column = Gtk::TreeModelColumn<bool>();
         add(model_column);
         view->append_column(names[i].name, model_column);
         column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);

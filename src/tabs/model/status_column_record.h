@@ -125,11 +125,6 @@ private:
   Glib::RefPtr<Gtk::TreeModelSort> sort_model;
   Gtk::TreeModelFilter::SlotVisible filter_fun;
 
-  // Used when remembering the state of the ColumnRecord when it is reset
-  std::map<Gtk::TreePath, RowData> significant_rows;
-  double last_vadjustment_value = 0;
-  double last_hadjustment_value = 0;
-
   // Unless `set_visible_func` is called, this filter sets every row in the ColumnRecord to be visible when filtered
   static bool default_filter(const Gtk::TreeModel::iterator &node);
 

@@ -9,6 +9,7 @@ struct ColumnHeader
   {
     STRING,
     INT,
+    BOOLEAN,
     PROFILE_ENTRY,
     PROCESS_ENTRY,
     LOG_ENTRY
