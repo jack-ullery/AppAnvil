@@ -3,6 +3,7 @@
 
 #include <gtkmm/box.h>
 #include <gtkmm/cellrenderertext.h>
+#include <gtkmm/cellrenderertoggle.h>
 #include <gtkmm/main.h>
 #include <gtkmm/treeiter.h>
 #include <gtkmm/treemodelcolumn.h>
@@ -216,6 +217,23 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
 
         // Make this row invisible
         column_view->set_visible(false);
+      } else if (names[i].type == ColumnHeader::BOOLEAN) {
+        auto *renderer = dynamic_cast<Gtk::CellRendererToggle*>(column_view->get_first_cell());
+
+        if(renderer != nullptr) {
+          renderer->set_activatable(true);
+          renderer->set_sensitive(true);
+
+          auto lambda = [this, i](const std::string &path_str) -> void {
+            Gtk::TreePath path(path_str);
+            auto iter = sort_model->get_iter(path);
+
+            bool value;
+            iter->get_value(i, value);
+            iter->set_value(i, !value);
+          };
+          renderer->signal_toggled().connect(lambda);
+        }
       }
     }
     else {
