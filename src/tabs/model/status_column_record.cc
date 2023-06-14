@@ -9,6 +9,7 @@
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treemodelsort.h>
 #include <iostream>
+#include <libappanvil/tree/FileRule.hh>
 #include <memory>
 #include <sigc++/functors/ptr_fun.h>
 #include <tuple>
@@ -36,6 +37,11 @@ void StatusColumnRecord::set_visible_func(const Gtk::TreeModelFilter::SlotVisibl
 {
   filter_fun = filter;
   filter_model->set_visible_func(filter);
+}
+
+void StatusColumnRecord::set_toggle_func(const toggle_function_type &fun)
+{
+  toggle_fun = fun;
 }
 
 Gtk::TreeRow StatusColumnRecord::new_row()
@@ -141,7 +147,8 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Status> &tab, const
 StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view,
                                        const std::vector<ColumnHeader> &names)
   : view{ view },
-    filter_fun{ sigc::ptr_fun(&StatusColumnRecord::default_filter) }
+    filter_fun{ sigc::ptr_fun(&StatusColumnRecord::default_filter) },
+    toggle_fun{ sigc::ptr_fun(&StatusColumnRecord::on_toggle) }
 {
   for (uint i = 0; i < names.size(); i++) {
     std::unique_ptr<Gtk::TreeModelColumnBase> column_base;
@@ -172,7 +179,7 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
       } break;
 
       case ColumnHeader::PROFILE_ENTRY: {
-        // Add a visible column, and title it using the string from 'names'
+        // Add an invisible column, and title it using the string from 'names'
         auto model_column = Gtk::TreeModelColumn<ProfileTableEntry>();
         add(model_column);
         view->append_column(names[i].name, model_column);
@@ -180,7 +187,7 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
       } break;
 
       case ColumnHeader::PROCESS_ENTRY: {
-        // Add a visible column, and title it using the string from 'names'
+        // Add an invisible column, and title it using the string from 'names'
         auto model_column = Gtk::TreeModelColumn<ProcessTableEntry>();
         add(model_column);
         view->append_column(names[i].name, model_column);
@@ -188,8 +195,16 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
       } break;
 
       case ColumnHeader::LOG_ENTRY: {
-        // Add a visible column, and title it using the string from 'names'
+        // Add an invisible column, and title it using the string from 'names'
         auto model_column = Gtk::TreeModelColumn<LogTableEntry>();
+        add(model_column);
+        view->append_column(names[i].name, model_column);
+        column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
+      } break;
+
+      case ColumnHeader::FILE_RULE_POINTER: {
+        // Add an invisible column, and title it using the string from 'names'
+        auto model_column = Gtk::TreeModelColumn<std::shared_ptr<AppArmor::Tree::FileRule>>();
         add(model_column);
         view->append_column(names[i].name, model_column);
         column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
@@ -205,8 +220,10 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
       column_view->set_min_width(MIN_COL_WIDTH);
       column_view->set_sort_column(*column_base);
 
-      if (names[i].type == ColumnHeader::PROFILE_ENTRY || names[i].type == ColumnHeader::PROCESS_ENTRY ||
-          names[i].type == ColumnHeader::LOG_ENTRY) {
+      if (names[i].type == ColumnHeader::PROFILE_ENTRY || 
+          names[i].type == ColumnHeader::PROCESS_ENTRY ||
+          names[i].type == ColumnHeader::LOG_ENTRY     ||
+          names[i].type == ColumnHeader::FILE_RULE_POINTER) {
         // Create a custom cell renderer which shows nothing for these entries
         auto *renderer    = Gtk::make_managed<Gtk::CellRendererText>();
         auto callback_fun = sigc::ptr_fun(&StatusColumnRecord::ignore_cell_render);
@@ -218,12 +235,14 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
         // Make this row invisible
         column_view->set_visible(false);
       } else if (names[i].type == ColumnHeader::BOOLEAN) {
+        // Ensure that the togglebutton actually toggles when clicked
         auto *renderer = dynamic_cast<Gtk::CellRendererToggle*>(column_view->get_first_cell());
 
         if(renderer != nullptr) {
           renderer->set_activatable(true);
           renderer->set_sensitive(true);
 
+          // Function that is caled when togglebutton is clicked
           auto lambda = [this, i](const std::string &path_str) -> void {
             Gtk::TreePath path(path_str);
             auto iter = sort_model->get_iter(path);
@@ -231,6 +250,8 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
             bool value;
             iter->get_value(i, value);
             iter->set_value(i, !value);
+
+            toggle_fun(iter);
           };
           renderer->signal_toggled().connect(lambda);
         }
@@ -249,6 +270,11 @@ bool StatusColumnRecord::default_filter(const Gtk::TreeModel::iterator &node)
 {
   std::ignore = node;
   return true;
+}
+
+void StatusColumnRecord::on_toggle(const Gtk::TreeModel::iterator &node)
+{
+  std::ignore = node;
 }
 
 void StatusColumnRecord::ignore_cell_render(Gtk::CellRenderer *renderer, const Gtk::TreeIter &iter)

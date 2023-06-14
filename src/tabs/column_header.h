@@ -12,7 +12,8 @@ struct ColumnHeader
     BOOLEAN,
     PROFILE_ENTRY,
     PROCESS_ENTRY,
-    LOG_ENTRY
+    LOG_ENTRY,
+    FILE_RULE_POINTER,
   };
 
   ColumnType type;

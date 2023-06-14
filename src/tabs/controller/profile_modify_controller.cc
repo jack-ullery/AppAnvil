@@ -35,16 +35,60 @@ void ProfileModifyController::intialize_file_rules(std::shared_ptr<AppArmor::Pro
   auto rules = profile->getFileRules();
 
   for(AppArmor::Tree::FileRule &rule : rules) {
+    auto shared_rule = std::make_shared<AppArmor::Tree::FileRule>(rule);
     const std::string filename = rule.getFilename();
     const auto filemode = rule.getFilemode();
 
     auto row = file_rule_record->new_row();
-    row->set_value(0, filename);
-    row->set_value(1, filemode.getRead());
-    row->set_value(2, filemode.getWrite());
-    row->set_value(3, filemode.getLink());
-    row->set_value(4, filemode.getLock());
-    row->set_value(5, !filemode.getExecuteMode().empty());
+    row->set_value(FILE_RULE_POS::Data,  shared_rule);
+    row->set_value(FILE_RULE_POS::Path,  filename);
+    row->set_value(FILE_RULE_POS::Read,  filemode.getRead());
+    row->set_value(FILE_RULE_POS::Write, filemode.getWrite());
+    row->set_value(FILE_RULE_POS::Link,  filemode.getLink());
+    row->set_value(FILE_RULE_POS::Lock,  filemode.getLock());
+    row->set_value(FILE_RULE_POS::Exec, !filemode.getExecuteMode().empty());    
+
+    auto toggle_fun = sigc::mem_fun(*this, &ProfileModifyController::handle_file_rule_toggle);
+    file_rule_record->set_toggle_func(toggle_fun);
+  }
+}
+
+void ProfileModifyController::handle_file_rule_toggle(const Gtk::TreeModel::iterator &node)
+{
+  // Get the FileRule stored in the row
+  std::shared_ptr<AppArmor::Tree::FileRule> rule;
+  node->get_value(FILE_RULE_POS::Data, rule);
+  
+  if(rule != nullptr) {
+    const std::string filename = rule->getFilename();
+    const auto filemode = rule->getFilemode();
+
+    bool read       = filemode.getRead();
+    bool write      = filemode.getWrite();
+    bool append     = filemode.getAppend();
+    bool memory_map = filemode.getMemoryMap();
+    bool link       = filemode.getLink();
+    bool lock       = filemode.getLock();
+    bool has_exec   = false;
+
+    node->get_value(FILE_RULE_POS::Read,  read);
+    node->get_value(FILE_RULE_POS::Write, write);
+    node->get_value(FILE_RULE_POS::Link,  link);
+    node->get_value(FILE_RULE_POS::Lock,  lock);
+    node->get_value(FILE_RULE_POS::Exec,  has_exec);
+
+    std::string exec_mode;
+    if(has_exec) {
+      exec_mode = filemode.getExecuteMode();
+      if(exec_mode.empty()) {
+        exec_mode = "ix";
+      }
+    }
+
+    AppArmor::Tree::FileMode new_filemode(read, write, append, memory_map, link, lock, exec_mode);
+    std::cout << "New FileMode: " << std::string(new_filemode) << std::endl;
+  } else {
+    std::cerr << "Error: Could not locate AppArmor::FileRule for selected row" << std::endl;
   }
 }
 

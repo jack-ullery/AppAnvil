@@ -47,6 +47,9 @@ public:
    */
   void set_visible_func(const Gtk::TreeModelFilter::SlotVisible &filter);
 
+  typedef sigc::slot<void, const Gtk::TreeModel::iterator&> toggle_function_type;
+  void set_toggle_func(const toggle_function_type &fun);
+
   /**
    * @brief Creates and returns a new TreeRow in the table.
    *
@@ -124,9 +127,13 @@ private:
   Glib::RefPtr<Gtk::TreeModelFilter> filter_model;
   Glib::RefPtr<Gtk::TreeModelSort> sort_model;
   Gtk::TreeModelFilter::SlotVisible filter_fun;
+  toggle_function_type toggle_fun;
 
   // Unless `set_visible_func` is called, this filter sets every row in the ColumnRecord to be visible when filtered
   static bool default_filter(const Gtk::TreeModel::iterator &node);
+
+  // Unless `set_toggle_func` is called, this function does nothing
+  static void on_toggle(const Gtk::TreeModel::iterator &node);
 
   // Ignores the parameter and returns an empty string
   // This is used by the cell renderer of columns we do not want to view
