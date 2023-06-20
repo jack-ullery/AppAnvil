@@ -59,6 +59,11 @@ Gtk::TreeRow StatusColumnRecord::get_row(const Gtk::TreePath &path)
   return *(sort_model->get_iter(path));
 }
 
+void StatusColumnRecord::clear()
+{
+  store->clear();
+}
+
 uint StatusColumnRecord::filter_rows()
 {
   // Count the number of rows that are visible

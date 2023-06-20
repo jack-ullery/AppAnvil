@@ -73,6 +73,14 @@ public:
   Gtk::TreeRow new_child_row(const Gtk::TreeRow &parent);
 
   /**
+   * @brief Removes all rows from the table.
+   *
+   * @details
+   * Removes all rows from the underlying TreeStore, emptying the table.
+   */
+  void clear();
+
+  /**
    * @brief Gets the TreeRow in the table which is the child of another TreeRow.
    *
    * @details

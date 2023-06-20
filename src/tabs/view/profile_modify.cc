@@ -90,7 +90,7 @@ std::shared_ptr<Gtk::TreeView> ProfileModifyImpl<AppArmorParser>::get_file_rule_
 
 template<class AppArmorParser>
 ProfileModifyImpl<AppArmorParser>::ProfileModifyImpl(std::shared_ptr<AppArmorParser> parser, 
-                                                                      std::shared_ptr<AppArmor::Profile> profile)
+                                                                     std::shared_ptr<AppArmor::Profile> profile)
   : builder{ Gtk::Builder::create_from_resource("/resources/profile_modify.glade") },
     m_box{ Common::get_widget<Gtk::Box>("m_box", builder) },
     m_title_1{ Common::get_widget<Gtk::Label>("m_title_1", builder) },

@@ -12,14 +12,17 @@
 class ProfileModifyController
 {
 public:
-  ProfileModifyController(std::shared_ptr<AppArmor::Parser> &parser, std::shared_ptr<AppArmor::Profile> &profile);
+  ProfileModifyController(std::shared_ptr<AppArmor::Parser> parser, std::shared_ptr<AppArmor::Profile> profile);
 
   std::shared_ptr<ProfileModify> get_profile_modify();
 
 protected:
-  void intialize_abstractions(std::shared_ptr<AppArmor::Profile> profile);
-  void intialize_file_rules(std::shared_ptr<AppArmor::Profile> profile);
+  void intialize_abstractions();
+  void intialize_file_rules();
+  void update_all_tables();
+
   void handle_file_rule_toggle(const Gtk::TreeModel::iterator &node);
+  void handle_edit_file_rule(AppArmor::Tree::FileRule &old_rule, const AppArmor::Tree::FileRule &new_rule);
 
 private:
   const std::vector<ColumnHeader> abstraction_col_names{
@@ -46,6 +49,10 @@ private:
     Lock  = 5,
     Exec  = 6,
   };
+
+  std::stringstream profile_stream;
+  std::shared_ptr<AppArmor::Parser> parser;
+  std::shared_ptr<AppArmor::Profile> profile;
 
   std::shared_ptr<ProfileModify> modify;
   std::shared_ptr<StatusColumnRecord> abstraction_record;
