@@ -21,8 +21,10 @@ protected:
   void intialize_file_rules();
   void update_all_tables();
 
+  void handle_profile_changed();
   void handle_file_rule_toggle(const Gtk::TreeModel::iterator &node);
-  void handle_edit_file_rule(AppArmor::Tree::FileRule &old_rule, const AppArmor::Tree::FileRule &new_rule);
+  void handle_edit_rule(AppArmor::Tree::FileRule &old_rule, const AppArmor::Tree::FileRule &new_rule);
+  void handle_remove_rule(AppArmor::Tree::FileRule &old_rule);
 
 private:
   const std::vector<ColumnHeader> abstraction_col_names{
