@@ -4,6 +4,7 @@
 #include <gtkmm/box.h>
 #include <gtkmm/cellrenderertext.h>
 #include <gtkmm/cellrenderertoggle.h>
+#include <gtkmm/liststore.h>
 #include <gtkmm/main.h>
 #include <gtkmm/treeiter.h>
 #include <gtkmm/treemodelcolumn.h>
@@ -14,6 +15,8 @@
 #include <sigc++/functors/ptr_fun.h>
 #include <tuple>
 #include <vector>
+
+#include <gtkmm.h>
 
 /*
     Public Methods
@@ -157,6 +160,7 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
 {
   for (uint i = 0; i < names.size(); i++) {
     std::unique_ptr<Gtk::TreeModelColumnBase> column_base;
+    Gtk::TreeModelColumn<std::shared_ptr<Gtk::TreeModel>> combo_box;
 
     switch (names[i].type) {
       case ColumnHeader::STRING: {
@@ -214,6 +218,14 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
         view->append_column(names[i].name, model_column);
         column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
       } break;
+
+      case ColumnHeader::COMBO_BOX: {
+        auto model_column = Gtk::TreeModelColumn<std::string>();
+        add(model_column);
+        add(combo_box);
+        view->append_column(names[i].name, model_column);
+        column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
+      } break;
     };
 
     // Set some default settings for the columns
@@ -261,8 +273,11 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
           renderer->signal_toggled().connect(lambda);
         }
       }
-    }
-    else {
+    } else if (names[i].type == ColumnHeader::COMBO_BOX) {
+        auto *renderer = Gtk::make_managed<Gtk::CellRendererCombo>();
+        column_view->pack_start(*renderer, false);
+        column_view->add_attribute(renderer->property_model(), combo_box);
+    } else {
       std::cerr << "Could not create column (" << i << ") with header: " << names[i].name << std::endl;
     }
   }

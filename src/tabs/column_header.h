@@ -14,6 +14,7 @@ struct ColumnHeader
     PROCESS_ENTRY,
     LOG_ENTRY,
     FILE_RULE_POINTER,
+    COMBO_BOX,
   };
 
   ColumnType type;

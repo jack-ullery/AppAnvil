@@ -4,6 +4,7 @@
 #include "../column_header.h"
 #include "../view/status.h"
 
+#include <gtkmm/cellrenderercombo.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/treeiter.h>
 #include <gtkmm/treemodel.h>

@@ -5,6 +5,7 @@
 #include "../model/status_column_record.h"
 #include "../view/profile_modify.h"
 
+#include <gtkmm/liststore.h>
 #include <libappanvil/apparmor_parser.hh>
 #include <memory>
 #include <vector>
@@ -39,6 +40,7 @@ private:
     ColumnHeader("Link", ColumnHeader::ColumnType::BOOLEAN),
     ColumnHeader("Lock", ColumnHeader::ColumnType::BOOLEAN),
     ColumnHeader("Execute", ColumnHeader::ColumnType::BOOLEAN),
+    ColumnHeader("Execute Type", ColumnHeader::ColumnType::COMBO_BOX),
     ColumnHeader("Advanced", ColumnHeader::ColumnType::STRING),
   };
 
@@ -50,6 +52,8 @@ private:
     Link  = 4,
     Lock  = 5,
     Exec  = 6,
+    Exec_Type = 7,
+    Exec_Type_Combobox = 8,
   };
 
   std::stringstream profile_stream;

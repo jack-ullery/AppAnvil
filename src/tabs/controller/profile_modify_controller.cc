@@ -37,18 +37,20 @@ void ProfileModifyController::intialize_file_rules()
   auto rules = this->profile->getFileRules();
 
   for(AppArmor::Tree::FileRule &rule : rules) {
-    auto shared_rule = std::make_shared<AppArmor::Tree::FileRule>(rule);
+    auto shared_rule           = std::make_shared<AppArmor::Tree::FileRule>(rule);
     const std::string filename = rule.getFilename();
-    const auto filemode = rule.getFilemode();
+    const auto filemode        = rule.getFilemode();
+    const bool exec_allowed    = !filemode.getExecuteMode().empty();
 
     auto row = file_rule_record->new_row();
-    row->set_value(FILE_RULE_POS::Data,  shared_rule);
-    row->set_value(FILE_RULE_POS::Path,  filename);
-    row->set_value(FILE_RULE_POS::Read,  filemode.getRead());
-    row->set_value(FILE_RULE_POS::Write, filemode.getWrite());
-    row->set_value(FILE_RULE_POS::Link,  filemode.getLink());
-    row->set_value(FILE_RULE_POS::Lock,  filemode.getLock());
-    row->set_value(FILE_RULE_POS::Exec, !filemode.getExecuteMode().empty());    
+    row->set_value(FILE_RULE_POS::Data,      shared_rule);
+    row->set_value(FILE_RULE_POS::Path,      filename);
+    row->set_value(FILE_RULE_POS::Read,      filemode.getRead());
+    row->set_value(FILE_RULE_POS::Write,     filemode.getWrite());
+    row->set_value(FILE_RULE_POS::Link,      filemode.getLink());
+    row->set_value(FILE_RULE_POS::Lock,      filemode.getLock());
+    row->set_value(FILE_RULE_POS::Exec,      exec_allowed);
+    row->set_value(FILE_RULE_POS::Exec_Type, filemode.getExecuteMode());
 
     auto toggle_fun = sigc::mem_fun(*this, &ProfileModifyController::handle_file_rule_toggle);
     file_rule_record->set_toggle_func(toggle_fun);
@@ -106,6 +108,7 @@ void ProfileModifyController::handle_file_rule_toggle(const Gtk::TreeModel::iter
       }
     }
 
+    node->set_value(FILE_RULE_POS::Exec_Type, exec_mode);
     AppArmor::Tree::FileMode new_filemode(read, write, append, memory_map, link, lock, exec_mode);
 
     if(new_filemode.empty()) {
@@ -138,8 +141,8 @@ ProfileModifyController::ProfileModifyController(std::shared_ptr<AppArmor::Parse
   : parser{ parser },
     profile{ profile },
     modify{ std::make_shared<ProfileModify>(parser, profile) },
-    abstraction_record{ StatusColumnRecord::create(modify->get_abstraction_view(), abstraction_col_names)},
-    file_rule_record{ StatusColumnRecord::create(modify->get_file_rule_view(), file_rule_col_names)}
+    abstraction_record{ StatusColumnRecord::create(modify->get_abstraction_view(), abstraction_col_names) },
+    file_rule_record{ StatusColumnRecord::create(modify->get_file_rule_view(), file_rule_col_names) }
 {
   update_all_tables();
 }
