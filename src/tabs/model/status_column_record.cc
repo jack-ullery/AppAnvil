@@ -1,3 +1,4 @@
+#include "combobox_store.h"
 #include "status_column_record.h"
 #include "../entries.h"
 
@@ -144,14 +145,6 @@ bool StatusColumnRecord::pid_exists_in_child(unsigned int pid, const Gtk::TreeRo
   return false;
 }
 
-/*
-    Protected Methods
-*/
-StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Status> &tab, const std::vector<ColumnHeader> &names)
-  : StatusColumnRecord(tab->get_view(), names)
-{
-}
-
 StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view,
                                        const std::vector<ColumnHeader> &names)
   : view{ view },
@@ -160,7 +153,6 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
 {
   for (uint i = 0; i < names.size(); i++) {
     std::unique_ptr<Gtk::TreeModelColumnBase> column_base;
-    Gtk::TreeModelColumn<std::shared_ptr<Gtk::TreeModel>> combo_box;
 
     switch (names[i].type) {
       case ColumnHeader::STRING: {
@@ -222,7 +214,6 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
       case ColumnHeader::COMBO_BOX: {
         auto model_column = Gtk::TreeModelColumn<std::string>();
         add(model_column);
-        add(combo_box);
         view->append_column(names[i].name, model_column);
         column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
       } break;
@@ -231,54 +222,64 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
     // Set some default settings for the columns
     // Note this a Gtk::TreeViewColumn which is different then the Gtk::TreeModelColumn which we use earlier
     auto *column_view = view->get_column(static_cast<int>(i));
-    if(column_view != nullptr) {
-      column_view->set_reorderable(false);
-      column_view->set_resizable();
-      column_view->set_min_width(MIN_COL_WIDTH);
-      column_view->set_sort_column(*column_base);
+    
+    if(column_view == nullptr) {
+      std::cerr << "Could not create column (" << i << ") with header: " << names[i].name << std::endl;
+      continue;
+    }
 
-      if (names[i].type == ColumnHeader::PROFILE_ENTRY || 
-          names[i].type == ColumnHeader::PROCESS_ENTRY ||
-          names[i].type == ColumnHeader::LOG_ENTRY     ||
-          names[i].type == ColumnHeader::FILE_RULE_POINTER) {
-        // Create a custom cell renderer which shows nothing for these entries
-        auto *renderer    = Gtk::make_managed<Gtk::CellRendererText>();
-        auto callback_fun = sigc::ptr_fun(&StatusColumnRecord::ignore_cell_render);
+    column_view->set_reorderable(false);
+    column_view->set_resizable();
+    column_view->set_min_width(MIN_COL_WIDTH);
+    column_view->set_sort_column(*column_base);
 
-        column_view->clear();
-        column_view->pack_start(*renderer, false);
-        column_view->set_cell_data_func(*renderer, callback_fun);
+    if (names[i].type == ColumnHeader::PROFILE_ENTRY || 
+        names[i].type == ColumnHeader::PROCESS_ENTRY ||
+        names[i].type == ColumnHeader::LOG_ENTRY     ||
+        names[i].type == ColumnHeader::FILE_RULE_POINTER) {
+      // Create a custom cell renderer which shows nothing for these entries
+      auto *renderer    = Gtk::make_managed<Gtk::CellRendererText>();
+      auto callback_fun = sigc::ptr_fun(&StatusColumnRecord::ignore_cell_render);
 
-        // Make this row invisible
-        column_view->set_visible(false);
-      } else if (names[i].type == ColumnHeader::BOOLEAN) {
-        // Ensure that the togglebutton actually toggles when clicked
-        auto *renderer = dynamic_cast<Gtk::CellRendererToggle*>(column_view->get_first_cell());
+      column_view->clear();
+      column_view->pack_start(*renderer, false);
+      column_view->set_cell_data_func(*renderer, callback_fun);
 
-        if(renderer != nullptr) {
-          renderer->set_activatable(true);
-          renderer->set_sensitive(true);
+      // Make this row invisible
+      column_view->set_visible(false);
+    } else if (names[i].type == ColumnHeader::BOOLEAN) {
+      // Ensure that the togglebutton actually toggles when clicked
+      auto *renderer = dynamic_cast<Gtk::CellRendererToggle*>(column_view->get_first_cell());
 
-          // Function that is caled when togglebutton is clicked
-          auto lambda = [this, i](const std::string &path_str) -> void {
-            Gtk::TreePath path(path_str);
-            auto iter = sort_model->get_iter(path);
+      if(renderer != nullptr) {
+        renderer->set_activatable(true);
+        renderer->set_sensitive(true);
 
-            bool value;
-            iter->get_value(i, value);
-            iter->set_value(i, !value);
+        // Function that is caled when togglebutton is clicked
+        auto lambda = [this, i](const std::string &path_str) -> void {
+          Gtk::TreePath path(path_str);
+          auto iter = sort_model->get_iter(path);
 
-            toggle_fun(iter);
-          };
-          renderer->signal_toggled().connect(lambda);
-        }
+          bool value;
+          iter->get_value(i, value);
+          iter->set_value(i, !value);
+
+          toggle_fun(iter);
+        };
+        renderer->signal_toggled().connect(lambda);
       }
     } else if (names[i].type == ColumnHeader::COMBO_BOX) {
-        auto *renderer = Gtk::make_managed<Gtk::CellRendererCombo>();
-        column_view->pack_start(*renderer, false);
-        column_view->add_attribute(renderer->property_model(), combo_box);
-    } else {
-      std::cerr << "Could not create column (" << i << ") with header: " << names[i].name << std::endl;
+      auto *renderer = Gtk::make_managed<Gtk::CellRendererCombo>();
+
+      column_view->clear();
+      column_view->pack_start(*renderer);
+      column_view->add_attribute(renderer->property_text(), *column_base);
+
+      Glib::RefPtr<Gtk::ListStore> combobox_options = ComboboxStore::create(names[i].combobox_options);
+
+      renderer->property_model() = combobox_options;
+      renderer->property_text_column() = 0;
+      renderer->property_editable() = true;
     }
   }
 }

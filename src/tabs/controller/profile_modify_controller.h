@@ -40,7 +40,12 @@ private:
     ColumnHeader("Link", ColumnHeader::ColumnType::BOOLEAN),
     ColumnHeader("Lock", ColumnHeader::ColumnType::BOOLEAN),
     ColumnHeader("Execute", ColumnHeader::ColumnType::BOOLEAN),
-    ColumnHeader("Execute Type", ColumnHeader::ColumnType::COMBO_BOX),
+    ColumnHeader("Execute Type", {
+      {"ix", "Inherit execute"},
+      {"Px", "Discrete Profile execute"},
+      {"Cx", "Transition to Subprofile execute"},
+      {"Ux", "Unconfined execute"},
+    }),
     ColumnHeader("Advanced", ColumnHeader::ColumnType::STRING),
   };
 
