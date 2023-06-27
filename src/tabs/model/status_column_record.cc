@@ -63,6 +63,11 @@ Gtk::TreeRow StatusColumnRecord::get_row(const Gtk::TreePath &path)
   return *(sort_model->get_iter(path));
 }
 
+Gtk::TreeRow StatusColumnRecord::get_row(const Glib::ustring &path)
+{
+  return *(sort_model->get_iter(path));
+}
+
 void StatusColumnRecord::clear()
 {
   store->clear();
@@ -280,6 +285,13 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
       renderer->property_model() = combobox_options;
       renderer->property_text_column() = 0;
       renderer->property_editable() = true;
+
+      // Called when a user changes the combobox
+      auto lambda = [&, i](const Glib::ustring& path_string, const Glib::ustring& new_text) -> void {
+        on_combobox_edited(path_string, new_text, i);
+      };
+
+      renderer->signal_edited().connect(lambda);
     }
   }
 }
@@ -296,6 +308,22 @@ bool StatusColumnRecord::default_filter(const Gtk::TreeModel::iterator &node)
 void StatusColumnRecord::on_toggle(const Gtk::TreeModel::iterator &node)
 {
   std::ignore = node;
+}
+
+void StatusColumnRecord::on_combobox_edited(const Glib::ustring& path_string,
+                                            const Glib::ustring& new_text,
+                                            int col)
+{
+  Gtk::TreePath path(path_string);
+
+  // Get the row from the path
+  auto iter = sort_model->get_iter(path);
+  if(iter)
+  {
+    // Store the user's new text in the model
+    auto row = *iter;
+    row.set_value(col, new_text);
+  }
 }
 
 void StatusColumnRecord::ignore_cell_render(Gtk::CellRenderer *renderer, const Gtk::TreeIter &iter)

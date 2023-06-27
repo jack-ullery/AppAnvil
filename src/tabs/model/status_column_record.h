@@ -92,6 +92,7 @@ public:
    * @returns A new TreeRow from the table.
    */
   Gtk::TreeRow get_row(const Gtk::TreePath &path);
+  Gtk::TreeRow get_row(const Glib::ustring &path);
 
   /**
    * @brief Set the visibility all the rows in the ColumnRecord.
@@ -143,6 +144,11 @@ private:
 
   // Unless `set_toggle_func` is called, this function does nothing
   static void on_toggle(const Gtk::TreeModel::iterator &node);
+
+  // Handles changing a combobox value in a row
+  void on_combobox_edited(const Glib::ustring& path_string,
+                          const Glib::ustring& new_text, 
+                          int col);
 
   // Ignores the parameter and returns an empty string
   // This is used by the cell renderer of columns we do not want to view
