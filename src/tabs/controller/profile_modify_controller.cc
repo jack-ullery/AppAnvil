@@ -52,8 +52,8 @@ void ProfileModifyController::intialize_file_rules()
     row->set_value(FILE_RULE_POS::Exec,      exec_allowed);
     row->set_value(FILE_RULE_POS::Exec_Type, filemode.getExecuteMode());
 
-    auto toggle_fun = sigc::mem_fun(*this, &ProfileModifyController::handle_file_rule_toggle);
-    file_rule_record->set_toggle_func(toggle_fun);
+    auto change_fun = sigc::mem_fun(*this, &ProfileModifyController::handle_file_rule_changed);
+    file_rule_record->set_change_func(change_fun);
   }
 }
 
@@ -76,12 +76,12 @@ void ProfileModifyController::handle_profile_changed()
   update_all_tables();
 }
 
-void ProfileModifyController::handle_file_rule_toggle(const Gtk::TreeModel::iterator &node)
+void ProfileModifyController::handle_file_rule_changed(const Gtk::TreeModel::iterator &node)
 {
   // Get the FileRule stored in the row
   std::shared_ptr<AppArmor::Tree::FileRule> rule;
   node->get_value(FILE_RULE_POS::Data, rule);
-  
+
   if(rule != nullptr) {
     const std::string filename = rule->getFilename();
     const auto filemode = rule->getFilemode();
@@ -93,6 +93,7 @@ void ProfileModifyController::handle_file_rule_toggle(const Gtk::TreeModel::iter
     bool link       = filemode.getLink();
     bool lock       = filemode.getLock();
     bool has_exec   = false;
+    std::string exec_mode;
 
     node->get_value(FILE_RULE_POS::Read,  read);
     node->get_value(FILE_RULE_POS::Write, write);
@@ -100,9 +101,8 @@ void ProfileModifyController::handle_file_rule_toggle(const Gtk::TreeModel::iter
     node->get_value(FILE_RULE_POS::Lock,  lock);
     node->get_value(FILE_RULE_POS::Exec,  has_exec);
 
-    std::string exec_mode;
     if(has_exec) {
-      exec_mode = filemode.getExecuteMode();
+      node->get_value(FILE_RULE_POS::Exec_Type, exec_mode);
       if(exec_mode.empty()) {
         exec_mode = "ix";
       }

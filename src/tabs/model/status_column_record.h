@@ -48,8 +48,17 @@ public:
    */
   void set_visible_func(const Gtk::TreeModelFilter::SlotVisible &filter);
 
-  typedef sigc::slot<void, const Gtk::TreeModel::iterator&> toggle_function_type;
-  void set_toggle_func(const toggle_function_type &fun);
+  /**
+   * @brief Sets the callback function which is called whenever a row is edited by the user
+   *
+   * @details
+   * Sets the callback function which is called whenever a row is edited by the user.
+   * This function is called whevener a user toggles a button, or changes a ComboBox.
+   *
+   * @param fun, the callback function to use
+   */
+  typedef sigc::slot<void, const Gtk::TreeModel::iterator&> change_function_type;
+  void set_change_func(const change_function_type &fun);
 
   /**
    * @brief Creates and returns a new TreeRow in the table.
@@ -137,12 +146,12 @@ private:
   Glib::RefPtr<Gtk::TreeModelFilter> filter_model;
   Glib::RefPtr<Gtk::TreeModelSort> sort_model;
   Gtk::TreeModelFilter::SlotVisible filter_fun;
-  toggle_function_type toggle_fun;
+  change_function_type change_fun;
 
   // Unless `set_visible_func` is called, this filter sets every row in the ColumnRecord to be visible when filtered
   static bool default_filter(const Gtk::TreeModel::iterator &node);
 
-  // Unless `set_toggle_func` is called, this function does nothing
+  // Unless `set_change_func` is called, this function does nothing
   static void on_toggle(const Gtk::TreeModel::iterator &node);
 
   // Handles changing a combobox value in a row

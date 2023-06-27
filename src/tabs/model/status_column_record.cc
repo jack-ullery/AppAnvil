@@ -43,9 +43,9 @@ void StatusColumnRecord::set_visible_func(const Gtk::TreeModelFilter::SlotVisibl
   filter_model->set_visible_func(filter);
 }
 
-void StatusColumnRecord::set_toggle_func(const toggle_function_type &fun)
+void StatusColumnRecord::set_change_func(const change_function_type &fun)
 {
-  toggle_fun = fun;
+  change_fun = fun;
 }
 
 Gtk::TreeRow StatusColumnRecord::new_row()
@@ -154,7 +154,7 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
                                        const std::vector<ColumnHeader> &names)
   : view{ view },
     filter_fun{ sigc::ptr_fun(&StatusColumnRecord::default_filter) },
-    toggle_fun{ sigc::ptr_fun(&StatusColumnRecord::on_toggle) }
+    change_fun{ sigc::ptr_fun(&StatusColumnRecord::on_toggle) }
 {
   view->set_activate_on_single_click(true);
 
@@ -271,7 +271,7 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
           iter->get_value(i, value);
           iter->set_value(i, !value);
 
-          toggle_fun(iter);
+          change_fun(iter);
         };
         renderer->signal_toggled().connect(lambda);
       }
@@ -323,8 +323,10 @@ void StatusColumnRecord::on_combobox_edited(const Glib::ustring& path_string,
   if(iter)
   {
     // Store the user's new text in the model
-    auto row = *iter;
-    row.set_value(col, new_text);
+    iter->set_value(col, new_text);
+
+    // Call the change_fun() because the row was manually edited
+    this->change_fun(iter);
   }
 }
 
