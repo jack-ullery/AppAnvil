@@ -156,6 +156,8 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
     filter_fun{ sigc::ptr_fun(&StatusColumnRecord::default_filter) },
     toggle_fun{ sigc::ptr_fun(&StatusColumnRecord::on_toggle) }
 {
+  view->set_activate_on_single_click(true);
+
   for (uint i = 0; i < names.size(); i++) {
     std::unique_ptr<Gtk::TreeModelColumnBase> column_base;
 

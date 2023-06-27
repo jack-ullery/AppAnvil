@@ -159,8 +159,6 @@ LogsController<LogsTab, Database, Adapter, LogRecord>::LogsController(std::share
 
   auto key_event_fun = sigc::mem_fun(*this, &LogsController::on_key_event);
   logs->get_view()->signal_key_release_event().connect(key_event_fun, true);
-
-  logs->get_view()->set_activate_on_single_click(true);
 }
 
 // Used to avoid linker errors

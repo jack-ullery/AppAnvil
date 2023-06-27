@@ -106,8 +106,6 @@ ProfilesController<ProfilesTab, Database, Adapter>::ProfilesController(std::shar
 
   auto key_event_fun = sigc::mem_fun(*this, &ProfilesController::on_key_event);
   prof->get_view()->signal_key_release_event().connect(key_event_fun, true);
-
-  prof->get_view()->set_activate_on_single_click(true);
 }
 
 // Used to avoid linker errors
