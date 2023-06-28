@@ -16,7 +16,7 @@ protected:
   LogAdapterTest()
     : database{ new Database() },
       status{ new Status() },
-      adapter(database, status->get_view(), status)
+      adapter(database, status->get_view())
   {
   }
 

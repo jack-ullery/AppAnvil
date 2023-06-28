@@ -200,10 +200,11 @@ void StatusControllerTest::set_combobox_text(Gtk::Widget *obj, std::string combo
 }
 
 // Test for method parse_JSON(...) with an argument that is not in valid JSON format
+// Should return a best effort guess of the JSON, without throwing any exception
 TEST_F(StatusControllerTest, PARSE_JSON_INVALID_FORMAT)
 {
   std::string raw_json = "";
-  EXPECT_THROW(sc.parse_JSON(raw_json), std::invalid_argument);
+  EXPECT_NO_THROW(sc.parse_JSON(raw_json));
 }
 
 // Test for method parse_JSON(...) with an argument containing a null value
