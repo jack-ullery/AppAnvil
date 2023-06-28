@@ -33,8 +33,7 @@ public:
    *
    * @returns std::shared_ptr refrencing a new StatusColumnRecord object.
    */
-  static std::shared_ptr<StatusColumnRecord> create(const std::shared_ptr<Gtk::TreeView> &view,
-                                                    const std::vector<ColumnHeader> &names);
+  static std::shared_ptr<StatusColumnRecord> create(const std::shared_ptr<Gtk::TreeView> &view, const std::vector<ColumnHeader> &names);
 
   /**
    * @brief Sets the callback function which specifies whether a row should be visible
@@ -57,7 +56,7 @@ public:
    *
    * @param fun, the callback function to use
    */
-  typedef sigc::slot<void, const std::string&> change_function_type;
+  typedef sigc::slot<void, const std::string &> change_function_type;
   void set_change_func(const change_function_type &fun);
 
   /**
@@ -127,8 +126,7 @@ protected:
   StatusColumnRecord(const std::shared_ptr<Status> &tab, const std::vector<ColumnHeader> &names);
 
   // Called during the create() method, does not initialize certain fields
-  explicit StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view,
-                              const std::vector<ColumnHeader> &names);
+  explicit StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, const std::vector<ColumnHeader> &names);
 
 private:
   struct RowData
@@ -158,9 +156,7 @@ private:
   static void on_change(const std::string &node);
 
   // Handles changing a combobox value in a row
-  void on_combobox_edited(const Glib::ustring& path_string,
-                          const Glib::ustring& new_text, 
-                          int col);
+  void on_combobox_edited(const Glib::ustring &path_string, const Glib::ustring &new_text, int col);
 
   // Ignores the parameter and returns an empty string
   // This is used by the cell renderer of columns we do not want to view

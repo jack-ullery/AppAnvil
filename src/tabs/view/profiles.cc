@@ -72,10 +72,9 @@ void Profiles::show_profile_info()
     row->get_value(1, profile_name);
 
     // If the profile has been parsed, allow us to modify it
-    if(profile_map.contains(profile_name)) {
+    if (profile_map.contains(profile_name)) {
       p_modify_profile_toggle->set_sensitive(true);
-    }
-    else {
+    } else {
       p_modify_profile_toggle->set_sensitive(false);
     }
   }
@@ -139,15 +138,15 @@ void Profiles::handle_modify_profile_toggle()
       std::string profile_name;
       row->get_value(1, profile_name);
 
-      if(!modifiers.contains(profile_name)) {
+      if (!modifiers.contains(profile_name)) {
         auto profile_pair = profile_map.find(profile_name);
 
-        if(profile_pair != profile_map.end()) {
-          CommandCaller::parser_profile_pair tuple  = profile_pair->second;
-          auto parser  = std::make_shared<AppArmor::Parser>(tuple.first);
-          auto profile = std::make_shared<AppArmor::Profile>(tuple.second);
-          auto controller = std::make_shared<ProfileModifyController>(parser, profile);
-          auto profile_modify = controller->get_profile_modify();
+        if (profile_pair != profile_map.end()) {
+          CommandCaller::parser_profile_pair tuple = profile_pair->second;
+          auto parser                              = std::make_shared<AppArmor::Parser>(tuple.first);
+          auto profile                             = std::make_shared<AppArmor::Profile>(tuple.second);
+          auto controller                          = std::make_shared<ProfileModifyController>(parser, profile);
+          auto profile_modify                      = controller->get_profile_modify();
 
           modifiers.insert_or_assign(profile_name, controller);
           p_stack->add(*profile_modify, "modifyProfile_" + profile_name);
@@ -176,7 +175,7 @@ Profiles::Profiles()
     p_num_log_label{ Common::get_widget<Gtk::Label>("p_num_log_label", builder) },
     p_num_proc_label{ Common::get_widget<Gtk::Label>("p_num_proc_label", builder) },
     loader{ std::make_unique<ProfileLoader>() },
-    profile_map{CommandCaller::get_profiles()}
+    profile_map{ CommandCaller::get_profiles() }
 {
   // Add tabs to the stack pane
   p_stack->add(*loader, "loadProfile");

@@ -68,15 +68,18 @@ public:
   static std::string disable_profile(const std::string &profileName);
 
   // Attempt to locate the profile in possible locations
-  static std::string locate_profile(const std::string &profile, const std::initializer_list<std::string> &possible_profile_locations = {"/etc/apparmor.d/", "/var/lib/snapd/apparmor/profiles/"});
+  static std::string locate_profile(
+    const std::string &profile,
+    const std::initializer_list<std::string> &possible_profile_locations = { "/etc/apparmor.d/", "/var/lib/snapd/apparmor/profiles/" });
 
   // Gets a vector of abstractions located at a path (default "/etc/apparmor.d")
   static std::vector<std::string> get_abstractions(const std::string &path = "/etc/apparmor.d/abstractions");
 
-  // Returns a map (indexed by profile name) for each AppArmor::Profile (and its corresponding AppArmor::Parser) found at certain directories
-  // This function attempts to parse every file at specified locations to search for profiles
+  // Returns a map (indexed by profile name) for each AppArmor::Profile (and its corresponding AppArmor::Parser) found at certain
+  // directories This function attempts to parse every file at specified locations to search for profiles
   typedef std::pair<AppArmor::Parser, AppArmor::Profile> parser_profile_pair;
-  static std::map<std::string, parser_profile_pair> get_profiles(const std::initializer_list<std::string> &possible_profile_locations = {"/etc/apparmor.d/", "/var/lib/snapd/apparmor/profiles/"});
+  static std::map<std::string, parser_profile_pair> get_profiles(
+    const std::initializer_list<std::string> &possible_profile_locations = { "/etc/apparmor.d/", "/var/lib/snapd/apparmor/profiles/" });
 
 protected:
   struct results

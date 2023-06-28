@@ -4,10 +4,11 @@
 #include "profile_modify_test.h"
 
 ProfileModifyTest::ProfileModifyTest()
-  : parser{std::make_shared<::testing::StrictMock<AppArmorParserMock>>()},
-    profile{std::make_shared<AppArmor::Profile>("example_profile", AppArmor::Tree::RuleList())},
+  : parser{ std::make_shared<::testing::StrictMock<AppArmorParserMock>>() },
+    profile{ std::make_shared<AppArmor::Profile>("example_profile", AppArmor::Tree::RuleList()) },
     pm(parser, profile)
-{   }
+{
+}
 
 TEST_F(ProfileModifyTest, TEST_CONSTRUCTOR)
 {
@@ -42,9 +43,7 @@ TEST_F(ProfileModifyTest, TEST_DELETE_BUTTON_WITH_EXCEPTION)
   // Click the button
   // This time pm.removeRule() will throw a std::domain_error exception
   // Ensure that this does not crash the program
-  EXPECT_CALL(*parser, removeRule(*profile, frule))
-    .Times(1)
-    .WillRepeatedly(::testing::Throw(std::domain_error("example exception")));
+  EXPECT_CALL(*parser, removeRule(*profile, frule)).Times(1).WillRepeatedly(::testing::Throw(std::domain_error("example exception")));
 
   ASSERT_NO_THROW(button->clicked());
 }

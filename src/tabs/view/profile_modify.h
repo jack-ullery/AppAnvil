@@ -1,9 +1,6 @@
 #ifndef TABS_PROFILE_MODIFY_H
 #define TABS_PROFILE_MODIFY_H
 
-#include <libappanvil/apparmor_parser.hh>
-#include <libappanvil/tree/AbstractionRule.hh>
-#include <libappanvil/tree/FileRule.hh>
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
@@ -12,6 +9,9 @@
 #include <gtkmm/label.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/treeview.h>
+#include <libappanvil/apparmor_parser.hh>
+#include <libappanvil/tree/AbstractionRule.hh>
+#include <libappanvil/tree/FileRule.hh>
 #include <list>
 #include <memory>
 #include <string>
@@ -25,8 +25,7 @@ template<class AppArmorParser>
 class ProfileModifyImpl : public Gtk::ScrolledWindow
 {
 public:
-  ProfileModifyImpl(std::shared_ptr<AppArmorParser> parser, 
-                    std::shared_ptr<AppArmor::Profile> profile);
+  ProfileModifyImpl(std::shared_ptr<AppArmorParser> parser, std::shared_ptr<AppArmor::Profile> profile);
 
   std::shared_ptr<Gtk::TreeView> get_abstraction_view();
   std::shared_ptr<Gtk::TreeView> get_file_rule_view();
@@ -34,14 +33,14 @@ public:
 protected:
   // Functions to create certain reused Gtk Widgets
   // Each function returns a pointer that will be freed by Gtk
-  static Gtk::Label* create_label(const std::string &text);
-  static Gtk::Button* create_image_button(const std::string &image_name);
+  static Gtk::Label *create_label(const std::string &text);
+  static Gtk::Button *create_image_button(const std::string &image_name);
 
   template<AppArmor::RuleDerived RuleType>
-  Gtk::Button* create_edit_button(RuleType &rule);
+  Gtk::Button *create_edit_button(RuleType &rule);
 
   template<AppArmor::RuleDerived RuleType>
-  Gtk::Button* create_delete_button(RuleType &rule, const std::string &name);
+  Gtk::Button *create_delete_button(RuleType &rule, const std::string &name);
 
   // Helper functions that will be called when Profile rules should be changed
   template<AppArmor::RuleDerived RuleType>
@@ -71,11 +70,11 @@ private:
   std::map<std::string, widget_tuple> abstraction_map;
   std::map<std::shared_ptr<AppArmor::Tree::FileRule>, std::shared_ptr<Gtk::Widget>> file_rule_map;
 
-  #ifdef TESTS_ENABLED
-    FRIEND_TEST(ProfileModifyTest, TEST_CONSTRUCTOR);
-    FRIEND_TEST(ProfileModifyTest, TEST_DELETE_BUTTON);
-    FRIEND_TEST(ProfileModifyTest, TEST_DELETE_BUTTON_WITH_EXCEPTION);
-  #endif
+#ifdef TESTS_ENABLED
+  FRIEND_TEST(ProfileModifyTest, TEST_CONSTRUCTOR);
+  FRIEND_TEST(ProfileModifyTest, TEST_DELETE_BUTTON);
+  FRIEND_TEST(ProfileModifyTest, TEST_DELETE_BUTTON_WITH_EXCEPTION);
+#endif
 };
 
 typedef ProfileModifyImpl<AppArmor::Parser> ProfileModify;

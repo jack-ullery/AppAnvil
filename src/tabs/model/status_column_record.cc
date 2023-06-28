@@ -1,6 +1,6 @@
-#include "combobox_store.h"
 #include "status_column_record.h"
 #include "../entries.h"
+#include "combobox_store.h"
 
 #include <gtkmm/box.h>
 #include <gtkmm/cellrenderertext.h>
@@ -72,7 +72,7 @@ Gtk::TreeModel::iterator StatusColumnRecord::get_iter(const Glib::ustring &path)
 Gtk::TreeRow StatusColumnRecord::get_row(const Gtk::TreePath &path)
 {
   auto iter = get_iter(path);
-  if(iter == nullptr) {
+  if (iter == nullptr) {
     throw std::runtime_error("get_iter() returned nullptr. This should not happen. If you see this, it is a bug...");
   }
   return *iter;
@@ -81,7 +81,7 @@ Gtk::TreeRow StatusColumnRecord::get_row(const Gtk::TreePath &path)
 Gtk::TreeRow StatusColumnRecord::get_row(const Glib::ustring &path)
 {
   auto iter = get_iter(path);
-  if(iter == nullptr) {
+  if (iter == nullptr) {
     throw std::runtime_error("get_iter() returned nullptr. This should not happen. If you see this, it is a bug...");
   }
   return *iter;
@@ -169,8 +169,7 @@ bool StatusColumnRecord::pid_exists_in_child(unsigned int pid, const Gtk::TreeRo
   return false;
 }
 
-StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view,
-                                       const std::vector<ColumnHeader> &names)
+StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, const std::vector<ColumnHeader> &names)
   : view{ view },
     filter_fun{ sigc::ptr_fun(&StatusColumnRecord::default_filter) },
     change_fun{ sigc::ptr_fun(&StatusColumnRecord::on_change) }
@@ -248,8 +247,8 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
     // Set some default settings for the columns
     // Note this a Gtk::TreeViewColumn which is different then the Gtk::TreeModelColumn which we use earlier
     auto *column_view = view->get_column(static_cast<int>(i));
-    
-    if(column_view == nullptr) {
+
+    if (column_view == nullptr) {
       std::cerr << "Could not create column (" << i << ") with header: " << names[i].name << std::endl;
       continue;
     }
@@ -259,10 +258,8 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
     column_view->set_min_width(MIN_COL_WIDTH);
     column_view->set_sort_column(*column_base);
 
-    if (names[i].type == ColumnHeader::PROFILE_ENTRY || 
-        names[i].type == ColumnHeader::PROCESS_ENTRY ||
-        names[i].type == ColumnHeader::LOG_ENTRY     ||
-        names[i].type == ColumnHeader::FILE_RULE_POINTER) {
+    if (names[i].type == ColumnHeader::PROFILE_ENTRY || names[i].type == ColumnHeader::PROCESS_ENTRY ||
+        names[i].type == ColumnHeader::LOG_ENTRY || names[i].type == ColumnHeader::FILE_RULE_POINTER) {
       // Create a custom cell renderer which shows nothing for these entries
       auto *renderer    = Gtk::make_managed<Gtk::CellRendererText>();
       auto callback_fun = sigc::ptr_fun(&StatusColumnRecord::ignore_cell_render);
@@ -275,9 +272,9 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
       column_view->set_visible(false);
     } else if (names[i].type == ColumnHeader::BOOLEAN) {
       // Ensure that the togglebutton actually toggles when clicked
-      auto *renderer = dynamic_cast<Gtk::CellRendererToggle*>(column_view->get_first_cell());
+      auto *renderer = dynamic_cast<Gtk::CellRendererToggle *>(column_view->get_first_cell());
 
-      if(renderer != nullptr) {
+      if (renderer != nullptr) {
         renderer->set_activatable(true);
         renderer->set_sensitive(true);
 
@@ -302,12 +299,12 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
 
       Glib::RefPtr<Gtk::ListStore> combobox_options = ComboboxStore::create(names[i].combobox_options);
 
-      renderer->property_model() = combobox_options;
+      renderer->property_model()       = combobox_options;
       renderer->property_text_column() = 0;
-      renderer->property_editable() = true;
+      renderer->property_editable()    = true;
 
       // Called when a user changes the combobox
-      auto lambda = [&, i](const Glib::ustring& path_string, const Glib::ustring& new_text) -> void {
+      auto lambda = [&, i](const Glib::ustring &path_string, const Glib::ustring &new_text) -> void {
         on_combobox_edited(path_string, new_text, i);
       };
 
@@ -330,16 +327,13 @@ void StatusColumnRecord::on_change(const std::string &node)
   std::ignore = node;
 }
 
-void StatusColumnRecord::on_combobox_edited(const Glib::ustring& path_string,
-                                            const Glib::ustring& new_text,
-                                            int col)
+void StatusColumnRecord::on_combobox_edited(const Glib::ustring &path_string, const Glib::ustring &new_text, int col)
 {
   Gtk::TreePath path(path_string);
 
   // Get the row from the path
   auto iter = get_iter(path);
-  if(iter)
-  {
+  if (iter) {
     // Store the user's new text in the model
     iter->set_value(col, new_text);
 

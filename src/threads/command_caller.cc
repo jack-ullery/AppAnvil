@@ -162,49 +162,48 @@ std::string CommandCaller::execute_change(const std::string &profile, const std:
 // TODO(multiple-locations) handle different abstractions in multiple profile locations
 std::vector<std::string> CommandCaller::get_abstractions(const std::string &path)
 {
-    std::vector<std::string> found = {};
+  std::vector<std::string> found = {};
 
-    auto dir_iter = std::filesystem::directory_iterator(path);
-    for (const auto &entry : dir_iter) {
-      auto abstraction = entry.path().filename();
-      found.push_back(abstraction);
-    }
+  auto dir_iter = std::filesystem::directory_iterator(path);
+  for (const auto &entry : dir_iter) {
+    auto abstraction = entry.path().filename();
+    found.push_back(abstraction);
+  }
 
-    return found;
+  return found;
 }
 
-std::map<std::string, CommandCaller::parser_profile_pair> CommandCaller::get_profiles(const std::initializer_list<std::string> &possible_profile_locations)
+std::map<std::string, CommandCaller::parser_profile_pair> CommandCaller::get_profiles(
+  const std::initializer_list<std::string> &possible_profile_locations)
 {
   std::map<std::string, std::pair<AppArmor::Parser, AppArmor::Profile>> found_profiles;
 
   // Iterate over every directory
-  for(const auto &path : possible_profile_locations) {
+  for (const auto &path : possible_profile_locations) {
     // Iterate over every file in a directory
     bool exists = std::filesystem::exists(path);
-    if(exists) {
+    if (exists) {
       auto files = std::filesystem::directory_iterator(path);
       for (const auto &entry : files) {
         // Attempt to parse file in directory
         try {
-          if(entry.is_regular_file()){
+          if (entry.is_regular_file()) {
             AppArmor::Parser parsed(entry.path());
 
             // Add each profile found in the file
             auto profile_list = parsed.getProfileList();
-            for(auto &profile : profile_list)
-            {
-              parser_profile_pair tuple{parsed, profile};
+            for (auto &profile : profile_list) {
+              parser_profile_pair tuple{ parsed, profile };
               found_profiles.insert_or_assign(profile.name(), tuple);
             }
           }
-        }
-        catch(const std::exception &ex) {
+        } catch (const std::exception &ex) {
           std::cerr << "Error reading file: " << entry.path() << std::endl;
           std::cerr << "\tMessage: " << ex.what() << std::endl;
         }
       }
     }
- }
+  }
 
   return found_profiles;
 }

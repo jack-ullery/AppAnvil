@@ -91,13 +91,14 @@ void LogsController<LogsTab, Database, Adapter, LogRecord>::add_row(const std::s
 template<class LogsTab, class Database, class Adapter, class LogRecord>
 void LogsController<LogsTab, Database, Adapter, LogRecord>::add_data_to_record(const std::list<std::shared_ptr<LogRecord>> &data)
 {
-  auto ptr = std::make_shared<std::list<std::shared_ptr<LogRecord>>>(data);
+  auto ptr    = std::make_shared<std::list<std::shared_ptr<LogRecord>>>(data);
   auto lambda = [&, ptr]() -> bool { return add_data_to_record_helper(ptr); };
   Glib::signal_idle().connect(lambda, Glib::PRIORITY_LOW);
 }
 
 template<class LogsTab, class Database, class Adapter, class LogRecord>
-bool LogsController<LogsTab, Database, Adapter, LogRecord>::add_data_to_record_helper(std::shared_ptr<std::list<std::shared_ptr<LogRecord>>> data)
+bool LogsController<LogsTab, Database, Adapter, LogRecord>::add_data_to_record_helper(
+  std::shared_ptr<std::list<std::shared_ptr<LogRecord>>> data)
 {
   constexpr uint num_logs_batch = 127;
   for (uint i = 0; i < num_logs_batch; i++) {

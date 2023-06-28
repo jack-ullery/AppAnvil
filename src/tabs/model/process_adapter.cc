@@ -108,8 +108,7 @@ std::shared_ptr<ColumnRecord> ProcessAdapter<Database, ColumnRecord>::get_col_re
 }
 
 template<class Database, class ColumnRecord>
-ProcessAdapter<Database, ColumnRecord>::ProcessAdapter(std::shared_ptr<Database> db,
-                                                       const std::shared_ptr<Gtk::TreeView> &view)
+ProcessAdapter<Database, ColumnRecord>::ProcessAdapter(std::shared_ptr<Database> db, const std::shared_ptr<Gtk::TreeView> &view)
   : db{ db },
     col_record{ StatusColumnRecord::create(view, col_names) }
 {

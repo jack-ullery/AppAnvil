@@ -1,23 +1,23 @@
-#include "common.h"
-#include "../../threads/command_caller.h"
 #include "profile_modify.h"
+#include "../../threads/command_caller.h"
+#include "common.h"
 
 #include <exception>
-#include <libappanvil/apparmor_parser.hh>
 #include <gtkmm/button.h>
 #include <gtkmm/enums.h>
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
 #include <iostream>
+#include <libappanvil/apparmor_parser.hh>
 #include <memory>
 #include <string>
 #include <unordered_set>
 
-// Size of right-margin (pixels) for labels created by following method 
+// Size of right-margin (pixels) for labels created by following method
 constexpr int LABEL_RIGHT_MARGIN = 8;
 
 template<class AppArmorParser>
-Gtk::Label* ProfileModifyImpl<AppArmorParser>::create_label(const std::string &text)
+Gtk::Label *ProfileModifyImpl<AppArmorParser>::create_label(const std::string &text)
 {
   auto *label = Gtk::make_managed<Gtk::Label>(text);
   label->set_halign(Gtk::ALIGN_START);
@@ -28,7 +28,7 @@ Gtk::Label* ProfileModifyImpl<AppArmorParser>::create_label(const std::string &t
 }
 
 template<class AppArmorParser>
-Gtk::Button* ProfileModifyImpl<AppArmorParser>::create_image_button(const std::string &image_name)
+Gtk::Button *ProfileModifyImpl<AppArmorParser>::create_image_button(const std::string &image_name)
 {
   auto *image = Gtk::make_managed<Gtk::Button>();
   image->set_image_from_icon_name(image_name);
@@ -37,7 +37,7 @@ Gtk::Button* ProfileModifyImpl<AppArmorParser>::create_image_button(const std::s
 
 template<class AppArmorParser>
 template<AppArmor::RuleDerived RuleType>
-Gtk::Button* ProfileModifyImpl<AppArmorParser>::create_edit_button(RuleType &rule)
+Gtk::Button *ProfileModifyImpl<AppArmorParser>::create_edit_button(RuleType &rule)
 {
   auto *image = create_image_button("edit-symbolic");
 
@@ -52,14 +52,12 @@ Gtk::Button* ProfileModifyImpl<AppArmorParser>::create_edit_button(RuleType &rul
 
 template<class AppArmorParser>
 template<AppArmor::RuleDerived RuleType>
-Gtk::Button* ProfileModifyImpl<AppArmorParser>::create_delete_button(RuleType &rule, const std::string &name)
+Gtk::Button *ProfileModifyImpl<AppArmorParser>::create_delete_button(RuleType &rule, const std::string &name)
 {
   auto *image = create_image_button("edit-delete-symbolic");
 
   // Create lambda to be called when button is clicked
-  auto on_clicked = [this, &rule](){
-    handle_delete<RuleType>(rule);
-  };
+  auto on_clicked = [this, &rule]() { handle_delete<RuleType>(rule); };
   image->signal_clicked().connect(on_clicked);
 
   return image;
@@ -89,8 +87,7 @@ std::shared_ptr<Gtk::TreeView> ProfileModifyImpl<AppArmorParser>::get_file_rule_
 }
 
 template<class AppArmorParser>
-ProfileModifyImpl<AppArmorParser>::ProfileModifyImpl(std::shared_ptr<AppArmorParser> parser, 
-                                                                     std::shared_ptr<AppArmor::Profile> profile)
+ProfileModifyImpl<AppArmorParser>::ProfileModifyImpl(std::shared_ptr<AppArmorParser> parser, std::shared_ptr<AppArmor::Profile> profile)
   : builder{ Gtk::Builder::create_from_resource("/resources/profile_modify.glade") },
     m_box{ Common::get_widget<Gtk::Box>("m_box", builder) },
     m_title_1{ Common::get_widget<Gtk::Label>("m_title_1", builder) },

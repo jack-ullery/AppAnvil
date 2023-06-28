@@ -169,7 +169,7 @@ TEST_F(ProfilesTest, SHOW_PROFILE_INFO_MAKES_CHANGE_TOGGLE_VISIBLE)
   // Create and select a row
   auto profile_name = "Test_Profile_Name";
   auto old_status   = "fake_status";
-  auto store = initialize_store();
+  auto store        = initialize_store();
   create_and_select_row(store, profile_name, old_status);
 
   // This should make the toggle visible, since a row is selected
@@ -289,8 +289,8 @@ TEST_F(ProfilesTest, NO_SIMULTANEOUS_TOGGLE_PRESS_TWO)
 
 TEST_F(ProfilesTest, SET_PROFILE_INFO)
 {
-  std::string logs_str       = "Example string for logs label";
-  std::string processes_str  = "Example string for processes label";
+  std::string logs_str      = "Example string for logs label";
+  std::string processes_str = "Example string for processes label";
 
   pc.set_profile_info(logs_str, processes_str);
 

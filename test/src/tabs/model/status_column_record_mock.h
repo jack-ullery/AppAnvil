@@ -21,8 +21,7 @@
 class StatusColumnRecordMock
 {
 public:
-  static std::shared_ptr<StatusColumnRecordMock> create(const std::shared_ptr<Gtk::TreeView> &view,
-                                                        const std::vector<ColumnHeader> &names)
+  static std::shared_ptr<StatusColumnRecordMock> create(const std::shared_ptr<Gtk::TreeView> &view, const std::vector<ColumnHeader> &names)
   {
     std::ignore = view;
     std::ignore = names;

@@ -70,8 +70,7 @@ std::shared_ptr<ColumnRecord> LogAdapter<Database, ColumnRecord>::get_col_record
 }
 
 template<class Database, class ColumnRecord>
-LogAdapter<Database, ColumnRecord>::LogAdapter(std::shared_ptr<Database> db,
-                                               const std::shared_ptr<Gtk::TreeView> &view)
+LogAdapter<Database, ColumnRecord>::LogAdapter(std::shared_ptr<Database> db, const std::shared_ptr<Gtk::TreeView> &view)
   : db{ db },
     col_record{ ColumnRecord::create(view, col_names) }
 {

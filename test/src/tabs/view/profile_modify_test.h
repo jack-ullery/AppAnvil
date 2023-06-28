@@ -12,15 +12,15 @@
 // Test Fixture for Process class
 class ProfileModifyTest : public ::testing::Test
 {
-  protected:
-    ProfileModifyTest();
+protected:
+  ProfileModifyTest();
 
-    std::shared_ptr<::testing::StrictMock<AppArmorParserMock>> parser;
-    std::shared_ptr<AppArmor::Profile> profile;
-    ProfileModifyImpl<AppArmorParserMock> pm;
+  std::shared_ptr<::testing::StrictMock<AppArmorParserMock>> parser;
+  std::shared_ptr<AppArmor::Profile> profile;
+  ProfileModifyImpl<AppArmorParserMock> pm;
 
-    // Test values
-    AppArmor::Tree::FileRule frule;
+  // Test values
+  AppArmor::Tree::FileRule frule;
 };
 
 #endif // TEST_SRC_TABS_VIEW_PROFILE_MODIFY_TEST_H

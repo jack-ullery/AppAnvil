@@ -28,9 +28,7 @@ protected:
   void handle_remove_rule(AppArmor::Tree::FileRule &old_rule);
 
 private:
-  const std::vector<ColumnHeader> abstraction_col_names{
-    ColumnHeader("Abstraction", ColumnHeader::ColumnType::STRING)
-  };
+  const std::vector<ColumnHeader> abstraction_col_names{ ColumnHeader("Abstraction", ColumnHeader::ColumnType::STRING) };
 
   const std::vector<ColumnHeader> file_rule_col_names{
     ColumnHeader("Data", ColumnHeader::ColumnType::FILE_RULE_POINTER),
@@ -40,23 +38,26 @@ private:
     ColumnHeader("Link", ColumnHeader::ColumnType::BOOLEAN),
     ColumnHeader("Lock", ColumnHeader::ColumnType::BOOLEAN),
     ColumnHeader("Execute", ColumnHeader::ColumnType::BOOLEAN),
-    ColumnHeader("Execute Type", {
-      {"ix", "Inherit execute"},
-      {"Px", "Discrete Profile execute"},
-      {"Cx", "Transition to Subprofile execute"},
-      {"Ux", "Unconfined execute"},
-    }),
+    ColumnHeader("Execute Type",
+                 {
+                                  { "ix", "Inherit execute" },
+                                  { "Px", "Discrete Profile execute" },
+                                  { "Cx", "Transition to Subprofile execute" },
+                                  { "Ux", "Unconfined execute" },
+                                  }
+                 ),
     ColumnHeader("Advanced", ColumnHeader::ColumnType::STRING),
   };
 
-  enum FILE_RULE_POS {
-    Data  = 0,
-    Path  = 1,
-    Read  = 2,
-    Write = 3,
-    Link  = 4,
-    Lock  = 5,
-    Exec  = 6,
+  enum FILE_RULE_POS
+  {
+    Data      = 0,
+    Path      = 1,
+    Read      = 2,
+    Write     = 3,
+    Link      = 4,
+    Lock      = 5,
+    Exec      = 6,
     Exec_Type = 7,
   };
 
