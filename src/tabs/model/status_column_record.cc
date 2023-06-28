@@ -1,25 +1,32 @@
 #include "status_column_record.h"
 #include "../entries.h"
+#include "combobox_store.h"
 
 #include <gtkmm/box.h>
 #include <gtkmm/cellrenderertext.h>
+#include <gtkmm/cellrenderertoggle.h>
+#include <gtkmm/liststore.h>
 #include <gtkmm/main.h>
 #include <gtkmm/treeiter.h>
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treemodelsort.h>
+#include <iostream>
+#include <libappanvil/tree/FileRule.hh>
 #include <memory>
 #include <sigc++/functors/ptr_fun.h>
+#include <stdexcept>
 #include <tuple>
 #include <vector>
+
+#include <gtkmm.h>
 
 /*
     Public Methods
 */
 std::shared_ptr<StatusColumnRecord> StatusColumnRecord::create(const std::shared_ptr<Gtk::TreeView> &view,
-                                                               const std::shared_ptr<Gtk::ScrolledWindow> &win,
                                                                const std::vector<ColumnHeader> &names)
 {
-  std::shared_ptr<StatusColumnRecord> record{ new StatusColumnRecord(view, win, names) };
+  std::shared_ptr<StatusColumnRecord> record{ new StatusColumnRecord(view, names) };
 
   auto store    = Gtk::TreeStore::create(*record);
   record->store = store;
@@ -37,6 +44,11 @@ void StatusColumnRecord::set_visible_func(const Gtk::TreeModelFilter::SlotVisibl
   filter_model->set_visible_func(filter);
 }
 
+void StatusColumnRecord::set_change_func(const change_function_type &fun)
+{
+  change_fun = fun;
+}
+
 Gtk::TreeRow StatusColumnRecord::new_row()
 {
   return *(store->append());
@@ -47,33 +59,36 @@ Gtk::TreeRow StatusColumnRecord::new_child_row(const Gtk::TreeRow &parent)
   return *(store->append(parent.children()));
 }
 
+Gtk::TreeModel::iterator StatusColumnRecord::get_iter(const Gtk::TreePath &path)
+{
+  return sort_model->get_iter(path);
+}
+
+Gtk::TreeModel::iterator StatusColumnRecord::get_iter(const Glib::ustring &path)
+{
+  return sort_model->get_iter(path);
+}
+
 Gtk::TreeRow StatusColumnRecord::get_row(const Gtk::TreePath &path)
 {
-  return *(sort_model->get_iter(path));
+  auto iter = get_iter(path);
+  if (iter == nullptr) {
+    throw std::runtime_error("get_iter() returned nullptr. This should not happen. If you see this, it is a bug...");
+  }
+  return *iter;
+}
+
+Gtk::TreeRow StatusColumnRecord::get_row(const Glib::ustring &path)
+{
+  auto iter = get_iter(path);
+  if (iter == nullptr) {
+    throw std::runtime_error("get_iter() returned nullptr. This should not happen. If you see this, it is a bug...");
+  }
+  return *iter;
 }
 
 void StatusColumnRecord::clear()
 {
-  // We want to remember the last selected row, so that when data is added, we can select it again if a similar row appears
-  // If a future row has the same string values we treat it the same as this row
-  significant_rows.clear();
-  // Get the currently selected rows (right now the max is one)
-  auto selection = view->get_selection()->get_selected_rows();
-
-  // Add all selected rows to map
-  for (const auto &path : selection) {
-    bool isExpanded = view->row_expanded(path);
-    RowData data(true, isExpanded);
-    significant_rows.insert({ path, data });
-  }
-
-  // Remember the path of every selected or expanded row in the TreeView
-  auto children = sort_model->children();
-  remember_children_rows(children);
-
-  // Remember last position of the ScrolledBar in the ScrolledWindow our TreeView is a member of
-  remember_scrollbar_position();
-
   store->clear();
 }
 
@@ -154,24 +169,13 @@ bool StatusColumnRecord::pid_exists_in_child(unsigned int pid, const Gtk::TreeRo
   return false;
 }
 
-/*
-    Protected Methods
-*/
-StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Status> &tab, const std::vector<ColumnHeader> &names)
-  : StatusColumnRecord(tab->get_view(), tab->get_window(), names)
-{
-}
-
-/*
-    Private Methods
-*/
-StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view,
-                                       const std::shared_ptr<Gtk::ScrolledWindow> &win,
-                                       const std::vector<ColumnHeader> &names)
+StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, const std::vector<ColumnHeader> &names)
   : view{ view },
-    win{ win },
-    filter_fun{ sigc::ptr_fun(&StatusColumnRecord::default_filter) }
+    filter_fun{ sigc::ptr_fun(&StatusColumnRecord::default_filter) },
+    change_fun{ sigc::ptr_fun(&StatusColumnRecord::on_change) }
 {
+  view->set_activate_on_single_click(true);
+
   for (uint i = 0; i < names.size(); i++) {
     std::unique_ptr<Gtk::TreeModelColumnBase> column_base;
 
@@ -179,6 +183,14 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
       case ColumnHeader::STRING: {
         // Add a visible column, and title it using the string from 'names'
         auto model_column = Gtk::TreeModelColumn<std::string>();
+        add(model_column);
+        view->append_column(names[i].name, model_column);
+        column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
+      } break;
+
+      case ColumnHeader::BOOLEAN: {
+        // Add a visible column, and title it using the string from 'names'
+        auto model_column = Gtk::TreeModelColumn<bool>();
         add(model_column);
         view->append_column(names[i].name, model_column);
         column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
@@ -193,7 +205,7 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
       } break;
 
       case ColumnHeader::PROFILE_ENTRY: {
-        // Add a visible column, and title it using the string from 'names'
+        // Add an invisible column, and title it using the string from 'names'
         auto model_column = Gtk::TreeModelColumn<ProfileTableEntry>();
         add(model_column);
         view->append_column(names[i].name, model_column);
@@ -201,7 +213,7 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
       } break;
 
       case ColumnHeader::PROCESS_ENTRY: {
-        // Add a visible column, and title it using the string from 'names'
+        // Add an invisible column, and title it using the string from 'names'
         auto model_column = Gtk::TreeModelColumn<ProcessTableEntry>();
         add(model_column);
         view->append_column(names[i].name, model_column);
@@ -209,8 +221,23 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
       } break;
 
       case ColumnHeader::LOG_ENTRY: {
-        // Add a visible column, and title it using the string from 'names'
+        // Add an invisible column, and title it using the string from 'names'
         auto model_column = Gtk::TreeModelColumn<LogTableEntry>();
+        add(model_column);
+        view->append_column(names[i].name, model_column);
+        column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
+      } break;
+
+      case ColumnHeader::FILE_RULE_POINTER: {
+        // Add an invisible column, and title it using the string from 'names'
+        auto model_column = Gtk::TreeModelColumn<std::shared_ptr<AppArmor::Tree::FileRule>>();
+        add(model_column);
+        view->append_column(names[i].name, model_column);
+        column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
+      } break;
+
+      case ColumnHeader::COMBO_BOX: {
+        auto model_column = Gtk::TreeModelColumn<std::string>();
         add(model_column);
         view->append_column(names[i].name, model_column);
         column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
@@ -220,17 +247,22 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
     // Set some default settings for the columns
     // Note this a Gtk::TreeViewColumn which is different then the Gtk::TreeModelColumn which we use earlier
     auto *column_view = view->get_column(static_cast<int>(i));
-    column_view->set_reorderable();
+
+    if (column_view == nullptr) {
+      std::cerr << "Could not create column (" << i << ") with header: " << names[i].name << std::endl;
+      continue;
+    }
+
+    column_view->set_reorderable(false);
     column_view->set_resizable();
     column_view->set_min_width(MIN_COL_WIDTH);
     column_view->set_sort_column(*column_base);
 
     if (names[i].type == ColumnHeader::PROFILE_ENTRY || names[i].type == ColumnHeader::PROCESS_ENTRY ||
-        names[i].type == ColumnHeader::LOG_ENTRY) {
+        names[i].type == ColumnHeader::LOG_ENTRY || names[i].type == ColumnHeader::FILE_RULE_POINTER) {
       // Create a custom cell renderer which shows nothing for these entries
-      // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
-      Gtk::CellRenderer *renderer = Gtk::manage(new Gtk::CellRendererText());
-      auto callback_fun           = sigc::ptr_fun(&StatusColumnRecord::ignore_cell_render);
+      auto *renderer    = Gtk::make_managed<Gtk::CellRendererText>();
+      auto callback_fun = sigc::ptr_fun(&StatusColumnRecord::ignore_cell_render);
 
       column_view->clear();
       column_view->pack_start(*renderer, false);
@@ -238,89 +270,76 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
 
       // Make this row invisible
       column_view->set_visible(false);
-    }
-  }
-}
+    } else if (names[i].type == ColumnHeader::BOOLEAN) {
+      // Ensure that the togglebutton actually toggles when clicked
+      auto *renderer = dynamic_cast<Gtk::CellRendererToggle *>(column_view->get_first_cell());
 
-void StatusColumnRecord::remember_scrollbar_position()
-{
-  // Remember last position of the ScrolledBar in the ScrolledWindow our TreeView is a member of
-  last_vadjustment_value = win->get_vadjustment()->get_value();
-  last_hadjustment_value = win->get_hadjustment()->get_value();
-}
+      if (renderer != nullptr) {
+        renderer->set_activatable(true);
+        renderer->set_sensitive(true);
 
-void StatusColumnRecord::reset_scrollbar_position()
-{
-  // Adjust the ScrolledWindow to its previous position
-  while (Gtk::Main::events_pending()) {
-    Gtk::Main::iteration();
-  }
+        // Function that is caled when togglebutton is clicked
+        auto lambda = [this, i](const std::string &path) -> void {
+          auto iter = get_iter(path);
 
-  win->get_vadjustment()->set_value(last_vadjustment_value);
-  win->get_hadjustment()->set_value(last_hadjustment_value);
-}
+          bool value;
+          iter->get_value(i, value);
+          iter->set_value(i, !value);
 
-void StatusColumnRecord::remember_children_rows(const Gtk::TreeModel::Children &children)
-{
-  for (const auto &row : children) {
-    // Get the path
-    Gtk::TreePath path = sort_model->get_path(row);
-    // If the row is expanded, and not contained in the map
-    bool isExpanded = view->row_expanded(path);
-    bool exists     = significant_rows.find(path) != significant_rows.end();
-    if (isExpanded && !exists) {
-      // Add data to the map
-      RowData data(false, isExpanded);
-      significant_rows.insert({ path, data });
-    }
-
-    // Do the same for this row's children
-    remember_children_rows(row.children());
-  }
-}
-
-void StatusColumnRecord::reselect_children_rows(const Gtk::TreeModel::Children &children)
-{
-  for (const auto &row : children) {
-    // Get the path
-    Gtk::TreePath path = sort_model->get_path(row);
-
-    // If this row has the same data as the previously selected row (when this ColumnRecord was last cleared), then select it
-    auto row_pair = significant_rows.find(path);
-    if (row_pair != significant_rows.end()) {
-      auto row_data = row_pair->second;
-
-      // If row was selected
-      if (row_data.isSelected) {
-        auto selection = view->get_selection();
-        selection->select(path);
+          change_fun(path);
+        };
+        renderer->signal_toggled().connect(lambda);
       }
+    } else if (names[i].type == ColumnHeader::COMBO_BOX) {
+      auto *renderer = Gtk::make_managed<Gtk::CellRendererCombo>();
 
-      // If row was expanded
-      if (row_data.isExpanded) {
-        view->expand_to_path(path);
-      }
+      column_view->clear();
+      column_view->pack_start(*renderer);
+      column_view->add_attribute(renderer->property_text(), *column_base);
 
-      // Do the same for this row's children
-      reselect_children_rows(row.children());
+      Glib::RefPtr<Gtk::ListStore> combobox_options = ComboboxStore::create(names[i].combobox_options);
+
+      renderer->property_model()       = combobox_options;
+      renderer->property_text_column() = 0;
+      renderer->property_editable()    = true;
+
+      // Called when a user changes the combobox
+      auto lambda = [&, i](const Glib::ustring &path_string, const Glib::ustring &new_text) -> void {
+        on_combobox_edited(path_string, new_text, i);
+      };
+
+      renderer->signal_edited().connect(lambda);
     }
   }
 }
 
-void StatusColumnRecord::reselect_rows()
-{
-  // Reselect/reexpand every row in the TreeView, if it was selected or expanded before
-  auto children = sort_model->children();
-  reselect_children_rows(children);
-
-  // Adjust the ScrolledWindow to its previous position
-  reset_scrollbar_position();
-}
-
+/*
+    Private Methods
+*/
 bool StatusColumnRecord::default_filter(const Gtk::TreeModel::iterator &node)
 {
   std::ignore = node;
   return true;
+}
+
+void StatusColumnRecord::on_change(const std::string &node)
+{
+  std::ignore = node;
+}
+
+void StatusColumnRecord::on_combobox_edited(const Glib::ustring &path_string, const Glib::ustring &new_text, int col)
+{
+  Gtk::TreePath path(path_string);
+
+  // Get the row from the path
+  auto iter = get_iter(path);
+  if (iter) {
+    // Store the user's new text in the model
+    iter->set_value(col, new_text);
+
+    // Call the change_fun() because the row was manually edited
+    this->change_fun(path_string);
+  }
 }
 
 void StatusColumnRecord::ignore_cell_render(Gtk::CellRenderer *renderer, const Gtk::TreeIter &iter)

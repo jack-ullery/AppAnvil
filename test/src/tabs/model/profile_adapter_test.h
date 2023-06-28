@@ -15,7 +15,7 @@ protected:
   ProfileAdapterTest()
     : database{ new Database() },
       status{ new Status() },
-      adapter(database, status->get_view(), status->get_window())
+      adapter(database, status->get_view())
   {
   }
 

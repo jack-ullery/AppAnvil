@@ -33,12 +33,10 @@ public:
   void refresh();
 
 protected:
-  typedef typename std::list<std::shared_ptr<LogRecord>>::const_iterator record_iter;
-
   // TODO(maybe remove): This removes quotes from data (which we may not need to do anymore)
   static std::string format_log_data(const std::string &data);
 
-  bool add_data_to_record_helper(const record_iter &begin, const record_iter &end);
+  bool add_data_to_record_helper(std::shared_ptr<std::list<std::shared_ptr<LogRecord>>> data);
   void add_row(const std::shared_ptr<LogRecord> &record);
 
 private:

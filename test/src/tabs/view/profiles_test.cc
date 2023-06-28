@@ -163,18 +163,20 @@ TEST_F(ProfilesTest, CHANGE_STATUS_ROW_SELECTED)
 TEST_F(ProfilesTest, SHOW_PROFILE_INFO_MAKES_CHANGE_TOGGLE_VISIBLE)
 {
   ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) << "This toggle should always be visible";
-
   ASSERT_FALSE(pc.p_change_state_toggle->get_sensitive()) << "This toggle should not be enabled by default";
-
   ASSERT_FALSE(pc.p_change_state_toggle->get_active()) << "This toggle should not be active by default";
 
-  // This should make the toggle visible
+  // Create and select a row
+  auto profile_name = "Test_Profile_Name";
+  auto old_status   = "fake_status";
+  auto store        = initialize_store();
+  create_and_select_row(store, profile_name, old_status);
+
+  // This should make the toggle visible, since a row is selected
   pc.show_profile_info();
 
   ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) << "This toggle should always be visible";
-
   ASSERT_TRUE(pc.p_change_state_toggle->get_sensitive()) << "This toggle should be enabled after `show_profile_info()` is called";
-
   ASSERT_FALSE(pc.p_change_state_toggle->get_active()) << "This toggle should be active after `show_profile_info()` is called";
 }
 
@@ -287,13 +289,11 @@ TEST_F(ProfilesTest, NO_SIMULTANEOUS_TOGGLE_PRESS_TWO)
 
 TEST_F(ProfilesTest, SET_PROFILE_INFO)
 {
-  std::string logs_str       = "Example string for logs label";
-  std::string permission_str = "Example string for permissions label";
-  std::string processes_str  = "Example string for processes label";
+  std::string logs_str      = "Example string for logs label";
+  std::string processes_str = "Example string for processes label";
 
-  pc.set_profile_info(logs_str, permission_str, processes_str);
+  pc.set_profile_info(logs_str, processes_str);
 
   ASSERT_EQ(logs_str, std::string(pc.p_num_log_label->get_text()));
-  ASSERT_EQ(permission_str, std::string(pc.p_num_perm_label->get_text()));
   ASSERT_EQ(processes_str, std::string(pc.p_num_proc_label->get_text()));
 }

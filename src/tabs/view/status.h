@@ -20,6 +20,7 @@ class Status : public Gtk::ScrolledWindow
 {
 public:
   Status();
+  ~Status();
 
   /**
    * @brief Return the TreeView associated with this class.

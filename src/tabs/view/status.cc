@@ -66,8 +66,6 @@ Status::Status(const std::string &glade_resource)
     s_whole_word{ Common::get_widget<Gtk::CheckButton>("s_whole_word", builder) },
     s_found_label{ Common::get_widget<Gtk::Label>("s_found_label", builder) }
 {
-  s_view->set_activate_on_single_click(true);
-
   s_win->set_shadow_type(Gtk::ShadowType::SHADOW_NONE);
   s_win->set_policy(Gtk::PolicyType::POLICY_AUTOMATIC, Gtk::PolicyType::POLICY_AUTOMATIC);
   s_win->set_hexpand();
@@ -83,4 +81,12 @@ Status::Status(const std::string &glade_resource)
 Status::Status()
   : Status("/resources/status.glade")
 {
+}
+
+Status::~Status()
+{
+  // This stops a segfault
+  //   (I believe this object might be freed twice somehow)
+  // TODO(builder-leakage): Check that this object is actually deleted and freed
+  std::ignore = builder.release();
 }

@@ -3,21 +3,23 @@ cmake_minimum_required (VERSION 3.16.3)
 
 set(
   TEST_SOURCES
-  ./src/test_runner.cc
-  ./src/tabs/controller/logs_controller_test.cc
-  ./src/tabs/controller/status_controller_test.cc
-  ./src/tabs/model/log_adapter_test.cc
-  ./src/tabs/model/process_adapter_test.cc
-  ./src/tabs/model/profile_adapter_test.cc
-  ./src/tabs/view/status_test.cc
-  ./src/tabs/view/profiles_test.cc
-  ./src/threads/command_caller.cc
-  ./src/threads/dispatcher_middleman.cc
-  ./src/threads/blocking_queue.cc
-  ./aa-caller/aa-caller.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/test_runner.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/tabs/controller/logs_controller_test.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/tabs/controller/status_controller_test.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/tabs/model/log_adapter_test.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/tabs/model/process_adapter_test.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/tabs/model/profile_adapter_test.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/tabs/view/status_test.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/tabs/view/profiles_test.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/tabs/view/profile_modify_test.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/threads/command_caller.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/threads/dispatcher_middleman.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/threads/blocking_queue.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/aa-caller/aa-caller.cc
 )
 
-set(REPORT_FILES_DIR ${CMAKE_SOURCE_DIR}/test/CMakeFiles/${TEST_NAME}.dir)
+set(REPORT_FILES_DIR ${CMAKE_BINARY_DIR}/test/CMakeFiles/${TEST_NAME}.dir)
+set(EXAMPLE_PROFILE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/example_profiles)
 
 #====================================
 
@@ -28,13 +30,18 @@ pkg_check_modules(GTKMM gtkmm-3.0)
 
 pkg_check_modules(GTEST gtest)
 pkg_check_modules(GMOCK gmock)
+pkg_check_modules(LIBAPPANVIL REQUIRED libappanvil)
 
 if(${GTEST_FOUND} AND ${GMOCK_FOUND})
   message(STATUS "Adding unit tests to build")
 
   add_custom_command(
     OUTPUT ${RESOURCE_BUNDLE_OUTPUT}
-    COMMAND glib-compile-resources --target=${RESOURCE_BUNDLE_OUTPUT} --generate-source ${XML_GRESOURCE}
+    COMMAND glib-compile-resources
+              --target=${RESOURCE_BUNDLE_OUTPUT}
+              --sourcedir=${CMAKE_SOURCE_DIR}
+              --generate-source
+              ${XML_GRESOURCE}
     DEPENDS ${XML_GRESOURCE} ${GLADE_RESOURCES} 
     COMMENT "Generating Glib Resource Bundle."
     VERBATIM
@@ -62,9 +69,14 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
   # Define the "TESTS_ENABLED" preprocessor flag for the "test" target
   target_compile_definitions(${TEST_NAME} PUBLIC -DTESTS_ENABLED)
 
+  # Set the location of profiles as a global variable for the tests
+  target_compile_definitions(${TEST_NAME} PUBLIC -DEXAMPLE_PROFILE_SOURCE_DIR="${EXAMPLE_PROFILE_SOURCE_DIR}")
+
   target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
   target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${LIBAPPARMOR_INCLUDE_DIRS})
   target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${JSONCPP_INCLUDE_DIRS})
+  target_include_directories(${TEST_NAME} SYSTEM PUBLIC ${LIBAPPANVIL_INCLUDE_DIRS})
+  target_include_directories(${TEST_NAME} PRIVATE ${PROJECT_SOURCE_DIR})
 
   target_link_libraries(${TEST_NAME} PUBLIC gtest)
   target_link_libraries(${TEST_NAME} PUBLIC gmock)
@@ -74,6 +86,7 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
   target_link_libraries(${TEST_NAME} PUBLIC ${GTKMM_LIBRARIES})
   target_link_libraries(${TEST_NAME} PUBLIC ${LIBAPPARMOR_LIBRARIES})
   target_link_libraries(${TEST_NAME} PUBLIC "aa-caller_dev")
+  target_link_libraries(${TEST_NAME} PUBLIC ${LIBAPPANVIL_LIBRARIES})
 
   # Create target "report", which should run the unit-tests and generate a code coverage report  
   add_custom_target(

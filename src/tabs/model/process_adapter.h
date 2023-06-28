@@ -16,7 +16,7 @@ class ProcessAdapter
 {
 public:
   // Initializes the database adapter
-  ProcessAdapter(std::shared_ptr<Database> db, const std::shared_ptr<Gtk::TreeView> &view, const std::shared_ptr<Gtk::ScrolledWindow> &win);
+  ProcessAdapter(std::shared_ptr<Database> db, const std::shared_ptr<Gtk::TreeView> &view);
 
   // For unit-tests
   ProcessAdapter(std::shared_ptr<Database> db, std::shared_ptr<ColumnRecord> mock);

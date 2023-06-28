@@ -1,7 +1,9 @@
 #ifndef TABS_PROFILES_H
 #define TABS_PROFILES_H
 
+#include "../controller/profile_modify_controller.h"
 #include "profile_loader.h"
+#include "profile_modify.h"
 #include "status.h"
 
 #include <gtkmm/box.h>
@@ -28,7 +30,7 @@ public:
    */
   void set_apply_label_text(const std::string &str);
 
-  void set_profile_info(const std::string &num_logs, const std::string &num_perms, const std::string &num_procs);
+  void set_profile_info(const std::string &num_logs, const std::string &num_procs);
 
   void show_profile_info();
   void hide_profile_info();
@@ -40,6 +42,7 @@ protected:
 
   void handle_load_profile_toggle();
   void handle_change_state_toggle();
+  void handle_modify_profile_toggle();
 
 private:
   sigc::slot<void(std::string, std::string, std::string)> profile_status_change_fun;
@@ -49,6 +52,7 @@ private:
 
   std::unique_ptr<Gtk::ToggleButton> p_change_state_toggle;
   std::unique_ptr<Gtk::ToggleButton> p_load_profile_toggle;
+  std::unique_ptr<Gtk::ToggleButton> p_modify_profile_toggle;
 
   std::unique_ptr<Gtk::Stack> p_stack;
   std::unique_ptr<Gtk::Box> p_state_selection_box;
@@ -59,10 +63,13 @@ private:
   std::unique_ptr<Gtk::Box> p_profile_info;
   std::unique_ptr<Gtk::Label> p_num_log_label;
   std::unique_ptr<Gtk::Label> p_num_proc_label;
-  std::unique_ptr<Gtk::Label> p_num_perm_label;
 
-  // Profile Loader page, which is added to the stack
+  // Additional pages, which are added to the stack
   std::unique_ptr<ProfileLoader> loader;
+  std::map<std::string, std::shared_ptr<ProfileModifyController>> modifiers;
+
+  // Map of all known profiles
+  std::map<std::string, std::pair<AppArmor::Parser, AppArmor::Profile>> profile_map;
 
 #ifdef TESTS_ENABLED
   FRIEND_TEST(ProfilesTest, CHECK_APPLY_LABEL_TEXT);

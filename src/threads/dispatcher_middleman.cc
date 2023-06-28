@@ -17,7 +17,7 @@ template<class Profiles, class Processes, class Logs, class Dispatcher, class Mu
 DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::DispatcherMiddleman(std::shared_ptr<Profiles> prof_arg,
                                                                                        std::shared_ptr<Processes> proc_arg,
                                                                                        std::shared_ptr<Logs> logs_arg)
-  : dispatch{ new Dispatcher() },
+  : dispatch{ std::make_shared<Dispatcher>() },
     prof{ std::move(prof_arg) },
     proc{ std::move(proc_arg) },
     logs{ std::move(logs_arg) }

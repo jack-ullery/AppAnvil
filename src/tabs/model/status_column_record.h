@@ -4,6 +4,7 @@
 #include "../column_header.h"
 #include "../view/status.h"
 
+#include <gtkmm/cellrenderercombo.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/treeiter.h>
 #include <gtkmm/treemodel.h>
@@ -32,9 +33,7 @@ public:
    *
    * @returns std::shared_ptr refrencing a new StatusColumnRecord object.
    */
-  static std::shared_ptr<StatusColumnRecord> create(const std::shared_ptr<Gtk::TreeView> &view,
-                                                    const std::shared_ptr<Gtk::ScrolledWindow> &win,
-                                                    const std::vector<ColumnHeader> &names);
+  static std::shared_ptr<StatusColumnRecord> create(const std::shared_ptr<Gtk::TreeView> &view, const std::vector<ColumnHeader> &names);
 
   /**
    * @brief Sets the callback function which specifies whether a row should be visible
@@ -47,6 +46,18 @@ public:
    * @param filter, The callback function to use
    */
   void set_visible_func(const Gtk::TreeModelFilter::SlotVisible &filter);
+
+  /**
+   * @brief Sets the callback function which is called whenever a row is edited by the user
+   *
+   * @details
+   * Sets the callback function which is called whenever a row is edited by the user.
+   * This function is called whevener a user toggles a button, or changes a ComboBox.
+   *
+   * @param fun, the callback function to use
+   */
+  typedef sigc::slot<void, const std::string &> change_function_type;
+  void set_change_func(const change_function_type &fun);
 
   /**
    * @brief Creates and returns a new TreeRow in the table.
@@ -71,6 +82,14 @@ public:
   Gtk::TreeRow new_child_row(const Gtk::TreeRow &parent);
 
   /**
+   * @brief Removes all rows from the table.
+   *
+   * @details
+   * Removes all rows from the underlying TreeStore, emptying the table.
+   */
+  void clear();
+
+  /**
    * @brief Gets the TreeRow in the table which is the child of another TreeRow.
    *
    * @details
@@ -81,11 +100,10 @@ public:
    * @returns A new TreeRow from the table.
    */
   Gtk::TreeRow get_row(const Gtk::TreePath &path);
+  Gtk::TreeRow get_row(const Glib::ustring &path);
 
-  /**
-   * @brief Deletes all rows in the StatusColumnRecord.
-   */
-  void clear();
+  Gtk::TreeModel::iterator get_iter(const Gtk::TreePath &path);
+  Gtk::TreeModel::iterator get_iter(const Glib::ustring &path);
 
   /**
    * @brief Set the visibility all the rows in the ColumnRecord.
@@ -99,13 +117,16 @@ public:
    */
   uint filter_rows();
 
-  void reselect_rows();
   Gtk::TreeRow get_parent_by_pid(unsigned int pid);
   Gtk::TreeRow get_parent_by_pid(unsigned int pid, const Gtk::TreeRow &parent);
   bool pid_exists_in_child(unsigned int pid, const Gtk::TreeRow &parent);
 
 protected:
+  // Used by unit-test, the create() method should be used in production code
   StatusColumnRecord(const std::shared_ptr<Status> &tab, const std::vector<ColumnHeader> &names);
+
+  // Called during the create() method, does not initialize certain fields
+  explicit StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, const std::vector<ColumnHeader> &names);
 
 private:
   struct RowData
@@ -120,31 +141,22 @@ private:
     }
   };
 
-  explicit StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view,
-                              const std::shared_ptr<Gtk::ScrolledWindow> &win,
-                              const std::vector<ColumnHeader> &names);
   Glib::RefPtr<Gtk::TreeStore> store;
   std::shared_ptr<Gtk::TreeView> view;
-
-  std::shared_ptr<Gtk::ScrolledWindow> win;
 
   Glib::RefPtr<Gtk::TreeModelFilter> filter_model;
   Glib::RefPtr<Gtk::TreeModelSort> sort_model;
   Gtk::TreeModelFilter::SlotVisible filter_fun;
-
-  // Used when remembering the state of the ColumnRecord when it is reset
-  std::map<Gtk::TreePath, RowData> significant_rows;
-  double last_vadjustment_value = 0;
-  double last_hadjustment_value = 0;
-
-  void remember_scrollbar_position();
-  void reset_scrollbar_position();
-
-  void remember_children_rows(const Gtk::TreeModel::Children &children);
-  void reselect_children_rows(const Gtk::TreeModel::Children &children);
+  change_function_type change_fun;
 
   // Unless `set_visible_func` is called, this filter sets every row in the ColumnRecord to be visible when filtered
   static bool default_filter(const Gtk::TreeModel::iterator &node);
+
+  // Unless `set_change_func` is called, this function does nothing
+  static void on_change(const std::string &node);
+
+  // Handles changing a combobox value in a row
+  void on_combobox_edited(const Glib::ustring &path_string, const Glib::ustring &new_text, int col);
 
   // Ignores the parameter and returns an empty string
   // This is used by the cell renderer of columns we do not want to view

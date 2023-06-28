@@ -21,6 +21,7 @@ The AppAnvil project aims to create an intuitive graphical interface for monitor
 * GTKmm
 * JsonCpp
 * libapparmor
+* [libappanvil](https://github.com/jack-ullery/libappanvil)
 * apparmor-utils
 
 #### Install commands (Ubuntu)

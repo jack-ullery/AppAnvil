@@ -21,12 +21,9 @@
 class StatusColumnRecordMock
 {
 public:
-  static std::shared_ptr<StatusColumnRecordMock> create(const std::shared_ptr<Gtk::TreeView> &view,
-                                                        const std::shared_ptr<Gtk::ScrolledWindow> &win,
-                                                        const std::vector<ColumnHeader> &names)
+  static std::shared_ptr<StatusColumnRecordMock> create(const std::shared_ptr<Gtk::TreeView> &view, const std::vector<ColumnHeader> &names)
   {
     std::ignore = view;
-    std::ignore = win;
     std::ignore = names;
     return nullptr;
   }
@@ -38,9 +35,7 @@ public:
   MOCK_METHOD(void, set_visible_func, (const Gtk::TreeModelFilter::SlotVisible &filter));
   MOCK_METHOD(Gtk::TreeRow, new_row, ());
   MOCK_METHOD(Gtk::TreeRow, new_child_row, (const Gtk::TreeRow &parent));
-  MOCK_METHOD(void, clear, ());
   MOCK_METHOD(uint, filter_rows, ());
-  MOCK_METHOD(void, reselect_rows, ());
   MOCK_METHOD(Gtk::TreeRow, get_parent_by_pid, (unsigned int pid, const Gtk::TreeRow &parent));
   MOCK_METHOD(Gtk::TreeRow, get_parent_by_pid, (unsigned int pid));
 

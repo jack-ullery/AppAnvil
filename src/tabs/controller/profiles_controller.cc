@@ -49,8 +49,7 @@ void ProfilesController<ProfilesTab, Database, Adapter>::handle_profile_selected
 
     uint num_log  = adapter.get_number_logs(entry.profile_name);
     uint num_proc = adapter.get_number_processes(entry.profile_name);
-    prof->set_profile_info(
-      std::to_string(num_log) + " related logs", "Not implemented yet!", std::to_string(num_proc) + " running processes");
+    prof->set_profile_info(std::to_string(num_log) + " related logs", std::to_string(num_proc) + " running processes");
 
     prof->show_profile_info();
   } else {
@@ -93,7 +92,7 @@ template<class ProfilesTab, class Database, class Adapter>
 ProfilesController<ProfilesTab, Database, Adapter>::ProfilesController(std::shared_ptr<Database> database)
   : StatusController<ProfilesTab>(),
     prof{ StatusController<ProfilesTab>::get_tab() },
-    adapter(database, prof->get_view(), prof->get_window())
+    adapter(database, prof->get_view())
 {
   auto func = sigc::mem_fun(*this, &ProfilesController<ProfilesTab, Database, Adapter>::refresh);
   prof->set_refresh_signal_handler(func);
@@ -107,8 +106,6 @@ ProfilesController<ProfilesTab, Database, Adapter>::ProfilesController(std::shar
 
   auto key_event_fun = sigc::mem_fun(*this, &ProfilesController::on_key_event);
   prof->get_view()->signal_key_release_event().connect(key_event_fun, true);
-
-  prof->get_view()->set_activate_on_single_click(true);
 }
 
 // Used to avoid linker errors

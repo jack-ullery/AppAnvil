@@ -1,0 +1,8 @@
+profile test1 {
+  #include <includes/base>
+  #include <includes/bash>
+
+  /tmp/filepath/first r,
+  /tmp/filepath/second rwix,
+  /var/log/syslog r,
+}

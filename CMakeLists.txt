@@ -16,12 +16,14 @@ set(
   ${PROJECT_SOURCE_DIR}/threads/log_record.cc
   ${PROJECT_SOURCE_DIR}/threads/log_reader.cc
   ${PROJECT_SOURCE_DIR}/tabs/model/database.cc
+  ${PROJECT_SOURCE_DIR}/tabs/model/combobox_store.cc
   ${PROJECT_SOURCE_DIR}/tabs/model/status_column_record.cc
   ${PROJECT_SOURCE_DIR}/tabs/model/profile_adapter.cc
   ${PROJECT_SOURCE_DIR}/tabs/model/process_adapter.cc
   ${PROJECT_SOURCE_DIR}/tabs/model/log_adapter.cc
   ${PROJECT_SOURCE_DIR}/tabs/controller/status_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/controller/profiles_controller.cc
+  ${PROJECT_SOURCE_DIR}/tabs/controller/profile_modify_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/controller/processes_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/controller/logs_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/status.cc
@@ -29,6 +31,7 @@ set(
   ${PROJECT_SOURCE_DIR}/tabs/view/processes.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/logs.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/profile_loader.cc
+  ${PROJECT_SOURCE_DIR}/tabs/view/profile_modify.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/help.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/info_box.cc
 )
@@ -111,13 +114,16 @@ endif()
 
 #### Include GTKmm Libraries ####
 find_package(PkgConfig)
-pkg_check_modules(GTKMM gtkmm-3.0)
+pkg_check_modules(GTKMM REQUIRED gtkmm-3.0)
 
 #### Include jsoncpp libraries ####
-pkg_check_modules(JSONCPP jsoncpp)
+pkg_check_modules(JSONCPP REQUIRED jsoncpp)
 
-#### Libapparmor used for parsing kernel logs ####
-pkg_check_modules(LIBAPPARMOR libapparmor)
+#### libapparmor used for parsing kernel logs ####
+pkg_check_modules(LIBAPPARMOR REQUIRED libapparmor)
+
+#### libappanvil custom library for parsing/editing profiles ####
+pkg_check_modules(LIBAPPANVIL REQUIRED libappanvil)
 
 #### Package the .gresource.xml resource bundle ####
 
@@ -132,6 +138,7 @@ execute_process(
 
 # This ensures that ${GLADE_RESOURCES} uses semicolons instead of newline characters as seperators
 string(REGEX REPLACE "\n" ";" GLADE_RESOURCES "${GLADE_RESOURCES}")
+string(REGEX REPLACE "resources/" "${PROJECT_RESOURCE_DIR}/" GLADE_RESOURCES "${GLADE_RESOURCES}")
 
 # If glib-compile-resources did not complete succesfully, throw a fatal error
 if (NOT GLIB_RETURN_VALUE EQUAL 0)
@@ -156,7 +163,9 @@ include_directories(
 )
 
 #### Set Compiler Options ####
-set(CMAKE_CXX_FLAGS " -Wall -Wextra")
+set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -fPIE")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+set(CMAKE_CXX_STANDARD 20)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dist)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lib)
@@ -170,10 +179,12 @@ add_executable(${PROJECT_NAME} ${RESOURCE_BUNDLE_OUTPUT} ${SOURCES} ${PROJECT_SO
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${LIBAPPARMOR_INCLUDE_DIRS})
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${JSONCPP_INCLUDE_DIRS})
+target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${LIBAPPANVIL_INCLUDE_DIRS})
 
 target_link_libraries(${PROJECT_NAME} PUBLIC ${GTKMM_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${LIBAPPARMOR_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${JSONCPP_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${LIBAPPANVIL_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} PUBLIC pthread)
 
 pkg_check_modules(GTEST gtest)

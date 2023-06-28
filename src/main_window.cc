@@ -6,12 +6,12 @@
 #include <tuple>
 
 MainWindow::MainWindow()
-  : database{ new Database() },
-    prof_control{ new ProfilesControllerInstance(database) },
-    proc_control{ new ProcessesControllerInstance(database) },
-    logs_control{ new LogsControllerInstance(database) },
-    help{ new Help() },
-    console{ new ConsoleThreadInstance(prof_control, proc_control, logs_control) }
+  : database{ std::make_shared<Database>() },
+    prof_control{ std::make_shared<ProfilesControllerInstance>(database) },
+    proc_control{ std::make_shared<ProcessesControllerInstance>(database) },
+    logs_control{ std::make_shared<LogsControllerInstance>(database) },
+    help{ std::make_shared<Help>() },
+    console{ std::make_shared<ConsoleThreadInstance>(prof_control, proc_control, logs_control) }
 {
   // Add tabs to the stack pane
   m_tab_stack.add(*(prof_control->get_tab()), "prof", "Profiles");

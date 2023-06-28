@@ -1,6 +1,8 @@
 #ifndef SRC_THREADS_COMMAND_CALLER
 #define SRC_THREADS_COMMAND_CALLER
 
+#include <libappanvil/apparmor_parser.hh>
+#include <map>
 #include <string>
 #include <vector>
 
@@ -59,11 +61,25 @@ public:
   static std::string execute_change(const std::string &profile, const std::string &old_status, const std::string &new_status);
 
   /*
-    loadprofile
+    loads a profile given its file name, puts it into enforce mode
   */
   static std::string load_profile(const std::string &fullFileName);
 
   static std::string disable_profile(const std::string &profileName);
+
+  // Attempt to locate the profile in possible locations
+  static std::string locate_profile(
+    const std::string &profile,
+    const std::initializer_list<std::string> &possible_profile_locations = { "/etc/apparmor.d/", "/var/lib/snapd/apparmor/profiles/" });
+
+  // Gets a vector of abstractions located at a path (default "/etc/apparmor.d")
+  static std::vector<std::string> get_abstractions(const std::string &path = "/etc/apparmor.d/abstractions");
+
+  // Returns a map (indexed by profile name) for each AppArmor::Profile (and its corresponding AppArmor::Parser) found at certain
+  // directories This function attempts to parse every file at specified locations to search for profiles
+  typedef std::pair<AppArmor::Parser, AppArmor::Profile> parser_profile_pair;
+  static std::map<std::string, parser_profile_pair> get_profiles(
+    const std::initializer_list<std::string> &possible_profile_locations = { "/etc/apparmor.d/", "/var/lib/snapd/apparmor/profiles/" });
 
 protected:
   struct results
@@ -86,9 +102,6 @@ protected:
                                     const std::string &profile,
                                     const std::string &old_status,
                                     const std::string &new_status);
-
-  // Helper function
-  static bool file_exists(const std::string &location);
 
 #ifdef TESTS_ENABLED
   FRIEND_TEST(CommandCallerTest, TEST_UNCONF);

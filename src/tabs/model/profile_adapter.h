@@ -15,7 +15,7 @@ class ProfileAdapter
 {
 public:
   // Initializes the database adapter
-  ProfileAdapter(std::shared_ptr<Database> db, const std::shared_ptr<Gtk::TreeView> &view, const std::shared_ptr<Gtk::ScrolledWindow> &win);
+  ProfileAdapter(std::shared_ptr<Database> db, const std::shared_ptr<Gtk::TreeView> &view);
 
   void put_data(const std::string &profile_name, const std::string &status);
   std::pair<ProfileTableEntry, bool> get_data(const std::string &profile_name);

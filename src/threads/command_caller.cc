@@ -1,5 +1,7 @@
 #include "command_caller.h"
 
+#include <filesystem>
+#include <fstream>
 #include <glibmm/spawn.h>
 #include <iostream>
 #include <stdexcept>
@@ -76,11 +78,17 @@ std::string CommandCaller::disable_profile(CommandCaller *caller, const std::str
   return "Success: disabling porfile" + profileName;
 }
 
-bool CommandCaller::file_exists(const std::string &location)
+std::string CommandCaller::locate_profile(const std::string &profile, const std::initializer_list<std::string> &possible_profile_locations)
 {
-  struct stat buffer
-  {};
-  return (stat(location.c_str(), &buffer) == 0);
+  for (const std::string &location : possible_profile_locations) {
+    bool exists = std::filesystem::exists(location + profile);
+
+    if (exists) {
+      return location;
+    }
+  }
+
+  return "";
 }
 
 std::string CommandCaller::execute_change(CommandCaller *caller,
@@ -107,17 +115,7 @@ std::string CommandCaller::execute_change(CommandCaller *caller,
   }
 
   // Attempt to locate the profile in possible locations
-  const std::vector<std::string> possible_profile_locations{ "/etc/apparmor.d/", "/var/lib/snapd/apparmor/profiles/" };
-  std::string profile_location;
-
-  for (const std::string &location : possible_profile_locations) {
-    bool exists = file_exists(location + profile);
-
-    if (exists) {
-      profile_location = location;
-      break;
-    }
-  }
+  std::string profile_location = locate_profile(profile);
 
   // command to change the profile to the provided status
   std::vector<std::string> command = { "pkexec", status_command, "-d", profile_location, profile };
@@ -159,4 +157,53 @@ std::string CommandCaller::execute_change(const std::string &profile, const std:
 {
   CommandCaller caller;
   return execute_change(&caller, profile, old_status, new_status);
+}
+
+// TODO(multiple-locations) handle different abstractions in multiple profile locations
+std::vector<std::string> CommandCaller::get_abstractions(const std::string &path)
+{
+  std::vector<std::string> found = {};
+
+  auto dir_iter = std::filesystem::directory_iterator(path);
+  for (const auto &entry : dir_iter) {
+    auto abstraction = entry.path().filename();
+    found.push_back(abstraction);
+  }
+
+  return found;
+}
+
+std::map<std::string, CommandCaller::parser_profile_pair> CommandCaller::get_profiles(
+  const std::initializer_list<std::string> &possible_profile_locations)
+{
+  std::map<std::string, std::pair<AppArmor::Parser, AppArmor::Profile>> found_profiles;
+
+  // Iterate over every directory
+  for (const auto &path : possible_profile_locations) {
+    // Iterate over every file in a directory
+    bool exists = std::filesystem::exists(path);
+    if (exists) {
+      auto files = std::filesystem::directory_iterator(path);
+      for (const auto &entry : files) {
+        // Attempt to parse file in directory
+        try {
+          if (entry.is_regular_file()) {
+            AppArmor::Parser parsed(entry.path());
+
+            // Add each profile found in the file
+            auto profile_list = parsed.getProfileList();
+            for (auto &profile : profile_list) {
+              parser_profile_pair tuple{ parsed, profile };
+              found_profiles.insert_or_assign(profile.name(), tuple);
+            }
+          }
+        } catch (const std::exception &ex) {
+          std::cerr << "Error reading file: " << entry.path() << std::endl;
+          std::cerr << "\tMessage: " << ex.what() << std::endl;
+        }
+      }
+    }
+  }
+
+  return found_profiles;
 }

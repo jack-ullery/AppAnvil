@@ -91,28 +91,27 @@ void LogsController<LogsTab, Database, Adapter, LogRecord>::add_row(const std::s
 template<class LogsTab, class Database, class Adapter, class LogRecord>
 void LogsController<LogsTab, Database, Adapter, LogRecord>::add_data_to_record(const std::list<std::shared_ptr<LogRecord>> &data)
 {
-  auto lambda = [&, data]() -> bool { return add_data_to_record_helper(data.begin(), data.end()); };
+  auto ptr    = std::make_shared<std::list<std::shared_ptr<LogRecord>>>(data);
+  auto lambda = [&, ptr]() -> bool { return add_data_to_record_helper(ptr); };
   Glib::signal_idle().connect(lambda, Glib::PRIORITY_LOW);
 }
 
 template<class LogsTab, class Database, class Adapter, class LogRecord>
-bool LogsController<LogsTab, Database, Adapter, LogRecord>::add_data_to_record_helper(const record_iter &begin, const record_iter &end)
+bool LogsController<LogsTab, Database, Adapter, LogRecord>::add_data_to_record_helper(
+  std::shared_ptr<std::list<std::shared_ptr<LogRecord>>> data)
 {
-  typename std::list<std::shared_ptr<LogRecord>>::const_iterator iter = begin;
-
-  // gets each log entry, and calls add_row to add each individual entry
   constexpr uint num_logs_batch = 127;
   for (uint i = 0; i < num_logs_batch; i++) {
     // Check if we exhausted the list of logs
-    if (iter == end) {
+    if (data->empty()) {
       // Return false to disconnect the signal handler
       refresh();
       return false;
     }
 
     // Retrieve and pop the next log
-    std::shared_ptr<LogRecord> log = *iter;
-    iter++;
+    std::shared_ptr<LogRecord> log = data->front();
+    data->pop_front();
 
     add_row(log);
   }
@@ -121,7 +120,7 @@ bool LogsController<LogsTab, Database, Adapter, LogRecord>::add_data_to_record_h
   refresh();
 
   // Then continue signal processing
-  auto lambda = [&, iter, end]() -> bool { return add_data_to_record_helper(iter, end); };
+  auto lambda = [&, data]() -> bool { return add_data_to_record_helper(data); };
   Glib::signal_idle().connect(lambda, Glib::PRIORITY_LOW);
 
   // Disconnect the current signal handler
@@ -147,7 +146,7 @@ LogsController<LogsTab, Database, Adapter, LogRecord>::LogsController(std::share
 template<class LogsTab, class Database, class Adapter, class LogRecord>
 LogsController<LogsTab, Database, Adapter, LogRecord>::LogsController(std::shared_ptr<Database> database)
   : logs{ StatusController<LogsTab>::get_tab() },
-    adapter{ new Adapter(database, logs->get_view(), logs->get_window()) }
+    adapter{ std::make_shared<Adapter>(database, logs->get_view()) }
 {
   auto func = sigc::mem_fun(*this, &LogsController<LogsTab, Database, Adapter, LogRecord>::refresh);
   logs->set_refresh_signal_handler(func);
@@ -161,8 +160,6 @@ LogsController<LogsTab, Database, Adapter, LogRecord>::LogsController(std::share
 
   auto key_event_fun = sigc::mem_fun(*this, &LogsController::on_key_event);
   logs->get_view()->signal_key_release_event().connect(key_event_fun, true);
-
-  logs->get_view()->set_activate_on_single_click(true);
 }
 
 // Used to avoid linker errors
