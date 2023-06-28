@@ -76,11 +76,13 @@ void ProfileModifyController::handle_profile_changed()
   update_all_tables();
 }
 
-void ProfileModifyController::handle_file_rule_changed(const Gtk::TreeModel::iterator &node)
+void ProfileModifyController::handle_file_rule_changed(const std::string &path)
 {
+  auto row = file_rule_record->get_iter(path);
+
   // Get the FileRule stored in the row
   std::shared_ptr<AppArmor::Tree::FileRule> rule;
-  node->get_value(FILE_RULE_POS::Data, rule);
+  row->get_value(FILE_RULE_POS::Data, rule);
 
   if(rule != nullptr) {
     const std::string filename = rule->getFilename();
@@ -95,20 +97,20 @@ void ProfileModifyController::handle_file_rule_changed(const Gtk::TreeModel::ite
     bool has_exec   = false;
     std::string exec_mode;
 
-    node->get_value(FILE_RULE_POS::Read,  read);
-    node->get_value(FILE_RULE_POS::Write, write);
-    node->get_value(FILE_RULE_POS::Link,  link);
-    node->get_value(FILE_RULE_POS::Lock,  lock);
-    node->get_value(FILE_RULE_POS::Exec,  has_exec);
+    row->get_value(FILE_RULE_POS::Read,  read);
+    row->get_value(FILE_RULE_POS::Write, write);
+    row->get_value(FILE_RULE_POS::Link,  link);
+    row->get_value(FILE_RULE_POS::Lock,  lock);
+    row->get_value(FILE_RULE_POS::Exec,  has_exec);
 
     if(has_exec) {
-      node->get_value(FILE_RULE_POS::Exec_Type, exec_mode);
+      row->get_value(FILE_RULE_POS::Exec_Type, exec_mode);
       if(exec_mode.empty()) {
         exec_mode = "ix";
       }
     }
 
-    node->set_value(FILE_RULE_POS::Exec_Type, exec_mode);
+    row->set_value(FILE_RULE_POS::Exec_Type, exec_mode);
     AppArmor::Tree::FileMode new_filemode(read, write, append, memory_map, link, lock, exec_mode);
 
     if(new_filemode.empty()) {

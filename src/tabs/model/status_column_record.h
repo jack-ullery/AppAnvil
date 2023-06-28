@@ -57,7 +57,7 @@ public:
    *
    * @param fun, the callback function to use
    */
-  typedef sigc::slot<void, const Gtk::TreeModel::iterator&> change_function_type;
+  typedef sigc::slot<void, const std::string&> change_function_type;
   void set_change_func(const change_function_type &fun);
 
   /**
@@ -102,6 +102,9 @@ public:
    */
   Gtk::TreeRow get_row(const Gtk::TreePath &path);
   Gtk::TreeRow get_row(const Glib::ustring &path);
+
+  Gtk::TreeModel::iterator get_iter(const Gtk::TreePath &path);
+  Gtk::TreeModel::iterator get_iter(const Glib::ustring &path);
 
   /**
    * @brief Set the visibility all the rows in the ColumnRecord.
@@ -152,7 +155,7 @@ private:
   static bool default_filter(const Gtk::TreeModel::iterator &node);
 
   // Unless `set_change_func` is called, this function does nothing
-  static void on_toggle(const Gtk::TreeModel::iterator &node);
+  static void on_change(const std::string &node);
 
   // Handles changing a combobox value in a row
   void on_combobox_edited(const Glib::ustring& path_string,

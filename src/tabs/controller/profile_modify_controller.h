@@ -23,7 +23,7 @@ protected:
   void update_all_tables();
 
   void handle_profile_changed();
-  void handle_file_rule_changed(const Gtk::TreeModel::iterator &node);
+  void handle_file_rule_changed(const std::string &path);
   void handle_edit_rule(AppArmor::Tree::FileRule &old_rule, const AppArmor::Tree::FileRule &new_rule);
   void handle_remove_rule(AppArmor::Tree::FileRule &old_rule);
 

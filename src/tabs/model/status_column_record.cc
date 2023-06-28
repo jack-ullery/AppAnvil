@@ -14,6 +14,7 @@
 #include <libappanvil/tree/FileRule.hh>
 #include <memory>
 #include <sigc++/functors/ptr_fun.h>
+#include <stdexcept>
 #include <tuple>
 #include <vector>
 
@@ -58,14 +59,32 @@ Gtk::TreeRow StatusColumnRecord::new_child_row(const Gtk::TreeRow &parent)
   return *(store->append(parent.children()));
 }
 
+Gtk::TreeModel::iterator StatusColumnRecord::get_iter(const Gtk::TreePath &path)
+{
+  return sort_model->get_iter(path);
+}
+
+Gtk::TreeModel::iterator StatusColumnRecord::get_iter(const Glib::ustring &path)
+{
+  return sort_model->get_iter(path);
+}
+
 Gtk::TreeRow StatusColumnRecord::get_row(const Gtk::TreePath &path)
 {
-  return *(sort_model->get_iter(path));
+  auto iter = get_iter(path);
+  if(iter == nullptr) {
+    throw std::runtime_error("get_iter() returned nullptr. This should not happen. If you see this, it is a bug...");
+  }
+  return *iter;
 }
 
 Gtk::TreeRow StatusColumnRecord::get_row(const Glib::ustring &path)
 {
-  return *(sort_model->get_iter(path));
+  auto iter = get_iter(path);
+  if(iter == nullptr) {
+    throw std::runtime_error("get_iter() returned nullptr. This should not happen. If you see this, it is a bug...");
+  }
+  return *iter;
 }
 
 void StatusColumnRecord::clear()
@@ -154,7 +173,7 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
                                        const std::vector<ColumnHeader> &names)
   : view{ view },
     filter_fun{ sigc::ptr_fun(&StatusColumnRecord::default_filter) },
-    change_fun{ sigc::ptr_fun(&StatusColumnRecord::on_toggle) }
+    change_fun{ sigc::ptr_fun(&StatusColumnRecord::on_change) }
 {
   view->set_activate_on_single_click(true);
 
@@ -263,15 +282,14 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
         renderer->set_sensitive(true);
 
         // Function that is caled when togglebutton is clicked
-        auto lambda = [this, i](const std::string &path_str) -> void {
-          Gtk::TreePath path(path_str);
-          auto iter = sort_model->get_iter(path);
+        auto lambda = [this, i](const std::string &path) -> void {
+          auto iter = get_iter(path);
 
           bool value;
           iter->get_value(i, value);
           iter->set_value(i, !value);
 
-          change_fun(iter);
+          change_fun(path);
         };
         renderer->signal_toggled().connect(lambda);
       }
@@ -307,7 +325,7 @@ bool StatusColumnRecord::default_filter(const Gtk::TreeModel::iterator &node)
   return true;
 }
 
-void StatusColumnRecord::on_toggle(const Gtk::TreeModel::iterator &node)
+void StatusColumnRecord::on_change(const std::string &node)
 {
   std::ignore = node;
 }
@@ -319,14 +337,14 @@ void StatusColumnRecord::on_combobox_edited(const Glib::ustring& path_string,
   Gtk::TreePath path(path_string);
 
   // Get the row from the path
-  auto iter = sort_model->get_iter(path);
+  auto iter = get_iter(path);
   if(iter)
   {
     // Store the user's new text in the model
     iter->set_value(col, new_text);
 
     // Call the change_fun() because the row was manually edited
-    this->change_fun(iter);
+    this->change_fun(path_string);
   }
 }
 
