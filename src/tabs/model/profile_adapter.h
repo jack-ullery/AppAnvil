@@ -35,7 +35,18 @@ private:
 
   const std::vector<ColumnHeader> col_names{ ColumnHeader("Metadata", ColumnHeader::ColumnType::PROFILE_ENTRY),
                                              ColumnHeader("Profile"),
-                                             ColumnHeader("Status") };
+                                             ColumnHeader("Status", {
+                                              {"enforce", "Similar to a whitelist, will only allow actions that are granted by the profile."},
+                                              {"complain", "Similar to a blacklist, will grant any permission that is not explicitly denied by a profile."},
+                                              {"kill", "Equivalent to enforce mode, but kills any process that violates this profile"},
+                                              {"disabled", "This profile exists, but will not actually function to confine processes."},
+
+                                              //// Advanced (Should put in a seperate menu or something)
+                                              // {"Audit", "Ensures all allowed or denied actions are logged"},
+                                              // {"Mediate Deleted", ""},
+                                              // {"Attach Disconnected", ""},
+                                              // {"Chroot Relative", ""},
+                                             }) };
 
   std::shared_ptr<StatusColumnRecord> col_record;
 };
