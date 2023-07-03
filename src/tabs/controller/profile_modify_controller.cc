@@ -50,9 +50,6 @@ void ProfileModifyController::intialize_file_rules()
     row->set_value(FILE_RULE_POS::Lock, filemode.getLock());
     row->set_value(FILE_RULE_POS::Exec, exec_allowed);
     row->set_value(FILE_RULE_POS::Exec_Type, filemode.getExecuteMode());
-
-    auto change_fun = sigc::mem_fun(*this, &ProfileModifyController::handle_file_rule_changed);
-    file_rule_record->set_change_func(change_fun);
   }
 }
 
@@ -144,5 +141,8 @@ ProfileModifyController::ProfileModifyController(std::shared_ptr<AppArmor::Parse
     abstraction_record{ StatusColumnRecord::create(modify->get_abstraction_view(), abstraction_col_names) },
     file_rule_record{ StatusColumnRecord::create(modify->get_file_rule_view(), file_rule_col_names) }
 {
+  auto change_fun = sigc::mem_fun(*this, &ProfileModifyController::handle_file_rule_changed);
+  file_rule_record->set_change_func(change_fun);
+
   update_all_tables();
 }
