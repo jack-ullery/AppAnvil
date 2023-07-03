@@ -17,12 +17,6 @@ public:
   virtual void add_data_to_record(const std::string &data);
   void refresh();
 
-  /**
-   * @brief Change the text in the label next to the Apply button/spinner.
-   * Called by DispatcherMiddleman
-   */
-  void set_apply_label_text(const std::string &str);
-
 protected:
   bool on_button_event(GdkEventButton *event);
   bool on_key_event(GdkEventKey *event);

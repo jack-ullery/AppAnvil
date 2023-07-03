@@ -93,7 +93,6 @@ void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::handle_s
       break;
 
     case PROFILES_TEXT:
-      prof->set_apply_label_text(data.string);
       break;
 
     case NONE:

@@ -83,12 +83,6 @@ void ProfilesController<ProfilesTab, Database, Adapter>::refresh()
 }
 
 template<class ProfilesTab, class Database, class Adapter>
-void ProfilesController<ProfilesTab, Database, Adapter>::set_apply_label_text(const std::string &str)
-{
-  prof->set_apply_label_text(str);
-}
-
-template<class ProfilesTab, class Database, class Adapter>
 ProfilesController<ProfilesTab, Database, Adapter>::ProfilesController(std::shared_ptr<Database> database)
   : StatusController<ProfilesTab>(),
     prof{ StatusController<ProfilesTab>::get_tab() },

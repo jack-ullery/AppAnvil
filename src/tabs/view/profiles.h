@@ -25,11 +25,6 @@ public:
   // Sets the function to be used when changing the status of a profile, this is used in main_window.cc
   void set_status_change_signal_handler(sigc::slot<void(std::string, std::string, std::string)> change_fun);
 
-  /**
-   * @brief Change the text in the label next to the Apply button/spinner.
-   */
-  void set_apply_label_text(const std::string &str);
-
   void set_profile_info(const std::string &num_logs, const std::string &num_procs);
 
   void show_profile_info();
@@ -50,15 +45,10 @@ private:
   // Widgets
   Glib::RefPtr<Gtk::Builder> builder;
 
-  std::unique_ptr<Gtk::ToggleButton> p_change_state_toggle;
   std::unique_ptr<Gtk::ToggleButton> p_load_profile_toggle;
   std::unique_ptr<Gtk::ToggleButton> p_modify_profile_toggle;
 
   std::unique_ptr<Gtk::Stack> p_stack;
-  std::unique_ptr<Gtk::Box> p_state_selection_box;
-  std::unique_ptr<Gtk::ComboBoxText> p_status_selection;
-  std::unique_ptr<Gtk::Button> p_apply_button;
-  std::unique_ptr<Gtk::Label> p_apply_info_text;
 
   std::unique_ptr<Gtk::Box> p_profile_info;
   std::unique_ptr<Gtk::Label> p_num_log_label;

@@ -71,6 +71,8 @@ ProfileAdapter<Database>::ProfileAdapter(std::shared_ptr<Database> db, const std
   : db{ db },
     col_record{ StatusColumnRecord::create(view, col_names) }
 {
+  // auto change_fun = sigc::mem_fun(*this, &ProfileAdapter<Database>::handle_profile_status_changed);
+  // col_record->set_change_func(change_fun);
 }
 
 template class ProfileAdapter<Database>;
