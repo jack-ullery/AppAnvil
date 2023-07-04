@@ -1,4 +1,5 @@
 #include "main_window.h"
+#include "console_thread.h"
 
 #include <gtkmm/button.h>
 #include <gtkmm/enums.h>
@@ -31,8 +32,8 @@ MainWindow::MainWindow()
   on_switch(NULL);
 
   // Connect the profile tab to the `send_status_change` method
-  auto change_fun = sigc::mem_fun(*this, &MainWindow::send_status_change);
-  prof_control->get_tab()->set_status_change_signal_handler(change_fun);
+  auto change_fun = sigc::mem_fun(*console, &ConsoleThreadInstance::send_change_profile_status_message);
+  prof_control->set_status_change_signal_handler(change_fun);
 
   // Configure settings related to the 'Help' button
   m_help_button.set_image_from_icon_name("dialog-question");
@@ -80,11 +81,6 @@ MainWindow::MainWindow()
 
   // Hide the side info in the Profiles Tab
   prof_control->get_tab()->hide_profile_info();
-}
-
-void MainWindow::send_status_change(const std::string &profile, const std::string &old_status, const std::string &new_status)
-{
-  console->send_change_profile_status_message(profile, old_status, new_status);
 }
 
 void MainWindow::on_help_toggle()

@@ -18,6 +18,9 @@ public:
   ProfileAdapter(std::shared_ptr<Database> db, const std::shared_ptr<Gtk::TreeView> &view);
 
   void put_data(const std::string &profile_name, const std::string &status);
+
+  void set_profile_status_change_func(const StatusColumnRecord::change_function_type &fun);
+
   std::pair<ProfileTableEntry, bool> get_data(const std::string &profile_name);
 
   std::shared_ptr<StatusColumnRecord> get_col_record();

@@ -48,15 +48,26 @@ public:
   void set_visible_func(const Gtk::TreeModelFilter::SlotVisible &filter);
 
   /**
+   * @brief Callback function which for when a user toggles a button, or changes a combobox.
+   *
+   * @details
+   * This callback function takes a string as an argument, which corresponds to the Gtk::Path of the row affected
+   *
+   * @param path the path pointing to the affected row in the Gtk::TreeView
+   */
+  typedef sigc::slot<void, const std::string &> change_function_type;
+
+  /**
    * @brief Sets the callback function which is called whenever a row is edited by the user
    *
    * @details
    * Sets the callback function which is called whenever a row is edited by the user.
-   * This function is called whevener a user toggles a button, or changes a ComboBox.
+   * This function is called whevener a user toggles a button, or edited a ComboBox.
+   * Specifically, this function connects to the signal_edited() function in Gtk::CellRendererCombo
+   * and the signal_toggled() function in Gtk::CellRendererToggle.
    *
-   * @param fun, the callback function to use
+   * @param fun the callback function to use
    */
-  typedef sigc::slot<void, const std::string &> change_function_type;
   void set_change_func(const change_function_type &fun);
 
   /**

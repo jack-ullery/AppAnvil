@@ -114,11 +114,8 @@ std::string CommandCaller::execute_change(CommandCaller *caller,
     return "Error: Illegal arguments passed to CommandCaller::execute_change.";
   }
 
-  // Attempt to locate the profile in possible locations
-  std::string profile_location = locate_profile(profile);
-
   // command to change the profile to the provided status
-  std::vector<std::string> command = { "pkexec", status_command, "-d", profile_location, profile };
+  std::vector<std::string> command = { "pkexec", status_command, profile };
   auto result                      = caller->call_command(command);
 
   if (result.exit_status != 0) {
