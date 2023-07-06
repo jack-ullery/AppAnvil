@@ -1,0 +1,7 @@
+rebuild_master:
+  steps:
+    - rebuild_package:
+        project: home:jackullery:AppAnvil
+        package: appanvil
+  filters:
+    event: push
