@@ -42,6 +42,28 @@ public:
    */
   static std::string get_unconfined();
 
+  /**
+   * @brief Return the output of `ausearch`
+   *
+   * @details
+   * Returns the output of `pkexec ausearch --raw -m AVC --checkpoint [filename]` to get a list of logs that may pertain to AppArmor,
+   * where [filename] is a randomly named checkpoint file in /tmp.
+   *
+   * @returns std::string the raw output of ausearch, prepended by [filename]
+   */
+  static std::string get_logs();
+
+  /**
+   * @brief Return the output of `ausearch`
+   *
+   * @details
+   * Returns the output of `pkexec ausearch --raw -m AVC --checkpoint [filename]` to get a list of logs that may pertain to AppArmor,
+   * where [filename] is the argument to the method.
+   *
+   * @returns std::string the raw output of ausearch
+   */
+  static std::string get_logs(const std::string &filename);
+
 protected:
   struct results
   {
@@ -57,6 +79,7 @@ protected:
   // Dependency Injection: For unit testing
   static std::string get_status(AppArmorCaller *caller);
   static std::string get_unconfined(AppArmorCaller *caller);
+  static std::string get_logs(AppArmorCaller *caller, const std::string &filename);
 };
 
 #endif // COMMAND_CALLER_H
