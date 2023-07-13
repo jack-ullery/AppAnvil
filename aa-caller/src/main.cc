@@ -36,8 +36,7 @@ int main(int argc, char **argv)
       std::cout << AppArmorCaller::get_logs();
       return 0;
     }
-  }
-  else if (argc == 3) {
+  } else if (argc == 3) {
     std::string arg_1(argv[1]);
     std::string arg_2(argv[2]);
     if (arg_1 == "-l") {
