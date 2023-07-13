@@ -10,7 +10,15 @@
 CommandCaller::results CommandCaller::call_command(const std::vector<std::string> &command)
 {
   results result;
-  Glib::spawn_sync("/usr/sbin/", command, Glib::SpawnFlags::SPAWN_SEARCH_PATH, {}, &result.output, &result.error, &result.exit_status);
+  std::vector<std::string> envp = {"/usr/bin/", "/usr/sbin/", "/usr/local/bin"};
+  Glib::spawn_sync("/usr/sbin/",
+                   command,
+                   envp,
+                   Glib::SpawnFlags::SPAWN_SEARCH_PATH_FROM_ENVP,
+                   {},
+                   &result.output,
+                   &result.error,
+                   &result.exit_status);
   return result;
 }
 
@@ -40,6 +48,18 @@ std::string CommandCaller::get_status(CommandCaller *caller)
 std::string CommandCaller::get_unconfined(CommandCaller *caller)
 {
   std::vector<std::string> command = { "pkexec", "aa-caller", "-u" };
+  std::string return_on_error;
+  return caller->call_command(command, return_on_error);
+}
+
+std::string CommandCaller::get_logs(CommandCaller *caller, const std::string &checkpoint_filepath)
+{
+  std::vector<std::string> command = {"pkexec", "aa-caller", "-l"};
+
+  if(!checkpoint_filepath.empty()) {
+    command.push_back(checkpoint_filepath);
+  }
+
   std::string return_on_error;
   return caller->call_command(command, return_on_error);
 }
@@ -139,6 +159,12 @@ std::string CommandCaller::get_unconfined()
 {
   CommandCaller caller;
   return get_unconfined(&caller);
+}
+
+std::string CommandCaller::get_logs(const std::string &checkpoint_filepath)
+{
+  CommandCaller caller;
+  return get_logs(&caller, checkpoint_filepath);
 }
 
 std::string CommandCaller::load_profile(const std::string &fullFileName)

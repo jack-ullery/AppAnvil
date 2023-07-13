@@ -15,8 +15,13 @@ public:
 
   std::list<std::shared_ptr<LogRecord>> read_logs();
 
+protected:
+  // Append logs from ausearch to list
+  void append_audit_logs(std::list<std::shared_ptr<LogRecord>> &log_list);
+
 private:
   std::forward_list<std::ifstream> log_files;
+  std::string checkpoint_filepath;
 };
 
 #endif
