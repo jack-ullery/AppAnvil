@@ -79,6 +79,9 @@ std::string AppArmorCaller::get_logs()
 {
   AppArmorCaller caller;
 
+  // Seed the random number generator using the time
+  srand(time(NULL));
+
   // Create a random filename with the following format '/tmp/appanvil-$RAND' 
   std::stringstream stream;
   stream << "/tmp/appanvil-" << rand();
