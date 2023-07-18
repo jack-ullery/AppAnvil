@@ -39,7 +39,6 @@ void ProfileModifyController::intialize_file_rules()
     auto shared_rule           = std::make_shared<AppArmor::Tree::FileRule>(rule);
     const std::string filename = rule.getFilename();
     const auto filemode        = rule.getFilemode();
-    const bool exec_allowed    = !filemode.getExecuteMode().empty();
     const auto prefix = rule.getPrefix();
 
     auto row = file_rule_record->new_row();
@@ -49,8 +48,7 @@ void ProfileModifyController::intialize_file_rules()
     row->set_value(FILE_RULE_POS::Write, filemode.getWrite());
     row->set_value(FILE_RULE_POS::Link, filemode.getLink());
     row->set_value(FILE_RULE_POS::Lock, filemode.getLock());
-    row->set_value(FILE_RULE_POS::Exec, exec_allowed);
-    row->set_value(FILE_RULE_POS::Exec_Type, filemode.getExecuteMode());
+    row->set_value(FILE_RULE_POS::Exec, filemode.getExecuteMode());
     row->set_value(FILE_RULE_POS::Advanced, prefix.operator std::string());
 
     auto change_fun = sigc::mem_fun(*this, &ProfileModifyController::handle_file_rule_changed);
@@ -95,23 +93,14 @@ void ProfileModifyController::handle_file_rule_changed(const std::string &path)
     bool memory_map = filemode.getMemoryMap();
     bool link       = filemode.getLink();
     bool lock       = filemode.getLock();
-    bool has_exec   = false;
     std::string exec_mode;
 
     row->get_value(FILE_RULE_POS::Read, read);
     row->get_value(FILE_RULE_POS::Write, write);
     row->get_value(FILE_RULE_POS::Link, link);
     row->get_value(FILE_RULE_POS::Lock, lock);
-    row->get_value(FILE_RULE_POS::Exec, has_exec);
+    row->get_value(FILE_RULE_POS::Exec, exec_mode);
 
-    if (has_exec) {
-      row->get_value(FILE_RULE_POS::Exec_Type, exec_mode);
-      if (exec_mode.empty()) {
-        exec_mode = "ix";
-      }
-    }
-
-    row->set_value(FILE_RULE_POS::Exec_Type, exec_mode);
     AppArmor::Tree::FileMode new_filemode(read, write, append, memory_map, link, lock, exec_mode);
 
     if (new_filemode.empty()) {

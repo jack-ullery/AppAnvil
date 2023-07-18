@@ -37,8 +37,7 @@ private:
     ColumnHeader("Write", ColumnHeader::ColumnType::BOOLEAN),
     ColumnHeader("Link", ColumnHeader::ColumnType::BOOLEAN),
     ColumnHeader("Lock", ColumnHeader::ColumnType::BOOLEAN),
-    ColumnHeader("Execute", ColumnHeader::ColumnType::BOOLEAN),
-    ColumnHeader("Execute Type",
+    ColumnHeader("Execute",
                  {
                                   { "ix", "Inherit execute" },
                                   { "Px", "Discrete Profile execute" },
@@ -58,8 +57,7 @@ private:
     Link      = 4,
     Lock      = 5,
     Exec      = 6,
-    Exec_Type = 7,
-    Advanced  = 8,
+    Advanced  = 7,
   };
 
   std::stringstream profile_stream;
