@@ -59,6 +59,7 @@ private:
     Lock      = 5,
     Exec      = 6,
     Exec_Type = 7,
+    Advanced  = 8,
   };
 
   std::stringstream profile_stream;
