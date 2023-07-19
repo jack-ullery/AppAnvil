@@ -41,11 +41,11 @@ private:
                                              ColumnHeader("Status", {
                                               {"enforce", "Similar to a whitelist, will only allow actions that are granted by the profile."},
                                               {"complain", "Similar to a blacklist, will grant any permission that is not explicitly denied by a profile."},
-                                              {"kill", "Equivalent to enforce mode, but kills any process that violates this profile"},
+                                              {"audit", "Equivalent to enforce mode, but all allowed or denied actions are logged"},
                                               {"disabled", "This profile exists, but will not actually function to confine processes."},
 
                                               //// Advanced (Should put in a seperate menu or something)
-                                              // {"Audit", "Ensures all allowed or denied actions are logged"},
+                                              // {"kill", "Equivalent to enforce mode, but kills any process that violates this profile"},
                                               // {"Mediate Deleted", ""},
                                               // {"Attach Disconnected", ""},
                                               // {"Chroot Relative", ""},
