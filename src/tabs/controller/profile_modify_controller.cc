@@ -101,13 +101,20 @@ void ProfileModifyController::handle_file_rule_changed(const std::string &path)
     row->get_value(FILE_RULE_POS::Lock, lock);
     row->get_value(FILE_RULE_POS::Exec, exec_mode);
 
-    AppArmor::Tree::FileMode new_filemode(read, write, append, memory_map, link, lock, exec_mode);
+    try {
+      AppArmor::Tree::FileMode new_filemode(read, write, append, memory_map, link, lock, exec_mode);
 
-    if (new_filemode.empty()) {
-      handle_remove_rule(*rule);
-    } else {
-      AppArmor::Tree::FileRule new_rule(0, -1, rule->getFilename(), new_filemode, rule->getExecTarget(), rule->getIsSubset());
-      handle_edit_rule(*rule, new_rule);
+      if (new_filemode.empty()) {
+        handle_remove_rule(*rule);
+      } else {
+        AppArmor::Tree::FileRule new_rule(0, -1, rule->getFilename(), new_filemode, rule->getExecTarget(), rule->getIsSubset());
+        handle_edit_rule(*rule, new_rule);
+      }
+    } catch(const std::exception &ex) {
+      std::cerr << "Error when specifying Execute Mode:" << std::endl << ex.what() << std::endl;
+
+      // Reset the exec_mode to its previous value
+      row->set_value(FILE_RULE_POS::Exec, filemode.getExecuteMode());
     }
   } else {
     std::cerr << "Error: Could not locate AppArmor::FileRule for selected row" << std::endl;
