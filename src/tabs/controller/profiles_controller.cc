@@ -83,6 +83,12 @@ void ProfilesController<ProfilesTab, Database, Adapter>::change_status(const std
     std::string profile_path = prof->find_path(profile);
 
     this->profile_status_change_fun(profile_path, old_status, new_status);
+
+    // Update the entry and refresh the table
+    entry.status = new_status;
+    row->set_value(0, entry);
+    refresh();
+
   } else {
     std::cerr << "Error: Could not retrieve row when changing status" << std::endl;
   }
