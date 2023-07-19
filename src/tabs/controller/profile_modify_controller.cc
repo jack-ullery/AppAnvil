@@ -102,11 +102,14 @@ void ProfileModifyController::handle_file_rule_changed(const std::string &path)
     row->get_value(FILE_RULE_POS::Exec, exec_mode);
 
     try {
+      // Attempt to create a FileMode object representing the permissions of the updated rule
       AppArmor::Tree::FileMode new_filemode(read, write, append, memory_map, link, lock, exec_mode);
 
       if (new_filemode.empty()) {
+        // If the rule no longer contains permissions, delete it
         handle_remove_rule(*rule);
       } else {
+        // If the rule still contains permissions, modify it
         AppArmor::Tree::FileRule new_rule(0, -1, rule->getFilename(), new_filemode, rule->getExecTarget(), rule->getIsSubset());
         handle_edit_rule(*rule, new_rule);
       }
