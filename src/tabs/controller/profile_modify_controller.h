@@ -38,6 +38,7 @@ private:
     ColumnHeader("Link", ColumnHeader::ColumnType::BOOLEAN),
     ColumnHeader("Lock", ColumnHeader::ColumnType::BOOLEAN),
     ColumnHeader("Execute",
+                 "",
                  {
                                   { "ix", "Inherit execute" },
                                   { "Px", "Discrete Profile execute" },
