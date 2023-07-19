@@ -40,6 +40,7 @@ void ProfileModifyController::intialize_file_rules()
     const std::string filename = rule.getFilename();
     const auto filemode        = rule.getFilemode();
     const bool exec_allowed    = !filemode.getExecuteMode().empty();
+    const auto prefix = rule.getPrefix();
 
     auto row = file_rule_record->new_row();
     row->set_value(FILE_RULE_POS::Data, shared_rule);
@@ -50,6 +51,10 @@ void ProfileModifyController::intialize_file_rules()
     row->set_value(FILE_RULE_POS::Lock, filemode.getLock());
     row->set_value(FILE_RULE_POS::Exec, exec_allowed);
     row->set_value(FILE_RULE_POS::Exec_Type, filemode.getExecuteMode());
+    row->set_value(FILE_RULE_POS::Advanced, prefix.operator std::string());
+
+    auto change_fun = sigc::mem_fun(*this, &ProfileModifyController::handle_file_rule_changed);
+    file_rule_record->set_change_func(change_fun);
   }
 }
 

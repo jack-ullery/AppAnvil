@@ -29,24 +29,43 @@ public:
   CommandCaller &operator=(CommandCaller &&)      = delete;
 
   /**
-   * @brief Return the output of `aa-status --json`
+   * @brief Return the output of `aa-caller -s`
    *
    * @details
-   * Returns the output of `pkexec aa-status --json` to get a list of profiles and processes confined by apparmor.
+   * Uses aa-caller, to call aa-status to get a list of profiles and processes confined by apparmor.
+   *
+   * Wrapping this call in aa-caller ensures that the user does not need to authenticate
+   * to pkexec every few seconds.
    *
    * @returns std::string the raw output of aa-status
    */
   static std::string get_status();
 
   /**
-   * @brief Return the output of `aa-unconfined`
+   * @brief Return the output of `aa-caller -u`
    *
    * @details
-   * Returns the output of `pkexec aa-unconfined` to get a list of processes not confined by apparmor.
+   * Uses aa-caller, to call aa-unconfined to get a list of processes not confined by apparmor.
+   *
+   * Wrapping this call in aa-caller ensures that the user does not need to authenticate
+   * to pkexec every few seconds.
    *
    * @returns std::string the raw output of aa-unconfined
    */
   static std::string get_unconfined();
+
+  /**
+   * @brief Return the output of `aa-caller -l`
+   *
+   * @details
+   * Uses aa-caller which calls ausearch to get a list of logs that may pertain to AppArmor.
+   *
+   * Wrapping this call in aa-caller ensures that the user does not need to authenticate
+   * to pkexec every few seconds.
+   *
+   * @returns std::string the raw output of ausearch
+   */
+  static std::string get_logs(const std::string &checkpoint_filepath);
 
   /**
    * @brief Change the status of a profile
@@ -96,6 +115,7 @@ protected:
   // Dependency Injection: For unit testing
   static std::string get_status(CommandCaller *caller);
   static std::string get_unconfined(CommandCaller *caller);
+  static std::string get_logs(CommandCaller *caller, const std::string &checkpoint_filepath);
   static std::string load_profile(CommandCaller *caller, const std::string &fullFileName);
   static std::string disable_profile(CommandCaller *caller, const std::string &profileName);
   static std::string execute_change(CommandCaller *caller,
