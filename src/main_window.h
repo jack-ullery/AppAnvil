@@ -66,8 +66,6 @@ protected:
    */
   bool on_switch(GdkEvent *event);
 
-  void send_status_change(const std::string &profile, const std::string &old_status, const std::string &new_status);
-
 private:
   // A set of Typedeffed classes, to handle dependency injection
   // This lowers the amount of repeated <..> symbols

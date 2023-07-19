@@ -67,7 +67,14 @@ uint ProfileAdapter<Database>::get_number_logs(const std::string &profile)
 }
 
 template<class Database>
-ProfileAdapter<Database>::ProfileAdapter(std::shared_ptr<Database> db, const std::shared_ptr<Gtk::TreeView> &view)
+void ProfileAdapter<Database>::set_profile_status_change_func(const StatusColumnRecord::change_function_type &fun)
+{
+  col_record->set_change_func(fun);
+}
+
+template<class Database>
+ProfileAdapter<Database>::ProfileAdapter(std::shared_ptr<Database> db,
+                                         const std::shared_ptr<Gtk::TreeView> &view)
   : db{ db },
     col_record{ StatusColumnRecord::create(view, col_names) }
 {

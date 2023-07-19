@@ -10,6 +10,7 @@
 #include "../tabs/view/profiles.h"
 
 #include <glibmm/priorities.h>
+#include <iostream>
 #include <mutex>
 #include <sigc++/functors/mem_fun.h>
 
@@ -93,7 +94,7 @@ void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::handle_s
       break;
 
     case PROFILES_TEXT:
-      prof->set_apply_label_text(data.string);
+      std::cerr << data.string << std::endl;
       break;
 
     case NONE:

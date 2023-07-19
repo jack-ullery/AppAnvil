@@ -18,6 +18,9 @@ public:
   ProfileAdapter(std::shared_ptr<Database> db, const std::shared_ptr<Gtk::TreeView> &view);
 
   void put_data(const std::string &profile_name, const std::string &status);
+
+  void set_profile_status_change_func(const StatusColumnRecord::change_function_type &fun);
+
   std::pair<ProfileTableEntry, bool> get_data(const std::string &profile_name);
 
   std::shared_ptr<StatusColumnRecord> get_col_record();
@@ -33,9 +36,26 @@ public:
 private:
   std::shared_ptr<Database> db;
 
-  const std::vector<ColumnHeader> col_names{ ColumnHeader("Metadata", ColumnHeader::ColumnType::PROFILE_ENTRY),
-                                             ColumnHeader("Profile"),
-                                             ColumnHeader("Status") };
+  // clang-format off
+  const std::vector<ColumnHeader> col_names{ 
+    ColumnHeader("Metadata", ColumnHeader::ColumnType::PROFILE_ENTRY),
+    ColumnHeader("Profile"),
+    ColumnHeader("Status",
+      {
+        {"enforce", "Similar to a whitelist, will only allow actions that are granted by the profile."},
+        {"complain", "Similar to a blacklist, will grant any permission that is not explicitly denied by a profile."},
+        {"audit", "Equivalent to enforce mode, but all allowed or denied actions are logged"},
+        {"disabled", "This profile exists, but will not actually function to confine processes."},
+
+        //// Advanced (Should put in a seperate menu or something)
+        // {"kill", "Equivalent to enforce mode, but kills any process that violates this profile"},
+        // {"Mediate Deleted", ""},
+        // {"Attach Disconnected", ""},
+        // {"Chroot Relative", ""},
+      }
+    )
+  };
+  // clang-format on
 
   std::shared_ptr<StatusColumnRecord> col_record;
 };

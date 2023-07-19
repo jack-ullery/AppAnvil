@@ -9,6 +9,7 @@
 #include <glibmm.h>
 #include <gtkmm/treeiter.h>
 #include <gtkmm/treepath.h>
+#include <iostream>
 #include <json/json.h>
 #include <memory>
 #include <string>
@@ -57,6 +58,42 @@ void ProfilesController<ProfilesTab, Database, Adapter>::handle_profile_selected
   }
 }
 
+template<class ProfilesTab, class Database, class Adapter>
+void ProfilesController<ProfilesTab, Database, Adapter>::change_status(const std::string &path)
+{
+  auto iter = adapter.get_col_record()->get_iter(path);
+
+  if (iter != nullptr) {
+    auto row = *iter;
+
+    ProfileTableEntry entry;
+    std::string profile;
+    std::string new_status;
+
+    row->get_value(0, entry);
+    row->get_value(1, profile);
+    row->get_value(2, new_status);
+
+    std::string old_status = entry.status;
+
+    // Convert the status strings to lower case.
+    transform(old_status.begin(), old_status.end(), old_status.begin(), ::tolower);
+    transform(new_status.begin(), new_status.end(), new_status.begin(), ::tolower);
+
+    std::string profile_path = prof->find_path(profile);
+
+    this->profile_status_change_fun(profile_path, old_status, new_status);
+  } else {
+    std::cerr << "Error: Could not retrieve row when changing status" << std::endl;
+  }
+}
+
+template<class ProfilesTab, class Database, class Adapter>
+void ProfilesController<ProfilesTab, Database, Adapter>::set_status_change_signal_handler(sigc::slot<void(std::string, std::string, std::string)> change_fun)
+{
+  profile_status_change_fun = std::move(change_fun);
+}
+
 // add_data_to_record() is based on assumptions about the output of aa-status.
 // If those assumptions are incorrect, or aa-status changes, this could crash.
 template<class ProfilesTab, class Database, class Adapter>
@@ -77,15 +114,11 @@ void ProfilesController<ProfilesTab, Database, Adapter>::add_data_to_record(cons
 template<class ProfilesTab, class Database, class Adapter>
 void ProfilesController<ProfilesTab, Database, Adapter>::refresh()
 {
-  uint num_visible = adapter.get_col_record()->filter_rows();
-  prof->set_status_label_text(" " + std::to_string(num_visible) + " matching profiles");
-  handle_profile_selected();
-}
+  std::stringstream label;
+  label << " " << adapter.get_col_record()->filter_rows() << " matching profiles";
 
-template<class ProfilesTab, class Database, class Adapter>
-void ProfilesController<ProfilesTab, Database, Adapter>::set_apply_label_text(const std::string &str)
-{
-  prof->set_apply_label_text(str);
+  prof->set_status_label_text(label.str());
+  handle_profile_selected();
 }
 
 template<class ProfilesTab, class Database, class Adapter>
@@ -99,6 +132,10 @@ ProfilesController<ProfilesTab, Database, Adapter>::ProfilesController(std::shar
 
   auto filter_fun = sigc::mem_fun(*this, &ProfilesController::filter);
   adapter.get_col_record()->set_visible_func(filter_fun);
+
+  // When the profile status dropdown is changed, attempt to change the status
+  auto change_fun = sigc::mem_fun(*this, &ProfilesController::change_status);
+  adapter.get_col_record()->set_change_func(change_fun);
 
   // When a key/button is pressed or released, check if the selection has changed
   auto button_event_fun = sigc::mem_fun(*this, &ProfilesController::on_button_event);
