@@ -5,6 +5,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "../column_header.h"
 #include "../entries.h"
@@ -37,7 +38,7 @@ private:
   std::shared_ptr<Database> db;
 
   // clang-format off
-  const std::vector<ColumnHeader> col_names{ 
+  const std::vector<ColumnHeader> col_names {
     ColumnHeader("Metadata", ColumnHeader::ColumnType::PROFILE_ENTRY),
     ColumnHeader("Profile"),
     ColumnHeader("Status", "",
