@@ -40,7 +40,7 @@ private:
   const std::vector<ColumnHeader> col_names{ 
     ColumnHeader("Metadata", ColumnHeader::ColumnType::PROFILE_ENTRY),
     ColumnHeader("Profile"),
-    ColumnHeader("Status",
+    ColumnHeader("Status", "",
       {
         {"enforce", "Similar to a whitelist, will only allow actions that are granted by the profile."},
         {"complain", "Similar to a blacklist, will grant any permission that is not explicitly denied by a profile."},
