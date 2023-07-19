@@ -299,9 +299,10 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
 
       Glib::RefPtr<Gtk::ListStore> combobox_options = ComboboxStore::create(names[i].combobox_options);
 
-      renderer->property_model()       = combobox_options;
-      renderer->property_text_column() = 0;
-      renderer->property_editable()    = true;
+      renderer->property_model()            = combobox_options;
+      renderer->property_text_column()      = 0;
+      renderer->property_editable()         = true;
+      renderer->property_placeholder_text() = names[i].placeholder;
 
       // Called when a user changes the combobox
       auto lambda = [&, i](const Glib::ustring &path_string, const Glib::ustring &new_text) -> void {
