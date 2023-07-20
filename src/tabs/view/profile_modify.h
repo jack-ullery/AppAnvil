@@ -8,6 +8,7 @@
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
 #include <gtkmm/scrolledwindow.h>
+#include <gtkmm/textview.h>
 #include <gtkmm/treeview.h>
 #include <libappanvil/apparmor_parser.hh>
 #include <libappanvil/tree/AbstractionRule.hh>
@@ -25,26 +26,15 @@ template<class AppArmorParser>
 class ProfileModifyImpl : public Gtk::ScrolledWindow
 {
 public:
-  ProfileModifyImpl(std::shared_ptr<AppArmorParser> parser, std::shared_ptr<AppArmor::Profile> profile);
+  ProfileModifyImpl(std::shared_ptr<AppArmorParser> parser,
+                    std::shared_ptr<AppArmor::Profile> profile);
 
   std::shared_ptr<Gtk::TreeView> get_abstraction_view();
   std::shared_ptr<Gtk::TreeView> get_file_rule_view();
 
-protected:
-  // Functions to create certain reused Gtk Widgets
-  // Each function returns a pointer that will be freed by Gtk
-  static Gtk::Label *create_label(const std::string &text);
-  static Gtk::Button *create_image_button(const std::string &image_name);
-
-  template<AppArmor::RuleDerived RuleType>
-  Gtk::Button *create_edit_button(RuleType &rule);
-
-  template<AppArmor::RuleDerived RuleType>
-  Gtk::Button *create_delete_button(RuleType &rule, const std::string &name);
-
-  // Helper functions that will be called when Profile rules should be changed
-  template<AppArmor::RuleDerived RuleType>
-  void handle_delete(RuleType &rule);
+  // Overwrites the data in the Gtk::TreeView, which shows the file this profile is in.
+  // Uses the data from AppArmor::Parser
+  void update_profile_text();
 
 private:
   // GUI Builder to parse UI from xml file
@@ -56,19 +46,13 @@ private:
   // Widgets
   std::unique_ptr<Gtk::Label> m_title_1;
   std::unique_ptr<Gtk::Label> m_title_2;
+  std::unique_ptr<Gtk::Label> m_title_3;
   std::shared_ptr<Gtk::TreeView> m_abstraction_view;
   std::shared_ptr<Gtk::TreeView> m_file_rule_view;
-
-  // Typedef a tuple of widgets
-  typedef std::tuple<std::shared_ptr<Gtk::Widget>, std::shared_ptr<Gtk::Widget>, std::shared_ptr<Gtk::Widget>> widget_tuple;
+  std::shared_ptr<Gtk::TextView> m_profile_text;
 
   // Fields used for reading and modifying the profile
   std::shared_ptr<AppArmorParser> parser;
-  std::shared_ptr<AppArmor::Profile> profile;
-
-  // Container of added abstractions and file rules
-  std::map<std::string, widget_tuple> abstraction_map;
-  std::map<std::shared_ptr<AppArmor::Tree::FileRule>, std::shared_ptr<Gtk::Widget>> file_rule_map;
 
 #ifdef TESTS_ENABLED
   FRIEND_TEST(ProfileModifyTest, TEST_CONSTRUCTOR);

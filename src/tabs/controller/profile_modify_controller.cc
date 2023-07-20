@@ -73,6 +73,7 @@ void ProfileModifyController::handle_profile_changed()
 
   // Update all the rows and tables
   update_all_tables();
+  modify->update_profile_text();
 }
 
 void ProfileModifyController::handle_file_rule_changed(const std::string &path)
