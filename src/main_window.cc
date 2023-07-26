@@ -11,7 +11,6 @@ MainWindow::MainWindow()
     prof_control{ std::make_shared<ProfilesControllerInstance>(database) },
     proc_control{ std::make_shared<ProcessesControllerInstance>(database) },
     logs_control{ std::make_shared<LogsControllerInstance>(database) },
-    help{ std::make_shared<Help>() },
     console{ std::make_shared<ConsoleThreadInstance>(prof_control, proc_control, logs_control) }
 {
   // Add tabs to the stack pane
@@ -35,28 +34,15 @@ MainWindow::MainWindow()
   auto change_fun = sigc::mem_fun(*console, &ConsoleThreadInstance::send_change_profile_status_message);
   prof_control->set_status_change_signal_handler(change_fun);
 
-  // Configure settings related to the 'Help' button
-  m_help_button.set_image_from_icon_name("dialog-question");
-
-  auto help_toggle_fun = sigc::mem_fun(*this, &MainWindow::on_help_toggle);
-  m_help_button.signal_toggled().connect(help_toggle_fun, true);
-
   // Configure settings related to 'Search' button
   m_search_button.set_image_from_icon_name("edit-find-symbolic");
 
   auto search_togggle_fun = sigc::mem_fun(*this, &MainWindow::on_search_toggle);
   m_search_button.signal_toggled().connect(search_togggle_fun, true);
 
-  // Add the main page and the help page to the top stack
-  // This stack controls whether the 'Help' page is visible, or the main application
-  m_top_stack.add(m_tab_stack, "main_page");
-  m_top_stack.add(*help, "help_page");
-
-  m_top_stack.set_transition_duration(DEFAULT_TRANSITION_DURATION);
-
   // Set some default properties for titlebar
   m_headerbar.set_custom_title(m_switcher);
-  m_headerbar.pack_end(m_help_button);
+  m_headerbar.pack_end(help_toggle);
   m_headerbar.pack_end(m_search_button);
 
   m_headerbar.set_title("AppAnvil");
@@ -76,31 +62,11 @@ MainWindow::MainWindow()
 
   // Add and show all children
   this->set_titlebar(m_headerbar);
-  this->add(m_top_stack);
+  this->add(m_tab_stack);
   this->show_all();
 
   // Hide the side info in the Profiles Tab
   prof_control->get_tab()->hide_profile_info();
-}
-
-void MainWindow::on_help_toggle()
-{
-  const bool is_active = m_help_button.get_active();
-
-  if (is_active) {
-    m_switcher.hide();
-    m_top_stack.set_visible_child("help_page", Gtk::STACK_TRANSITION_TYPE_SLIDE_DOWN);
-    m_help_button.set_label("Return to application");
-    m_help_button.set_always_show_image(false);
-  } else {
-    m_switcher.show();
-    m_top_stack.set_visible_child("main_page", Gtk::STACK_TRANSITION_TYPE_SLIDE_UP);
-    m_help_button.set_label("");
-    m_help_button.set_image_from_icon_name("dialog-question");
-    m_help_button.set_always_show_image(true);
-  }
-
-  handle_search_button_visiblity();
 }
 
 void MainWindow::on_search_toggle()
@@ -113,12 +79,10 @@ void MainWindow::on_search_toggle()
     prof_control->get_tab()->show_searchbar(visible_child == "prof");
     proc_control->get_tab()->show_searchbar(visible_child == "proc");
     logs_control->get_tab()->show_searchbar(visible_child == "logs");
-    help->show_searchbar(m_help_button.get_active());
   } else {
     prof_control->get_tab()->hide_searchbar();
     proc_control->get_tab()->hide_searchbar();
     logs_control->get_tab()->hide_searchbar();
-    help->hide_searchbar();
   }
 }
 
@@ -135,18 +99,5 @@ bool MainWindow::on_switch(GdkEvent *event)
     console->send_refresh_message(LOGS);
   }
 
-  handle_search_button_visiblity();
   return false;
-}
-
-void MainWindow::handle_search_button_visiblity()
-{
-  const bool help_is_active       = m_help_button.get_active();
-  const std::string visible_child = m_tab_stack.get_visible_child_name();
-
-  if (visible_child == "profile_loader" && !help_is_active) {
-    m_search_button.hide();
-  } else {
-    m_search_button.show();
-  }
 }
