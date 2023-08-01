@@ -11,7 +11,68 @@
   <object class="GtkPopover" id="help_profile">
     <property name="can-focus">False</property>
     <child>
-      <placeholder/>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="margin-start">10</property>
+        <property name="margin-end">10</property>
+        <property name="margin-top">10</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Terminology</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+              <attribute name="scale" value="1.1000000000000001"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkStackSwitcher">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="width-request">20</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="halign">center</property>
+            <property name="margin-top">10</property>
+            <property name="hexpand">True</property>
+            <property name="label" translatable="yes">&lt;b&gt;Profile:&lt;/b&gt;  AppArmor policy file, lists which resources an application can access.
+
+&lt;b&gt;Status:&lt;/b&gt; Determines the overall behavior of a profle.
+
+&lt;b&gt;Profile Status Types:&lt;/b&gt;
+  • &lt;b&gt;Enforce:&lt;/b&gt; Similar to a whitelist, only grants permissions that are listed in the profile.
+  • &lt;b&gt;Complain:&lt;/b&gt; Similar to a blacklist, will grant any permission that is not explicitly denied by a profile. For use when developing profiles.
+  • &lt;b&gt;Audit:&lt;/b&gt; Equivalent to enforce mode, but all allowed or denied actions are logged.
+  • &lt;b&gt;Unconfined:&lt;/b&gt; Will not confine applications.
+</property>
+            <property name="use-markup">True</property>
+            <property name="wrap">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+      </object>
     </child>
   </object>
   <object class="GtkPopover" id="help_profile_modify">
