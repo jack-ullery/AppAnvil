@@ -11,7 +11,15 @@
 class Help : public Gtk::ToggleButton
 {
 public:
-  Help();
+  enum Type {
+    PROFILE,
+    PROCESS,
+    LOGS
+  };
+
+  explicit Help(Help::Type help_type = Help::Type::PROFILE);
+
+  void set_help_type(Help::Type help_type);
 
 protected:
   void on_help_toggle();
@@ -22,8 +30,11 @@ private:
 
   // Widgets on the tab
   std::unique_ptr<Gtk::Popover> help_profile;
-  std::unique_ptr<Gtk::Popover> help_profile_modify;
+  std::unique_ptr<Gtk::Popover> help_process;
   std::unique_ptr<Gtk::Popover> help_logs;
+
+  // Popup that should show up
+  Help::Type help_type;
 };
 
 #endif // TABS_VIEW_HELP_H

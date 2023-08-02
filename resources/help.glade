@@ -8,6 +8,12 @@
       <placeholder/>
     </child>
   </object>
+  <object class="GtkPopover" id="help_process">
+    <property name="can-focus">False</property>
+    <child>
+      <placeholder/>
+    </child>
+  </object>
   <object class="GtkPopover" id="help_profile">
     <property name="can-focus">False</property>
     <child>
@@ -73,12 +79,6 @@
           </packing>
         </child>
       </object>
-    </child>
-  </object>
-  <object class="GtkPopover" id="help_profile_modify">
-    <property name="can-focus">False</property>
-    <child>
-      <placeholder/>
     </child>
   </object>
 </interface>
