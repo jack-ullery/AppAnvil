@@ -29,11 +29,18 @@ Help::Help(Help::Type help_type)
 void Help::set_help_type(Help::Type help_type)
 {
   this->help_type = help_type;
+
+  // If the help button is toggled, then update the popover
+  on_help_toggle();
 }
 
 void Help::on_help_toggle()
 {
   bool active = this->get_active();
+
+  help_profile->hide();
+  help_process->hide();
+  help_logs->hide();
 
   if(active) {
     switch(help_type)
@@ -50,9 +57,5 @@ void Help::on_help_toggle()
       help_logs->show();
       break;
     };
-  } else {
-    help_profile->hide();
-    help_process->hide();
-    help_logs->hide();
   }
 }
