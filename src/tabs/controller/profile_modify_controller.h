@@ -40,25 +40,25 @@ private:
     ColumnHeader("Execute",
                  "",
                  {
-                                  { "ix", "Inherit execute" },
-                                  { "Px", "Discrete Profile execute" },
-                                  { "Cx", "Transition to Subprofile execute" },
-                                  { "Ux", "Unconfined execute" },
-                                  }
+                   { "ix", "Inherit execute" },
+                   { "Px", "Discrete Profile execute" },
+                   { "Cx", "Transition to Subprofile execute" },
+                   { "Ux", "Unconfined execute" },
+                   }
                  ),
     ColumnHeader("Advanced", ColumnHeader::ColumnType::STRING),
   };
 
   enum FILE_RULE_POS
   {
-    Data      = 0,
-    Path      = 1,
-    Read      = 2,
-    Write     = 3,
-    Link      = 4,
-    Lock      = 5,
-    Exec      = 6,
-    Advanced  = 7,
+    Data     = 0,
+    Path     = 1,
+    Read     = 2,
+    Write    = 3,
+    Link     = 4,
+    Lock     = 5,
+    Exec     = 6,
+    Advanced = 7,
   };
 
   std::stringstream profile_stream;

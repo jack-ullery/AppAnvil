@@ -95,7 +95,8 @@ void ProfilesController<ProfilesTab, Database, Adapter>::change_status(const std
 }
 
 template<class ProfilesTab, class Database, class Adapter>
-void ProfilesController<ProfilesTab, Database, Adapter>::set_status_change_signal_handler(sigc::slot<void(std::string, std::string, std::string)> change_fun)
+void ProfilesController<ProfilesTab, Database, Adapter>::set_status_change_signal_handler(
+  sigc::slot<void(std::string, std::string, std::string)> change_fun)
 {
   profile_status_change_fun = std::move(change_fun);
 }

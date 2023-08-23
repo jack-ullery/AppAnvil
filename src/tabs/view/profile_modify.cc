@@ -34,8 +34,7 @@ void ProfileModifyImpl<AppArmorParser>::update_profile_text()
 }
 
 template<class AppArmorParser>
-ProfileModifyImpl<AppArmorParser>::ProfileModifyImpl(std::shared_ptr<AppArmorParser> parser, 
-                                                     std::shared_ptr<AppArmor::Profile> profile)
+ProfileModifyImpl<AppArmorParser>::ProfileModifyImpl(std::shared_ptr<AppArmorParser> parser, std::shared_ptr<AppArmor::Profile> profile)
   : builder{ Gtk::Builder::create_from_resource("/resources/profile_modify.glade") },
     m_box{ Common::get_widget<Gtk::Box>("m_box", builder) },
     m_title_1{ Common::get_widget<Gtk::Label>("m_title_1", builder) },
@@ -44,7 +43,7 @@ ProfileModifyImpl<AppArmorParser>::ProfileModifyImpl(std::shared_ptr<AppArmorPar
     m_abstraction_view{ Common::get_widget<Gtk::TreeView>("m_abstraction_view", builder) },
     m_file_rule_view{ Common::get_widget<Gtk::TreeView>("m_file_rule_view", builder) },
     m_profile_text{ Common::get_widget<Gtk::TextView>("m_profile_text", builder) },
-    parser{parser}
+    parser{ parser }
 {
   const auto &profile_name = profile->name();
   m_title_1->set_label(profile_name);
