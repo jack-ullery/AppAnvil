@@ -9,10 +9,20 @@
 #include <string>
 
 // clang-tidy throws [cert-err58-cpp], but it's not a problem in this case, so lets ignore it.
-const std::regex unconfined_proc("^\\s*(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(unconfined|\\S+ \\(\\S+\\))\\s+(\\S+)"); // NOLINT(cert-err58-cpp)
+const std::regex unconfined_proc("^\\s*(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(unconfined|-|_|\\S+ \\(\\S+\\))\\s+(\\S+)"); // NOLINT(cert-err58-cpp)
 
 // TODO(regex): This is pretty buggy currently, we should fix it
 const std::regex confined_prof("^\\s*(.+)\\s+\\((enforce|complain|audit)\\)"); // NOLINT(cert-err58-cpp)
+
+unsigned long int safe_convert_pid(const std::string &str)
+{
+  try {
+    return stoul(str);
+  } catch(std::exception &ex) {
+    std::cerr << ex.what() << std::endl;
+    return -1;
+  }
+}
 
 template<class ProcessesTab, class Database, class Adapter>
 void ProcessesController<ProcessesTab, Database, Adapter>::add_row_from_line(const std::string &line)
@@ -20,8 +30,8 @@ void ProcessesController<ProcessesTab, Database, Adapter>::add_row_from_line(con
   std::smatch match;
   std::regex_search(line, match, unconfined_proc);
 
-  unsigned int pid    = stoul(match[1]); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  unsigned int ppid   = stoul(match[2]); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  unsigned long int pid  = safe_convert_pid(match[1]); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  unsigned long int ppid = safe_convert_pid(match[2]); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   std::string user    = match[3];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   std::string status  = match[4];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   std::string process = match[5];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
@@ -31,6 +41,8 @@ void ProcessesController<ProcessesTab, Database, Adapter>::add_row_from_line(con
   bool is_confined = std::regex_match(status, match, confined_prof);
   if (is_confined) {
     profile = match[1]; // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  } else {
+    status = "unconfined";
   }
 
   adapter.put_data(process, profile, pid, ppid, user, status);
