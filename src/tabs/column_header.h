@@ -37,7 +37,9 @@ struct ColumnHeader
   {
   }
 
-  explicit ColumnHeader(std::string _name, std::string _placeholder, std::initializer_list<std::pair<std::string, std::string>> _combobox_options)
+  explicit ColumnHeader(std::string _name,
+                        std::string _placeholder,
+                        std::initializer_list<std::pair<std::string, std::string>> _combobox_options)
     : type{ COMBO_BOX },
       name{ _name },
       placeholder{ _placeholder },

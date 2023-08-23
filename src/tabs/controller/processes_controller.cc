@@ -18,7 +18,7 @@ unsigned long int safe_convert_pid(const std::string &str)
 {
   try {
     return stoul(str);
-  } catch(std::exception &ex) {
+  } catch (std::exception &ex) {
     std::cerr << ex.what() << std::endl;
     return -1;
   }
@@ -32,9 +32,9 @@ void ProcessesController<ProcessesTab, Database, Adapter>::add_row_from_line(con
 
   unsigned long int pid  = safe_convert_pid(match[1]); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   unsigned long int ppid = safe_convert_pid(match[2]); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  std::string user    = match[3];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  std::string status  = match[4];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  std::string process = match[5];        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  std::string user       = match[3];                   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  std::string status     = match[4];                   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  std::string process    = match[5];                   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
 
   // Attempt to get the profile that confines this process (if availible)
   std::string profile;

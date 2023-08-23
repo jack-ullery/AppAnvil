@@ -73,8 +73,7 @@ void ProfileAdapter<Database>::set_profile_status_change_func(const StatusColumn
 }
 
 template<class Database>
-ProfileAdapter<Database>::ProfileAdapter(std::shared_ptr<Database> db,
-                                         const std::shared_ptr<Gtk::TreeView> &view)
+ProfileAdapter<Database>::ProfileAdapter(std::shared_ptr<Database> db, const std::shared_ptr<Gtk::TreeView> &view)
   : db{ db },
     col_record{ StatusColumnRecord::create(view, col_names) }
 {
