@@ -41,7 +41,7 @@ struct ColumnHeader
     : type{ COMBO_BOX },
       name{ _name },
       placeholder{ _placeholder },
-      combobox_options{ _combobox_options }
+      combobox_options(_combobox_options)
   {
   }
 };
