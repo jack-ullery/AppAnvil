@@ -36,7 +36,7 @@ public:
    * @brief Return the output of `ps`
    *
    * @details
-   * Returns the output of `pkexec ps -A --format pid,ppid,user,context,comm` to get a 
+   * Returns the output of `pkexec ps -A --format pid,ppid,user,context,comm` to get a
    * list of processes which may (or may not) ne confined by apparmor.
    *
    * @returns std::string the raw output of aa-unconfined
