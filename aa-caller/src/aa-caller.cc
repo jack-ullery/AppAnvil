@@ -11,6 +11,10 @@ AppArmorCaller::results AppArmorCaller::call_command(const std::vector<std::stri
   std::vector<std::string> possible_directories = { "/usr/bin/", "/usr/sbin/" };
 
   // Search for the directory where the binary is located
+  // Note: Normally we would use the flag Glib::SpawnFlags::SPAWN_SEARCH_PATH_FROM_ENVP
+  //       to make Glib search for this. However, I was getting an uncatchable Glib::SpawnError
+  //       that would crash aa-caller. There probably is a better solution, but I resorted to 
+  //       manually searching for the binary to avoid this issue.
   std::string command_dir = "";
   for (const auto &dir : possible_directories) {
     std::filesystem::path path(dir);
@@ -23,7 +27,7 @@ AppArmorCaller::results AppArmorCaller::call_command(const std::vector<std::stri
   }
 
   if (!command_dir.empty()) {
-    // We found the binaries location, so lets run the command
+    // We found the binary's location, so lets run the command
     std::vector<std::string> envp{};
     Glib::spawn_sync(command_dir, command, envp, Glib::SpawnFlags::SPAWN_DEFAULT, {}, &result.output, &result.error, &result.exit_status);
   } else {
