@@ -1,15 +1,39 @@
 #include "aa-caller.h"
 
 #include <cstdlib>
+#include <filesystem>
 #include <glibmm/spawn.h>
 #include <iostream>
 
 AppArmorCaller::results AppArmorCaller::call_command(const std::vector<std::string> &command)
 {
   results result;
-  std::vector<std::string> envp = { "/usr/bin/", "/usr/sbin/" };
-  Glib::spawn_sync(
-    "/usr/sbin/", command, envp, Glib::SpawnFlags::SPAWN_SEARCH_PATH_FROM_ENVP, {}, &result.output, &result.error, &result.exit_status);
+  std::vector<std::string> possible_directories = { "/usr/bin/", "/usr/sbin/" };
+
+  // Search for the directory where the binary is located
+  std::string command_dir = "";
+  for (const auto &dir : possible_directories) {
+    std::filesystem::path path(dir);
+    path.append(command[0]);
+
+    if (std::filesystem::exists(path)) {
+      command_dir = dir;
+      break;
+    }
+  }
+
+  if (!command_dir.empty()) {
+    // We found the binaries location, so lets run the command
+    std::vector<std::string> envp{};
+    Glib::spawn_sync(command_dir, command, envp, Glib::SpawnFlags::SPAWN_DEFAULT, {}, &result.output, &result.error, &result.exit_status);
+  } else {
+    // If we could not find the binary, then return an error
+    std::stringstream error_message;
+    error_message << command[0] << ": Command not found" << std::endl;
+
+    result.exit_status = 127;
+    result.error       = error_message.str();
+  }
   return result;
 }
 
