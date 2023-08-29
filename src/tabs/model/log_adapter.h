@@ -43,7 +43,7 @@ private:
                                              ColumnHeader("Time"),
                                              ColumnHeader("Type"),
                                              ColumnHeader("Operation"),
-                                             ColumnHeader("Name"),
+                                             ColumnHeader("Profile"),
                                              ColumnHeader("Pid", ColumnHeader::ColumnType::INT) };
 
   const std::shared_ptr<ColumnRecord> col_record;
