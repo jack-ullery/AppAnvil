@@ -57,7 +57,7 @@
 
 &lt;b&gt;Profile:&lt;/b&gt; AppArmor policy file, lists resources an application can access.
 
-&lt;b&gt;Status:&lt;/b&gt; Determines the overall behavior of a profle.
+&lt;b&gt;Status:&lt;/b&gt; Determines the overall behavior of a profile.
 
 &lt;b&gt;Status Types:&lt;/b&gt;
   • &lt;b&gt;Enforce:&lt;/b&gt; Similar to a whitelist, only grants permissions that are listed in the profile.
@@ -124,7 +124,7 @@
             <property name="hexpand">True</property>
             <property name="label" translatable="yes">&lt;b&gt;Profile:&lt;/b&gt;  AppArmor policy file, lists which resources an application can access.
 
-&lt;b&gt;Status:&lt;/b&gt; Determines the overall behavior of a profle.
+&lt;b&gt;Status:&lt;/b&gt; Determines the overall behavior of a profile.
 
 &lt;b&gt;Status Types:&lt;/b&gt;
   • &lt;b&gt;Enforce:&lt;/b&gt; Similar to a whitelist, only grants permissions that are listed in the profile.
