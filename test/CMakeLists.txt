@@ -30,7 +30,12 @@ pkg_check_modules(GTKMM gtkmm-3.0)
 
 pkg_check_modules(GTEST gtest)
 pkg_check_modules(GMOCK gmock)
-pkg_check_modules(LIBAPPANVIL REQUIRED libappanvil)
+pkg_search_module(LIBAPPANVIL REQUIRED
+  libappanvil
+  ${CMAKE_INSTALL_PREFIX}/lib64/pkgconfig/libappanvil.pc                  
+  /usr/lib64/pkgconfig/libappanvil.pc
+  /usr/local/lib64/pkgconfig/libappanvil.pc
+)
 
 if(${GTEST_FOUND} AND ${GMOCK_FOUND})
   message(STATUS "Adding unit tests to build")

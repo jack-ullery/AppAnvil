@@ -9,7 +9,7 @@ void print_usage()
   std::cout << "Usage: aa-caller <option>" << std::endl << std::endl;
   std::cout << "Options:" << std::endl;
   std::cout << "   -s :  call \"aa-status\", to get the status of currently confined apps" << std::endl;
-  std::cout << "   -u :  call \"aa-unconfined\", to get the status of some unconfined apps" << std::endl;
+  std::cout << "   -u :  call \"ps\", to get a list of unconfined processes" << std::endl;
   std::cout << "   -l :  call \"ausearch\", to get auditd logs. First line of output is a randomly-named checkpoint file." << std::endl;
   std::cout << "   -l [filename]:  call \"ausearch\", to get auditd logs, using a previously generated checkpoint file." << std::endl;
 }

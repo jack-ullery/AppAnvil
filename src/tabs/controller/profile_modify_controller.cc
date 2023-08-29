@@ -39,7 +39,7 @@ void ProfileModifyController::intialize_file_rules()
     auto shared_rule           = std::make_shared<AppArmor::Tree::FileRule>(rule);
     const std::string filename = rule.getFilename();
     const auto filemode        = rule.getFilemode();
-    const auto prefix = rule.getPrefix();
+    const auto prefix          = rule.getPrefix();
 
     auto row = file_rule_record->new_row();
     row->set_value(FILE_RULE_POS::Data, shared_rule);
@@ -114,7 +114,7 @@ void ProfileModifyController::handle_file_rule_changed(const std::string &path)
         AppArmor::Tree::FileRule new_rule(0, -1, rule->getFilename(), new_filemode, rule->getExecTarget(), rule->getIsSubset());
         handle_edit_rule(*rule, new_rule);
       }
-    } catch(const std::exception &ex) {
+    } catch (const std::exception &ex) {
       std::cerr << "Error when specifying Execute Mode:" << std::endl << ex.what() << std::endl;
 
       // Reset the exec_mode to its previous value
