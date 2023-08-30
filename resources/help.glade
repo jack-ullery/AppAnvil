@@ -5,7 +5,64 @@
   <object class="GtkPopover" id="help_logs">
     <property name="can-focus">False</property>
     <child>
-      <placeholder/>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="margin-start">10</property>
+        <property name="margin-end">10</property>
+        <property name="margin-top">10</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Terminology</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+              <attribute name="scale" value="1.1000000000000001"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkStackSwitcher">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="width-request">20</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="halign">center</property>
+            <property name="margin-top">10</property>
+            <property name="hexpand">True</property>
+            <property name="label" translatable="yes">&lt;b&gt;Common Log Types:&lt;/b&gt;
+  • &lt;b&gt;STATUS:&lt;/b&gt; Marks a change in AppArmor configuration
+  • &lt;b&gt;DENIED:&lt;/b&gt; Emitted when a process is denied access to a resource, unless a deny rule was triggered
+  • &lt;b&gt;ALLOWED:&lt;/b&gt; Emitted when a process in &lt;i&gt;Complain&lt;/i&gt; mode is granted access to a resource that would be denied in &lt;i&gt;Enforce&lt;/i&gt; mode
+  • &lt;b&gt;AUDIT:&lt;/b&gt; Emitted when any rule with an audit flag is triggered
+</property>
+            <property name="use-markup">True</property>
+            <property name="wrap">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+      </object>
     </child>
   </object>
   <object class="GtkPopover" id="help_process">
