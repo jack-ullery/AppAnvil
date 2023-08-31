@@ -1,70 +1,60 @@
 #include "help.h"
 #include "common.h"
 
-#include <string>
-#include <vector>
-
-Help::Help()
+Help::Help(Help::Type help_type)
   : builder{ Gtk::Builder::create_from_resource("/resources/help.glade") },
-    h_box{ Common::get_widget<Gtk::Box>("h_box", builder) },
-    h_label{ Common::get_widget<Gtk::Label>("h_label", builder) },
-    h_searchbox{ Common::get_widget<Gtk::Box>("h_searchbox", builder) },
-    h_search{ Common::get_widget<Gtk::SearchEntry>("h_search", builder) },
-    description{ h_label->get_label() }
+    help_profile{ Common::get_widget<Gtk::Popover>("help_profile", builder) },
+    help_process{ Common::get_widget<Gtk::Popover>("help_process", builder) },
+    help_logs{ Common::get_widget<Gtk::Popover>("help_logs", builder) },
+    help_type{ help_type }
 {
-  auto search_func = sigc::mem_fun(*this, &Help::on_search_changed);
-  set_search_signal_handler(search_func);
+  // Set the image for this button
+  this->set_image_from_icon_name("dialog-question");
 
-  h_label->set_use_markup(true);
-  h_box->set_hexpand();
-  h_box->set_vexpand();
+  // Make popups point to this ToggleButton
+  help_profile->set_relative_to(*this);
+  help_process->set_relative_to(*this);
+  help_logs->set_relative_to(*this);
 
-  // Make the searchbox invisible, until show_searchbar() is called
-  h_searchbox->set_no_show_all(true);
-  hide_searchbar();
+  // Ensure popups are not modal
+  // That other inputs on the screen can be pressed when they are displayed
+  help_profile->set_modal(false);
+  help_process->set_modal(false);
+  help_logs->set_modal(false);
 
-  this->add(*h_box);
+  auto help_toggle_fun = sigc::mem_fun(*this, &Help::on_help_toggle);
+  this->signal_toggled().connect(help_toggle_fun, true);
 }
 
-void Help::hide_searchbar()
+void Help::set_help_type(Help::Type help_type)
 {
-  h_searchbox->hide();
+  this->help_type = help_type;
+
+  // If the help button is toggled, then update the popover
+  on_help_toggle();
 }
 
-void Help::show_searchbar(const bool &should_focus)
+void Help::on_help_toggle()
 {
-  h_searchbox->show();
+  bool active = this->get_active();
 
-  if (should_focus) {
-    h_search->grab_focus();
+  help_profile->hide();
+  help_process->hide();
+  help_logs->hide();
+
+  if (active) {
+    switch (help_type) {
+      case Help::Type::PROFILE:
+        help_profile->show();
+        break;
+
+      case Help::Type::PROCESS:
+        help_process->show();
+        break;
+
+      case Help::Type::LOGS:
+        help_logs->show();
+        break;
+    };
   }
-}
-
-void Help::set_search_signal_handler(const Glib::SignalProxyProperty::SlotType &func)
-{
-  h_search->signal_search_changed().connect(func, true);
-}
-
-// TODO(apparmor): Need to make searchbar more like the one used in status.cc
-void Help::on_search_changed()
-{
-  std::string search = h_search->get_text();
-
-  if (search.empty() || search == "b" || search == "i" || search == "u") {
-    h_label->set_text(description);
-    h_label->set_use_markup(true);
-    return;
-  }
-
-  size_t pos = description.find(search);
-
-  std::string description_copy(description);
-  while (pos != std::string::npos) {
-    auto replacement_string = "<span bgcolor=\"yellow\">" + description_copy.substr(pos, search.size()) + "</span>";
-    description_copy.replace(pos, search.size(), replacement_string);
-    pos = description_copy.find(search, pos + replacement_string.size());
-  }
-
-  h_label->set_text(description_copy);
-  h_label->set_use_markup(true);
 }

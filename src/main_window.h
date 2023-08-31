@@ -79,12 +79,13 @@ private:
   Glib::RefPtr<Gtk::Builder> builder;
 
   // Member widgets:
-  Gtk::Stack m_top_stack;
   Gtk::Stack m_tab_stack;
   Gtk::HeaderBar m_headerbar;
   Gtk::StackSwitcher m_switcher;
-  Gtk::ToggleButton m_help_button;
   Gtk::ToggleButton m_search_button;
+
+  // Custom ToggleButton, which opens popup containers
+  Help help_toggle;
 
   // Data structure for sharing data related to AppArmor between tabs
   std::shared_ptr<Database> database;
@@ -94,14 +95,8 @@ private:
   std::shared_ptr<ProcessesControllerInstance> proc_control;
   std::shared_ptr<LogsControllerInstance> logs_control;
 
-  // Tab (Without Controller)
-  std::shared_ptr<Help> help;
-
   // Second thread for calling command line utilities
   std::shared_ptr<ConsoleThreadInstance> console;
-
-  // Controls whether a the 'Search' button is visible
-  void handle_search_button_visiblity();
 };
 
 #endif // MAIN_WINDOW_H
