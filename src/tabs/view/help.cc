@@ -1,12 +1,12 @@
-#include "common.h"
 #include "help.h"
+#include "common.h"
 
 Help::Help(Help::Type help_type)
   : builder{ Gtk::Builder::create_from_resource("/resources/help.glade") },
     help_profile{ Common::get_widget<Gtk::Popover>("help_profile", builder) },
     help_process{ Common::get_widget<Gtk::Popover>("help_process", builder) },
     help_logs{ Common::get_widget<Gtk::Popover>("help_logs", builder) },
-    help_type{help_type}
+    help_type{ help_type }
 {
   // Set the image for this button
   this->set_image_from_icon_name("dialog-question");
@@ -42,20 +42,19 @@ void Help::on_help_toggle()
   help_process->hide();
   help_logs->hide();
 
-  if(active) {
-    switch(help_type)
-    {
+  if (active) {
+    switch (help_type) {
       case Help::Type::PROFILE:
-      help_profile->show();
-      break;
+        help_profile->show();
+        break;
 
       case Help::Type::PROCESS:
-      help_process->show();
-      break;
+        help_process->show();
+        break;
 
       case Help::Type::LOGS:
-      help_logs->show();
-      break;
+        help_logs->show();
+        break;
     };
   }
 }

@@ -2,8 +2,8 @@
 #define TABS_VIEW_HELP_H
 
 #include <gtkmm/builder.h>
-#include <gtkmm/togglebutton.h>
 #include <gtkmm/popover.h>
+#include <gtkmm/togglebutton.h>
 #include <memory>
 #include <string>
 #include <vector>
@@ -11,7 +11,8 @@
 class Help : public Gtk::ToggleButton
 {
 public:
-  enum Type {
+  enum Type
+  {
     PROFILE,
     PROCESS,
     LOGS
