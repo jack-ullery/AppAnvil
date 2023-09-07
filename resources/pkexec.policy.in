@@ -10,8 +10,7 @@
     <defaults>
       <allow_active>auth_admin_keep</allow_active>
     </defaults>
-    <annotate key="org.freedesktop.policykit.exec.path">/usr/bin/aa-caller</annotate>
-    <annotate key="org.freedesktop.policykit.exec.path">/bin/aa-caller</annotate>
+    <annotate key="org.freedesktop.policykit.exec.path">@CMAKE_INSTALL_PREFIX@/bin/aa-caller</annotate>
   </action>
 
 </policyconfig>
