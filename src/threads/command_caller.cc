@@ -10,7 +10,7 @@
 CommandCaller::results CommandCaller::call_command(const std::vector<std::string> &command)
 {
   results result;
-  std::vector<std::string> envp = { "PATH=/usr/bin/:/usr/sbin/:/usr/local/bin" };
+  std::vector<std::string> envp = { "PATH=/usr/bin:/usr/sbin:/usr/local/bin" };
   Glib::spawn_sync(
     "/usr/sbin/", command, envp, Glib::SpawnFlags::SPAWN_SEARCH_PATH_FROM_ENVP, {}, &result.output, &result.error, &result.exit_status);
   return result;
