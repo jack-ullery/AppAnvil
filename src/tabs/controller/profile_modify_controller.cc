@@ -64,6 +64,8 @@ void ProfileModifyController::update_all_tables()
 
 void ProfileModifyController::handle_profile_changed()
 {
+  parser->saveChanges();
+
   // Find the new parsed profile from the list of profiles
   for (auto new_profile : parser->getProfileList()) {
     if (new_profile.name() == profile->name()) {
