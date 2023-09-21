@@ -26,9 +26,8 @@ std::shared_ptr<Gtk::TreeView> ProfileModifyImpl<AppArmorParser>::get_file_rule_
 }
 
 template<class AppArmorParser>
-void ProfileModifyImpl<AppArmorParser>::connect_apply_buttons(
-  const on_clicked_handler &cancel_button_handler,
-  const on_clicked_handler &apply_button_handler)
+void ProfileModifyImpl<AppArmorParser>::connect_apply_buttons(const on_clicked_handler &cancel_button_handler,
+                                                              const on_clicked_handler &apply_button_handler)
 {
   m_cancel_button->signal_clicked().connect(cancel_button_handler);
   m_apply_button->signal_clicked().connect(apply_button_handler);
