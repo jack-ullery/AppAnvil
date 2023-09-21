@@ -77,7 +77,7 @@ std::string CommandCaller::load_profile(CommandCaller *caller, const std::string
     return result.error;
   }
 
-  return "Success: loading porfile" + fileName;
+  return "Success: loading profile " + fileName;
 }
 
 std::string CommandCaller::disable_profile(CommandCaller *caller, const std::string &profileName)
@@ -89,7 +89,7 @@ std::string CommandCaller::disable_profile(CommandCaller *caller, const std::str
     return result.error;
   }
 
-  return "Success: disabling porfile" + profileName;
+  return "Success: disabling profile " + profileName;
 }
 
 std::string CommandCaller::locate_profile(const std::string &profile, const std::initializer_list<std::string> &possible_profile_locations)

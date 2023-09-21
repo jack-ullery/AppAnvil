@@ -4,9 +4,9 @@
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
-#include <gtkmm/grid.h>
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
+#include <gtkmm/revealer.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/textview.h>
 #include <gtkmm/treeview.h>
@@ -31,6 +31,12 @@ public:
   std::shared_ptr<Gtk::TreeView> get_abstraction_view();
   std::shared_ptr<Gtk::TreeView> get_file_rule_view();
 
+  typedef sigc::slot<void> on_clicked_handler;
+  void connect_apply_buttons(const on_clicked_handler &cancel_button_handler, const on_clicked_handler &apply_button_handler);
+
+  // Decides whether the apply and cancel buttons should be visible
+  void handle_apply_visible();
+
   // Overwrites the data in the Gtk::TreeView, which shows the file this profile is in.
   // Uses the data from AppArmor::Parser
   void update_profile_text();
@@ -49,6 +55,9 @@ private:
   std::shared_ptr<Gtk::TreeView> m_abstraction_view;
   std::shared_ptr<Gtk::TreeView> m_file_rule_view;
   std::shared_ptr<Gtk::TextView> m_profile_text;
+  std::shared_ptr<Gtk::Revealer> m_button_reveal;
+  std::shared_ptr<Gtk::Button> m_cancel_button;
+  std::shared_ptr<Gtk::Button> m_apply_button;
 
   // Fields used for reading and modifying the profile
   std::shared_ptr<AppArmorParser> parser;
