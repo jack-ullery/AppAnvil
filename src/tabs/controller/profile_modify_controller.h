@@ -26,6 +26,8 @@ protected:
   void handle_file_rule_changed(const std::string &path);
   void handle_edit_rule(AppArmor::Tree::FileRule &old_rule, const AppArmor::Tree::FileRule &new_rule);
   void handle_remove_rule(AppArmor::Tree::FileRule &old_rule);
+  void handle_cancel_called();
+  void handle_apply_called();
 
 private:
   const std::vector<ColumnHeader> abstraction_col_names{ ColumnHeader("Abstraction", ColumnHeader::ColumnType::STRING) };

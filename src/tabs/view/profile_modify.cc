@@ -26,10 +26,19 @@ std::shared_ptr<Gtk::TreeView> ProfileModifyImpl<AppArmorParser>::get_file_rule_
 }
 
 template<class AppArmorParser>
+void ProfileModifyImpl<AppArmorParser>::handle_apply_visible()
+{
+  if(parser->hasChanges()) {
+    m_button_box->show();
+  } else {
+    m_button_box->hide();
+  }
+}
+
+template<class AppArmorParser>
 void ProfileModifyImpl<AppArmorParser>::update_profile_text()
 {
   const std::string profile_data = parser->operator std::string();
-
   m_profile_text->get_buffer()->set_text(profile_data);
 }
 
@@ -43,17 +52,23 @@ ProfileModifyImpl<AppArmorParser>::ProfileModifyImpl(std::shared_ptr<AppArmorPar
     m_abstraction_view{ Common::get_widget<Gtk::TreeView>("m_abstraction_view", builder) },
     m_file_rule_view{ Common::get_widget<Gtk::TreeView>("m_file_rule_view", builder) },
     m_profile_text{ Common::get_widget<Gtk::TextView>("m_profile_text", builder) },
+    m_button_box{ Common::get_widget<Gtk::Box>("m_button_box", builder) },
+    m_cancel_button{ Common::get_widget<Gtk::Button>("m_cancel_button", builder) },
+    m_apply_button{ Common::get_widget<Gtk::Button>("m_apply_button", builder) },
     parser{ parser }
 {
+  // Set the labels that show the Profile's name
   const auto &profile_name = profile->name();
   m_title_1->set_label(profile_name);
   m_title_2->set_label(profile_name);
   m_title_3->set_label(profile_name);
 
+  // Fill the textarea for the "Profile Text" section
   update_profile_text();
 
   this->add(*m_box);
   this->show_all();
+  handle_apply_visible();
 }
 
 template class ProfileModifyImpl<AppArmor::Parser>;

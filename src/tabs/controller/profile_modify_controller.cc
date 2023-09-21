@@ -64,8 +64,6 @@ void ProfileModifyController::update_all_tables()
 
 void ProfileModifyController::handle_profile_changed()
 {
-  parser->saveChanges();
-
   // Find the new parsed profile from the list of profiles
   for (auto new_profile : parser->getProfileList()) {
     if (new_profile.name() == profile->name()) {
@@ -76,6 +74,9 @@ void ProfileModifyController::handle_profile_changed()
   // Update all the rows and tables
   update_all_tables();
   modify->update_profile_text();
+
+  // Decide whether the cancel/save buttons should be visible
+  modify->handle_apply_visible();
 }
 
 void ProfileModifyController::handle_file_rule_changed(const std::string &path)
