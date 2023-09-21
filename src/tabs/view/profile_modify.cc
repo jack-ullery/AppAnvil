@@ -37,11 +37,7 @@ void ProfileModifyImpl<AppArmorParser>::connect_apply_buttons(
 template<class AppArmorParser>
 void ProfileModifyImpl<AppArmorParser>::handle_apply_visible()
 {
-  if(parser->hasChanges()) {
-    m_button_box->show();
-  } else {
-    m_button_box->hide();
-  }
+  m_button_reveal->set_reveal_child(parser->hasChanges());
 }
 
 template<class AppArmorParser>
@@ -61,7 +57,7 @@ ProfileModifyImpl<AppArmorParser>::ProfileModifyImpl(std::shared_ptr<AppArmorPar
     m_abstraction_view{ Common::get_widget<Gtk::TreeView>("m_abstraction_view", builder) },
     m_file_rule_view{ Common::get_widget<Gtk::TreeView>("m_file_rule_view", builder) },
     m_profile_text{ Common::get_widget<Gtk::TextView>("m_profile_text", builder) },
-    m_button_box{ Common::get_widget<Gtk::Box>("m_button_box", builder) },
+    m_button_reveal{ Common::get_widget<Gtk::Revealer>("m_button_reveal", builder) },
     m_cancel_button{ Common::get_widget<Gtk::Button>("m_cancel_button", builder) },
     m_apply_button{ Common::get_widget<Gtk::Button>("m_apply_button", builder) },
     parser{ parser }

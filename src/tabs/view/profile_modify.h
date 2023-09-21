@@ -4,9 +4,9 @@
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
-#include <gtkmm/grid.h>
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
+#include <gtkmm/revealer.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/textview.h>
 #include <gtkmm/treeview.h>
@@ -56,7 +56,7 @@ private:
   std::shared_ptr<Gtk::TreeView> m_abstraction_view;
   std::shared_ptr<Gtk::TreeView> m_file_rule_view;
   std::shared_ptr<Gtk::TextView> m_profile_text;
-  std::shared_ptr<Gtk::Box> m_button_box;
+  std::shared_ptr<Gtk::Revealer> m_button_reveal;
   std::shared_ptr<Gtk::Button> m_cancel_button;
   std::shared_ptr<Gtk::Button> m_apply_button;
 
