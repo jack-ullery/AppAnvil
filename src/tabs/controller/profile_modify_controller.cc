@@ -142,6 +142,20 @@ void ProfileModifyController::handle_remove_rule(AppArmor::Tree::FileRule &old_r
   handle_profile_changed();
 }
 
+void ProfileModifyController::handle_cancel_called()
+{
+  parser->cancelChanges();
+  handle_profile_changed();
+}
+
+void ProfileModifyController::handle_apply_called()
+{
+  int re = parser->saveChanges();
+  if (re == 0) {
+    handle_profile_changed();
+  }
+}
+
 ProfileModifyController::ProfileModifyController(std::shared_ptr<AppArmor::Parser> parser, std::shared_ptr<AppArmor::Profile> profile)
   : parser{ parser },
     profile{ profile },
@@ -151,6 +165,10 @@ ProfileModifyController::ProfileModifyController(std::shared_ptr<AppArmor::Parse
 {
   auto change_fun = sigc::mem_fun(*this, &ProfileModifyController::handle_file_rule_changed);
   file_rule_record->set_change_func(change_fun);
+
+  auto handle_cancel_fun = sigc::mem_fun(*this, &ProfileModifyController::handle_cancel_called);
+  auto handle_apply_fun  = sigc::mem_fun(*this, &ProfileModifyController::handle_apply_called);
+  modify->connect_apply_buttons(handle_cancel_fun, handle_apply_fun);
 
   update_all_tables();
 }

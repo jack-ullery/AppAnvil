@@ -31,6 +31,10 @@ public:
   std::shared_ptr<Gtk::TreeView> get_abstraction_view();
   std::shared_ptr<Gtk::TreeView> get_file_rule_view();
 
+  typedef sigc::slot<void> on_clicked_handler;
+  void connect_apply_buttons(const on_clicked_handler &cancel_button_handler,
+                             const on_clicked_handler &apply_button_handler);
+
   // Decides whether the apply and cancel buttons should be visible
   void handle_apply_visible();
 
