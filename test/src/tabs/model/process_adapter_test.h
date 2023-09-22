@@ -10,8 +10,7 @@
 // Test Fixture for Process class
 class ProcessAdapterTest : public ::testing::Test
 {
-
-protected:
+public:
   ProcessAdapterTest()
     : database{ new Database() },
       status{ new Status() },
