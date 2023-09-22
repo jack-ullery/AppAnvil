@@ -14,6 +14,10 @@
 class AppArmorParserMock
 {
 public:
+  AppArmorParserMock() {
+      EXPECT_CALL(*this, hasChanges()).Times(1).WillOnce(testing::Return(false));
+  }
+
   MOCK_METHOD(void, getProfileList, ());
   MOCK_METHOD(void, removeRule, (AppArmor::Tree::ProfileRule & profile, AppArmor::Tree::RuleNode &rule));
   MOCK_METHOD(void, removeRule, (AppArmor::Tree::ProfileRule & profile, AppArmor::Tree::RuleNode &rule, std::ostream &output));
