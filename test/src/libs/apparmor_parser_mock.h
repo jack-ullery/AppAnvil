@@ -32,6 +32,13 @@ public:
                const std::string &fileglob,
                const std::string &filemode,
                std::ostream &output));
+  MOCK_METHOD(bool, hasChanges, ());
+  MOCK_METHOD(void, saveChanges, ());
+  MOCK_METHOD(void, cancelChanges, ());
+
+  operator std::string() {
+    return "this is a string";
+  }
 };
 
 #endif
