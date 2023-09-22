@@ -82,7 +82,7 @@ TEST_F(ProfilesTest, CHANGE_STATUS_WIDGETS_INVISIBLE_WHEN_CHANGE_TOGGLE_NOT_PRES
   ASSERT_FALSE(pc.p_modify_profile_toggle->get_active()) << "This toggle should not be pressed by default, even when a row is selected";
 }
 
-TEST_F(ProfilesTest, SHOW_PROFILE_INFO_MAKES_CHANGE_TOGGLE_VISIBLE)
+TEST_F(ProfilesTest, SHOW_PROFILE_INFO_MAKES_WITHOUT_PROFILE_FOUND)
 {
   ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) << "This toggle should always be visible";
   ASSERT_FALSE(pc.p_modify_profile_toggle->get_sensitive()) << "This toggle should not be enabled by default";
@@ -94,11 +94,11 @@ TEST_F(ProfilesTest, SHOW_PROFILE_INFO_MAKES_CHANGE_TOGGLE_VISIBLE)
   auto store        = initialize_store();
   create_and_select_row(store, profile_name, old_status);
 
-  // This should make the toggle visible, since a row is selected
+  // This should not make the toggle visible, because this profile does not exist
   pc.show_profile_info();
 
   ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) << "This toggle should always be visible";
-  ASSERT_TRUE(pc.p_modify_profile_toggle->get_sensitive()) << "This toggle should be enabled after `show_profile_info()` is called";
+  ASSERT_FALSE(pc.p_modify_profile_toggle->get_sensitive()) << "This toggle should not be enabled because no profile was found in profile_map";
   ASSERT_FALSE(pc.p_modify_profile_toggle->get_active()) << "This toggle should be active after `show_profile_info()` is called";
 }
 
