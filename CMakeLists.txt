@@ -130,6 +130,9 @@ pkg_search_module(LIBAPPANVIL REQUIRED
   ${CMAKE_INSTALL_PREFIX}/lib64/pkgconfig/libappanvil.pc                  
   /usr/lib64/pkgconfig/libappanvil.pc
   /usr/local/lib64/pkgconfig/libappanvil.pc
+  ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig/libappanvil.pc                  
+  /usr/lib/pkgconfig/libappanvil.pc
+  /usr/local/lib/pkgconfig/libappanvil.pc
 )
 
 #### Package the .gresource.xml resource bundle ####
