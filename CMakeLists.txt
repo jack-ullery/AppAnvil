@@ -127,9 +127,9 @@ pkg_check_modules(LIBAPPARMOR REQUIRED libapparmor)
 #### libappanvil custom library for parsing/editing profiles ####
 pkg_search_module(LIBAPPANVIL REQUIRED
   libappanvil
-  ${CMAKE_INSTALL_PREFIX}/lib64/pkgconfig/libappanvil.pc                  
-  /usr/lib64/pkgconfig/libappanvil.pc
-  /usr/local/lib64/pkgconfig/libappanvil.pc
+  ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig/libappanvil.pc                  
+  /usr/lib/pkgconfig/libappanvil.pc
+  /usr/local/lib/pkgconfig/libappanvil.pc
 )
 
 #### Package the .gresource.xml resource bundle ####
