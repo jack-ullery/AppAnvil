@@ -98,7 +98,8 @@ TEST_F(ProfilesTest, SHOW_PROFILE_INFO_MAKES_WITHOUT_PROFILE_FOUND)
   pc.show_profile_info();
 
   ASSERT_TRUE(pc.p_load_profile_toggle->is_visible()) << "This toggle should always be visible";
-  ASSERT_FALSE(pc.p_modify_profile_toggle->get_sensitive()) << "This toggle should not be enabled because no profile was found in profile_map";
+  ASSERT_FALSE(pc.p_modify_profile_toggle->get_sensitive())
+    << "This toggle should not be enabled because no profile was found in profile_map";
   ASSERT_FALSE(pc.p_modify_profile_toggle->get_active()) << "This toggle should be active after `show_profile_info()` is called";
 }
 

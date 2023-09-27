@@ -14,9 +14,7 @@
 class AppArmorParserMock
 {
 public:
-  AppArmorParserMock() {
-      EXPECT_CALL(*this, hasChanges()).Times(1).WillOnce(testing::Return(false));
-  }
+  AppArmorParserMock() { EXPECT_CALL(*this, hasChanges()).Times(1).WillOnce(testing::Return(false)); }
 
   MOCK_METHOD(void, getProfileList, ());
   MOCK_METHOD(void, removeRule, (AppArmor::Tree::ProfileRule & profile, AppArmor::Tree::RuleNode &rule));
@@ -41,9 +39,7 @@ public:
   MOCK_METHOD(void, cancelChanges, ());
   MOCK_METHOD(std::string, getPath, ());
 
-  operator std::string() {
-    return "this is a string";
-  }
+  operator std::string() { return "this is a string"; }
 };
 
 #endif
