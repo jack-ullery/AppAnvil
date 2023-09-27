@@ -10,8 +10,7 @@
 // Test Fixture for Logs class
 class ProfileAdapterTest : public ::testing::Test
 {
-
-protected:
+public:
   ProfileAdapterTest()
     : database{ new Database() },
       status{ new Status() },

@@ -1,7 +1,7 @@
 #ifndef TEST_SRC_TABS_MODEL_PROCESS_ADAPTER_TEST_H
 #define TEST_SRC_TABS_MODEL_PROCESS_ADAPTER_TEST_H
 
-#include "../../../../src/tabs/controller/processes_controller.cc"
+// #include "../../../../src/tabs/controller/processes_controller.cc"
 #include "../../../../src/tabs/model/database.h"
 #include "../../../../src/tabs/model/process_adapter.cc"
 #include "../../../../src/tabs/view/processes.h"
@@ -10,8 +10,7 @@
 // Test Fixture for Process class
 class ProcessAdapterTest : public ::testing::Test
 {
-
-protected:
+public:
   ProcessAdapterTest()
     : database{ new Database() },
       status{ new Status() },

@@ -59,17 +59,17 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
 
   # Set the flags for the "test" target
   target_compile_options(${TEST_NAME} PUBLIC 
-    "-fprofile-arcs"
-    "-ftest-coverage"
+#    "-fprofile-arcs"
+#    "-ftest-coverage"
     "-Wall" 
     "-Wextra"
     "-g"
   )
 
-  target_link_options(${TEST_NAME} PUBLIC 
-    "-fprofile-arcs"
-    "-ftest-coverage"
-  )
+  #target_link_options(${TEST_NAME} PUBLIC 
+  #  "-fprofile-arcs"
+  #  "-ftest-coverage"
+  #)
 
   # Define the "TESTS_ENABLED" preprocessor flag for the "test" target
   target_compile_definitions(${TEST_NAME} PUBLIC -DTESTS_ENABLED)
