@@ -219,93 +219,93 @@
               </packing>
             </child>
             <child>
-              <object class="GtkScrolledWindow">
+              <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="hexpand">True</property>
+                <property name="can-focus">False</property>
+                <property name="margin-start">10</property>
+                <property name="margin-end">15</property>
+                <property name="margin-bottom">5</property>
                 <property name="vexpand">True</property>
-                <property name="hscrollbar-policy">never</property>
+                <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkViewport">
+                  <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
+                    <property name="tooltip-text" translatable="yes">The name of this profile</property>
+                    <property name="halign">start</property>
+                    <property name="valign">start</property>
+                    <property name="margin-end">10</property>
+                    <property name="margin-top">10</property>
+                    <property name="margin-bottom">5</property>
+                    <property name="label" translatable="yes">Profile Text</property>
+                    <property name="selectable">True</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                      <attribute name="variant" value="title-caps"/>
+                      <attribute name="scale" value="1.3999999999999999"/>
+                    </attributes>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkFrame">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="margin-top">10</property>
+                    <property name="vexpand">True</property>
+                    <property name="label-xalign">0.009999999776482582</property>
+                    <property name="label-yalign">0</property>
+                    <property name="shadow-type">in</property>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkScrolledWindow">
                         <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="margin-start">10</property>
-                        <property name="margin-end">15</property>
-                        <property name="margin-bottom">5</property>
-                        <property name="orientation">vertical</property>
+                        <property name="can-focus">True</property>
+                        <property name="vexpand">True</property>
+                        <property name="shadow-type">in</property>
+                        <property name="min-content-width">0</property>
+                        <property name="min-content-height">0</property>
+                        <property name="overlay-scrolling">False</property>
                         <child>
-                          <object class="GtkLabel">
+                          <object class="GtkTextView" id="m_profile_text">
                             <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="tooltip-text" translatable="yes">The name of this profile</property>
-                            <property name="halign">start</property>
-                            <property name="margin-end">10</property>
-                            <property name="margin-top">10</property>
-                            <property name="margin-bottom">5</property>
-                            <property name="hexpand">False</property>
-                            <property name="label" translatable="yes">Profile Text</property>
-                            <property name="selectable">True</property>
-                            <attributes>
-                              <attribute name="weight" value="bold"/>
-                              <attribute name="variant" value="title-caps"/>
-                              <attribute name="scale" value="1.3999999999999999"/>
-                            </attributes>
+                            <property name="can-focus">True</property>
+                            <property name="vexpand">True</property>
+                            <property name="left-margin">5</property>
+                            <property name="right-margin">5</property>
+                            <property name="top-margin">5</property>
+                            <property name="bottom-margin">5</property>
+                            <property name="monospace">True</property>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkFrame">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="margin-top">10</property>
-                            <property name="label-xalign">0.009999999776482582</property>
-                            <property name="label-yalign">0</property>
-                            <child>
-                              <object class="GtkTextView" id="m_profile_text">
-                                <property name="visible">True</property>
-                                <property name="can-focus">True</property>
-                                <property name="left-margin">5</property>
-                                <property name="right-margin">5</property>
-                                <property name="top-margin">5</property>
-                                <property name="bottom-margin">5</property>
-                                <property name="monospace">True</property>
-                              </object>
-                            </child>
-                            <child type="label">
-                              <object class="GtkLabel" id="m_title_3">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="halign">start</property>
-                                <property name="margin-start">10</property>
-                                <property name="margin-top">10</property>
-                                <property name="margin-bottom">5</property>
-                                <property name="label" translatable="yes">Profile Text</property>
-                                <property name="selectable">True</property>
-                                <attributes>
-                                  <attribute name="weight" value="normal"/>
-                                  <attribute name="variant" value="title-caps"/>
-                                  <attribute name="scale" value="1"/>
-                                </attributes>
-                              </object>
-                            </child>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">2</property>
-                          </packing>
                         </child>
                       </object>
                     </child>
+                    <child type="label">
+                      <object class="GtkLabel" id="m_title_3">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="margin-start">10</property>
+                        <property name="margin-top">10</property>
+                        <property name="margin-bottom">5</property>
+                        <property name="label" translatable="yes">Profile Text</property>
+                        <property name="selectable">True</property>
+                        <attributes>
+                          <attribute name="weight" value="normal"/>
+                          <attribute name="variant" value="title-caps"/>
+                          <attribute name="scale" value="1"/>
+                        </attributes>
+                      </object>
+                    </child>
                   </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
                 </child>
               </object>
               <packing>
