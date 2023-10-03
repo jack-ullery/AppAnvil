@@ -13,7 +13,6 @@
 #include <string>
 #include <tuple>
 
-
 template<class ProfilesController, class ProcessesController, class LogsController>
 ConsoleThread<ProfilesController, ProcessesController, LogsController>::ConsoleThread(std::shared_ptr<ProfilesController> prof,
                                                                                       std::shared_ptr<ProcessesController> proc,
@@ -147,7 +146,7 @@ void ConsoleThread<ProfilesController, ProcessesController, LogsController>::con
           break;
       }
     }
-  } catch (std::runtime_error& err) {
+  } catch (std::runtime_error &err) {
     send_quit_message();
     asynchronous_thread.wait();
   }
