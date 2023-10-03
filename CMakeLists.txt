@@ -1,6 +1,7 @@
 cmake_minimum_required (VERSION 3.16.3)
 
 project (appanvil)
+set(PROJECT_VERSION 0.2)
 
 #### Set Source Code #####
 set(PROJECT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -143,6 +144,8 @@ execute_process(
   OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
+configure_file(${PROJECT_RESOURCE_DIR}/appanvil.desktop.in appanvil.desktop @ONLY)
+
 # This ensures that ${GLADE_RESOURCES} uses semicolons instead of newline characters as seperators
 string(REGEX REPLACE "\n" ";" GLADE_RESOURCES "${GLADE_RESOURCES}")
 string(REGEX REPLACE "resources/" "${PROJECT_RESOURCE_DIR}/" GLADE_RESOURCES "${GLADE_RESOURCES}")
@@ -204,6 +207,12 @@ add_subdirectory(test)
 install(
   TARGETS ${PROJECT_NAME}
   DESTINATION bin
+)
+
+#### Install desktop entry file ####
+install(
+  FILES ${CMAKE_BINARY_DIR}/appanvil.desktop
+  DESTINATION share/applications
 )
 
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
