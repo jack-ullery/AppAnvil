@@ -25,7 +25,14 @@ std::string CommandCaller::call_command(const std::vector<std::string> &command,
   results result = call_command(command);
 
   if (result.exit_status != 0) {
-    std::cout << "Error calling '" << command[0] << "'. " << result.error << std::endl;
+    std::cout << "Error calling";
+    for (const auto& argument : command) {
+      std::cout << " " << argument;
+    }
+    std::cout << ". " << result.error << std::endl;
+
+    throw std::runtime_error(command[0] + ": " + result.error);
+
     return return_on_error;
   }
 

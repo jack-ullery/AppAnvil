@@ -9,8 +9,10 @@
 #include "tabs/view/profiles.h"
 #include "threads/command_caller.h"
 
+#include <stdexcept>
 #include <string>
 #include <tuple>
+
 
 template<class ProfilesController, class ProcessesController, class LogsController>
 ConsoleThread<ProfilesController, ProcessesController, LogsController>::ConsoleThread(std::shared_ptr<ProfilesController> prof,
@@ -122,27 +124,32 @@ void ConsoleThread<ProfilesController, ProcessesController, LogsController>::con
 {
   bool shouldContinue = true;
 
-  while (shouldContinue) {
-    Message message = wait_for_message();
+  try {
+    while (shouldContinue) {
+      Message message = wait_for_message();
 
-    switch (message.event) {
-      case REFRESH:
-        run_command(message.state);
-        break;
+      switch (message.event) {
+        case REFRESH:
+          run_command(message.state);
+          break;
 
-      case CHANGE_STATUS: {
-        const std::string profile    = message.data.at(0);
-        const std::string old_status = message.data.at(1);
-        const std::string new_status = message.data.at(2);
-        std::string return_message   = CommandCaller::execute_change(profile, old_status, new_status);
-        dispatch_man.update_prof_apply_text(return_message);
-        run_command(PROFILE);
-      } break;
+        case CHANGE_STATUS: {
+          const std::string profile    = message.data.at(0);
+          const std::string old_status = message.data.at(1);
+          const std::string new_status = message.data.at(2);
+          std::string return_message   = CommandCaller::execute_change(profile, old_status, new_status);
+          dispatch_man.update_prof_apply_text(return_message);
+          run_command(PROFILE);
+        } break;
 
-      case QUIT:
-        shouldContinue = false;
-        break;
+        case QUIT:
+          shouldContinue = false;
+          break;
+      }
     }
+  } catch (std::runtime_error& err) {
+    send_quit_message();
+    asynchronous_thread.wait();
   }
 }
 
