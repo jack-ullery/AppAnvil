@@ -1,8 +1,8 @@
 #ifndef TABS_PROFILES_H
 #define TABS_PROFILES_H
 
-#include "../controller/profile_modify_controller.h"
 #include "../controller/profile_loader_controller.h"
+#include "../controller/profile_modify_controller.h"
 #include "profile_modify.h"
 #include "status.h"
 

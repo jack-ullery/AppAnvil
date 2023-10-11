@@ -24,19 +24,19 @@
 template<class ProfileLoaderTab>
 class ProfileLoaderControllerImpl
 {
-  public:
-    ProfileLoaderControllerImpl();
-    void clearLabel();
+public:
+  ProfileLoaderControllerImpl();
+  void clearLabel();
 
-    // Returns the Tab that this controller communicates with
-    std::shared_ptr<ProfileLoaderTab> get_tab();
+  // Returns the Tab that this controller communicates with
+  std::shared_ptr<ProfileLoaderTab> get_tab();
 
-  protected:
-    // Signal handler
-    void on_confirm_clicked();
+protected:
+  // Signal handler
+  void on_confirm_clicked();
 
-  private:
-      std::shared_ptr<ProfileLoaderTab> fc;
+private:
+  std::shared_ptr<ProfileLoaderTab> fc;
 };
 
 typedef ProfileLoaderControllerImpl<ProfileLoader> ProfileLoaderController;

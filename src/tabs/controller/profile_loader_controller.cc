@@ -8,22 +8,22 @@ void ProfileLoaderControllerImpl<ProfileLoaderTab>::on_confirm_clicked()
 {
   // In production-code, this is a `Glib::RefPtr<Gio::File>`
   auto file = fc->get_file();
-  
+
   // If the file is not null, then attempt to load it as a new profiile
   if (file) {
-  	auto filename = file->get_path(); 
-	  std::string short_filename = CommandCaller::load_profile(filename);
+    auto filename              = file->get_path();
+    std::string short_filename = CommandCaller::load_profile(filename);
 
     // TODO(apparmor): Add error handling, when the profile is not correctly formatted
-	  fc->set_label_text("Done");
-	}
-  else {
-	  fc->set_label_text("No profile selected!");
+    fc->set_label_text("Done");
+  } else {
+    fc->set_label_text("No profile selected!");
   }
 }
 
 template<class ProfileLoaderTab>
-void ProfileLoaderControllerImpl<ProfileLoaderTab>::clearLabel(){
+void ProfileLoaderControllerImpl<ProfileLoaderTab>::clearLabel()
+{
   fc->set_label_text("");
 }
 
@@ -35,7 +35,7 @@ std::shared_ptr<ProfileLoaderTab> ProfileLoaderControllerImpl<ProfileLoaderTab>:
 
 template<class ProfileLoaderTab>
 ProfileLoaderControllerImpl<ProfileLoaderTab>::ProfileLoaderControllerImpl()
-  : fc{new ProfileLoaderTab()}
+  : fc{ new ProfileLoaderTab() }
 {
   auto button_func = sigc::mem_fun(*this, &ProfileLoaderControllerImpl::on_confirm_clicked);
   fc->set_l_button_signal_handler(button_func);
