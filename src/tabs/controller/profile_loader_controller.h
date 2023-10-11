@@ -19,11 +19,13 @@
 #include <string>
 #include <vector>
 
+#include "../view/profile_loader.h"
+
 template<class ProfileLoaderTab>
-class ProfileLoaderController
+class ProfileLoaderControllerImpl
 {
   public:
-    ProfileLoaderController();
+    ProfileLoaderControllerImpl();
     void clearLabel();
 
     // Returns the Tab that this controller communicates with
@@ -36,5 +38,7 @@ class ProfileLoaderController
   private:
       std::shared_ptr<ProfileLoaderTab> fc;
 };
+
+typedef ProfileLoaderControllerImpl<ProfileLoader> ProfileLoaderController;
 
 #endif // TABS_CONTROLLER_PROFILELOADER_CONTROLLER_H

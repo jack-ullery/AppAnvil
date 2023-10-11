@@ -4,7 +4,7 @@
 
 // TODO(apparmor): Need to make asynchronous eventually, there should be no direct calls to CommandCaller
 template<class ProfileLoaderTab>
-void ProfileLoaderController<ProfileLoaderTab>::on_confirm_clicked()
+void ProfileLoaderControllerImpl<ProfileLoaderTab>::on_confirm_clicked()
 {
   // In production-code, this is a `Glib::RefPtr<Gio::File>`
   auto file = fc->get_file();
@@ -23,23 +23,23 @@ void ProfileLoaderController<ProfileLoaderTab>::on_confirm_clicked()
 }
 
 template<class ProfileLoaderTab>
-void ProfileLoaderController<ProfileLoaderTab>::clearLabel(){
+void ProfileLoaderControllerImpl<ProfileLoaderTab>::clearLabel(){
   fc->set_label_text("");
 }
 
 template<class ProfileLoaderTab>
-std::shared_ptr<ProfileLoaderTab> ProfileLoaderController<ProfileLoaderTab>::get_tab()
+std::shared_ptr<ProfileLoaderTab> ProfileLoaderControllerImpl<ProfileLoaderTab>::get_tab()
 {
   return fc;
 }
 
 template<class ProfileLoaderTab>
-ProfileLoaderController<ProfileLoaderTab>::ProfileLoaderController()
+ProfileLoaderControllerImpl<ProfileLoaderTab>::ProfileLoaderControllerImpl()
   : fc{new ProfileLoaderTab()}
 {
-  auto button_func = sigc::mem_fun(*this, &ProfileLoaderController::on_confirm_clicked);
+  auto button_func = sigc::mem_fun(*this, &ProfileLoaderControllerImpl::on_confirm_clicked);
   fc->set_l_button_signal_handler(button_func);
 }
 
 // Used to avoid linker errors
-template class ProfileLoaderController<ProfileLoader>;
+template class ProfileLoaderControllerImpl<ProfileLoader>;

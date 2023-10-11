@@ -3,7 +3,6 @@
 #include "../entries.h"
 #include "../model/status_column_record.h"
 #include "common.h"
-#include "profile_loader.h"
 #include "profile_modify.h"
 #include "status.h"
 
@@ -120,11 +119,11 @@ Profiles::Profiles()
     p_profile_info{ Common::get_widget<Gtk::Box>("p_profile_info", builder) },
     p_num_log_label{ Common::get_widget<Gtk::Label>("p_num_log_label", builder) },
     p_num_proc_label{ Common::get_widget<Gtk::Label>("p_num_proc_label", builder) },
-    loader{ std::make_unique<ProfileLoader>() },
+    loader_controller{ std::make_unique<ProfileLoaderController>() },
     profile_map{ CommandCaller::get_profiles() }
 {
   // Add tabs to the stack pane
-  p_stack->add(*loader, "loadProfile");
+  p_stack->add(*loader_controller->get_tab(), "loadProfile");
 
   // Configure the button used for loading a profile
   auto load_profile_toggle_fun = sigc::mem_fun(*this, &Profiles::handle_load_profile_toggle);
