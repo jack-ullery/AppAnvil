@@ -64,7 +64,7 @@ void ProfilesController<ProfilesTab, Database, Adapter>::change_status(const std
   auto iter = adapter.get_col_record()->get_iter(path);
 
   if (iter != nullptr) {
-    auto row = *iter;
+    const auto &row = *iter;
 
     ProfileTableEntry entry;
     std::string profile;

@@ -26,7 +26,8 @@ template<class AppArmorParser>
 class ProfileModifyImpl : public Gtk::ScrolledWindow
 {
 public:
-  ProfileModifyImpl(std::shared_ptr<AppArmorParser> parser, std::shared_ptr<AppArmor::Profile> profile);
+  ProfileModifyImpl(std::shared_ptr<AppArmorParser> parser,
+                    const std::shared_ptr<AppArmor::Profile> &profile);
 
   std::shared_ptr<Gtk::TreeView> get_abstraction_view();
   std::shared_ptr<Gtk::TreeView> get_file_rule_view();

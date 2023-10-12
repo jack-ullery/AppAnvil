@@ -13,7 +13,8 @@
 class ProfileModifyController
 {
 public:
-  ProfileModifyController(std::shared_ptr<AppArmor::Parser> parser, std::shared_ptr<AppArmor::Profile> profile);
+  ProfileModifyController(const std::shared_ptr<AppArmor::Parser> &parser,
+                          const std::shared_ptr<AppArmor::Profile> &profile);
 
   std::shared_ptr<ProfileModify> get_profile_modify();
 
