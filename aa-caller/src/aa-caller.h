@@ -73,6 +73,9 @@ protected:
     std::string error;
   };
 
+  static constexpr uint COMMAND_NOT_FOUND_STATUS = 127;
+  static constexpr uint AUSEARCH_NO_RESULT_STATUS = 256;
+
   // Used to call command-line commands from `/usr/sbin`
   virtual results call_command(const std::vector<std::string> &command);
   virtual std::string call_command(const std::vector<std::string> &command, const std::string &return_on_error);
