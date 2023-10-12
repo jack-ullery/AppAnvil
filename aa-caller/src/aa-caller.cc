@@ -1,9 +1,9 @@
 #include "aa-caller.h"
 
-#include <cstdlib>
 #include <filesystem>
 #include <glibmm/spawn.h>
 #include <iostream>
+#include <random>
 
 AppArmorCaller::results AppArmorCaller::call_command(const std::vector<std::string> &command)
 {
@@ -15,7 +15,7 @@ AppArmorCaller::results AppArmorCaller::call_command(const std::vector<std::stri
   //       to make Glib search for this. However, I was getting an uncatchable Glib::SpawnError
   //       that would crash aa-caller. There probably is a better solution, but I resorted to
   //       manually searching for the binary to avoid this issue.
-  std::string command_dir = "";
+  std::string command_dir;
   for (const auto &dir : possible_directories) {
     std::filesystem::path path(dir);
     path.append(command[0]);
@@ -35,7 +35,7 @@ AppArmorCaller::results AppArmorCaller::call_command(const std::vector<std::stri
     std::stringstream error_message;
     error_message << command[0] << ": Command not found" << std::endl;
 
-    result.exit_status = 127;
+    result.exit_status = COMMAND_NOT_FOUND_STATUS;
     result.error       = error_message.str();
   }
   return result;
@@ -53,7 +53,7 @@ std::string AppArmorCaller::call_command(const std::vector<std::string> &command
   if (result.exit_status != 0) {
     // ausearch returns and error code if no data was found
     // I do not consider that an issue, so I suppress it here
-    if (command[0] != "ausearch" || result.exit_status != 256) {
+    if (command[0] != "ausearch" || result.exit_status != AUSEARCH_NO_RESULT_STATUS) {
       std::cerr << "Error calling '" << command[0] << "' returned (" << result.exit_status << "). " << result.error << std::endl;
       return return_on_error;
     }
@@ -97,16 +97,21 @@ std::string AppArmorCaller::get_unconfined()
   return get_unconfined(&caller);
 }
 
+// Seeds a PRNG and generates one random uint
+uint one_rand()
+{
+  std::random_device rd;
+  std::mt19937 gen32(rd());
+  return gen32();
+}
+
 std::string AppArmorCaller::get_logs()
 {
   AppArmorCaller caller;
 
-  // Seed the random number generator using the time
-  srand(time(NULL));
-
   // Create a random filename with the following format '/tmp/appanvil-$RAND'
   std::stringstream stream;
-  stream << "/tmp/appanvil-" << rand();
+  stream << "/tmp/appanvil-" << one_rand();
 
   // Call get_logs and append the output to what we are interested in
   std::string output = get_logs(&caller, stream.str());

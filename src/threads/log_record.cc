@@ -86,7 +86,7 @@ std::string LogRecord::name() const
 }
 
 // Attempts to emplace key/value pair to a list (if the 'value' is not null)
-void attempt_emplace_pair(std::list<std::pair<std::string, std::string>> &metadata, std::string key, char *value)
+void attempt_emplace_pair(std::list<std::pair<std::string, std::string>> &metadata, const std::string &key, const char *value)
 {
   if (value != nullptr) {
     metadata.emplace_back(key, value);
