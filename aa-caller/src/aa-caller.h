@@ -73,7 +73,7 @@ protected:
     std::string error;
   };
 
-  static constexpr uint COMMAND_NOT_FOUND_STATUS = 127;
+  static constexpr uint COMMAND_NOT_FOUND_STATUS  = 127;
   static constexpr uint AUSEARCH_NO_RESULT_STATUS = 256;
 
   // Used to call command-line commands from `/usr/sbin`

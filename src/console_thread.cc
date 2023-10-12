@@ -151,7 +151,7 @@ template<class ProfilesController, class ProcessesController, class LogsControll
 ConsoleThread<ProfilesController, ProcessesController, LogsController>
   &ConsoleThread<ProfilesController, ProcessesController, LogsController>::operator=(ConsoleThread &&other) noexcept
 {
-  queue = other.queue;
+  queue      = other.queue;
   last_state = other.last_state;
   // log_cursor = other.log_cursor;
   // log_reader = other.log_reader;
