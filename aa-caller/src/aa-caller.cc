@@ -1,9 +1,9 @@
 #include "aa-caller.h"
 
-#include <cstdlib>
 #include <filesystem>
 #include <glibmm/spawn.h>
 #include <iostream>
+#include <random>
 
 AppArmorCaller::results AppArmorCaller::call_command(const std::vector<std::string> &command)
 {
@@ -97,16 +97,21 @@ std::string AppArmorCaller::get_unconfined()
   return get_unconfined(&caller);
 }
 
+// Seeds a PRNG and generates one random uint
+uint one_rand()
+{
+  std::random_device rd;
+  std::mt19937 gen32(rd());
+  return gen32();
+}
+
 std::string AppArmorCaller::get_logs()
 {
   AppArmorCaller caller;
 
-  // Seed the random number generator using the time
-  srand(time(NULL));
-
   // Create a random filename with the following format '/tmp/appanvil-$RAND'
   std::stringstream stream;
-  stream << "/tmp/appanvil-" << rand();
+  stream << "/tmp/appanvil-" << one_rand();
 
   // Call get_logs and append the output to what we are interested in
   std::string output = get_logs(&caller, stream.str());
