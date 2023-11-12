@@ -7,7 +7,6 @@
 #include <gtkmm/enums.h>
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
-#include <iostream>
 #include <libappanvil/apparmor_parser.hh>
 #include <memory>
 #include <string>
@@ -26,11 +25,17 @@ std::shared_ptr<Gtk::TreeView> ProfileModifyImpl<AppArmorParser>::get_file_rule_
 }
 
 template<class AppArmorParser>
-void ProfileModifyImpl<AppArmorParser>::connect_apply_buttons(const on_clicked_handler &cancel_button_handler,
-                                                              const on_clicked_handler &apply_button_handler)
+void ProfileModifyImpl<AppArmorParser>::connect_apply_buttons(const void_func &cancel_button_handler,
+                                                              const void_func &apply_button_handler)
 {
   m_cancel_button->signal_clicked().connect(cancel_button_handler);
   m_apply_button->signal_clicked().connect(apply_button_handler);
+}
+
+template<class AppArmorParser>
+void ProfileModifyImpl<AppArmorParser>::connect_handle_profile_changed(const void_func &parser_handler)
+{
+  handle_apparmor_parser_changed = parser_handler;
 }
 
 template<class AppArmorParser>
@@ -47,13 +52,23 @@ void ProfileModifyImpl<AppArmorParser>::update_profile_text()
 }
 
 template<class AppArmorParser>
-void ProfileModifyImpl<AppArmorParser>::handle_profile_text_change()
+void ProfileModifyImpl<AppArmorParser>::handle_raw_profile_text_change()
 {
   const std::string old_profile_data = parser->operator std::string();
   const std::string new_profile_data = m_profile_text->get_buffer()->get_text();
 
   const bool changed = (old_profile_data != new_profile_data);
   m_raw_text_apply_reveal->set_reveal_child(changed);
+}
+
+template<class AppArmorParser>
+void ProfileModifyImpl<AppArmorParser>::apply_raw_profile_text_change()
+{
+  const std::string new_profile_data = m_profile_text->get_buffer()->get_text();
+  parser->updateFromString(new_profile_data);
+
+  handle_apparmor_parser_changed();
+  handle_raw_profile_text_change();
 }
 
 template<class AppArmorParser>
@@ -83,10 +98,16 @@ ProfileModifyImpl<AppArmorParser>::ProfileModifyImpl(std::shared_ptr<AppArmorPar
 
   // Fill the textarea for the "Profile Text" section
   update_profile_text();
-  handle_profile_text_change();
+  handle_raw_profile_text_change();
+
+  // Connect buttons which change m_profile_text
+  auto cancel_raw_text_change = sigc::mem_fun(*this, &ProfileModifyImpl<AppArmorParser>::update_profile_text);
+  auto apply_raw_text_change  = sigc::mem_fun(*this, &ProfileModifyImpl<AppArmorParser>::apply_raw_profile_text_change);
+  m_raw_text_cancel_button->signal_clicked().connect(cancel_raw_text_change);
+  m_raw_text_apply_button->signal_clicked().connect(apply_raw_text_change);
 
   // Handle the changes in m_profile_text
-  auto handle_text_change = sigc::mem_fun(*this, &ProfileModifyImpl<AppArmorParser>::handle_profile_text_change);
+  auto handle_text_change = sigc::mem_fun(*this, &ProfileModifyImpl<AppArmorParser>::handle_raw_profile_text_change);
   m_profile_text->get_buffer()->signal_changed().connect(handle_text_change);
 
   this->add(*m_box);
