@@ -41,6 +41,10 @@ public:
   // Uses the data from AppArmor::Parser
   void update_profile_text();
 
+protected:
+  // Called when the buffer in 'm_profile_text' is changed
+  void handle_profile_text_change();
+
 private:
   // GUI Builder to parse UI from xml file
   Glib::RefPtr<Gtk::Builder> builder;
@@ -58,6 +62,9 @@ private:
   std::shared_ptr<Gtk::Revealer> m_button_reveal;
   std::shared_ptr<Gtk::Button> m_cancel_button;
   std::shared_ptr<Gtk::Button> m_apply_button;
+  std::shared_ptr<Gtk::Revealer> m_raw_text_apply_reveal;
+  std::shared_ptr<Gtk::Button> m_raw_text_cancel_button;
+  std::shared_ptr<Gtk::Button> m_raw_text_apply_button;
 
   // Fields used for reading and modifying the profile
   std::shared_ptr<AppArmorParser> parser;

@@ -2,6 +2,27 @@
 <!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
+  <object class="GtkImage" id="dialog-apply-2">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">view-refresh</property>
+  </object>
+  <object class="GtkImage" id="dialog-cancel">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">dialog-cancel</property>
+  </object>
+  <object class="GtkImage" id="dialog-cancel-2">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">dialog-cancel</property>
+  </object>
+  <object class="GtkImage" id="dialog-ok">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">dialog-ok</property>
+    <property name="use-fallback">True</property>
+  </object>
   <object class="GtkBox" id="m_box">
     <property name="width-request">200</property>
     <property name="height-request">200</property>
@@ -265,7 +286,6 @@
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="vexpand">True</property>
-                        <property name="shadow-type">in</property>
                         <property name="min-content-width">0</property>
                         <property name="min-content-height">0</property>
                         <property name="overlay-scrolling">False</property>
@@ -307,6 +327,95 @@
                     <property name="position">1</property>
                   </packing>
                 </child>
+                <child>
+                  <object class="GtkRevealer" id="m_raw_text_apply_reveal">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="transition-type">slide-up</property>
+                    <property name="transition-duration">200</property>
+                    <property name="reveal-child">True</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-start">10</property>
+                        <property name="margin-end">10</property>
+                        <property name="margin-top">5</property>
+                        <property name="margin-bottom">5</property>
+                        <property name="spacing">5</property>
+                        <child>
+                          <object class="GtkButtonBox">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="halign">end</property>
+                            <property name="hexpand">True</property>
+                            <child>
+                              <object class="GtkButton" id="m_raw_text_cancel_button">
+                                <property name="label" translatable="yes"> Cancel</property>
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="receives-default">True</property>
+                                <property name="image">dialog-cancel-2</property>
+                                <property name="always-show-image">True</property>
+                              </object>
+                              <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="m_raw_text_apply_button">
+                                <property name="label" translatable="yes"> Parse</property>
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="receives-default">True</property>
+                                <property name="image">dialog-apply-2</property>
+                                <property name="always-show-image">True</property>
+                              </object>
+                              <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
+                                <property name="position">2</property>
+                              </packing>
+                            </child>
+                            <style>
+                              <class name="linked"/>
+                            </style>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="pack-type">end</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="hexpand">True</property>
+                            <property name="label" translatable="yes">There are unparsed manual changes </property>
+                            <attributes>
+                              <attribute name="style" value="italic"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
               </object>
               <packing>
                 <property name="name">raw_profile</property>
@@ -345,11 +454,11 @@
                     <property name="hexpand">True</property>
                     <child>
                       <object class="GtkButton" id="m_cancel_button">
-                        <property name="label">gtk-cancel</property>
+                        <property name="label" translatable="yes"> Cancel</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
-                        <property name="use-stock">True</property>
+                        <property name="image">dialog-cancel</property>
                         <property name="always-show-image">True</property>
                       </object>
                       <packing>
@@ -360,11 +469,11 @@
                     </child>
                     <child>
                       <object class="GtkButton" id="m_apply_button">
-                        <property name="label">gtk-apply</property>
+                        <property name="label" translatable="yes"> Apply</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
-                        <property name="use-stock">True</property>
+                        <property name="image">dialog-ok</property>
                         <property name="always-show-image">True</property>
                       </object>
                       <packing>
@@ -390,7 +499,7 @@
                     <property name="can-focus">False</property>
                     <property name="halign">start</property>
                     <property name="hexpand">True</property>
-                    <property name="label" translatable="yes">There are unsaved changes </property>
+                    <property name="label" translatable="yes">There are unapplied changes </property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                     </attributes>

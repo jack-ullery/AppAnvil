@@ -47,6 +47,16 @@ void ProfileModifyImpl<AppArmorParser>::update_profile_text()
 }
 
 template<class AppArmorParser>
+void ProfileModifyImpl<AppArmorParser>::handle_profile_text_change()
+{
+  const std::string old_profile_data = parser->operator std::string();
+  const std::string new_profile_data = m_profile_text->get_buffer()->get_text();
+
+  const bool changed = (old_profile_data != new_profile_data);
+  m_raw_text_apply_reveal->set_reveal_child(changed);
+}
+
+template<class AppArmorParser>
 ProfileModifyImpl<AppArmorParser>::ProfileModifyImpl(std::shared_ptr<AppArmorParser> parser,
                                                      const std::shared_ptr<AppArmor::Profile> &profile)
   : builder{ Gtk::Builder::create_from_resource("/resources/profile_modify.glade") },
@@ -60,6 +70,9 @@ ProfileModifyImpl<AppArmorParser>::ProfileModifyImpl(std::shared_ptr<AppArmorPar
     m_button_reveal{ Common::get_widget<Gtk::Revealer>("m_button_reveal", builder) },
     m_cancel_button{ Common::get_widget<Gtk::Button>("m_cancel_button", builder) },
     m_apply_button{ Common::get_widget<Gtk::Button>("m_apply_button", builder) },
+    m_raw_text_apply_reveal{Common::get_widget<Gtk::Revealer>("m_raw_text_apply_reveal", builder)},
+    m_raw_text_cancel_button{Common::get_widget<Gtk::Button>("m_raw_text_cancel_button", builder)},
+    m_raw_text_apply_button{Common::get_widget<Gtk::Button>("m_raw_text_apply_button", builder)},
     parser{ parser }
 {
   // Set the labels that show the Profile's name
@@ -70,6 +83,11 @@ ProfileModifyImpl<AppArmorParser>::ProfileModifyImpl(std::shared_ptr<AppArmorPar
 
   // Fill the textarea for the "Profile Text" section
   update_profile_text();
+  handle_profile_text_change();
+
+  // Handle the changes in m_profile_text
+  auto handle_text_change = sigc::mem_fun(*this, &ProfileModifyImpl<AppArmorParser>::handle_profile_text_change);
+  m_profile_text->get_buffer()->signal_changed().connect(handle_text_change);
 
   this->add(*m_box);
   this->show_all();
