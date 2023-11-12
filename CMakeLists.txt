@@ -1,6 +1,7 @@
 cmake_minimum_required (VERSION 3.16.3)
 
 project (appanvil)
+set(PROJECT_VERSION 0.2)
 
 #### Set Source Code #####
 set(PROJECT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -24,6 +25,7 @@ set(
   ${PROJECT_SOURCE_DIR}/tabs/controller/status_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/controller/profiles_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/controller/profile_modify_controller.cc
+  ${PROJECT_SOURCE_DIR}/tabs/controller/profile_loader_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/controller/processes_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/controller/logs_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/status.cc
@@ -143,6 +145,10 @@ execute_process(
   OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
+set(APPANVIL_DESKTOP_IN ${PROJECT_RESOURCE_DIR}/appanvil.desktop.in)
+set(APPANVIL_DESKTOP    ${PROJECT_RESOURCE_DIR}/appanvil.desktop)
+configure_file(${APPANVIL_DESKTOP_IN} ${APPANVIL_DESKTOP} @ONLY)
+
 # This ensures that ${GLADE_RESOURCES} uses semicolons instead of newline characters as seperators
 string(REGEX REPLACE "\n" ";" GLADE_RESOURCES "${GLADE_RESOURCES}")
 string(REGEX REPLACE "resources/" "${PROJECT_RESOURCE_DIR}/" GLADE_RESOURCES "${GLADE_RESOURCES}")
@@ -204,6 +210,12 @@ add_subdirectory(test)
 install(
   TARGETS ${PROJECT_NAME}
   DESTINATION bin
+)
+
+#### Install desktop entry file ####
+install(
+  FILES ${APPANVIL_DESKTOP}
+  DESTINATION share/applications
 )
 
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME})

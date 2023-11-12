@@ -23,22 +23,20 @@ struct ColumnHeader
   std::string placeholder;
   std::initializer_list<std::pair<std::string, std::string>> combobox_options;
 
-  ColumnHeader(std::string _name, ColumnType _type)
+  ColumnHeader(const std::string &_name, const ColumnType &_type)
     : type{ _type },
-      name{ _name },
-      placeholder()
+      name{ _name }
   {
   }
 
-  explicit ColumnHeader(std::string _name)
+  explicit ColumnHeader(const std::string &_name)
     : type{ STRING },
-      name{ _name },
-      placeholder()
+      name{ _name }
   {
   }
 
-  explicit ColumnHeader(std::string _name,
-                        std::string _placeholder,
+  explicit ColumnHeader(const std::string &_name,
+                        const std::string &_placeholder,
                         std::initializer_list<std::pair<std::string, std::string>> _combobox_options)
     : type{ COMBO_BOX },
       name{ _name },

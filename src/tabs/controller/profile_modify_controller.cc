@@ -65,7 +65,7 @@ void ProfileModifyController::update_all_tables()
 void ProfileModifyController::handle_profile_changed()
 {
   // Find the new parsed profile from the list of profiles
-  for (auto new_profile : parser->getProfileList()) {
+  for (const auto &new_profile : parser->getProfileList()) {
     if (new_profile.name() == profile->name()) {
       profile = std::make_shared<AppArmor::Profile>(new_profile);
     }
@@ -130,7 +130,7 @@ void ProfileModifyController::handle_file_rule_changed(const std::string &path)
 
 void ProfileModifyController::handle_edit_rule(AppArmor::Tree::FileRule &old_rule, const AppArmor::Tree::FileRule &new_rule)
 {
-  std::cout << "Edited Rule: " << std::string(new_rule) << std::endl;
+  std::cout << "Edited Rule: " << new_rule.operator std::string() << std::endl;
   parser->editRule(*profile, old_rule, new_rule, profile_stream);
   handle_profile_changed();
 }
@@ -156,7 +156,8 @@ void ProfileModifyController::handle_apply_called()
   }
 }
 
-ProfileModifyController::ProfileModifyController(std::shared_ptr<AppArmor::Parser> parser, std::shared_ptr<AppArmor::Profile> profile)
+ProfileModifyController::ProfileModifyController(const std::shared_ptr<AppArmor::Parser> &parser,
+                                                 const std::shared_ptr<AppArmor::Profile> &profile)
   : parser{ parser },
     profile{ profile },
     modify{ std::make_shared<ProfileModify>(parser, profile) },

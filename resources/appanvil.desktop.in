@@ -1,0 +1,6 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=@PROJECT_VERSION@
+Type=Application
+Exec=@CMAKE_INSTALL_PREFIX@/bin/@PROJECT_NAME@
+Name=AppAnvil

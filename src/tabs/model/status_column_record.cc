@@ -282,9 +282,9 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
         auto lambda = [this, i](const std::string &path) -> void {
           auto iter = get_iter(path);
 
-          bool value;
-          iter->get_value(i, value);
-          iter->set_value(i, !value);
+          bool value = false;
+          iter->get_value(static_cast<int>(i), value);
+          iter->set_value(static_cast<int>(i), !value);
 
           change_fun(path);
         };
@@ -306,7 +306,7 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
 
       // Called when a user changes the combobox
       auto lambda = [&, i](const Glib::ustring &path_string, const Glib::ustring &new_text) -> void {
-        on_combobox_edited(path_string, new_text, i);
+        on_combobox_edited(path_string, new_text, static_cast<int>(i));
       };
 
       renderer->signal_edited().connect(lambda);

@@ -113,7 +113,7 @@ To format code, without building it:
 ```
 make FORMAT
 ```
-# Uninstall Instructions
+### Uninstall Instructions
 
 To uninstall AppAnvil binaries and pkexec policy from the system:
 ```
