@@ -9,6 +9,7 @@
 #include "tabs/view/profiles.h"
 #include "threads/command_caller.h"
 
+#include <iostream>
 #include <stdexcept>
 #include <string>
 #include <tuple>
@@ -147,8 +148,7 @@ void ConsoleThread<ProfilesController, ProcessesController, LogsController>::con
       }
     }
   } catch (std::runtime_error &err) {
-    send_quit_message();
-    asynchronous_thread.wait();
+    std::cerr << err.what() << std::endl;
   }
 }
 

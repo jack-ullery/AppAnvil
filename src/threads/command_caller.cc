@@ -31,19 +31,29 @@ std::string CommandCaller::call_command(const std::vector<std::string> &command,
     }
     std::cout << ". " << result.error << std::endl;
 
-    throw std::runtime_error(command[0] + ": " + result.error);
-
     return return_on_error;
   }
 
   return result.output;
 }
 
+inline bool contains(const std::string &big_str, const std::string &small_str)
+{
+  return big_str.find(small_str) != std::string::npos;
+}
+
 std::string CommandCaller::get_status(CommandCaller *caller)
 {
   std::vector<std::string> command = { "pkexec", "aa-caller", "-s" };
-  std::string return_on_error      = "{\"processes\": {}, \"profiles\": {}}";
-  return caller->call_command(command, return_on_error);
+  std::string return_on_error = "{\"processes\": {}, \"profiles\": {}}";
+
+  auto result = caller->call_command(command);
+
+  if(result.exit_status != 0 && contains(result.error, "Request dismissed")) {
+    throw std::runtime_error(command[0] + ": " + result.error);
+  }
+
+  return result.output;
 }
 
 std::string CommandCaller::get_unconfined(CommandCaller *caller)
