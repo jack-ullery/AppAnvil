@@ -171,5 +171,8 @@ ProfileModifyController::ProfileModifyController(const std::shared_ptr<AppArmor:
   auto handle_apply_fun  = sigc::mem_fun(*this, &ProfileModifyController::handle_apply_called);
   modify->connect_apply_buttons(handle_cancel_fun, handle_apply_fun);
 
+  auto handle_prof_fun = sigc::mem_fun(*this, &ProfileModifyController::handle_profile_changed);
+  modify->connect_handle_profile_changed(handle_prof_fun);
+
   update_all_tables();
 }
