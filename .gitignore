@@ -25,6 +25,7 @@ resources/#*#
 src/resource.autogen.c
 resources/resource.autogen.c
 resources/com.github.jack-ullery.AppAnvil.pkexec.policy
+resources/appanvil.desktop
 
 dist/
 lib/

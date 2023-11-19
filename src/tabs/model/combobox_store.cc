@@ -5,7 +5,7 @@ Glib::RefPtr<Gtk::ListStore> ComboboxStore::create(std::initializer_list<std::pa
   ModelColumnsCombo model;
   auto store = Gtk::ListStore::create(model);
 
-  for (auto pair : values) {
+  for (const auto &pair : values) {
     auto row                     = *store->append();
     row[model.m_col_choice]      = pair.first;
     row[model.m_col_description] = pair.second;

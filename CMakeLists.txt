@@ -25,6 +25,7 @@ set(
   ${PROJECT_SOURCE_DIR}/tabs/controller/status_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/controller/profiles_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/controller/profile_modify_controller.cc
+  ${PROJECT_SOURCE_DIR}/tabs/controller/profile_loader_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/controller/processes_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/controller/logs_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/status.cc
@@ -144,7 +145,9 @@ execute_process(
   OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
-configure_file(${PROJECT_RESOURCE_DIR}/appanvil.desktop.in appanvil.desktop @ONLY)
+set(APPANVIL_DESKTOP_IN ${PROJECT_RESOURCE_DIR}/appanvil.desktop.in)
+set(APPANVIL_DESKTOP    ${PROJECT_RESOURCE_DIR}/appanvil.desktop)
+configure_file(${APPANVIL_DESKTOP_IN} ${APPANVIL_DESKTOP} @ONLY)
 
 # This ensures that ${GLADE_RESOURCES} uses semicolons instead of newline characters as seperators
 string(REGEX REPLACE "\n" ";" GLADE_RESOURCES "${GLADE_RESOURCES}")
@@ -211,7 +214,7 @@ install(
 
 #### Install desktop entry file ####
 install(
-  FILES ${CMAKE_BINARY_DIR}/appanvil.desktop
+  FILES ${APPANVIL_DESKTOP}
   DESTINATION share/applications
 )
 

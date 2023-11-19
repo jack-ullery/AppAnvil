@@ -1,8 +1,8 @@
 #ifndef TABS_PROFILES_H
 #define TABS_PROFILES_H
 
+#include "../controller/profile_loader_controller.h"
 #include "../controller/profile_modify_controller.h"
-#include "profile_loader.h"
 #include "profile_modify.h"
 #include "status.h"
 
@@ -51,7 +51,7 @@ private:
   std::unique_ptr<Gtk::Label> p_num_proc_label;
 
   // Additional pages, which are added to the stack
-  std::unique_ptr<ProfileLoader> loader;
+  std::unique_ptr<ProfileLoaderController> loader_controller;
   std::map<std::string, std::shared_ptr<ProfileModifyController>> modifiers;
 
   // Map of all known profiles

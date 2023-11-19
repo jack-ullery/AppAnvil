@@ -26,13 +26,17 @@ template<class AppArmorParser>
 class ProfileModifyImpl : public Gtk::ScrolledWindow
 {
 public:
-  ProfileModifyImpl(std::shared_ptr<AppArmorParser> parser, std::shared_ptr<AppArmor::Profile> profile);
+  ProfileModifyImpl(std::shared_ptr<AppArmorParser> parser, const std::shared_ptr<AppArmor::Profile> &profile);
 
   std::shared_ptr<Gtk::TreeView> get_abstraction_view();
   std::shared_ptr<Gtk::TreeView> get_file_rule_view();
 
-  typedef sigc::slot<void> on_clicked_handler;
-  void connect_apply_buttons(const on_clicked_handler &cancel_button_handler, const on_clicked_handler &apply_button_handler);
+  typedef sigc::slot<void> void_func;
+  void connect_apply_buttons(const void_func &cancel_button_handler, const void_func &apply_button_handler);
+
+  // Connect function which will be called when the AppArmorParser is updated internally
+  // This happends if a user manuallt edits the profile in the "Profile Text" section
+  void connect_handle_profile_changed(const void_func &parser_handler);
 
   // Decides whether the apply and cancel buttons should be visible
   void handle_apply_visible();
@@ -40,6 +44,14 @@ public:
   // Overwrites the data in the Gtk::TreeView, which shows the file this profile is in.
   // Uses the data from AppArmor::Parser
   void update_profile_text();
+
+protected:
+  // Called when the buffer in 'm_profile_text' is changed
+  void handle_raw_profile_text_change();
+
+  // Called when 'm_raw_text_apply_button' is pressed
+  // Parses the text buffer in 'm_profile_text', attempting to apply it to the profile
+  void apply_raw_profile_text_change();
 
 private:
   // GUI Builder to parse UI from xml file
@@ -58,6 +70,12 @@ private:
   std::shared_ptr<Gtk::Revealer> m_button_reveal;
   std::shared_ptr<Gtk::Button> m_cancel_button;
   std::shared_ptr<Gtk::Button> m_apply_button;
+  std::shared_ptr<Gtk::Revealer> m_raw_text_apply_reveal;
+  std::shared_ptr<Gtk::Button> m_raw_text_cancel_button;
+  std::shared_ptr<Gtk::Button> m_raw_text_apply_button;
+
+  // Function that will be called if parser is updated internally
+  void_func handle_apparmor_parser_changed = []() {};
 
   // Fields used for reading and modifying the profile
   std::shared_ptr<AppArmorParser> parser;

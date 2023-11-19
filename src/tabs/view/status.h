@@ -20,7 +20,12 @@ class Status : public Gtk::ScrolledWindow
 {
 public:
   Status();
-  ~Status();
+  ~Status() override;
+
+  Status(const Status &)            = delete;
+  Status(Status &&)                 = default;
+  Status &operator=(const Status &) = delete;
+  Status &operator=(Status &&)      = default;
 
   /**
    * @brief Return the TreeView associated with this class.
