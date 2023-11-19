@@ -65,28 +65,43 @@ void ConsoleThread<ProfilesController, ProcessesController, LogsController>::sen
 }
 
 template<class ProfilesController, class ProcessesController, class LogsController>
+void ConsoleThread<ProfilesController, ProcessesController, LogsController>::reenable_authentication_for_refresh()
+{
+  std::unique_lock<std::mutex> lock(task_ready_mtx);
+  should_try_refresh = true;
+}
+
+template<class ProfilesController, class ProcessesController, class LogsController>
 void ConsoleThread<ProfilesController, ProcessesController, LogsController>::run_command(TabState state)
 {
-  switch (state) {
-    case PROFILE: {
-      std::string status = CommandCaller::get_status();
-      dispatch_man.update_profiles(status);
-    } break;
+  try {
+    if(should_try_refresh) {
+      switch (state) {
+        case PROFILE: {
+          std::string status = CommandCaller::get_status();
+          dispatch_man.update_profiles(status);
+        } break;
 
-    case PROCESS: {
-      std::string unconf = CommandCaller::get_unconfined();
-      dispatch_man.update_processes(unconf);
-    } break;
+        case PROCESS: {
+          std::string unconf = CommandCaller::get_unconfined();
+          dispatch_man.update_processes(unconf);
+        } break;
 
-    case LOGS: {
-      auto logs = log_reader.read_logs();
-      // const std::list<std::shared_ptr<LogRecord>> logs;
-      dispatch_man.update_logs(logs);
-    } break;
+        case LOGS: {
+          auto logs = log_reader.read_logs();
+          // const std::list<std::shared_ptr<LogRecord>> logs;
+          dispatch_man.update_logs(logs);
+        } break;
 
-    case OTHER:
-      // Do nothing.
-      break;
+        case OTHER:
+          // Do nothing.
+          break;
+      }
+    }
+  } catch (std::runtime_error &err) {
+    std::unique_lock<std::mutex> lock(task_ready_mtx);
+    std::cerr << err.what() << std::endl;
+    should_try_refresh = false;
   }
 }
 
@@ -123,32 +138,27 @@ template<class ProfilesController, class ProcessesController, class LogsControll
 void ConsoleThread<ProfilesController, ProcessesController, LogsController>::console_caller()
 {
   bool shouldContinue = true;
+  while (shouldContinue) {
+    Message message = wait_for_message();
 
-  try {
-    while (shouldContinue) {
-      Message message = wait_for_message();
+    switch (message.event) {
+      case REFRESH:
+        run_command(message.state);
+        break;
 
-      switch (message.event) {
-        case REFRESH:
-          run_command(message.state);
-          break;
+      case CHANGE_STATUS: {
+        const std::string profile    = message.data.at(0);
+        const std::string old_status = message.data.at(1);
+        const std::string new_status = message.data.at(2);
+        std::string return_message   = CommandCaller::execute_change(profile, old_status, new_status);
+        dispatch_man.update_prof_apply_text(return_message);
+        run_command(PROFILE);
+      } break;
 
-        case CHANGE_STATUS: {
-          const std::string profile    = message.data.at(0);
-          const std::string old_status = message.data.at(1);
-          const std::string new_status = message.data.at(2);
-          std::string return_message   = CommandCaller::execute_change(profile, old_status, new_status);
-          dispatch_man.update_prof_apply_text(return_message);
-          run_command(PROFILE);
-        } break;
-
-        case QUIT:
-          shouldContinue = false;
-          break;
-      }
+      case QUIT:
+        shouldContinue = false;
+        break;
     }
-  } catch (std::runtime_error &err) {
-    std::cerr << err.what() << std::endl;
   }
 }
 

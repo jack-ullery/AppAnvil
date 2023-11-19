@@ -42,6 +42,7 @@ public:
   // Create a move assignment operator
   ConsoleThread &operator=(ConsoleThread &&other) noexcept;
 
+  void reenable_authentication_for_refresh();
   void send_refresh_message(TabState new_state);
   void send_change_profile_status_message(const std::string &profile, const std::string &old_status, const std::string &new_status);
   void send_quit_message();
@@ -85,6 +86,7 @@ private:
   BlockingQueue<Message, std::deque<Message>, std::mutex> queue;
   TabState last_state{ PROFILE };
   std::string log_cursor;
+  bool should_try_refresh = true;
 
   // Used to read logs from files, assumes this process has read permission to the logs
   LogReader log_reader;
