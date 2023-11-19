@@ -25,8 +25,7 @@ std::shared_ptr<Gtk::TreeView> ProfileModifyImpl<AppArmorParser>::get_file_rule_
 }
 
 template<class AppArmorParser>
-void ProfileModifyImpl<AppArmorParser>::connect_apply_buttons(const void_func &cancel_button_handler,
-                                                              const void_func &apply_button_handler)
+void ProfileModifyImpl<AppArmorParser>::connect_apply_buttons(const void_func &cancel_button_handler, const void_func &apply_button_handler)
 {
   m_cancel_button->signal_clicked().connect(cancel_button_handler);
   m_apply_button->signal_clicked().connect(apply_button_handler);
@@ -85,9 +84,9 @@ ProfileModifyImpl<AppArmorParser>::ProfileModifyImpl(std::shared_ptr<AppArmorPar
     m_button_reveal{ Common::get_widget<Gtk::Revealer>("m_button_reveal", builder) },
     m_cancel_button{ Common::get_widget<Gtk::Button>("m_cancel_button", builder) },
     m_apply_button{ Common::get_widget<Gtk::Button>("m_apply_button", builder) },
-    m_raw_text_apply_reveal{Common::get_widget<Gtk::Revealer>("m_raw_text_apply_reveal", builder)},
-    m_raw_text_cancel_button{Common::get_widget<Gtk::Button>("m_raw_text_cancel_button", builder)},
-    m_raw_text_apply_button{Common::get_widget<Gtk::Button>("m_raw_text_apply_button", builder)},
+    m_raw_text_apply_reveal{ Common::get_widget<Gtk::Revealer>("m_raw_text_apply_reveal", builder) },
+    m_raw_text_cancel_button{ Common::get_widget<Gtk::Button>("m_raw_text_cancel_button", builder) },
+    m_raw_text_apply_button{ Common::get_widget<Gtk::Button>("m_raw_text_apply_button", builder) },
     parser{ parser }
 {
   // Set the labels that show the Profile's name

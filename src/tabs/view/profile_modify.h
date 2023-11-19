@@ -75,7 +75,7 @@ private:
   std::shared_ptr<Gtk::Button> m_raw_text_apply_button;
 
   // Function that will be called if parser is updated internally
-  void_func handle_apparmor_parser_changed = [](){};
+  void_func handle_apparmor_parser_changed = []() {};
 
   // Fields used for reading and modifying the profile
   std::shared_ptr<AppArmorParser> parser;
