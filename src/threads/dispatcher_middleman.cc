@@ -43,25 +43,25 @@ DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::DispatcherMid
 
 // Send methods (called from second thread)
 template<class Profiles, class Processes, class Logs, class Dispatcher, class Mutex>
-void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_profiles(const std::string &confined)
+void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_profiles(const std::string &confined, const bool &had_authentication_error)
 {
-  CallData data(PROFILE, confined);
+  CallData data(PROFILE, confined, had_authentication_error);
   queue.push(data);
   dispatch->emit();
 }
 
 template<class Profiles, class Processes, class Logs, class Dispatcher, class Mutex>
-void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_processes(const std::string &unconfined)
+void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_processes(const std::string &unconfined, const bool &had_authentication_error)
 {
-  CallData data(PROCESS, unconfined);
+  CallData data(PROCESS, unconfined, had_authentication_error);
   queue.push(data);
   dispatch->emit();
 }
 
 template<class Profiles, class Processes, class Logs, class Dispatcher, class Mutex>
-void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_logs(const std::list<std::shared_ptr<LogRecord>> &logs)
+void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_logs(const std::list<std::shared_ptr<LogRecord>> &logs, const bool &had_authentication_error)
 {
-  CallData data(LOGS, logs);
+  CallData data(LOGS, logs, had_authentication_error);
   queue.push(data);
   dispatch->emit();
 }
@@ -69,7 +69,7 @@ void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_l
 template<class Profiles, class Processes, class Logs, class Dispatcher, class Mutex>
 void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_prof_apply_text(const std::string &text)
 {
-  CallData data(PROFILES_TEXT, text);
+  CallData data(PROFILES_TEXT, text, false);
   queue.push(data);
   dispatch->emit();
 }
@@ -100,6 +100,13 @@ void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::handle_s
     case NONE:
       // Do nothing...
       break;
+  }
+
+  if(data.had_authentication_error) {
+    // If there was an error with pkexec, show the prompt asking to reauthenticate
+    // We don't do this for logs, because currently (we assume) only the audit logs need the prompt
+    prof->get_tab()->show_reauthenticate_prompt(true);
+    proc->get_tab()->show_reauthenticate_prompt(true);
   }
 }
 

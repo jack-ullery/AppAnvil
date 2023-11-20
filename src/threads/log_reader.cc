@@ -32,19 +32,24 @@ std::list<std::shared_ptr<LogRecord>> LogReader::read_logs()
 
 void LogReader::append_audit_logs(std::list<std::shared_ptr<LogRecord>> &log_list)
 {
-  std::string output = CommandCaller::get_logs(checkpoint_filepath);
-  std::istringstream stream(output);
+  auto results = CommandCaller::get_logs(checkpoint_filepath);
+  std::string output = results.first;
+  bool read_success = results.second;
 
-  if (checkpoint_filepath.empty()) {
-    std::getline(stream, checkpoint_filepath);
-  }
+  if(read_success) {
+    std::istringstream stream(output);
 
-  std::string line;
-  while (std::getline(stream, line)) {
-    auto log = std::make_shared<LogRecord>(line);
+    if (checkpoint_filepath.empty()) {
+      std::getline(stream, checkpoint_filepath);
+    }
 
-    if (log->valid()) {
-      log_list.push_back(log);
+    std::string line;
+    while (std::getline(stream, line)) {
+      auto log = std::make_shared<LogRecord>(line);
+
+      if (log->valid()) {
+        log_list.push_back(log);
+      }
     }
   }
 }

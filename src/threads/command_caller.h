@@ -4,6 +4,7 @@
 #include <libappanvil/apparmor_parser.hh>
 #include <map>
 #include <string>
+#include <utility>
 #include <vector>
 
 #ifdef TESTS_ENABLED
@@ -39,7 +40,7 @@ public:
    *
    * @returns std::string the raw output of aa-status
    */
-  static std::string get_status();
+  static std::pair<std::string, bool> get_status() noexcept;
 
   /**
    * @brief Return the output of `aa-caller -u`
@@ -52,7 +53,7 @@ public:
    *
    * @returns std::string the raw output of aa-unconfined
    */
-  static std::string get_unconfined();
+  static std::pair<std::string, bool> get_unconfined() noexcept;
 
   /**
    * @brief Return the output of `aa-caller -l`
@@ -65,7 +66,7 @@ public:
    *
    * @returns std::string the raw output of ausearch
    */
-  static std::string get_logs(const std::string &checkpoint_filepath);
+  static std::pair<std::string, bool> get_logs(const std::string &checkpoint_filepath) noexcept;
 
   /**
    * @brief Change the status of a profile
@@ -113,9 +114,9 @@ protected:
   virtual std::string call_command(const std::vector<std::string> &command, const std::string &return_on_error);
 
   // Dependency Injection: For unit testing
-  static std::string get_status(CommandCaller *caller);
-  static std::string get_unconfined(CommandCaller *caller);
-  static std::string get_logs(CommandCaller *caller, const std::string &checkpoint_filepath);
+  static std::pair<std::string, bool> get_status(CommandCaller *caller) noexcept;
+  static std::pair<std::string, bool> get_unconfined(CommandCaller *caller) noexcept;
+  static std::pair<std::string, bool> get_logs(CommandCaller *caller, const std::string &checkpoint_filepath) noexcept;
   static std::string load_profile(CommandCaller *caller, const std::string &fullFileName);
   static std::string disable_profile(CommandCaller *caller, const std::string &profileName);
   static std::string execute_change(CommandCaller *caller,

@@ -74,34 +74,31 @@ void ConsoleThread<ProfilesController, ProcessesController, LogsController>::ree
 template<class ProfilesController, class ProcessesController, class LogsController>
 void ConsoleThread<ProfilesController, ProcessesController, LogsController>::run_command(TabState state)
 {
-  try {
-    if(should_try_refresh) {
-      switch (state) {
-        case PROFILE: {
-          std::string status = CommandCaller::get_status();
-          dispatch_man.update_profiles(status);
-        } break;
+  if(should_try_refresh) {
+    switch (state) {
+      case PROFILE: {
+        auto results = CommandCaller::get_status();
+        should_try_refresh = results.second;
+        dispatch_man.update_profiles(results.first, !should_try_refresh);
+      } break;
 
-        case PROCESS: {
-          std::string unconf = CommandCaller::get_unconfined();
-          dispatch_man.update_processes(unconf);
-        } break;
+      case PROCESS: {
+        auto results = CommandCaller::get_unconfined();
+        should_try_refresh = results.second;
+        dispatch_man.update_processes(results.first, !should_try_refresh);
+      } break;
 
-        case LOGS: {
-          auto logs = log_reader.read_logs();
-          // const std::list<std::shared_ptr<LogRecord>> logs;
-          dispatch_man.update_logs(logs);
-        } break;
+      case LOGS: {
+        auto results = log_reader.read_logs();
+        dispatch_man.update_logs(results, true);
+      } break;
 
-        case OTHER:
-          // Do nothing.
-          break;
-      }
+      case OTHER:
+        // Do nothing.
+        break;
     }
-  } catch (std::runtime_error &err) {
+
     std::unique_lock<std::mutex> lock(task_ready_mtx);
-    std::cerr << err.what() << std::endl;
-    should_try_refresh = false;
   }
 }
 

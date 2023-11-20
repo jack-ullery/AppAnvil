@@ -13,6 +13,7 @@
 #include <gtkmm/label.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/searchentry.h>
+#include <gtkmm/stack.h>
 #include <gtkmm/treeview.h>
 #include <memory>
 
@@ -61,8 +62,15 @@ public:
   void hide_searchbar();
   void show_searchbar(const bool &should_focus);
 
+  // This SlotType is called when the user is ready to reauthneticate using pkexec
+  // Otherwise, we set up ConsoleThread to not initiate multiple pkexec prompts without the user's permission
+  void connect_reauthenticate_button(const Glib::SignalProxyProperty::SlotType &func);
+
+  // Whether this page should show the prompt to reauthenticate, or show the main content
+  void show_reauthenticate_prompt(bool should_show_button = true);
+
 protected:
-  explicit Status(const std::string &glade_resource);
+  explicit Status(const std::string &glade_resource, const std::string &table_item);
 
   Glib::RefPtr<Gtk::Builder> get_builder();
 
@@ -82,6 +90,11 @@ private:
   std::unique_ptr<Gtk::CheckButton> s_match_case;
   std::unique_ptr<Gtk::CheckButton> s_whole_word;
   std::unique_ptr<Gtk::Label> s_found_label;
+
+  // Widgets related to authentication errors
+  std::unique_ptr<Gtk::Stack> auth_stack;
+  std::unique_ptr<Gtk::Label> auth_error_label;
+  std::unique_ptr<Gtk::Button> auth_error_button;
 
   // clang-tidy complains about the `COLUMN_TYPE_STRING` macro, so we assign it here and tell clang-tidy not to look at it
   static constexpr unsigned int COLUMN_TYPE_STRING = G_TYPE_STRING; // NOLINT

@@ -43,13 +43,10 @@ public:
   ConsoleThread &operator=(ConsoleThread &&other) noexcept;
 
   void reenable_authentication_for_refresh();
+
   void send_refresh_message(TabState new_state);
   void send_change_profile_status_message(const std::string &profile, const std::string &old_status, const std::string &new_status);
   void send_quit_message();
-
-  void get_status();
-  void get_unconfined();
-  void get_logs();
 
 protected:
   enum Event

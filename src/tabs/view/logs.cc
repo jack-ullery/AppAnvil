@@ -27,7 +27,7 @@ void Logs::set_information(const std::list<std::pair<std::string, std::string>> 
 }
 
 Logs::Logs()
-  : Status("/resources/log.glade"),
+  : Status("/resources/log.glade", "system logs"),
     builder{ Status::get_builder() },
     l_log_info{ Common::get_widget<Gtk::Box>("l_log_info", builder) }
 {
