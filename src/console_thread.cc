@@ -90,7 +90,8 @@ void ConsoleThread<ProfilesController, ProcessesController, LogsController>::run
 
       case LOGS: {
         auto results = log_reader.read_logs();
-        dispatch_man.update_logs(results, true);
+        should_try_refresh = results.second;
+        dispatch_man.update_logs(results.first, !should_try_refresh);
       } break;
 
       case OTHER:

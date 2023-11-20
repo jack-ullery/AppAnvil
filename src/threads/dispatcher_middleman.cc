@@ -102,12 +102,10 @@ void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::handle_s
       break;
   }
 
-  if(data.had_authentication_error) {
-    // If there was an error with pkexec, show the prompt asking to reauthenticate
-    // We don't do this for logs, because currently (we assume) only the audit logs need the prompt
-    prof->get_tab()->show_reauthenticate_prompt(true);
-    proc->get_tab()->show_reauthenticate_prompt(true);
-  }
+  // If there was an error with pkexec, show the prompt asking to reauthenticate
+  prof->get_tab()->show_reauthenticate_prompt(data.had_authentication_error);
+  proc->get_tab()->show_reauthenticate_prompt(data.had_authentication_error);
+  logs->get_tab()->show_reauthenticate_prompt(data.had_authentication_error);
 }
 
 // Used to avoid linker errors

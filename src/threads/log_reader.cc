@@ -11,7 +11,7 @@ LogReader::LogReader(const std::initializer_list<std::string> &log_sources)
   }
 }
 
-std::list<std::shared_ptr<LogRecord>> LogReader::read_logs()
+std::pair<std::list<std::shared_ptr<LogRecord>>, bool> LogReader::read_logs()
 {
   std::list<std::shared_ptr<LogRecord>> logs;
 
@@ -26,11 +26,11 @@ std::list<std::shared_ptr<LogRecord>> LogReader::read_logs()
     }
   }
 
-  append_audit_logs(logs);
-  return logs;
+  bool audit_success = append_audit_logs(logs);
+  return {logs, audit_success};
 }
 
-void LogReader::append_audit_logs(std::list<std::shared_ptr<LogRecord>> &log_list)
+bool LogReader::append_audit_logs(std::list<std::shared_ptr<LogRecord>> &log_list)
 {
   auto results = CommandCaller::get_logs(checkpoint_filepath);
   std::string output = results.first;
@@ -52,4 +52,6 @@ void LogReader::append_audit_logs(std::list<std::shared_ptr<LogRecord>> &log_lis
       }
     }
   }
+
+  return read_success || !log_list.empty();
 }
