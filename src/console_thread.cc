@@ -9,6 +9,8 @@
 #include "tabs/view/profiles.h"
 #include "threads/command_caller.h"
 
+#include <iostream>
+#include <stdexcept>
 #include <string>
 #include <tuple>
 
@@ -63,28 +65,45 @@ void ConsoleThread<ProfilesController, ProcessesController, LogsController>::sen
 }
 
 template<class ProfilesController, class ProcessesController, class LogsController>
+void ConsoleThread<ProfilesController, ProcessesController, LogsController>::reenable_authentication_for_refresh()
+{
+  std::unique_lock<std::mutex> lock(task_ready_mtx);
+  should_try_refresh = true;
+  lock.unlock();
+
+  // Send a refresh message
+  send_refresh_message(last_state);
+}
+
+template<class ProfilesController, class ProcessesController, class LogsController>
 void ConsoleThread<ProfilesController, ProcessesController, LogsController>::run_command(TabState state)
 {
-  switch (state) {
-    case PROFILE: {
-      std::string status = CommandCaller::get_status();
-      dispatch_man.update_profiles(status);
-    } break;
+  if (should_try_refresh) {
+    switch (state) {
+      case PROFILE: {
+        auto results       = CommandCaller::get_status();
+        should_try_refresh = results.second;
+        dispatch_man.update_profiles(results.first, !should_try_refresh);
+      } break;
 
-    case PROCESS: {
-      std::string unconf = CommandCaller::get_unconfined();
-      dispatch_man.update_processes(unconf);
-    } break;
+      case PROCESS: {
+        auto results       = CommandCaller::get_unconfined();
+        should_try_refresh = results.second;
+        dispatch_man.update_processes(results.first, !should_try_refresh);
+      } break;
 
-    case LOGS: {
-      auto logs = log_reader.read_logs();
-      // const std::list<std::shared_ptr<LogRecord>> logs;
-      dispatch_man.update_logs(logs);
-    } break;
+      case LOGS: {
+        auto results       = log_reader.read_logs();
+        should_try_refresh = results.second;
+        dispatch_man.update_logs(results.first, !should_try_refresh);
+      } break;
 
-    case OTHER:
-      // Do nothing.
-      break;
+      case OTHER:
+        // Do nothing.
+        break;
+    }
+
+    std::unique_lock<std::mutex> lock(task_ready_mtx);
   }
 }
 
@@ -121,7 +140,6 @@ template<class ProfilesController, class ProcessesController, class LogsControll
 void ConsoleThread<ProfilesController, ProcessesController, LogsController>::console_caller()
 {
   bool shouldContinue = true;
-
   while (shouldContinue) {
     Message message = wait_for_message();
 

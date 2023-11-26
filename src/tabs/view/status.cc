@@ -54,7 +54,21 @@ void Status::show_searchbar(const bool &should_focus)
   }
 }
 
-Status::Status(const std::string &glade_resource)
+void Status::connect_reauthenticate_button(const Glib::SignalProxyProperty::SlotType &func)
+{
+  auth_error_button->signal_clicked().connect(func);
+}
+
+void Status::show_reauthenticate_prompt(bool should_show_button)
+{
+  if (should_show_button) {
+    auth_stack->set_visible_child("page1");
+  } else {
+    auth_stack->set_visible_child("page0");
+  }
+}
+
+Status::Status(const std::string &glade_resource, const std::string &table_item)
   : builder{ Gtk::Builder::create_from_resource(glade_resource) },
     s_view{ Common::get_widget_shared<Gtk::TreeView>("s_view", builder) },
     s_win{ Common::get_widget_shared<Gtk::ScrolledWindow>("s_win", builder) },
@@ -64,7 +78,10 @@ Status::Status(const std::string &glade_resource)
     s_use_regex{ Common::get_widget<Gtk::CheckButton>("s_use_regex", builder) },
     s_match_case{ Common::get_widget<Gtk::CheckButton>("s_match_case", builder) },
     s_whole_word{ Common::get_widget<Gtk::CheckButton>("s_whole_word", builder) },
-    s_found_label{ Common::get_widget<Gtk::Label>("s_found_label", builder) }
+    s_found_label{ Common::get_widget<Gtk::Label>("s_found_label", builder) },
+    auth_stack{ Common::get_widget<Gtk::Stack>("auth_stack", builder) },
+    auth_error_label{ Common::get_widget<Gtk::Label>("auth_error_label", builder) },
+    auth_error_button{ Common::get_widget<Gtk::Button>("auth_error_button", builder) }
 {
   s_win->set_shadow_type(Gtk::ShadowType::SHADOW_NONE);
   s_win->set_policy(Gtk::PolicyType::POLICY_AUTOMATIC, Gtk::PolicyType::POLICY_AUTOMATIC);
@@ -75,11 +92,17 @@ Status::Status(const std::string &glade_resource)
   s_searchbox->set_no_show_all(true);
   hide_searchbar();
 
+  // Set the text for 'auth_error_label'
+  std::string label = auth_error_label->get_text();
+  label             = label + table_item;
+  auth_error_label->set_text(label);
+
+  // Add all the widgets
   this->add(*s_box);
 }
 
 Status::Status()
-  : Status("/resources/status.glade")
+  : Status("/resources/status.glade", "item")
 {
 }
 

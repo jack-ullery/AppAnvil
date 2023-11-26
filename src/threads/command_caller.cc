@@ -25,28 +25,53 @@ std::string CommandCaller::call_command(const std::vector<std::string> &command,
   results result = call_command(command);
 
   if (result.exit_status != 0) {
-    std::cout << "Error calling '" << command[0] << "'. " << result.error << std::endl;
+    std::cout << "Error calling";
+    for (const auto &argument : command) {
+      std::cout << " " << argument;
+    }
+    std::cout << ". " << result.error << std::endl;
+
     return return_on_error;
   }
 
   return result.output;
 }
 
-std::string CommandCaller::get_status(CommandCaller *caller)
+inline bool contains(const std::string &big_str, const std::string &small_str)
+{
+  return big_str.find(small_str) != std::string::npos;
+}
+
+std::pair<std::string, bool> CommandCaller::get_status(CommandCaller *caller) noexcept
 {
   std::vector<std::string> command = { "pkexec", "aa-caller", "-s" };
   std::string return_on_error      = "{\"processes\": {}, \"profiles\": {}}";
-  return caller->call_command(command, return_on_error);
+
+  auto result = caller->call_command(command);
+
+  if (result.exit_status != 0 && contains(result.error, "Request dismissed")) {
+    std::cerr << command[0] << ": " << result.error << std::endl;
+    return { return_on_error, false };
+  }
+
+  return { result.output, true };
 }
 
-std::string CommandCaller::get_unconfined(CommandCaller *caller)
+std::pair<std::string, bool> CommandCaller::get_unconfined(CommandCaller *caller) noexcept
 {
   std::vector<std::string> command = { "pkexec", "aa-caller", "-u" };
-  std::string return_on_error;
-  return caller->call_command(command, return_on_error);
+
+  auto result = caller->call_command(command);
+
+  if (result.exit_status != 0 && contains(result.error, "Request dismissed")) {
+    std::cerr << command[0] << ": " << result.error << std::endl;
+    return { "", false };
+  }
+
+  return { result.output, true };
 }
 
-std::string CommandCaller::get_logs(CommandCaller *caller, const std::string &checkpoint_filepath)
+std::pair<std::string, bool> CommandCaller::get_logs(CommandCaller *caller, const std::string &checkpoint_filepath) noexcept
 {
   std::vector<std::string> command = { "pkexec", "aa-caller", "-l" };
 
@@ -54,8 +79,14 @@ std::string CommandCaller::get_logs(CommandCaller *caller, const std::string &ch
     command.push_back(checkpoint_filepath);
   }
 
-  std::string return_on_error;
-  return caller->call_command(command, return_on_error);
+  auto result = caller->call_command(command);
+
+  if (result.exit_status != 0 && contains(result.error, "Request dismissed")) {
+    std::cerr << command[0] << ": " << result.error << std::endl;
+    return { "", false };
+  }
+
+  return { result.output, true };
 }
 
 std::string CommandCaller::load_profile(CommandCaller *caller, const std::string &fullFileName)
@@ -140,19 +171,19 @@ std::string CommandCaller::execute_change(CommandCaller *caller,
 }
 
 // Static public methods
-std::string CommandCaller::get_status()
+std::pair<std::string, bool> CommandCaller::get_status() noexcept
 {
   CommandCaller caller;
   return get_status(&caller);
 }
 
-std::string CommandCaller::get_unconfined()
+std::pair<std::string, bool> CommandCaller::get_unconfined() noexcept
 {
   CommandCaller caller;
   return get_unconfined(&caller);
 }
 
-std::string CommandCaller::get_logs(const std::string &checkpoint_filepath)
+std::pair<std::string, bool> CommandCaller::get_logs(const std::string &checkpoint_filepath) noexcept
 {
   CommandCaller caller;
   return get_logs(&caller, checkpoint_filepath);

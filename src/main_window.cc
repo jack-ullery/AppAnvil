@@ -40,6 +40,12 @@ MainWindow::MainWindow()
   auto search_togggle_fun = sigc::mem_fun(*this, &MainWindow::on_search_toggle);
   m_search_button.signal_toggled().connect(search_togggle_fun, true);
 
+  // Connect the reauthenticate button
+  auto enable_auth_fun = sigc::mem_fun(*console, &ConsoleThreadInstance::reenable_authentication_for_refresh);
+  prof_control->get_tab()->connect_reauthenticate_button(enable_auth_fun);
+  proc_control->get_tab()->connect_reauthenticate_button(enable_auth_fun);
+  logs_control->get_tab()->connect_reauthenticate_button(enable_auth_fun);
+
   // Set some default properties for titlebar
   m_headerbar.set_custom_title(m_switcher);
   m_headerbar.pack_end(help_toggle);

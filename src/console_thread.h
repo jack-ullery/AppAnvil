@@ -42,13 +42,19 @@ public:
   // Create a move assignment operator
   ConsoleThread &operator=(ConsoleThread &&other) noexcept;
 
+  /**
+   * @brief Allows sending calls to pkexec if this was disabled previously.
+   *
+   * @details
+   * This is tells ConsoleThread that we want to continue calling `pkexec aa-caller`.
+   * Those pkexec calls may be disabled by ConsoleThread, if the user decides not to authenticate.
+   * We do this, because we want to avoid spamming the user with pkexec prompts
+   */
+  void reenable_authentication_for_refresh();
+
   void send_refresh_message(TabState new_state);
   void send_change_profile_status_message(const std::string &profile, const std::string &old_status, const std::string &new_status);
   void send_quit_message();
-
-  void get_status();
-  void get_unconfined();
-  void get_logs();
 
 protected:
   enum Event
@@ -85,6 +91,7 @@ private:
   BlockingQueue<Message, std::deque<Message>, std::mutex> queue;
   TabState last_state{ PROFILE };
   std::string log_cursor;
+  bool should_try_refresh = true;
 
   // Used to read logs from files, assumes this process has read permission to the logs
   LogReader log_reader;

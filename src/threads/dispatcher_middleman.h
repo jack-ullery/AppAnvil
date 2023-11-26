@@ -31,9 +31,9 @@ public:
                                std::shared_ptr<Mutex> my_mtx);
 
   // Send methods (called from second thread)
-  void update_profiles(const std::string &confined);
-  void update_processes(const std::string &unconfined);
-  void update_logs(const std::list<std::shared_ptr<LogRecord>> &logs);
+  void update_profiles(const std::string &confined, const bool &had_authentication_error);
+  void update_processes(const std::string &unconfined, const bool &had_authentication_error);
+  void update_logs(const std::list<std::shared_ptr<LogRecord>> &logs, const bool &had_authentication_error);
   void update_prof_apply_text(const std::string &text);
 
 protected:
@@ -52,16 +52,19 @@ protected:
 
     std::string string;
     std::list<std::shared_ptr<LogRecord>> logs;
+    bool had_authentication_error;
 
-    CallData(CallType a, const std::string &b)
+    CallData(CallType a, const std::string &b, const bool &c)
       : type{ a },
-        string{ b }
+        string{ b },
+        had_authentication_error{ c }
     {
     }
 
-    CallData(CallType a, const std::list<std::shared_ptr<LogRecord>> &b)
+    CallData(CallType a, const std::list<std::shared_ptr<LogRecord>> &b, const bool &c)
       : type{ a },
-        logs{ b }
+        logs{ b },
+        had_authentication_error{ c }
     {
     }
   };
