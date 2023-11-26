@@ -61,10 +61,9 @@ void Status::connect_reauthenticate_button(const Glib::SignalProxyProperty::Slot
 
 void Status::show_reauthenticate_prompt(bool should_show_button)
 {
-  if(should_show_button) {
+  if (should_show_button) {
     auth_stack->set_visible_child("page1");
-  }
-  else {
+  } else {
     auth_stack->set_visible_child("page0");
   }
 }
@@ -93,9 +92,9 @@ Status::Status(const std::string &glade_resource, const std::string &table_item)
   s_searchbox->set_no_show_all(true);
   hide_searchbar();
 
-  // Set the text for 'auth_error_label' 
+  // Set the text for 'auth_error_label'
   std::string label = auth_error_label->get_text();
-  label = label + table_item;
+  label             = label + table_item;
   auth_error_label->set_text(label);
 
   // Add all the widgets

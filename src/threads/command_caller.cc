@@ -45,16 +45,16 @@ inline bool contains(const std::string &big_str, const std::string &small_str)
 std::pair<std::string, bool> CommandCaller::get_status(CommandCaller *caller) noexcept
 {
   std::vector<std::string> command = { "pkexec", "aa-caller", "-s" };
-  std::string return_on_error = "{\"processes\": {}, \"profiles\": {}}";
+  std::string return_on_error      = "{\"processes\": {}, \"profiles\": {}}";
 
   auto result = caller->call_command(command);
 
-  if(result.exit_status != 0 && contains(result.error, "Request dismissed")) {
+  if (result.exit_status != 0 && contains(result.error, "Request dismissed")) {
     std::cerr << command[0] << ": " << result.error << std::endl;
-    return {return_on_error, false};
+    return { return_on_error, false };
   }
 
-  return {result.output, true};
+  return { result.output, true };
 }
 
 std::pair<std::string, bool> CommandCaller::get_unconfined(CommandCaller *caller) noexcept
@@ -63,12 +63,12 @@ std::pair<std::string, bool> CommandCaller::get_unconfined(CommandCaller *caller
 
   auto result = caller->call_command(command);
 
-  if(result.exit_status != 0 && contains(result.error, "Request dismissed")) {
+  if (result.exit_status != 0 && contains(result.error, "Request dismissed")) {
     std::cerr << command[0] << ": " << result.error << std::endl;
-    return {"", false};
+    return { "", false };
   }
 
-  return {result.output, true};
+  return { result.output, true };
 }
 
 std::pair<std::string, bool> CommandCaller::get_logs(CommandCaller *caller, const std::string &checkpoint_filepath) noexcept
@@ -81,12 +81,12 @@ std::pair<std::string, bool> CommandCaller::get_logs(CommandCaller *caller, cons
 
   auto result = caller->call_command(command);
 
-  if(result.exit_status != 0 && contains(result.error, "Request dismissed")) {
+  if (result.exit_status != 0 && contains(result.error, "Request dismissed")) {
     std::cerr << command[0] << ": " << result.error << std::endl;
-    return {"", false};
+    return { "", false };
   }
 
-  return {result.output, true};
+  return { result.output, true };
 }
 
 std::string CommandCaller::load_profile(CommandCaller *caller, const std::string &fullFileName)

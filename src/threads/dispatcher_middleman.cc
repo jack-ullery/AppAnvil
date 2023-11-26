@@ -43,7 +43,8 @@ DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::DispatcherMid
 
 // Send methods (called from second thread)
 template<class Profiles, class Processes, class Logs, class Dispatcher, class Mutex>
-void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_profiles(const std::string &confined, const bool &had_authentication_error)
+void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_profiles(const std::string &confined,
+                                                                                        const bool &had_authentication_error)
 {
   CallData data(PROFILE, confined, had_authentication_error);
   queue.push(data);
@@ -51,7 +52,8 @@ void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_p
 }
 
 template<class Profiles, class Processes, class Logs, class Dispatcher, class Mutex>
-void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_processes(const std::string &unconfined, const bool &had_authentication_error)
+void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_processes(const std::string &unconfined,
+                                                                                         const bool &had_authentication_error)
 {
   CallData data(PROCESS, unconfined, had_authentication_error);
   queue.push(data);
@@ -59,7 +61,8 @@ void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_p
 }
 
 template<class Profiles, class Processes, class Logs, class Dispatcher, class Mutex>
-void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_logs(const std::list<std::shared_ptr<LogRecord>> &logs, const bool &had_authentication_error)
+void DispatcherMiddleman<Profiles, Processes, Logs, Dispatcher, Mutex>::update_logs(const std::list<std::shared_ptr<LogRecord>> &logs,
+                                                                                    const bool &had_authentication_error)
 {
   CallData data(LOGS, logs, had_authentication_error);
   queue.push(data);

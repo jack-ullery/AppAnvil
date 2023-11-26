@@ -78,22 +78,22 @@ void ConsoleThread<ProfilesController, ProcessesController, LogsController>::ree
 template<class ProfilesController, class ProcessesController, class LogsController>
 void ConsoleThread<ProfilesController, ProcessesController, LogsController>::run_command(TabState state)
 {
-  if(should_try_refresh) {
+  if (should_try_refresh) {
     switch (state) {
       case PROFILE: {
-        auto results = CommandCaller::get_status();
+        auto results       = CommandCaller::get_status();
         should_try_refresh = results.second;
         dispatch_man.update_profiles(results.first, !should_try_refresh);
       } break;
 
       case PROCESS: {
-        auto results = CommandCaller::get_unconfined();
+        auto results       = CommandCaller::get_unconfined();
         should_try_refresh = results.second;
         dispatch_man.update_processes(results.first, !should_try_refresh);
       } break;
 
       case LOGS: {
-        auto results = log_reader.read_logs();
+        auto results       = log_reader.read_logs();
         should_try_refresh = results.second;
         dispatch_man.update_logs(results.first, !should_try_refresh);
       } break;

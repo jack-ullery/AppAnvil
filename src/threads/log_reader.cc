@@ -27,16 +27,16 @@ std::pair<std::list<std::shared_ptr<LogRecord>>, bool> LogReader::read_logs()
   }
 
   bool audit_success = append_audit_logs(logs);
-  return {logs, audit_success};
+  return { logs, audit_success };
 }
 
 bool LogReader::append_audit_logs(std::list<std::shared_ptr<LogRecord>> &log_list)
 {
-  auto results = CommandCaller::get_logs(checkpoint_filepath);
+  auto results       = CommandCaller::get_logs(checkpoint_filepath);
   std::string output = results.first;
-  bool read_success = results.second;
+  bool read_success  = results.second;
 
-  if(read_success) {
+  if (read_success) {
     std::istringstream stream(output);
 
     if (checkpoint_filepath.empty()) {

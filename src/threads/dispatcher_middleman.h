@@ -57,14 +57,14 @@ protected:
     CallData(CallType a, const std::string &b, const bool &c)
       : type{ a },
         string{ b },
-        had_authentication_error{c}
+        had_authentication_error{ c }
     {
     }
 
     CallData(CallType a, const std::list<std::shared_ptr<LogRecord>> &b, const bool &c)
       : type{ a },
         logs{ b },
-        had_authentication_error{c}
+        had_authentication_error{ c }
     {
     }
   };
