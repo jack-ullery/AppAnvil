@@ -69,6 +69,10 @@ void ConsoleThread<ProfilesController, ProcessesController, LogsController>::ree
 {
   std::unique_lock<std::mutex> lock(task_ready_mtx);
   should_try_refresh = true;
+  lock.unlock();
+
+  // Send a refresh message
+  send_refresh_message(last_state);
 }
 
 template<class ProfilesController, class ProcessesController, class LogsController>

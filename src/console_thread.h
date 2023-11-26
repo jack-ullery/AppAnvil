@@ -42,6 +42,14 @@ public:
   // Create a move assignment operator
   ConsoleThread &operator=(ConsoleThread &&other) noexcept;
 
+  /**
+   * @brief Allows sending calls to pkexec if this was disabled previously.
+   *
+   * @details
+   * This is tells ConsoleThread that we want to continue calling `pkexec aa-caller`.
+   * Those pkexec calls may be disabled by ConsoleThread, if the user decides not to authenticate.
+   * We do this, because we want to avoid spamming the user with pkexec prompts
+   */
   void reenable_authentication_for_refresh();
 
   void send_refresh_message(TabState new_state);
