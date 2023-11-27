@@ -6,9 +6,10 @@
 #include <list>
 
 #include "../../../../src/threads/log_record.h"
+#include "status_controller_mock.h"
 
 // Mock object of LogsController class for use in status and dispatcher_middleman tests
-class LogsControllerMock
+class LogsControllerMock : public StatusControllerMock
 {
 public:
   MOCK_METHOD(void, add_data_to_record, (const std::list<std::shared_ptr<LogRecord>> &data));

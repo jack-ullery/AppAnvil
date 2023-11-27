@@ -38,7 +38,7 @@ public:
    * Wrapping this call in aa-caller ensures that the user does not need to authenticate
    * to pkexec every few seconds.
    *
-   * @returns std::string the raw output of aa-status
+   * @returns std::pair<std::string, bool> the raw output of aa-status and whether the call to pkexec was successful
    */
   static std::pair<std::string, bool> get_status() noexcept;
 
@@ -51,7 +51,7 @@ public:
    * Wrapping this call in aa-caller ensures that the user does not need to authenticate
    * to pkexec every few seconds.
    *
-   * @returns std::string the raw output of aa-unconfined
+   * @returns std::pair<std::string, bool> the raw output of aa-unconfined and whether the call to pkexec was successful
    */
   static std::pair<std::string, bool> get_unconfined() noexcept;
 
@@ -64,7 +64,7 @@ public:
    * Wrapping this call in aa-caller ensures that the user does not need to authenticate
    * to pkexec every few seconds.
    *
-   * @returns std::string the raw output of ausearch
+   * @returns std::pair<std::string, bool> the raw output of ausearch and whether the call to pkexec was successful
    */
   static std::pair<std::string, bool> get_logs(const std::string &checkpoint_filepath) noexcept;
 
@@ -127,6 +127,7 @@ protected:
 #ifdef TESTS_ENABLED
   FRIEND_TEST(CommandCallerTest, TEST_UNCONF);
   FRIEND_TEST(CommandCallerTest, TEST_STATUS);
+  FRIEND_TEST(CommandCallerTest, TEST_LOGS);
   FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_EE);
   FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_CC);
   FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_CE);

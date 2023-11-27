@@ -6,6 +6,7 @@ set(
   ${CMAKE_CURRENT_SOURCE_DIR}/src/test_runner.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/tabs/controller/logs_controller_test.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/tabs/controller/status_controller_test.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/tabs/controller/status_controller_mock.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/tabs/model/log_adapter_test.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/tabs/model/process_adapter_test.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/src/tabs/model/profile_adapter_test.cc
