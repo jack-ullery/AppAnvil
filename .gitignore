@@ -11,6 +11,7 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 
+appanvil_test*.cmake
 CPackConfig.cmake
 CPackSourceConfig.cmake
 _CPack_Packages/
