@@ -203,6 +203,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC pthread)
 pkg_check_modules(GTEST gtest)
 pkg_check_modules(GMOCK gmock)
 
+enable_testing()
 add_subdirectory(aa-caller)
 add_subdirectory(test)
 
