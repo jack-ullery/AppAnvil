@@ -36,33 +36,33 @@ TEST_F(CommandCallerTest, TEST_LOGS)
   EXPECT_TRUE(output.second);
 }
 
-// TEST_F(CommandCallerTest, TEST_STATUS_PKEXEC_FAIL)
-// {
-//   std::vector<std::string> command = { "pkexec", "aa-caller", "-s" };
-//   EXPECT_CALL(tester, call_command(command)).Times(1).WillOnce(Return(tester.result_error));
+TEST_F(CommandCallerTest, TEST_STATUS_PKEXEC_FAIL)
+{
+  std::vector<std::string> command = { "pkexec", "aa-caller", "-s" };
+  EXPECT_CALL(tester, call_command(command)).Times(1).WillOnce(Return(tester.pkexec_error));
 
-//   auto output = CommandCallerMock::get_status(&tester);
-//   EXPECT_FALSE(output.second);
-// }
+  auto output = CommandCallerMock::get_status(&tester);
+  EXPECT_FALSE(output.second);
+}
 
-// TEST_F(CommandCallerTest, TEST_UNCONF_PKEXEC_FAIL)
-// {
-//   std::vector<std::string> command = { "pkexec", "aa-caller", "-u" };
-//   EXPECT_CALL(tester, call_command(command)).Times(1).WillOnce(Return(tester.result_error));
+TEST_F(CommandCallerTest, TEST_UNCONF_PKEXEC_FAIL)
+{
+  std::vector<std::string> command = { "pkexec", "aa-caller", "-u" };
+  EXPECT_CALL(tester, call_command(command)).Times(1).WillOnce(Return(tester.pkexec_error));
 
-//   auto output = CommandCallerMock::get_unconfined(&tester);
-//   EXPECT_FALSE(output.second);
-// }
+  auto output = CommandCallerMock::get_unconfined(&tester);
+  EXPECT_FALSE(output.second);
+}
 
-// TEST_F(CommandCallerTest, TEST_LOGS_PKEXEC_FAIL)
-// {
-//   std::string filename = "/dev/null";
-//   std::vector<std::string> command = { "pkexec", "aa-caller", "-l", filename};
-//   EXPECT_CALL(tester, call_command(command)).Times(1).WillOnce(Return(tester.result_error));
+TEST_F(CommandCallerTest, TEST_LOGS_PKEXEC_FAIL)
+{
+  std::string filename = "/dev/null";
+  std::vector<std::string> command = { "pkexec", "aa-caller", "-l", filename};
+  EXPECT_CALL(tester, call_command(command)).Times(1).WillOnce(Return(tester.pkexec_error));
 
-//   auto output = CommandCallerMock::get_logs(&tester, filename);
-//   EXPECT_FALSE(output.second);
-// }
+  auto output = CommandCallerMock::get_logs(&tester, filename);
+  EXPECT_FALSE(output.second);
+}
 
 TEST_F(CommandCallerTest, TEST_CHANGE_STATUS_EE)
 {
