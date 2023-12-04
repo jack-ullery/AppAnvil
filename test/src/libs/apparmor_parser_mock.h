@@ -37,6 +37,7 @@ public:
   MOCK_METHOD(bool, hasChanges, ());
   MOCK_METHOD(void, saveChanges, ());
   MOCK_METHOD(void, cancelChanges, ());
+  MOCK_METHOD(void, updateFromString, (const std::string &new_profile_data));
   MOCK_METHOD(std::string, getPath, ());
 
   operator std::string() { return "this is a string"; }

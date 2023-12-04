@@ -12,6 +12,13 @@ void register_resource_bundle()
   resource_bundle->register_global();
 }
 
+// This tells googletest to discover and run all tests
+int init_and_run_all_tests(int argc, char **argv)
+{
+  testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
+}
+
 /**
  * @details
  * This class runs the unit-tests for us from a GTK Application Window.
@@ -22,10 +29,8 @@ class FakeWindow : public Gtk::ApplicationWindow
 {
 public:
   FakeWindow(int argc, char **argv)
+    : return_value{ init_and_run_all_tests(argc, argv) }
   {
-    // This runs all the tests
-    testing::InitGoogleTest(&argc, argv);
-    return_value = RUN_ALL_TESTS();
   }
 
   // This returns the value of the tests

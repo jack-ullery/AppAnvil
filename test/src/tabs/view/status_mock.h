@@ -20,6 +20,10 @@ public:
   MOCK_METHOD(void, set_apply_signal_handler, (const Glib::SignalProxyProperty::SlotType &func));
   MOCK_METHOD(Glib::ustring, get_selection_text, ());
   MOCK_METHOD(SearchInfo, get_search_info, ());
+  MOCK_METHOD(void, show_reauthenticate_prompt_impl, (bool should_show_button));
+
+  // Method overloading
+  void show_reauthenticate_prompt(bool should_show_button = true) { return show_reauthenticate_prompt_impl(should_show_button); }
 };
 
 #endif

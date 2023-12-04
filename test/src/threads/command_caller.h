@@ -10,6 +10,7 @@
 const std::string test_str    = "the quick brown fox jumps over the lazy dog";
 const std::string success_str = "success";
 const std::string error_str   = "error";
+const std::string pkexec_str  = "Error executing command as another user: Request dismissed";
 
 class CommandCallerMock : public CommandCaller
 {
@@ -18,7 +19,8 @@ public:
   MOCK_METHOD(CommandCaller::results, call_command, (const std::vector<std::string> &), (override));
 
   CommandCallerMock::results result_success = { 0, success_str, error_str };
-  CommandCallerMock::results result_error   = { 1, success_str, error_str };
+  CommandCallerMock::results result_error   = { 1, test_str, error_str };
+  CommandCallerMock::results pkexec_error   = { 1, test_str, pkexec_str };
 };
 
 class CommandCallerTest : public ::testing::Test

@@ -98,8 +98,9 @@ sudo make install
 This builds the necessary executables, installs them, and applies recommended changes to PolicyKit.
 
 ### Test
-To build the unit tests:
+To build and run the unit tests:
 ```
+make appanvil_test -j$(nproc)
 make test
 ```
 To generate a code coverage report:

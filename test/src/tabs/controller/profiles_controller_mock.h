@@ -3,9 +3,12 @@
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <memory>
+
+#include "status_controller_mock.h"
 
 // Mock object of Profiles class for use in status and dispatcher_middleman tests
-class ProfilesStatusMock
+class ProfilesControllerMock : public StatusControllerMock
 {
 public:
   MOCK_METHOD(void, add_data_to_record, (const std::string &data));
