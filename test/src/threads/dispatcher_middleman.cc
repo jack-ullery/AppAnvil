@@ -58,7 +58,8 @@ TEST_F(DispatcherMiddlemanTest, UPDATE_PROCESSES)
   expect_locks(2 * num_calls);
   expect_show_reauthenticate_prompt(should_show, num_calls);
 
-  dispatch_man.update_processes(processes_arg, should_show);;
+  dispatch_man.update_processes(processes_arg, should_show);
+  ;
   dispatch_man.handle_signal();
 }
 
@@ -74,7 +75,8 @@ TEST_F(DispatcherMiddlemanTest, UPDATE_LOGS)
   expect_locks(2 * num_calls);
   expect_show_reauthenticate_prompt(should_show, num_calls);
 
-  dispatch_man.update_logs(logs_arg, should_show);;
+  dispatch_man.update_logs(logs_arg, should_show);
+  ;
   dispatch_man.handle_signal();
 }
 
@@ -91,9 +93,11 @@ TEST_F(DispatcherMiddlemanTest, UPDATE_PROFILES_PROCESSES_SEQUENTIAL)
   expect_locks(2 * num_calls);
   expect_show_reauthenticate_prompt(should_show, num_calls);
 
-  dispatch_man.update_profiles(profiles_arg, should_show);;
+  dispatch_man.update_profiles(profiles_arg, should_show);
+  ;
   dispatch_man.handle_signal();
-  dispatch_man.update_processes(processes_arg, should_show);;
+  dispatch_man.update_processes(processes_arg, should_show);
+  ;
   dispatch_man.handle_signal();
 }
 
@@ -110,8 +114,10 @@ TEST_F(DispatcherMiddlemanTest, UPDATE_PROFILES_PROCESSES_INTERLOCKING)
   expect_locks(2 * num_calls);
   expect_show_reauthenticate_prompt(should_show, num_calls);
 
-  dispatch_man.update_profiles(profiles_arg, should_show);;
-  dispatch_man.update_processes(processes_arg, should_show);;
+  dispatch_man.update_profiles(profiles_arg, should_show);
+  ;
+  dispatch_man.update_processes(processes_arg, should_show);
+  ;
   dispatch_man.handle_signal();
   dispatch_man.handle_signal();
 }

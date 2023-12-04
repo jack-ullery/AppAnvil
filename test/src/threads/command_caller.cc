@@ -27,8 +27,8 @@ TEST_F(CommandCallerTest, TEST_UNCONF)
 
 TEST_F(CommandCallerTest, TEST_LOGS)
 {
-  std::string filename = "/dev/null";
-  std::vector<std::string> command = { "pkexec", "aa-caller", "-l", filename};
+  std::string filename             = "/dev/null";
+  std::vector<std::string> command = { "pkexec", "aa-caller", "-l", filename };
   EXPECT_CALL(tester, call_command(command)).Times(1).WillOnce(Return(tester.result_success));
 
   auto output = CommandCallerMock::get_logs(&tester, filename);
@@ -56,8 +56,8 @@ TEST_F(CommandCallerTest, TEST_UNCONF_PKEXEC_FAIL)
 
 TEST_F(CommandCallerTest, TEST_LOGS_PKEXEC_FAIL)
 {
-  std::string filename = "/dev/null";
-  std::vector<std::string> command = { "pkexec", "aa-caller", "-l", filename};
+  std::string filename             = "/dev/null";
+  std::vector<std::string> command = { "pkexec", "aa-caller", "-l", filename };
   EXPECT_CALL(tester, call_command(command)).Times(1).WillOnce(Return(tester.pkexec_error));
 
   auto output = CommandCallerMock::get_logs(&tester, filename);

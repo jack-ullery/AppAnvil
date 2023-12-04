@@ -54,9 +54,10 @@ protected:
 template class DispatcherMiddleman<ProfilesControllerMock, ProcessesControllerMock, LogsControllerMock, GlibDispatcherMock, MutexMock>;
 template class BlockingQueue<
   DispatcherMiddleman<ProfilesControllerMock, ProcessesControllerMock, LogsControllerMock, GlibDispatcherMock, MutexMock>::CallData,
-  std::deque<DispatcherMiddleman<ProfilesControllerMock, ProcessesControllerMock, LogsControllerMock, GlibDispatcherMock, MutexMock>::CallData,
-             std::allocator<
-               DispatcherMiddleman<ProfilesControllerMock, ProcessesControllerMock, LogsControllerMock, GlibDispatcherMock, MutexMock>::CallData>>,
+  std::deque<
+    DispatcherMiddleman<ProfilesControllerMock, ProcessesControllerMock, LogsControllerMock, GlibDispatcherMock, MutexMock>::CallData,
+    std::allocator<
+      DispatcherMiddleman<ProfilesControllerMock, ProcessesControllerMock, LogsControllerMock, GlibDispatcherMock, MutexMock>::CallData>>,
   MutexMock>;
 
 #endif

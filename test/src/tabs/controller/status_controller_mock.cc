@@ -3,8 +3,9 @@
 #include <memory>
 
 StatusControllerMock::StatusControllerMock()
-  : status_mock{std::make_shared<StatusMock>()}
-{   }
+  : status_mock{ std::make_shared<StatusMock>() }
+{
+}
 
 std::shared_ptr<StatusMock> StatusControllerMock::get_tab()
 {

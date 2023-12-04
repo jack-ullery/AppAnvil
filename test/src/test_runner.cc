@@ -29,8 +29,9 @@ class FakeWindow : public Gtk::ApplicationWindow
 {
 public:
   FakeWindow(int argc, char **argv)
-    : return_value{init_and_run_all_tests(argc, argv)}
-  { }
+    : return_value{ init_and_run_all_tests(argc, argv) }
+  {
+  }
 
   // This returns the value of the tests
   int get_value() // NOLINT(readability-make-member-function-const)
