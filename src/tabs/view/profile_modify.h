@@ -1,6 +1,8 @@
 #ifndef TABS_PROFILE_MODIFY_H
 #define TABS_PROFILE_MODIFY_H
 
+#include "scrolled_view.h"
+
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
@@ -61,11 +63,9 @@ private:
   std::unique_ptr<Gtk::Box> m_box;
 
   // Widgets
-  std::unique_ptr<Gtk::Label> m_title_1;
-  std::unique_ptr<Gtk::Label> m_title_2;
-  std::unique_ptr<Gtk::Label> m_title_3;
-  std::shared_ptr<Gtk::TreeView> m_abstraction_view;
-  std::shared_ptr<Gtk::TreeView> m_file_rule_view;
+  std::unique_ptr<Gtk::Label> m_raw_profile_title;
+  std::shared_ptr<Gtk::Box> m_abstraction_box;
+  std::shared_ptr<Gtk::Box> m_file_rule_box;
   std::shared_ptr<Gtk::TextView> m_profile_text;
   std::shared_ptr<Gtk::Revealer> m_button_reveal;
   std::shared_ptr<Gtk::Button> m_cancel_button;
@@ -73,6 +73,9 @@ private:
   std::shared_ptr<Gtk::Revealer> m_raw_text_apply_reveal;
   std::shared_ptr<Gtk::Button> m_raw_text_cancel_button;
   std::shared_ptr<Gtk::Button> m_raw_text_apply_button;
+
+  std::shared_ptr<ScrolledView> m_abstraction_view;
+  std::shared_ptr<ScrolledView> m_file_rule_view;
 
   // Function that will be called if parser is updated internally
   void_func handle_apparmor_parser_changed = []() {};

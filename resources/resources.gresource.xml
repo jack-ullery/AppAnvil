@@ -10,5 +10,6 @@
     <file preprocess="xml-stripblanks">resources/status.glade</file>
     <file preprocess="xml-stripblanks">resources/log.glade</file>
     <file preprocess="xml-stripblanks">resources/info_box.glade</file>
+    <file preprocess="xml-stripblanks">resources/scrolled_view.glade</file>
   </gresource>
 </gresources>
