@@ -16,6 +16,3 @@ std::shared_ptr<Gtk::TreeView> ScrolledView::get_view()
 {
     return tree_view;
 }
-
-// TODO: Look into dynamically resizing this widget
-// Ensure max size of this widget is equal to the size to draww smaller widget
