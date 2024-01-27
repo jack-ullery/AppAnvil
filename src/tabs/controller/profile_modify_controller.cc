@@ -175,23 +175,20 @@ inline void ProfileModifyController::handle_remove_selected_rule(const std::shar
 
     // Delete the rule
     handle_remove_rule<RuleType>(*rule);
-    std::cout << rule->operator std::string() << std::endl;
   }
   else {
-    std::cout << "Not removing rule because " << nrows << " found." << std::endl;
+    std::cout << "Not removing rule because " << nrows << " are selected." << std::endl;
   }
 }
 
 void ProfileModifyController::handle_remove_abstraction_button()
 {
-  std::cout << "Remove Abstraction: ";
   auto view = modify->get_abstraction_view();
   handle_remove_selected_rule<AppArmor::Tree::AbstractionRule>(view);
 }
 
 void ProfileModifyController::handle_remove_file_rule_button()
 {
-  std::cout << "Remove File Rule: ";
   auto view = modify->get_file_rule_view();
   handle_remove_selected_rule<AppArmor::Tree::FileRule>(view);
 }
