@@ -40,6 +40,9 @@ public:
   // This happends if a user manuallt edits the profile in the "Profile Text" section
   void connect_handle_profile_changed(const void_func &parser_handler);
 
+  // Function to connect "delete rule" buttons
+  void connect_handle_remove_rule(const void_func &ab_fun, const void_func &fr_fun);
+
   // Decides whether the apply and cancel buttons should be visible
   void handle_apply_visible();
 
@@ -73,6 +76,11 @@ private:
   std::shared_ptr<Gtk::Revealer> m_raw_text_apply_reveal;
   std::shared_ptr<Gtk::Button> m_raw_text_cancel_button;
   std::shared_ptr<Gtk::Button> m_raw_text_apply_button;
+
+  std::shared_ptr<Gtk::Button> ab_add_button;
+  std::shared_ptr<Gtk::Button> ab_delete_button;
+  std::shared_ptr<Gtk::Button> frule_add_button;
+  std::shared_ptr<Gtk::Button> frule_delete_button;
 
   std::shared_ptr<ScrolledView> m_abstraction_view;
   std::shared_ptr<ScrolledView> m_file_rule_view;

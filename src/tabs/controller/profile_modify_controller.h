@@ -25,9 +25,17 @@ protected:
   void handle_profile_changed();
   void handle_file_rule_changed(const std::string &path);
   void handle_edit_rule(AppArmor::Tree::FileRule &old_rule, const AppArmor::Tree::FileRule &new_rule);
-  void handle_remove_rule(AppArmor::Tree::FileRule &old_rule);
   void handle_cancel_called();
   void handle_apply_called();
+
+  template<AppArmor::RuleDerived RuleType>
+  void handle_remove_rule(RuleType &old_rule);
+
+  // Functions for handling delete buttons
+  template<AppArmor::RuleDerived RuleType>
+  inline void handle_remove_selected_rule(const std::shared_ptr<Gtk::TreeView> &view);
+  void handle_remove_abstraction_button();
+  void handle_remove_file_rule_button();
 
 private:
   const std::vector<ColumnHeader> abstraction_col_names{ ColumnHeader("Abstraction", ColumnHeader::ColumnType::STRING) };

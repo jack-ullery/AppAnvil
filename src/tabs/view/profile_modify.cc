@@ -39,6 +39,14 @@ void ProfileModifyImpl<AppArmorParser>::connect_handle_profile_changed(const voi
 }
 
 template<class AppArmorParser>
+void ProfileModifyImpl<AppArmorParser>::connect_handle_remove_rule(const void_func &ab_fun,
+                                                                   const void_func &fr_fun)
+{
+  ab_delete_button->signal_clicked().connect(ab_fun);
+  frule_delete_button->signal_clicked().connect(fr_fun);
+}
+
+template<class AppArmorParser>
 void ProfileModifyImpl<AppArmorParser>::handle_apply_visible()
 {
   m_button_reveal->set_reveal_child(parser->hasChanges());
@@ -86,6 +94,10 @@ ProfileModifyImpl<AppArmorParser>::ProfileModifyImpl(std::shared_ptr<AppArmorPar
     m_raw_text_apply_reveal{ Common::get_widget<Gtk::Revealer>("m_raw_text_apply_reveal", builder) },
     m_raw_text_cancel_button{ Common::get_widget<Gtk::Button>("m_raw_text_cancel_button", builder) },
     m_raw_text_apply_button{ Common::get_widget<Gtk::Button>("m_raw_text_apply_button", builder) },
+    ab_add_button{ Common::get_widget<Gtk::Button>("ab_add_button", builder) },
+    ab_delete_button{ Common::get_widget<Gtk::Button>("ab_delete_button", builder) },
+    frule_add_button{ Common::get_widget<Gtk::Button>("frule_add_button", builder) },
+    frule_delete_button{ Common::get_widget<Gtk::Button>("frule_delete_button", builder) },
     m_abstraction_view{ std::make_shared<ScrolledView>(profile->name()) },
     m_file_rule_view{ std::make_shared<ScrolledView>(profile->name()) },
     parser{ parser }

@@ -135,9 +135,10 @@ void ProfileModifyController::handle_edit_rule(AppArmor::Tree::FileRule &old_rul
   handle_profile_changed();
 }
 
-void ProfileModifyController::handle_remove_rule(AppArmor::Tree::FileRule &old_rule)
+template<AppArmor::RuleDerived RuleType>
+void ProfileModifyController::handle_remove_rule(RuleType &old_rule)
 {
-  std::cout << "Removed Rule: " << old_rule.getFilename() << std::endl;
+  std::cout << "Removed Rule: " << old_rule.operator std::string() << std::endl;
   parser->removeRule(*profile, old_rule, profile_stream);
   handle_profile_changed();
 }
@@ -154,6 +155,40 @@ void ProfileModifyController::handle_apply_called()
   if (re == 0) {
     handle_profile_changed();
   }
+}
+
+template<AppArmor::RuleDerived RuleType>
+inline void ProfileModifyController::handle_remove_selected_rule(const std::shared_ptr<Gtk::TreeView> &view)
+{
+  auto selection = view->get_selection();
+  const auto nrows = selection->count_selected_rows(); 
+  if (nrows == 1) {
+    // Get the rule from the selected row
+    std::shared_ptr<RuleType> rule;
+    auto row = *selection->get_selected();
+    row->get_value(0, rule);
+
+    // Delete the rule
+    handle_remove_rule<RuleType>(*rule);
+    std::cout << rule->operator std::string() << std::endl;
+  }
+  else {
+    std::cout << "Not removing rule because " << nrows << " found." << std::endl;
+  }
+}
+
+void ProfileModifyController::handle_remove_abstraction_button()
+{
+  std::cout << "Remove Abstraction: ";
+  auto view = modify->get_abstraction_view();
+  handle_remove_selected_rule<AppArmor::Tree::AbstractionRule>(view);
+}
+
+void ProfileModifyController::handle_remove_file_rule_button()
+{
+  std::cout << "Remove File Rule: ";
+  auto view = modify->get_file_rule_view();
+  handle_remove_selected_rule<AppArmor::Tree::FileRule>(view);
 }
 
 ProfileModifyController::ProfileModifyController(const std::shared_ptr<AppArmor::Parser> &parser,
@@ -173,6 +208,11 @@ ProfileModifyController::ProfileModifyController(const std::shared_ptr<AppArmor:
 
   auto handle_prof_fun = sigc::mem_fun(*this, &ProfileModifyController::handle_profile_changed);
   modify->connect_handle_profile_changed(handle_prof_fun);
+
+  // Connect the buttons that are used to remove thigs
+  auto handle_remove_abstr = sigc::mem_fun(*this, &ProfileModifyController::handle_remove_abstraction_button);
+  auto handle_remove_frule = sigc::mem_fun(*this, &ProfileModifyController::handle_remove_file_rule_button);
+  modify->connect_handle_remove_rule(handle_remove_abstr, handle_remove_frule);
 
   update_all_tables();
 }

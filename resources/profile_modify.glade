@@ -23,6 +23,30 @@
     <property name="can-focus">False</property>
     <property name="icon-name">view-refresh</property>
   </object>
+  <object class="GtkImage" id="rule-add">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">list-add</property>
+    <property name="use-fallback">True</property>
+  </object>
+  <object class="GtkImage" id="rule-add-2">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">list-add</property>
+    <property name="use-fallback">True</property>
+  </object>
+  <object class="GtkImage" id="rule-delete">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">list-remove</property>
+    <property name="use-fallback">True</property>
+  </object>
+  <object class="GtkImage" id="rule-delete-2">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">list-remove</property>
+    <property name="use-fallback">True</property>
+  </object>
   <object class="GtkBox" id="m_box">
     <property name="width-request">200</property>
     <property name="height-request">200</property>
@@ -92,7 +116,7 @@
                     <property name="margin-top">10</property>
                     <property name="layout-style">end</property>
                     <child>
-                      <object class="GtkButton">
+                      <object class="GtkButton" id="ab_delete_button">
                         <property name="label" translatable="yes">  Delete Abstraction</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
@@ -107,7 +131,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton">
+                      <object class="GtkButton" id="ab_add_button">
                         <property name="label" translatable="yes"> Add Abstraction</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
@@ -178,7 +202,7 @@
                     <property name="margin-top">10</property>
                     <property name="layout-style">end</property>
                     <child>
-                      <object class="GtkButton">
+                      <object class="GtkButton" id="frule_delete_button">
                         <property name="label" translatable="yes">  Delete Rule</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
@@ -193,7 +217,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton">
+                      <object class="GtkButton" id="frule_add_button">
                         <property name="label" translatable="yes"> Add Rule</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
@@ -511,29 +535,5 @@
         <property name="position">1</property>
       </packing>
     </child>
-  </object>
-  <object class="GtkImage" id="rule-add">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">list-add</property>
-    <property name="use-fallback">True</property>
-  </object>
-  <object class="GtkImage" id="rule-add-2">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">list-add</property>
-    <property name="use-fallback">True</property>
-  </object>
-  <object class="GtkImage" id="rule-delete">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">list-remove</property>
-    <property name="use-fallback">True</property>
-  </object>
-  <object class="GtkImage" id="rule-delete-2">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">list-remove</property>
-    <property name="use-fallback">True</property>
   </object>
 </interface>
