@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <memory>
+#include <tree/AbstractionRule.hh>
 
 std::shared_ptr<ProfileModify> ProfileModifyController::get_profile_modify()
 {
@@ -23,10 +24,13 @@ void ProfileModifyController::intialize_abstractions()
       pos++;
     }
 
+    // Add the data to the row
+    auto shared_rule    = std::make_shared<AppArmor::Tree::AbstractionRule>(abstraction);
     std::string trimmed = abstraction_str.substr(pos);
 
     auto row = abstraction_record->new_row();
-    row->set_value(0, trimmed);
+    row->set_value(0, shared_rule);
+    row->set_value(1, trimmed);
   }
 }
 
@@ -157,6 +161,7 @@ void ProfileModifyController::handle_apply_called()
   }
 }
 
+// Assumes column 0 holds the rule, will segfault otherwise
 template<AppArmor::RuleDerived RuleType>
 inline void ProfileModifyController::handle_remove_selected_rule(const std::shared_ptr<Gtk::TreeView> &view)
 {

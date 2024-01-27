@@ -38,7 +38,10 @@ protected:
   void handle_remove_file_rule_button();
 
 private:
-  const std::vector<ColumnHeader> abstraction_col_names{ ColumnHeader("Abstraction", ColumnHeader::ColumnType::STRING) };
+  const std::vector<ColumnHeader> abstraction_col_names{ 
+    ColumnHeader("Data", ColumnHeader::ColumnType::ABSTRACTION_RULE_POINTER),
+    ColumnHeader("Abstraction", ColumnHeader::ColumnType::STRING)
+  };
 
   const std::vector<ColumnHeader> file_rule_col_names{
     ColumnHeader("Data", ColumnHeader::ColumnType::FILE_RULE_POINTER),

@@ -14,6 +14,7 @@ struct ColumnHeader
     PROFILE_ENTRY,
     PROCESS_ENTRY,
     LOG_ENTRY,
+    ABSTRACTION_RULE_POINTER,
     FILE_RULE_POINTER,
     COMBO_BOX,
   };

@@ -15,6 +15,7 @@
 #include <memory>
 #include <sigc++/functors/ptr_fun.h>
 #include <stdexcept>
+#include <tree/AbstractionRule.hh>
 #include <tuple>
 #include <vector>
 
@@ -228,6 +229,14 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
         column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
       } break;
 
+      case ColumnHeader::ABSTRACTION_RULE_POINTER: {
+        // Add an invisible column, and title it using the string from 'names'
+        auto model_column = Gtk::TreeModelColumn<std::shared_ptr<AppArmor::Tree::AbstractionRule>>();
+        add(model_column);
+        view->append_column(names[i].name, model_column);
+        column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
+      } break;
+
       case ColumnHeader::FILE_RULE_POINTER: {
         // Add an invisible column, and title it using the string from 'names'
         auto model_column = Gtk::TreeModelColumn<std::shared_ptr<AppArmor::Tree::FileRule>>();
@@ -258,8 +267,7 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
     column_view->set_min_width(MIN_COL_WIDTH);
     column_view->set_sort_column(*column_base);
 
-    if (names[i].type == ColumnHeader::PROFILE_ENTRY || names[i].type == ColumnHeader::PROCESS_ENTRY ||
-        names[i].type == ColumnHeader::LOG_ENTRY || names[i].type == ColumnHeader::FILE_RULE_POINTER) {
+    if (names[i].type == ColumnHeader::PROFILE_ENTRY || names[i].type == ColumnHeader::PROCESS_ENTRY || names[i].type == ColumnHeader::LOG_ENTRY || names[i].type == ColumnHeader::FILE_RULE_POINTER || names[i].type == ColumnHeader::ABSTRACTION_RULE_POINTER) {
       // Create a custom cell renderer which shows nothing for these entries
       auto *renderer    = Gtk::make_managed<Gtk::CellRendererText>();
       auto callback_fun = sigc::ptr_fun(&StatusColumnRecord::ignore_cell_render);
