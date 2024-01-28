@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource>
+    <file>misc/icon.svg</file>
+    <file preprocess="xml-stripblanks">misc/icon.glade</file>
+    <file preprocess="xml-stripblanks">misc/info_box.glade</file>
+    <file preprocess="xml-stripblanks">misc/scrolled_view.glade</file>
+
+    <file preprocess="xml-stripblanks">profile.glade</file>
+    <file preprocess="xml-stripblanks">status.glade</file>
+    <file preprocess="xml-stripblanks">log.glade</file>
+
+    <file preprocess="xml-stripblanks">modal/help.glade</file>
+    <file preprocess="xml-stripblanks">modal/load_profile.glade</file>
+    <file preprocess="xml-stripblanks">modal/profile_modify.glade</file>
+  </gresource>
+</gresources>

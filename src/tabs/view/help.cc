@@ -2,7 +2,7 @@
 #include "common.h"
 
 Help::Help(Help::Type help_type)
-  : builder{ Gtk::Builder::create_from_resource("/resources/help.glade") },
+  : builder{ Gtk::Builder::create_from_resource("/modal/help.glade") },
     help_profile{ Common::get_widget<Gtk::Popover>("help_profile", builder) },
     help_process{ Common::get_widget<Gtk::Popover>("help_process", builder) },
     help_logs{ Common::get_widget<Gtk::Popover>("help_logs", builder) },

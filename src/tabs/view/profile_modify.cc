@@ -82,7 +82,7 @@ void ProfileModifyImpl<AppArmorParser>::apply_raw_profile_text_change()
 template<class AppArmorParser>
 ProfileModifyImpl<AppArmorParser>::ProfileModifyImpl(std::shared_ptr<AppArmorParser> parser,
                                                      const std::shared_ptr<AppArmor::Profile> &profile)
-  : builder{ Gtk::Builder::create_from_resource("/resources/profile_modify.glade") },
+  : builder{ Gtk::Builder::create_from_resource("/modal/profile_modify.glade") },
     m_box{ Common::get_widget<Gtk::Box>("m_box", builder) },
     m_raw_profile_title{ Common::get_widget<Gtk::Label>("m_raw_profile_title", builder) },
     m_abstraction_box{ Common::get_widget<Gtk::Box>("m_abstraction_box", builder) },

@@ -2,7 +2,7 @@
 #include "scrolled_view.h"
 
 ScrolledView::ScrolledView(const std::string &title)
-    :   builder{ Gtk::Builder::create_from_resource("/resources/scrolled_view.glade") },
+    :   builder{ Gtk::Builder::create_from_resource("/misc/scrolled_view.glade") },
         frame{Common::get_widget<Gtk::Frame>("frame", builder)},
         frame_title{Common::get_widget<Gtk::Label>("frame_title", builder)},
         scrolled_window{Common::get_widget<Gtk::ScrolledWindow>("scrolled_window", builder)},

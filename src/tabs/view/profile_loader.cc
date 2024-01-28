@@ -6,7 +6,7 @@
 #include <vector>
 
 ProfileLoader::ProfileLoader()
-  : builder{ Gtk::Builder::create_from_resource("/resources/load_profile.glade") },
+  : builder{ Gtk::Builder::create_from_resource("/modal/load_profile.glade") },
     l_box{ Common::get_widget<Gtk::Box>("l_box", builder) },
     l_filechooser_button{ Common::get_widget<Gtk::FileChooser>("l_filechooser_button", builder) },
     l_confirm_label{ Common::get_widget<Gtk::Label>("l_confirm_label", builder) },
