@@ -24,9 +24,7 @@ build/
 resources/*.glade~
 resources/#*#
 src/resource.autogen.c
-resources/resource.autogen.c
-resources/com.github.jack-ullery.AppAnvil.pkexec.policy
-resources/appanvil.desktop
+resources/generated
 
 dist/
 lib/
