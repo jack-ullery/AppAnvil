@@ -21,8 +21,8 @@ _CPack_Packages/
 .vscode/
 build/
 
-resources/*.glade~
-resources/#*#
+*.glade~
+\#*#
 src/resource.autogen.c
 resources/generated
 
