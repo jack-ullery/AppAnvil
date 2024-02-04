@@ -1,10 +1,12 @@
 #include "profile_modify.h"
 #include "../../threads/command_caller.h"
+#include "add_abstraction.h"
 #include "common.h"
 #include "scrolled_view.h"
 
 #include <exception>
 #include <gtkmm/button.h>
+#include <gtkmm/dialog.h>
 #include <gtkmm/enums.h>
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
@@ -80,6 +82,19 @@ void ProfileModifyImpl<AppArmorParser>::apply_raw_profile_text_change()
 }
 
 template<class AppArmorParser>
+void ProfileModifyImpl<AppArmorParser>::handle_add_abstraction()
+{
+  auto response = AddAbstraction::show_dialog();
+  auto dialog_response = response.first;
+
+  if(dialog_response == Gtk::ResponseType::RESPONSE_ACCEPT)
+  {
+    auto abstraction = response.second;
+    // parser->addRule(abstraction);
+  }
+}
+
+template<class AppArmorParser>
 ProfileModifyImpl<AppArmorParser>::ProfileModifyImpl(std::shared_ptr<AppArmorParser> parser,
                                                      const std::shared_ptr<AppArmor::Profile> &profile)
   : builder{ Gtk::Builder::create_from_resource("/modal/profile_modify.glade") },
@@ -119,6 +134,10 @@ ProfileModifyImpl<AppArmorParser>::ProfileModifyImpl(std::shared_ptr<AppArmorPar
   auto apply_raw_text_change  = sigc::mem_fun(*this, &ProfileModifyImpl<AppArmorParser>::apply_raw_profile_text_change);
   m_raw_text_cancel_button->signal_clicked().connect(cancel_raw_text_change);
   m_raw_text_apply_button->signal_clicked().connect(apply_raw_text_change);
+
+  // Connect buttons for adding/removing rules
+  auto handle_add_abstraction = sigc::mem_fun(*this, &ProfileModifyImpl<AppArmorParser>::handle_add_abstraction);
+  ab_add_button->signal_clicked().connect(handle_add_abstraction);
 
   // Handle the changes in m_profile_text
   auto handle_text_change = sigc::mem_fun(*this, &ProfileModifyImpl<AppArmorParser>::handle_raw_profile_text_change);

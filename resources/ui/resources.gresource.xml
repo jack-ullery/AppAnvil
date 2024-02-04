@@ -13,5 +13,8 @@
     <file preprocess="xml-stripblanks">modal/help.glade</file>
     <file preprocess="xml-stripblanks">modal/load_profile.glade</file>
     <file preprocess="xml-stripblanks">modal/profile_modify.glade</file>
+
+    <file preprocess="xml-stripblanks">modal/rule/abstraction.glade</file>
+    <file preprocess="xml-stripblanks">modal/rule/file_rule.glade</file>
   </gresource>
 </gresources>

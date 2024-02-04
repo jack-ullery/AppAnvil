@@ -58,6 +58,9 @@ protected:
   // Parses the text buffer in 'm_profile_text', attempting to apply it to the profile
   void apply_raw_profile_text_change();
 
+  // Called when 'ab_add_button' is clicked
+  void handle_add_abstraction();
+
 private:
   // GUI Builder to parse UI from xml file
   Glib::RefPtr<Gtk::Builder> builder;
