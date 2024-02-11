@@ -1,8 +1,13 @@
-#include "add_abstraction.h"
-#include "common.h"
 #include <gtkmm/dialog.h>
+#include <gtkmm/liststore.h>
+#include <gtkmm/treemodelcolumn.h>
+#include <gtkmm/treemodelsort.h>
 #include <libappanvil/tree/AbstractionRule.hh>
 #include <utility>
+
+#include "add_abstraction.h"
+#include "../../threads/command_caller.h"
+#include "common.h"
 
 AddAbstraction::AddAbstraction()
   : builder{ Gtk::Builder::create_from_resource("/modal/rule/abstraction.glade") },
@@ -29,6 +34,9 @@ AddAbstraction::AddAbstraction()
     button_back->signal_clicked().connect(handle_button_back);
     button_accept->signal_clicked().connect(handle_button_accept);
 
+    // Populate the combobox
+    set_known_abstractions();
+
     // Connect 'ab_entry' widget
     auto handle_entry = sigc::mem_fun(*this, &AddAbstraction::handle_entry_changed);
     ab_entry->signal_changed().connect(handle_entry);
@@ -37,6 +45,28 @@ AddAbstraction::AddAbstraction()
 
     // Show the dialog
     dialog->show_all();
+}
+
+void AddAbstraction::set_known_abstractions()
+{
+    // Createe the store which will hold the suggested values
+    Gtk::TreeModelColumnRecord col_record;
+    Gtk::TreeModelColumn<std::string> string_column;
+    col_record.add(string_column);
+
+    auto list_store = Gtk::ListStore::create(col_record);
+    auto sort_model = Gtk::TreeModelSort::create(list_store);
+    ab_combobox->set_model(list_store);
+
+    // Populate the list store
+    auto abstractions = CommandCaller::get_abstractions();
+    std::sort(abstractions.begin(), abstractions.end());
+
+    for(const std::string &abstraction : abstractions)
+    {
+        auto row = list_store->append();
+        row->set_value(string_column, abstraction);
+    }
 }
 
 void AddAbstraction::handle_button_cancel()

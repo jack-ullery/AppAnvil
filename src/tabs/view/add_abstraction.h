@@ -28,6 +28,9 @@ public:
 protected:
     AddAbstraction();
 
+    // Helper functions
+    void set_known_abstractions();
+
     // Signal Handlers
     void handle_entry_changed();
     void handle_button_cancel();
