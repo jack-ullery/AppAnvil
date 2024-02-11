@@ -118,7 +118,7 @@ void ProfileModifyController::handle_file_rule_changed(const std::string &path)
         handle_remove_rule(*rule);
       } else {
         // If the rule still contains permissions, modify it
-        AppArmor::Tree::FileRule new_rule(0, -1, rule->getFilename(), new_filemode, rule->getExecTarget(), rule->getIsSubset());
+        AppArmor::Tree::FileRule new_rule(0, -1, rule->getFilename(), new_filemode, rule->getExecTarget());
         handle_edit_rule(*rule, new_rule);
       }
     } catch (const std::exception &ex) {
