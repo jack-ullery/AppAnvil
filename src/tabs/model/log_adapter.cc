@@ -21,7 +21,9 @@ std::string LogAdapter<Database, ColumnRecord>::format_timestamp(const time_t &t
 
   std::tm bt{};
   auto *tm = localtime_r(&timestamp, &bt);
-  stream << std::put_time(tm, "%F %T");
+  std::locale loc("");
+  stream.imbue(loc);
+  stream << std::put_time(tm, "%c");
 
   return stream.str() + '\t';
 }
