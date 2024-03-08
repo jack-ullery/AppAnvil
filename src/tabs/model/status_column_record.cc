@@ -10,6 +10,7 @@
 #include <gtkmm/treeiter.h>
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treemodelsort.h>
+#include <iomanip>
 #include <iostream>
 #include <libappanvil/tree/FileRule.hh>
 #include <memory>
@@ -204,6 +205,14 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
         column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
       } break;
 
+      case ColumnHeader::TIMESTAMP: {
+        // Add a visible column, and title it using the string from 'names'
+        auto model_column = Gtk::TreeModelColumn<unsigned int>();
+        add(model_column);
+        view->append_column(names[i].name, model_column);
+        column_base = std::make_unique<Gtk::TreeModelColumnBase>(model_column);
+      } break;
+
       case ColumnHeader::PROFILE_ENTRY: {
         // Add an invisible column, and title it using the string from 'names'
         auto model_column = Gtk::TreeModelColumn<ProfileTableEntry>();
@@ -310,6 +319,24 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
       };
 
       renderer->signal_edited().connect(lambda);
+
+    } else if (names[i].type == ColumnHeader::TIMESTAMP) {
+      // Ensure that the togglebutton actually toggles when clicked
+      auto *renderer    = Gtk::make_managed<Gtk::CellRendererText>();
+
+      // Called when we want to render the timestamp
+      auto render_lambda = [i](Gtk::CellRenderer *renderer, const Gtk::TreeIter &iter) -> void {
+        auto *text_renderer = dynamic_cast<Gtk::CellRendererText *>(renderer);
+        if (iter && text_renderer != nullptr) {
+          unsigned int timestamp = 0;
+          iter->get_value(static_cast<int>(i), timestamp);
+          text_renderer->property_text() = format_timestamp(timestamp);
+        }
+      };
+
+      column_view->clear();
+      column_view->pack_start(*renderer, false);
+      column_view->set_cell_data_func(*renderer, render_lambda);
     }
   }
 }
@@ -351,4 +378,20 @@ void StatusColumnRecord::ignore_cell_render(Gtk::CellRenderer *renderer, const G
   if (text_renderer != nullptr) {
     text_renderer->property_text() = "";
   }
+}
+
+std::string StatusColumnRecord::format_timestamp(const time_t &timestamp, const std::locale &loc)
+{
+  if (timestamp == 0) {
+    return "Unknown";
+  }
+
+  std::stringstream stream;
+
+  std::tm bt{};
+  auto *tm = localtime_r(&timestamp, &bt);
+  stream.imbue(loc);
+  stream << std::put_time(tm, "%c");
+
+  return stream.str() + '\t';
 }

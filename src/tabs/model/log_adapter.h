@@ -34,14 +34,11 @@ public:
 
   std::shared_ptr<ColumnRecord> get_col_record();
 
-protected:
-  static std::string format_timestamp(const time_t &timestamp, const std::locale &loc = std::locale());
-
 private:
   std::shared_ptr<Database> db;
 
   const std::vector<ColumnHeader> col_names{ ColumnHeader("Metadata", ColumnHeader::ColumnType::LOG_ENTRY),
-                                             ColumnHeader("Time"),
+                                             ColumnHeader("Time", ColumnHeader::ColumnType::TIMESTAMP),
                                              ColumnHeader("Type"),
                                              ColumnHeader("Operation"),
                                              ColumnHeader("Profile"),

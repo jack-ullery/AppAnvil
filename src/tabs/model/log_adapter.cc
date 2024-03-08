@@ -11,23 +11,6 @@
 #include <string>
 
 template<class Database, class ColumnRecord>
-std::string LogAdapter<Database, ColumnRecord>::format_timestamp(const time_t &timestamp, const std::locale &loc)
-{
-  if (timestamp == 0) {
-    return "Unknown";
-  }
-
-  std::stringstream stream;
-
-  std::tm bt{};
-  auto *tm = localtime_r(&timestamp, &bt);
-  stream.imbue(loc);
-  stream << std::put_time(tm, "%c");
-
-  return stream.str() + '\t';
-}
-
-template<class Database, class ColumnRecord>
 void LogAdapter<Database, ColumnRecord>::put_data(const time_t &timestamp,
                                                   const std::string &type,
                                                   const std::string &operation,
@@ -51,12 +34,12 @@ void LogAdapter<Database, ColumnRecord>::put_data(const time_t &timestamp,
   LogTableEntry entry(timestamp, profile_name, pid, metadata, row);
 
   // clang-format off
-  row.set_value(0, entry);                       // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  row.set_value(1, format_timestamp(timestamp)); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  row.set_value(2, type);                        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  row.set_value(3, operation);                   // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  row.set_value(4, profile_name);                // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
-  row.set_value(5, pid);                         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row.set_value(0, entry);        // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row.set_value(1, timestamp);    // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row.set_value(2, type);         // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row.set_value(3, operation);    // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row.set_value(4, profile_name); // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
+  row.set_value(5, pid);          // NOLINT(cppcoreguidelines-avoid-magic-numbers,readability-magic-numbers)
   // clang-format on
 
   // A weird way of updating our profile in the map (because insert_or_assign does not exist with C++11)

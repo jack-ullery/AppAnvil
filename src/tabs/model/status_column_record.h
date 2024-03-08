@@ -139,6 +139,8 @@ protected:
   // Called during the create() method, does not initialize certain fields
   explicit StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &view, const std::vector<ColumnHeader> &names);
 
+  static std::string format_timestamp(const time_t &timestamp, const std::locale &loc = std::locale());
+
 private:
   struct RowData
   {
