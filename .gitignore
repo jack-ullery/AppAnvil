@@ -10,6 +10,7 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 _deps
+CMakePresets.json
 
 appanvil_test*.cmake
 CPackConfig.cmake
