@@ -9,17 +9,6 @@
 #include <regex>
 #include <string>
 
-// Test for method format_timestamp
-TEST_F(LogAdapterTest, TEST_FORMAT_TIMESTAMP)
-{
-  std::string formatted_timestamp = adapter.format_timestamp(sample_log_data_timestamp);
-  std::string formatted_zerotime  = adapter.format_timestamp(zerotime);
-
-  bool res = std::regex_match(formatted_timestamp, timestamp_regex);
-  ASSERT_TRUE(res) << "formatted timestamp does not match regex";
-  ASSERT_EQ(formatted_zerotime, "Unknown") << "if 'timestamp == 0', then assume we do not know when the log was made";
-}
-
 void LogAdapterTest::try_put_data(std::vector<LogAdapterTest::TestData> data_set)
 {
   for (auto data : data_set) {

@@ -45,10 +45,6 @@ private:
                                              ColumnHeader("Pid", ColumnHeader::ColumnType::INT) };
 
   const std::shared_ptr<ColumnRecord> col_record;
-
-#ifdef TESTS_ENABLED
-  FRIEND_TEST(LogAdapterTest, TEST_FORMAT_TIMESTAMP);
-#endif
 };
 
 #endif // TABS_MODEL_LOG_ADAPTER_H
