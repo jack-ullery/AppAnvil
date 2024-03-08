@@ -3,6 +3,7 @@
 
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/treeview.h>
+#include <locale>
 #include <map>
 #include <memory>
 #include <string>
@@ -34,7 +35,7 @@ public:
   std::shared_ptr<ColumnRecord> get_col_record();
 
 protected:
-  static std::string format_timestamp(const time_t &timestamp);
+  static std::string format_timestamp(const time_t &timestamp, const std::locale &loc = std::locale());
 
 private:
   std::shared_ptr<Database> db;

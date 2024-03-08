@@ -11,7 +11,7 @@
 #include <string>
 
 template<class Database, class ColumnRecord>
-std::string LogAdapter<Database, ColumnRecord>::format_timestamp(const time_t &timestamp)
+std::string LogAdapter<Database, ColumnRecord>::format_timestamp(const time_t &timestamp, const std::locale &loc)
 {
   if (timestamp == 0) {
     return "Unknown";
@@ -21,7 +21,6 @@ std::string LogAdapter<Database, ColumnRecord>::format_timestamp(const time_t &t
 
   std::tm bt{};
   auto *tm = localtime_r(&timestamp, &bt);
-  std::locale loc("");
   stream.imbue(loc);
   stream << std::put_time(tm, "%c");
 
