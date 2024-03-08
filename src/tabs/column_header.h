@@ -10,6 +10,7 @@ struct ColumnHeader
   {
     STRING,
     INT,
+    TIMESTAMP,
     BOOLEAN,
     PROFILE_ENTRY,
     PROCESS_ENTRY,

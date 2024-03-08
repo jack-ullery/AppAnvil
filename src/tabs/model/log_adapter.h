@@ -3,6 +3,7 @@
 
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/treeview.h>
+#include <locale>
 #include <map>
 #include <memory>
 #include <string>
@@ -33,24 +34,17 @@ public:
 
   std::shared_ptr<ColumnRecord> get_col_record();
 
-protected:
-  static std::string format_timestamp(const time_t &timestamp);
-
 private:
   std::shared_ptr<Database> db;
 
   const std::vector<ColumnHeader> col_names{ ColumnHeader("Metadata", ColumnHeader::ColumnType::LOG_ENTRY),
-                                             ColumnHeader("Time"),
+                                             ColumnHeader("Time", ColumnHeader::ColumnType::TIMESTAMP),
                                              ColumnHeader("Type"),
                                              ColumnHeader("Operation"),
                                              ColumnHeader("Profile"),
                                              ColumnHeader("Pid", ColumnHeader::ColumnType::INT) };
 
   const std::shared_ptr<ColumnRecord> col_record;
-
-#ifdef TESTS_ENABLED
-  FRIEND_TEST(LogAdapterTest, TEST_FORMAT_TIMESTAMP);
-#endif
 };
 
 #endif // TABS_MODEL_LOG_ADAPTER_H
