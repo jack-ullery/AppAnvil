@@ -10,6 +10,7 @@
 #include <gtkmm/enums.h>
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
+#include <iostream>
 #include <libappanvil/apparmor_parser.hh>
 #include <memory>
 #include <string>
@@ -46,6 +47,14 @@ void ProfileModifyImpl<AppArmorParser>::connect_handle_remove_rule(const void_fu
 {
   ab_delete_button->signal_clicked().connect(ab_fun);
   frule_delete_button->signal_clicked().connect(fr_fun);
+}
+
+template<class AppArmorParser>
+void ProfileModifyImpl<AppArmorParser>::connect_handle_add_rule(const sigc::slot<void, AppArmor::AbstractionRule> &ab_fun,
+                                                                const sigc::slot<void, AppArmor::FileRule> &fr_fun)
+{
+  add_abstraction = ab_fun;
+  add_file_rule   = fr_fun;
 }
 
 template<class AppArmorParser>
@@ -90,7 +99,7 @@ void ProfileModifyImpl<AppArmorParser>::handle_add_abstraction()
   if(dialog_response == Gtk::ResponseType::RESPONSE_ACCEPT)
   {
     auto abstraction = response.second;
-    // parser->addRule(abstraction);
+    add_abstraction(abstraction);
   }
 }
 

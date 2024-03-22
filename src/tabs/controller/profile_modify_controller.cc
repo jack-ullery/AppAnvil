@@ -1,5 +1,6 @@
 #include "profile_modify_controller.h"
 
+#include <apparmor_parser.hh>
 #include <iostream>
 #include <memory>
 #include <tree/AbstractionRule.hh>
@@ -147,6 +148,14 @@ void ProfileModifyController::handle_remove_rule(RuleType &old_rule)
   handle_profile_changed();
 }
 
+template<AppArmor::RuleDerived RuleType>
+void ProfileModifyController::handle_add_rule(const RuleType &new_rule)
+{
+  std::cout << "Add Rule: " << new_rule.operator std::string() << std::endl;
+  parser->addRule(*profile, new_rule, profile_stream);
+  handle_profile_changed();
+}
+
 void ProfileModifyController::handle_cancel_called()
 {
   parser->cancelChanges();
@@ -211,10 +220,15 @@ ProfileModifyController::ProfileModifyController(const std::shared_ptr<AppArmor:
   auto handle_prof_fun = sigc::mem_fun(*this, &ProfileModifyController::handle_profile_changed);
   modify->connect_handle_profile_changed(handle_prof_fun);
 
-  // Connect the buttons that are used to remove thigs
+  // Connect the buttons that are used to remove things
   auto handle_remove_abstr = sigc::mem_fun(*this, &ProfileModifyController::handle_remove_abstraction_button);
   auto handle_remove_frule = sigc::mem_fun(*this, &ProfileModifyController::handle_remove_file_rule_button);
   modify->connect_handle_remove_rule(handle_remove_abstr, handle_remove_frule);
+
+  // Connect the buttons that are used to add things
+  auto handle_add_abstr = sigc::mem_fun(*this, &ProfileModifyController::handle_add_rule<AppArmor::AbstractionRule>);
+  auto handle_add_frule = sigc::mem_fun(*this, &ProfileModifyController::handle_add_rule<AppArmor::FileRule>);
+  modify->connect_handle_add_rule(handle_add_abstr, handle_add_frule);
 
   update_all_tables();
 }

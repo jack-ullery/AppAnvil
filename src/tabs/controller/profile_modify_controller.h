@@ -31,6 +31,9 @@ protected:
   template<AppArmor::RuleDerived RuleType>
   void handle_remove_rule(RuleType &old_rule);
 
+  template<AppArmor::RuleDerived RuleType>
+  void handle_add_rule(const RuleType &new_rule);
+
   // Functions for handling delete buttons
   template<AppArmor::RuleDerived RuleType>
   inline void handle_remove_selected_rule(const std::shared_ptr<Gtk::TreeView> &view);

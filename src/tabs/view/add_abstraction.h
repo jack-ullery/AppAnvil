@@ -1,6 +1,7 @@
 #ifndef TABS_VIEW_ADD_ABSTRACTION_H
 #define TABS_VIEW_ADD_ABSTRACTION_H
 
+#include <apparmor_parser.hh>
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
@@ -16,7 +17,7 @@
 class AddAbstraction
 {
 public:
-    typedef std::pair<int, const std::string> show_dialog_response;
+    typedef std::pair<int, const AppArmor::AbstractionRule> show_dialog_response;
 
     /**
     * @brief Builds and shows the "Add Abstraction" dialog.
@@ -57,6 +58,9 @@ private:
     std::unique_ptr<Gtk::Entry>    ab_entry;
     std::unique_ptr<Gtk::TextView> ab_preview;
     std::unique_ptr<Gtk::TextView> ab_text;
+
+    // Currently selected rule (if there is one)
+    AppArmor::Tree::AbstractionRule prospective_rule;
 };
 
 #endif // TABS_VIEW_ADD_ABSTRACTION_H

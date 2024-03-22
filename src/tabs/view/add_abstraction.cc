@@ -94,13 +94,14 @@ void AddAbstraction::handle_button_accept()
 void AddAbstraction::handle_entry_changed()
 {
     auto text = ab_entry->get_text();
+    prospective_rule = AppArmor::Tree::AbstractionRule("abstractions/" + text);
 
     if(text.empty())
     {
         button_next->set_sensitive(false);
     } else {
         button_next->set_sensitive(true);
-        auto preview_text = "include <" + text + ">";
+        auto preview_text = prospective_rule.operator std::string();
         ab_preview->get_buffer()->set_text(preview_text);
     }
 }
@@ -109,13 +110,5 @@ AddAbstraction::show_dialog_response AddAbstraction::show_dialog()
 {
     AddAbstraction add_abstraction;
     int response = add_abstraction.dialog->run();
-
-    if(response != Gtk::ResponseType::RESPONSE_ACCEPT)
-    {
-        AppArmor::Tree::AbstractionRule default_rule;
-        return show_dialog_response(response, default_rule);
-    }
-    
-    AppArmor::Tree::AbstractionRule new_rule(0, 0, add_abstraction.ab_entry->get_text());
-    return show_dialog_response(response, new_rule);
+    return show_dialog_response(response, add_abstraction.prospective_rule);
 }
