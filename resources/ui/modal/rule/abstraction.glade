@@ -171,38 +171,80 @@
                 <property name="margin-bottom">5</property>
                 <property name="vexpand">True</property>
                 <property name="orientation">vertical</property>
+                <property name="spacing">20</property>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="halign">start</property>
-                    <property name="margin-bottom">10</property>
-                    <property name="label" translatable="yes">Abstraction Path</property>
-                    <attributes>
-                      <attribute name="scale" value="1.1000000000000001"/>
-                    </attributes>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkComboBoxText" id="ab_combobox">
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                    <property name="valign">start</property>
-                    <property name="margin-end">20</property>
-                    <property name="hexpand">True</property>
-                    <property name="button-sensitivity">on</property>
-                    <property name="has-entry">True</property>
-                    <child internal-child="entry">
-                      <object class="GtkEntry" id="ab_entry">
-                        <property name="can-focus">True</property>
-                        <property name="has-focus">True</property>
-                        <property name="can-default">True</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="margin-bottom">5</property>
+                        <property name="label" translatable="yes">Abstraction Path</property>
+                        <attributes>
+                          <attribute name="scale" value="1.1000000000000001"/>
+                        </attributes>
                       </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkExpander">
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="margin-bottom">5</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="margin-start">5</property>
+                            <property name="margin-end">5</property>
+                            <property name="margin-top">5</property>
+                            <property name="margin-bottom">2</property>
+                            <property name="label" translatable="yes">label</property>
+                          </object>
+                        </child>
+                        <child type="label">
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">Description</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkComboBoxText" id="ab_combobox">
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="valign">start</property>
+                        <property name="margin-end">20</property>
+                        <property name="hexpand">True</property>
+                        <property name="button-sensitivity">on</property>
+                        <property name="has-entry">True</property>
+                        <child internal-child="entry">
+                          <object class="GtkEntry" id="ab_entry">
+                            <property name="can-focus">False</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">2</property>
+                      </packing>
                     </child>
                   </object>
                   <packing>
@@ -210,9 +252,6 @@
                     <property name="fill">True</property>
                     <property name="position">1</property>
                   </packing>
-                </child>
-                <child>
-                  <placeholder/>
                 </child>
                 <child>
                   <placeholder/>
@@ -245,7 +284,8 @@
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="halign">start</property>
-                        <property name="label" translatable="yes">Preview Abstraction</property>
+                        <property name="margin-bottom">5</property>
+                        <property name="label" translatable="yes">Abstraction Preview</property>
                         <attributes>
                           <attribute name="scale" value="1.1000000000000001"/>
                         </attributes>
@@ -266,6 +306,8 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="halign">start</property>
+                            <property name="margin-left">5</property>
+                            <property name="margin-right">5</property>
                             <property name="margin-start">5</property>
                             <property name="margin-end">5</property>
                             <property name="margin-top">5</property>
@@ -337,6 +379,7 @@
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="halign">start</property>
+                        <property name="margin-bottom">5</property>
                         <property name="label" translatable="yes">Abstraction Text</property>
                         <attributes>
                           <attribute name="scale" value="1.1000000000000001"/>
