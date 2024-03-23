@@ -372,6 +372,7 @@
                   <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
+                    <property name="vexpand">False</property>
                     <property name="orientation">vertical</property>
                     <property name="spacing">5</property>
                     <child>
@@ -426,22 +427,30 @@
                       <object class="GtkFrame">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="valign">start</property>
                         <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
                         <property name="label-xalign">0.009999999776482582</property>
                         <property name="label-yalign">0</property>
                         <property name="shadow-type">in</property>
                         <child>
-                          <object class="GtkTextView" id="ab_text">
+                          <object class="GtkScrolledWindow">
                             <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="editable">False</property>
-                            <property name="left-margin">5</property>
-                            <property name="right-margin">5</property>
-                            <property name="top-margin">5</property>
-                            <property name="bottom-margin">5</property>
-                            <property name="cursor-visible">False</property>
-                            <property name="monospace">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="vexpand">True</property>
+                            <child>
+                              <object class="GtkTextView" id="ab_text">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="vexpand">True</property>
+                                <property name="editable">False</property>
+                                <property name="left-margin">5</property>
+                                <property name="right-margin">5</property>
+                                <property name="top-margin">5</property>
+                                <property name="bottom-margin">5</property>
+                                <property name="cursor-visible">False</property>
+                                <property name="monospace">True</property>
+                              </object>
+                            </child>
                           </object>
                         </child>
                         <child type="label_item">
@@ -449,14 +458,14 @@
                         </child>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
+                        <property name="expand">True</property>
                         <property name="fill">True</property>
                         <property name="position">2</property>
                       </packing>
                     </child>
                   </object>
                   <packing>
-                    <property name="expand">False</property>
+                    <property name="expand">True</property>
                     <property name="fill">True</property>
                     <property name="position">1</property>
                   </packing>
@@ -470,7 +479,7 @@
             </child>
           </object>
           <packing>
-            <property name="expand">False</property>
+            <property name="expand">True</property>
             <property name="fill">True</property>
             <property name="position">0</property>
           </packing>

@@ -1,3 +1,4 @@
+#include <fstream>
 #include <gtkmm/dialog.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/treemodelcolumn.h>
@@ -101,8 +102,17 @@ void AddAbstraction::handle_entry_changed()
         button_next->set_sensitive(false);
     } else {
         button_next->set_sensitive(true);
+
+        // Populate the "Abstraction Preview" TextView
         auto preview_text = prospective_rule.operator std::string();
         ab_preview->get_buffer()->set_text(preview_text);
+
+        // Populate the "Abstraction Text" TextView
+        auto abstraction_path = "/etc/apparmor.d/abstractions/" + text;
+        std::ifstream abstraction_file(abstraction_path);
+        std::stringstream abstraction_stream;
+        abstraction_stream << abstraction_file.rdbuf();
+        ab_text->get_buffer()->set_text(abstraction_stream.str());
     }
 }
 
