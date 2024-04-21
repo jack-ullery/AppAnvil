@@ -267,7 +267,9 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
     column_view->set_min_width(MIN_COL_WIDTH);
     column_view->set_sort_column(*column_base);
 
-    if (names[i].type == ColumnHeader::PROFILE_ENTRY || names[i].type == ColumnHeader::PROCESS_ENTRY || names[i].type == ColumnHeader::LOG_ENTRY || names[i].type == ColumnHeader::FILE_RULE_POINTER || names[i].type == ColumnHeader::ABSTRACTION_RULE_POINTER) {
+    if (names[i].type == ColumnHeader::PROFILE_ENTRY || names[i].type == ColumnHeader::PROCESS_ENTRY ||
+        names[i].type == ColumnHeader::LOG_ENTRY || names[i].type == ColumnHeader::FILE_RULE_POINTER ||
+        names[i].type == ColumnHeader::ABSTRACTION_RULE_POINTER) {
       // Create a custom cell renderer which shows nothing for these entries
       auto *renderer    = Gtk::make_managed<Gtk::CellRendererText>();
       auto callback_fun = sigc::ptr_fun(&StatusColumnRecord::ignore_cell_render);

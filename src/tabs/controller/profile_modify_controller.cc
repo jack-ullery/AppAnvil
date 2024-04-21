@@ -174,8 +174,8 @@ void ProfileModifyController::handle_apply_called()
 template<AppArmor::RuleDerived RuleType>
 inline void ProfileModifyController::handle_remove_selected_rule(const std::shared_ptr<Gtk::TreeView> &view)
 {
-  auto selection = view->get_selection();
-  const auto nrows = selection->count_selected_rows(); 
+  auto selection   = view->get_selection();
+  const auto nrows = selection->count_selected_rows();
   if (nrows == 1) {
     // Get the rule from the selected row
     std::shared_ptr<RuleType> rule;
@@ -184,8 +184,7 @@ inline void ProfileModifyController::handle_remove_selected_rule(const std::shar
 
     // Delete the rule
     handle_remove_rule<RuleType>(*rule);
-  }
-  else {
+  } else {
     std::cout << "Not removing rule because " << nrows << " are selected." << std::endl;
   }
 }

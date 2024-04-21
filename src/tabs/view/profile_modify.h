@@ -44,7 +44,8 @@ public:
   void connect_handle_remove_rule(const void_func &ab_fun, const void_func &fr_fun);
 
   // Function to connect "add rule" buttons
-  void connect_handle_add_rule(const sigc::slot<void, AppArmor::AbstractionRule> &ab_fun, const sigc::slot<void, AppArmor::FileRule> &fr_fun);
+  void connect_handle_add_rule(const sigc::slot<void, AppArmor::AbstractionRule> &ab_fun,
+                               const sigc::slot<void, AppArmor::FileRule> &fr_fun);
 
   // Decides whether the apply and cancel buttons should be visible
   void handle_apply_visible();
@@ -96,8 +97,8 @@ private:
   // Function that will be called if parser is updated internally
   void_func handle_apparmor_parser_changed = []() {};
 
-  sigc::slot<void, AppArmor::AbstractionRule&> add_abstraction = [](AppArmor::AbstractionRule&){};
-  sigc::slot<void, AppArmor::FileRule&> add_file_rule = [](AppArmor::FileRule&){};
+  sigc::slot<void, AppArmor::AbstractionRule &> add_abstraction = [](AppArmor::AbstractionRule &) {};
+  sigc::slot<void, AppArmor::FileRule &> add_file_rule          = [](AppArmor::FileRule &) {};
 
   // Fields used for reading and modifying the profile
   std::shared_ptr<AppArmorParser> parser;

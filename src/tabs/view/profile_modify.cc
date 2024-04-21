@@ -43,8 +43,7 @@ void ProfileModifyImpl<AppArmorParser>::connect_handle_profile_changed(const voi
 }
 
 template<class AppArmorParser>
-void ProfileModifyImpl<AppArmorParser>::connect_handle_remove_rule(const void_func &ab_fun,
-                                                                   const void_func &fr_fun)
+void ProfileModifyImpl<AppArmorParser>::connect_handle_remove_rule(const void_func &ab_fun, const void_func &fr_fun)
 {
   ab_delete_button->signal_clicked().connect(ab_fun);
   frule_delete_button->signal_clicked().connect(fr_fun);
@@ -94,11 +93,10 @@ void ProfileModifyImpl<AppArmorParser>::apply_raw_profile_text_change()
 template<class AppArmorParser>
 void ProfileModifyImpl<AppArmorParser>::handle_add_abstraction()
 {
-  auto response = AddAbstraction::show_dialog();
+  auto response        = AddAbstraction::show_dialog();
   auto dialog_response = response.first;
 
-  if(dialog_response == Gtk::ResponseType::RESPONSE_ACCEPT)
-  {
+  if (dialog_response == Gtk::ResponseType::RESPONSE_ACCEPT) {
     auto abstraction = response.second;
     add_abstraction(abstraction);
   }
@@ -107,11 +105,10 @@ void ProfileModifyImpl<AppArmorParser>::handle_add_abstraction()
 template<class AppArmorParser>
 void ProfileModifyImpl<AppArmorParser>::handle_add_file_rule()
 {
-  auto response = AddFileRule::show_dialog();
+  auto response        = AddFileRule::show_dialog();
   auto dialog_response = response.first;
 
-  if(dialog_response == Gtk::ResponseType::RESPONSE_ACCEPT)
-  {
+  if (dialog_response == Gtk::ResponseType::RESPONSE_ACCEPT) {
     auto file_rule = response.second;
     add_file_rule(file_rule);
   }

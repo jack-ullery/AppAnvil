@@ -10,19 +10,19 @@
 
 class ScrolledView : public Gtk::Bin
 {
-    public:
-        explicit ScrolledView(const std::string &title);
-        std::shared_ptr<Gtk::TreeView> get_view();
-    
-    private:
-        // GUI Builder to parse UI from xml file
-        Glib::RefPtr<Gtk::Builder> builder;
+public:
+  explicit ScrolledView(const std::string &title);
+  std::shared_ptr<Gtk::TreeView> get_view();
 
-        // Widgets
-        std::shared_ptr<Gtk::Frame> frame;
-        std::shared_ptr<Gtk::Label> frame_title;
-        std::shared_ptr<Gtk::ScrolledWindow> scrolled_window;
-        std::shared_ptr<Gtk::TreeView> tree_view;
+private:
+  // GUI Builder to parse UI from xml file
+  Glib::RefPtr<Gtk::Builder> builder;
+
+  // Widgets
+  std::shared_ptr<Gtk::Frame> frame;
+  std::shared_ptr<Gtk::Label> frame_title;
+  std::shared_ptr<Gtk::ScrolledWindow> scrolled_window;
+  std::shared_ptr<Gtk::TreeView> tree_view;
 };
 
 #endif // TABS_SCROLLED_VIEW_H
