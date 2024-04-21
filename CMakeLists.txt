@@ -38,6 +38,7 @@ set(
   ${PROJECT_SOURCE_DIR}/tabs/view/info_box.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/scrolled_view.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/add_abstraction.cc
+  ${PROJECT_SOURCE_DIR}/tabs/view/add_file_rule.cc
 )
 
 ### All the code globbed together for easy formatting ###

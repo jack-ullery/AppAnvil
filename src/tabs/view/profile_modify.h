@@ -64,6 +64,8 @@ protected:
   // Called when 'ab_add_button' is clicked
   void handle_add_abstraction();
 
+  void handle_add_file_rule();
+
 private:
   // GUI Builder to parse UI from xml file
   Glib::RefPtr<Gtk::Builder> builder;

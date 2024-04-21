@@ -1,6 +1,7 @@
 #include "profile_modify.h"
 #include "../../threads/command_caller.h"
 #include "add_abstraction.h"
+#include "add_file_rule.h"
 #include "common.h"
 #include "scrolled_view.h"
 
@@ -104,6 +105,19 @@ void ProfileModifyImpl<AppArmorParser>::handle_add_abstraction()
 }
 
 template<class AppArmorParser>
+void ProfileModifyImpl<AppArmorParser>::handle_add_file_rule()
+{
+  auto response = AddFileRule::show_dialog();
+  auto dialog_response = response.first;
+
+  if(dialog_response == Gtk::ResponseType::RESPONSE_ACCEPT)
+  {
+    auto file_rule = response.second;
+    add_file_rule(file_rule);
+  }
+}
+
+template<class AppArmorParser>
 ProfileModifyImpl<AppArmorParser>::ProfileModifyImpl(std::shared_ptr<AppArmorParser> parser,
                                                      const std::shared_ptr<AppArmor::Profile> &profile)
   : builder{ Gtk::Builder::create_from_resource("/modal/profile_modify.glade") },
@@ -147,6 +161,9 @@ ProfileModifyImpl<AppArmorParser>::ProfileModifyImpl(std::shared_ptr<AppArmorPar
   // Connect buttons for adding/removing rules
   auto handle_add_abstraction = sigc::mem_fun(*this, &ProfileModifyImpl<AppArmorParser>::handle_add_abstraction);
   ab_add_button->signal_clicked().connect(handle_add_abstraction);
+
+  auto handle_add_file_rule = sigc::mem_fun(*this, &ProfileModifyImpl<AppArmorParser>::handle_add_file_rule);
+  frule_add_button->signal_clicked().connect(handle_add_file_rule);
 
   // Handle the changes in m_profile_text
   auto handle_text_change = sigc::mem_fun(*this, &ProfileModifyImpl<AppArmorParser>::handle_raw_profile_text_change);
