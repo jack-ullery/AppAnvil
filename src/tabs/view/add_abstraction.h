@@ -29,10 +29,8 @@ public:
 protected:
     AddAbstraction();
 
-    // Helper functions
-    void set_known_abstractions();
-
     // Signal Handlers
+    void handle_file_button();
     void handle_entry_changed();
     void handle_button_cancel();
     void handle_button_next();
@@ -54,8 +52,8 @@ private:
     std::unique_ptr<Gtk::Button> button_back;
     std::unique_ptr<Gtk::Button> button_accept;
 
-    std::unique_ptr<Gtk::ComboBox> ab_combobox;
     std::unique_ptr<Gtk::Entry>    ab_entry;
+    std::unique_ptr<Gtk::Button>   ab_entry_button;
     std::unique_ptr<Gtk::TextView> ab_preview;
     std::unique_ptr<Gtk::TextView> ab_text;
 

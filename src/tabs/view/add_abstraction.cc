@@ -1,5 +1,7 @@
 #include <fstream>
 #include <gtkmm/dialog.h>
+#include <gtkmm/filechooser.h>
+#include <gtkmm/filechooserdialog.h>
 #include <gtkmm/liststore.h>
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treemodelsort.h>
@@ -20,8 +22,8 @@ AddAbstraction::AddAbstraction()
     button_next{ Common::get_widget<Gtk::Button>("button_next", builder)},
     button_back{ Common::get_widget<Gtk::Button>("button_back", builder)},
     button_accept{ Common::get_widget<Gtk::Button>("button_accept", builder)},
-    ab_combobox{ Common::get_widget<Gtk::ComboBox>("ab_combobox", builder) },
     ab_entry{ Common::get_widget<Gtk::Entry>("ab_entry", builder) },
+    ab_entry_button{ Common::get_widget<Gtk::Button>("ab_entry_button", builder) },
     ab_preview{ Common::get_widget<Gtk::TextView>("ab_preview", builder) },
     ab_text{ Common::get_widget<Gtk::TextView>("ab_text", builder) }
 {
@@ -35,8 +37,9 @@ AddAbstraction::AddAbstraction()
     button_back->signal_clicked().connect(handle_button_back);
     button_accept->signal_clicked().connect(handle_button_accept);
 
-    // Populate the combobox
-    set_known_abstractions();
+    // Connect the file button
+    auto handle_file_button = sigc::mem_fun(*this, &AddAbstraction::handle_file_button);
+    ab_entry_button->signal_clicked().connect(handle_file_button);
 
     // Connect 'ab_entry' widget
     auto handle_entry = sigc::mem_fun(*this, &AddAbstraction::handle_entry_changed);
@@ -48,25 +51,18 @@ AddAbstraction::AddAbstraction()
     dialog->show_all();
 }
 
-void AddAbstraction::set_known_abstractions()
+void AddAbstraction::handle_file_button()
 {
-    // Createe the store which will hold the suggested values
-    Gtk::TreeModelColumnRecord col_record;
-    Gtk::TreeModelColumn<std::string> string_column;
-    col_record.add(string_column);
+    Gtk::FileChooserDialog dialog("Select abstraction file", Gtk::FILE_CHOOSER_ACTION_SAVE);
+    dialog.add_button("Open", Gtk::RESPONSE_ACCEPT);
+    dialog.set_modal(true);
+    dialog.set_current_folder("/etc/apparmor.d/abstractions");
+    auto re = dialog.run();
 
-    auto list_store = Gtk::ListStore::create(col_record);
-    auto sort_model = Gtk::TreeModelSort::create(list_store);
-    ab_combobox->set_model(list_store);
-
-    // Populate the list store
-    auto abstractions = CommandCaller::get_abstractions();
-    std::sort(abstractions.begin(), abstractions.end());
-
-    for(const std::string &abstraction : abstractions)
+    if(re == Gtk::RESPONSE_ACCEPT)
     {
-        auto row = list_store->append();
-        row->set_value(string_column, abstraction);
+        auto filename = dialog.get_filename();
+        ab_entry->set_text(filename);
     }
 }
 
@@ -95,7 +91,7 @@ void AddAbstraction::handle_button_accept()
 void AddAbstraction::handle_entry_changed()
 {
     auto text = ab_entry->get_text();
-    prospective_rule = AppArmor::Tree::AbstractionRule("abstractions/" + text);
+    prospective_rule = AppArmor::Tree::AbstractionRule(text, false);
 
     if(text.empty())
     {
@@ -108,8 +104,7 @@ void AddAbstraction::handle_entry_changed()
         ab_preview->get_buffer()->set_text(preview_text);
 
         // Populate the "Abstraction Text" TextView
-        auto abstraction_path = "/etc/apparmor.d/abstractions/" + text;
-        std::ifstream abstraction_file(abstraction_path);
+        std::ifstream abstraction_file(text);
         std::stringstream abstraction_stream;
         abstraction_stream << abstraction_file.rdbuf();
         ab_text->get_buffer()->set_text(abstraction_stream.str());

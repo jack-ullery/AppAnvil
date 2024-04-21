@@ -18,6 +18,12 @@
     <property name="icon-name">dialog-cancel</property>
     <property name="use-fallback">True</property>
   </object>
+  <object class="GtkImage" id="file">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">document-open-symbolic</property>
+    <property name="use-fallback">True</property>
+  </object>
   <object class="GtkImage" id="next">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -226,22 +232,45 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkComboBoxText" id="ab_combobox">
+                      <object class="GtkBox">
                         <property name="visible">True</property>
-                        <property name="can-focus">True</property>
-                        <property name="valign">start</property>
-                        <property name="margin-end">20</property>
-                        <property name="hexpand">True</property>
-                        <property name="button-sensitivity">on</property>
-                        <property name="has-entry">True</property>
-                        <child internal-child="entry">
+                        <property name="can-focus">False</property>
+                        <child>
                           <object class="GtkEntry" id="ab_entry">
-                            <property name="can-focus">False</property>
+                            <property name="visible">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="hexpand">True</property>
                           </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
                         </child>
+                        <child>
+                          <object class="GtkButton" id="ab_entry_button">
+                            <property name="visible">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">True</property>
+                            <property name="image">file</property>
+                            <property name="always-show-image">True</property>
+                            <style>
+                              <class name="file"/>
+                              <class name="filechooserbutton"/>
+                            </style>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <style>
+                          <class name="linked"/>
+                        </style>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
+                        <property name="expand">True</property>
                         <property name="fill">True</property>
                         <property name="position">2</property>
                       </packing>
@@ -250,11 +279,8 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">1</property>
+                    <property name="position">0</property>
                   </packing>
-                </child>
-                <child>
-                  <placeholder/>
                 </child>
               </object>
               <packing>
