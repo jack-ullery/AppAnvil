@@ -96,7 +96,6 @@ void AddFileRule::handle_file_button()
     Gtk::FileChooserDialog dialog("Select file or folder", Gtk::FILE_CHOOSER_ACTION_OPEN);
     dialog.add_button("Open", Gtk::RESPONSE_ACCEPT);
     dialog.set_modal(true);
-    dialog.set_show_hidden(true);
     auto re = dialog.run();
 
     if(re == Gtk::RESPONSE_ACCEPT)
