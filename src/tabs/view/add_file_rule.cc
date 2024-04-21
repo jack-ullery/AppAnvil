@@ -1,7 +1,9 @@
 #include <fstream>
+#include <gtkmm/button.h>
 #include <gtkmm/dialog.h>
 #include <gtkmm/filechooserdialog.h>
 #include <gtkmm/liststore.h>
+#include <gtkmm/messagedialog.h>
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treemodelsort.h>
 #include <libappanvil/tree/FileRule.hh>
@@ -91,15 +93,16 @@ void AddFileRule::handle_button_accept()
 
 void AddFileRule::handle_file_button()
 {
-    Gtk::FileChooserDialog dialog("~/");
-    dialog.set_create_folders(false);
+    Gtk::FileChooserDialog dialog("Select file or folder", Gtk::FILE_CHOOSER_ACTION_OPEN);
+    dialog.add_button("Open", Gtk::RESPONSE_ACCEPT);
+    dialog.set_modal(true);
+    dialog.set_show_hidden(true);
+    auto re = dialog.run();
 
-    auto status = dialog.run();
-    if(status == 0)
+    if(re == Gtk::RESPONSE_ACCEPT)
     {
-        auto file = dialog.get_file();
-        auto filepath = file->get_uri();
-        fr_entry->set_text(filepath);
+        auto filename = dialog.get_filename();
+        fr_entry->set_text(filename);
     }
 }
 
