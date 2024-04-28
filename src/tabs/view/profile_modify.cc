@@ -11,9 +11,11 @@
 #include <gtkmm/enums.h>
 #include <gtkmm/image.h>
 #include <gtkmm/label.h>
+#include <gtkmm/messagedialog.h>
 #include <iostream>
 #include <libappanvil/apparmor_parser.hh>
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <unordered_set>
 
@@ -84,10 +86,21 @@ template<class AppArmorParser>
 void ProfileModifyImpl<AppArmorParser>::apply_raw_profile_text_change()
 {
   const std::string new_profile_data = m_profile_text->get_buffer()->get_text();
-  parser->updateFromString(new_profile_data);
 
-  handle_apparmor_parser_changed();
-  handle_raw_profile_text_change();
+  try {
+    parser->updateFromString(new_profile_data);
+    handle_apparmor_parser_changed();
+    handle_raw_profile_text_change();
+  } catch (const std::runtime_error &ex) {
+      std::stringstream msg;
+      msg << "<span size=\"large\">Error: Could Not Parse Profile!</span>" << std::endl << std::endl;
+      msg << "AppAnvil encountered the following error when parsing the provided profile: " << std::endl;
+      msg << ex.what() << std::endl;
+
+      Gtk::MessageDialog dialog(msg.str(), true, Gtk::MessageType::MESSAGE_ERROR);
+      dialog.set_secondary_text("If you are confident that the provided profile is not invalid, then you might be using a new feature in AppArmor's profile syntax that we have not yet supported.");
+      dialog.run();
+  }
 }
 
 template<class AppArmorParser>

@@ -24,15 +24,15 @@ protected:
 
   void handle_profile_changed();
   void handle_file_rule_changed(const std::string &path);
-  void handle_edit_rule(AppArmor::Tree::FileRule &old_rule, const AppArmor::Tree::FileRule &new_rule);
+  void handle_edit_rule(AppArmor::Tree::FileRule &old_rule, const AppArmor::Tree::FileRule &new_rule) noexcept;
   void handle_cancel_called();
   void handle_apply_called();
 
   template<AppArmor::RuleDerived RuleType>
-  void handle_remove_rule(RuleType &old_rule);
+  void handle_remove_rule(RuleType &old_rule) noexcept;
 
   template<AppArmor::RuleDerived RuleType>
-  void handle_add_rule(const RuleType &new_rule);
+  void handle_add_rule(const RuleType &new_rule) noexcept;
 
   // Functions for handling delete buttons
   template<AppArmor::RuleDerived RuleType>

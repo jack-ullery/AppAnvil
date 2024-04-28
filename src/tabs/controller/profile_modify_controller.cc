@@ -147,42 +147,45 @@ void show_error_message(const std::string &type_continuous_tense, const std::str
   dialog.run();
 }
 
-void ProfileModifyController::handle_edit_rule(AppArmor::Tree::FileRule &old_rule, const AppArmor::Tree::FileRule &new_rule)
+void ProfileModifyController::handle_edit_rule(AppArmor::Tree::FileRule &old_rule, const AppArmor::Tree::FileRule &new_rule) noexcept
 {
   std::cout << "Editing Rule: " << new_rule.operator std::string() << std::endl;
   try {
     parser->editRule(*profile, old_rule, new_rule, profile_stream);
-    handle_profile_changed();
   } catch (const std::exception &ex) {
     std::cerr << "Error Editing Rule: " << ex.what() << std::endl << std::endl;
     show_error_message("editing", old_rule.operator std::string());
   }
+
+  handle_profile_changed();
 }
 
 template<AppArmor::RuleDerived RuleType>
-void ProfileModifyController::handle_remove_rule(RuleType &old_rule)
+void ProfileModifyController::handle_remove_rule(RuleType &old_rule) noexcept
 {
   std::cout << "Removing Rule: " << old_rule.operator std::string() << std::endl;
   try {
     parser->removeRule(*profile, old_rule, profile_stream);
-    handle_profile_changed();
   } catch (const std::exception &ex) {
     std::cerr << "Error Removing Rule: " << ex.what() << std::endl << std::endl;
     show_error_message("removing", old_rule.operator std::string());
   }
+
+  handle_profile_changed();
 }
 
 template<AppArmor::RuleDerived RuleType>
-void ProfileModifyController::handle_add_rule(const RuleType &new_rule)
+void ProfileModifyController::handle_add_rule(const RuleType &new_rule) noexcept
 {
   std::cout << "Add Rule: " << new_rule.operator std::string() << std::endl;
   try {
     parser->addRule(*profile, new_rule, profile_stream);
-    handle_profile_changed();
   } catch (const std::exception &ex) {
     std::cerr << "Error Adding Rule: " << ex.what() << std::endl << std::endl;
     show_error_message("adding", new_rule.operator std::string());
   }
+
+  handle_profile_changed();
 }
 
 void ProfileModifyController::handle_cancel_called()
