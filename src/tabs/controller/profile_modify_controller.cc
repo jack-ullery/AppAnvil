@@ -140,9 +140,13 @@ void show_error_message(const std::string &type_continuous_tense, const std::str
   std::stringstream msg;
   msg << "<span size=\"large\">Our apologies!</span>" << std::endl << std::endl;
   msg << "AppAnvil encountered an error when " << type_continuous_tense << " the following rule: " << std::endl
-      << "<span font_family=\"mono\" weight=\"light\">  " << rule << "</span>" << std::endl << std::endl;
-  msg << "This is probably a software bug." << std::endl << std::endl
-      << "As a workaround, you might be able to make the change manually after clicking <span weight=\"heavy\">Profile Text</span>." << std::endl << std::endl;
+      << "<span font_family=\"mono\" weight=\"light\">  " << rule << "</span>" << std::endl
+      << std::endl;
+  msg << "This is probably a software bug." << std::endl
+      << std::endl
+      << "As a workaround, you might be able to make the change manually after clicking <span weight=\"heavy\">Profile Text</span>."
+      << std::endl
+      << std::endl;
   Gtk::MessageDialog dialog(msg.str(), true, Gtk::MessageType::MESSAGE_ERROR);
   dialog.run();
 }
