@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.40.0 -->
+<interface>
+  <requires lib="gtk+" version="3.24"/>
+  <object class="GtkFrame" id="frame">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="vexpand">True</property>
+    <property name="label-xalign">0.009999999776482582</property>
+    <property name="label-yalign">0</property>
+    <property name="shadow-type">in</property>
+    <child>
+      <object class="GtkScrolledWindow" id="scrolled_window">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+        <property name="vexpand">True</property>
+        <property name="min-content-width">0</property>
+        <property name="min-content-height">0</property>
+        <child>
+          <object class="GtkTreeView" id="tree_view">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="enable-grid-lines">horizontal</property>
+            <child internal-child="selection">
+              <object class="GtkTreeSelection"/>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child type="label">
+      <object class="GtkLabel" id="frame_title">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="halign">start</property>
+        <property name="margin-start">10</property>
+        <property name="margin-top">10</property>
+        <property name="margin-bottom">5</property>
+        <property name="selectable">True</property>
+        <attributes>
+          <attribute name="weight" value="normal"/>
+          <attribute name="variant" value="title-caps"/>
+          <attribute name="scale" value="1"/>
+        </attributes>
+      </object>
+    </child>
+  </object>
+</interface>

@@ -57,7 +57,7 @@ MainWindow::MainWindow()
   m_headerbar.set_show_close_button(true);
 
   // Set the icon
-  auto builder         = Gtk::Builder::create_from_resource("/resources/icon.glade");
+  auto builder         = Gtk::Builder::create_from_resource("/misc/icon.glade");
   Gtk::Image *icon_ptr = nullptr;
   builder->get_widget<Gtk::Image>("icon", icon_ptr);
   this->set_icon(icon_ptr->get_pixbuf());

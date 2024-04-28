@@ -111,7 +111,7 @@ void Profiles::handle_modify_profile_toggle()
 }
 
 Profiles::Profiles()
-  : Status("/resources/profile.glade", "loaded profiles"),
+  : Status("/profile.glade", "loaded profiles"),
     builder{ Status::get_builder() },
     p_load_profile_toggle{ Common::get_widget<Gtk::ToggleButton>("p_load_profile_toggle", builder) },
     p_modify_profile_toggle{ Common::get_widget<Gtk::ToggleButton>("p_modify_profile_toggle", builder) },

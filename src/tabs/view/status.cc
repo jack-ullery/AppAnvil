@@ -102,7 +102,7 @@ Status::Status(const std::string &glade_resource, const std::string &table_item)
 }
 
 Status::Status()
-  : Status("/resources/status.glade", "item")
+  : Status("/status.glade", "item")
 {
 }
 

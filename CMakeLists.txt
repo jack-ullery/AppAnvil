@@ -36,6 +36,9 @@ set(
   ${PROJECT_SOURCE_DIR}/tabs/view/profile_modify.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/help.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/info_box.cc
+  ${PROJECT_SOURCE_DIR}/tabs/view/scrolled_view.cc
+  ${PROJECT_SOURCE_DIR}/tabs/view/add_abstraction.cc
+  ${PROJECT_SOURCE_DIR}/tabs/view/add_file_rule.cc
 )
 
 ### All the code globbed together for easy formatting ###
@@ -53,11 +56,14 @@ file(GLOB_RECURSE FORMAT_SOURCES
 )
 
 set(PROJECT_RESOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/resources)
-set(XML_GRESOURCE ${PROJECT_RESOURCE_DIR}/resources.gresource.xml)
-set(RESOURCE_BUNDLE_OUTPUT ${PROJECT_RESOURCE_DIR}/resource.autogen.c)
+set(PROJECT_UI_DIR ${PROJECT_RESOURCE_DIR}/ui)
+set(GENERATED_DIR ${PROJECT_RESOURCE_DIR}/generated)
+
+set(XML_GRESOURCE ${PROJECT_UI_DIR}/resources.gresource.xml)
+set(RESOURCE_BUNDLE_OUTPUT ${GENERATED_DIR}/resource.autogen.c)
 
 set(PKEXEC_POLICY_IN ${PROJECT_RESOURCE_DIR}/pkexec.policy.in)
-set(PKEXEC_POLICY ${PROJECT_RESOURCE_DIR}/com.github.jack-ullery.AppAnvil.pkexec.policy)
+set(PKEXEC_POLICY ${GENERATED_DIR}/com.github.jack-ullery.AppAnvil.pkexec.policy)
 configure_file("${PKEXEC_POLICY_IN}" "${PKEXEC_POLICY}" @ONLY) 
 
 #### Add Linters and Static Analysis ####
@@ -140,18 +146,19 @@ pkg_search_module(LIBAPPANVIL REQUIRED
 # If a dependency is added to the ${XML_GRESOURCE} file, you should run cmake again
 execute_process(
   COMMAND glib-compile-resources ${XML_GRESOURCE} --generate-dependencies
+  WORKING_DIRECTORY ${PROJECT_UI_DIR}
   OUTPUT_VARIABLE GLADE_RESOURCES
   RESULT_VARIABLE GLIB_RETURN_VALUE
   OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
 set(APPANVIL_DESKTOP_IN ${PROJECT_RESOURCE_DIR}/appanvil.desktop.in)
-set(APPANVIL_DESKTOP    ${PROJECT_RESOURCE_DIR}/appanvil.desktop)
+set(APPANVIL_DESKTOP    ${GENERATED_DIR}/appanvil.desktop)
 configure_file(${APPANVIL_DESKTOP_IN} ${APPANVIL_DESKTOP} @ONLY)
 
 # This ensures that ${GLADE_RESOURCES} uses semicolons instead of newline characters as seperators
 string(REGEX REPLACE "\n" ";" GLADE_RESOURCES "${GLADE_RESOURCES}")
-string(REGEX REPLACE "resources/" "${PROJECT_RESOURCE_DIR}/" GLADE_RESOURCES "${GLADE_RESOURCES}")
+list(TRANSFORM GLADE_RESOURCES PREPEND "${PROJECT_UI_DIR}/")
 
 # If glib-compile-resources did not complete succesfully, throw a fatal error
 if (NOT GLIB_RETURN_VALUE EQUAL 0)
@@ -162,17 +169,17 @@ add_custom_command(
   OUTPUT ${RESOURCE_BUNDLE_OUTPUT}
   COMMAND glib-compile-resources
             --target=${RESOURCE_BUNDLE_OUTPUT}
-            --sourcedir=${CMAKE_CURRENT_SOURCE_DIR}
             --generate-source
             ${XML_GRESOURCE}
-  DEPENDS ${XML_GRESOURCE} ${GLADE_RESOURCES} 
+  WORKING_DIRECTORY ${PROJECT_UI_DIR}
+  DEPENDS ${XML_GRESOURCE} ${GLADE_RESOURCES}
   COMMENT "Generating Glib Resource Bundle."
   VERBATIM
 )
 
 include_directories(
   SYSTEM # Adds -isystem instead of -I and this tells clang-tidy not to analyze these includes
-  ${PROJECT_RESOURCE_DIR}
+  ${GENERATED_DIR}
 )
 
 #### Set Compiler Options ####
