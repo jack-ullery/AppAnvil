@@ -1,6 +1,8 @@
 #include "profile_modify_controller.h"
 
 #include <apparmor_parser.hh>
+#include <gtkmm/enums.h>
+#include <gtkmm/messagedialog.h>
 #include <iostream>
 #include <memory>
 #include <tree/AbstractionRule.hh>
@@ -133,27 +135,54 @@ void ProfileModifyController::handle_file_rule_changed(const std::string &path)
   }
 }
 
+void show_error_message(const std::string &type_continuous_tense, const std::string &rule)
+{
+  std::stringstream msg;
+  msg << "<span size=\"large\">Our apologies!</span>" << std::endl << std::endl;
+  msg << "AppAnvil encountered an error when " << type_continuous_tense << " the following rule: " << std::endl
+      << "<span font_family=\"mono\" weight=\"light\">  " << rule << "</span>" << std::endl << std::endl;
+  msg << "This is probably a software bug." << std::endl << std::endl
+      << "As a workaround, you might be able to make the change manually after clicking <span weight=\"heavy\">Profile Text</span>." << std::endl << std::endl;
+  Gtk::MessageDialog dialog(msg.str(), true, Gtk::MessageType::MESSAGE_ERROR);
+  dialog.run();
+}
+
 void ProfileModifyController::handle_edit_rule(AppArmor::Tree::FileRule &old_rule, const AppArmor::Tree::FileRule &new_rule)
 {
-  std::cout << "Edited Rule: " << new_rule.operator std::string() << std::endl;
-  parser->editRule(*profile, old_rule, new_rule, profile_stream);
-  handle_profile_changed();
+  std::cout << "Editing Rule: " << new_rule.operator std::string() << std::endl;
+  try {
+    parser->editRule(*profile, old_rule, new_rule, profile_stream);
+    handle_profile_changed();
+  } catch (const std::exception &ex) {
+    std::cerr << "Error Editing Rule: " << ex.what() << std::endl << std::endl;
+    show_error_message("editing", old_rule.operator std::string());
+  }
 }
 
 template<AppArmor::RuleDerived RuleType>
 void ProfileModifyController::handle_remove_rule(RuleType &old_rule)
 {
-  std::cout << "Removed Rule: " << old_rule.operator std::string() << std::endl;
-  parser->removeRule(*profile, old_rule, profile_stream);
-  handle_profile_changed();
+  std::cout << "Removing Rule: " << old_rule.operator std::string() << std::endl;
+  try {
+    parser->removeRule(*profile, old_rule, profile_stream);
+    handle_profile_changed();
+  } catch (const std::exception &ex) {
+    std::cerr << "Error Removing Rule: " << ex.what() << std::endl << std::endl;
+    show_error_message("removing", old_rule.operator std::string());
+  }
 }
 
 template<AppArmor::RuleDerived RuleType>
 void ProfileModifyController::handle_add_rule(const RuleType &new_rule)
 {
   std::cout << "Add Rule: " << new_rule.operator std::string() << std::endl;
-  parser->addRule(*profile, new_rule, profile_stream);
-  handle_profile_changed();
+  try {
+    parser->addRule(*profile, new_rule, profile_stream);
+    handle_profile_changed();
+  } catch (const std::exception &ex) {
+    std::cerr << "Error Adding Rule: " << ex.what() << std::endl << std::endl;
+    show_error_message("adding", new_rule.operator std::string());
+  }
 }
 
 void ProfileModifyController::handle_cancel_called()
