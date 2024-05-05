@@ -133,15 +133,10 @@ pkg_check_modules(JSONCPP REQUIRED jsoncpp)
 pkg_check_modules(LIBAPPARMOR REQUIRED libapparmor)
 
 #### libappanvil custom library for parsing/editing profiles ####
-pkg_search_module(LIBAPPANVIL REQUIRED
-  libappanvil
-  ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig/libappanvil.pc                  
-  /usr/lib/pkgconfig/libappanvil.pc
-  /usr/local/lib/pkgconfig/libappanvil.pc
-)
+add_subdirectory(libappanvil)
+get_target_property(LIBAPPANVIL_INCLUDE_DIRS appanvil-dev INCLUDE_DIRECTORIES)
 
 #### Package the .gresource.xml resource bundle ####
-
 # This gets the list of dependencies for ${XML_GRESOURCE} when cmake is called.
 # If a dependency is added to the ${XML_GRESOURCE} file, you should run cmake again
 execute_process(
@@ -204,7 +199,7 @@ target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${LIBAPPANVIL_INCLUDE_D
 target_link_libraries(${PROJECT_NAME} PUBLIC ${GTKMM_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${LIBAPPARMOR_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${JSONCPP_LIBRARIES})
-target_link_libraries(${PROJECT_NAME} PUBLIC ${LIBAPPANVIL_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PUBLIC appanvil-dev)
 target_link_libraries(${PROJECT_NAME} PUBLIC pthread)
 
 pkg_check_modules(GTEST gtest)
