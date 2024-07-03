@@ -7,8 +7,8 @@
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treemodelsort.h>
 #include <libappanvil/tree/FileRule.hh>
-#include <tree/FileMode.hh>
-#include <tree/PrefixNode.hh>
+#include <libappanvil/tree/FileMode.hh>
+#include <libappanvil/tree/PrefixNode.hh>
 #include <utility>
 
 #include "../../threads/command_caller.h"

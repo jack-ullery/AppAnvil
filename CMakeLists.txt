@@ -134,7 +134,7 @@ pkg_check_modules(LIBAPPARMOR REQUIRED libapparmor)
 
 #### libappanvil custom library for parsing/editing profiles ####
 add_subdirectory(libappanvil)
-get_target_property(LIBAPPANVIL_INCLUDE_DIRS appanvil-dev INCLUDE_DIRECTORIES)
+set(LIBAPPANVIL_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/libappanvil")
 
 #### Package the .gresource.xml resource bundle ####
 # This gets the list of dependencies for ${XML_GRESOURCE} when cmake is called.
@@ -190,6 +190,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 #### Create the main executable ####
 add_executable(${PROJECT_NAME} ${RESOURCE_BUNDLE_OUTPUT} ${SOURCES} ${PROJECT_SOURCE_DIR}/main.cc)
+add_dependencies(${PROJECT_NAME} appanvil-dev)
 
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${GTKMM_INCLUDE_DIRS})
 target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC ${LIBAPPARMOR_INCLUDE_DIRS})

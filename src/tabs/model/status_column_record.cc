@@ -16,7 +16,7 @@
 #include <memory>
 #include <sigc++/functors/ptr_fun.h>
 #include <stdexcept>
-#include <tree/AbstractionRule.hh>
+#include <libappanvil/tree/AbstractionRule.hh>
 #include <tuple>
 #include <vector>
 

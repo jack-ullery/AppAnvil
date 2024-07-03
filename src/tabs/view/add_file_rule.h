@@ -1,7 +1,7 @@
 #ifndef TABS_VIEW_ADD_FILE_RULE_H
 #define TABS_VIEW_ADD_FILE_RULE_H
 
-#include <apparmor_parser.hh>
+#include <libappanvil/apparmor_parser.hh>
 #include <gtkmm/box.h>
 #include <gtkmm/builder.h>
 #include <gtkmm/button.h>
