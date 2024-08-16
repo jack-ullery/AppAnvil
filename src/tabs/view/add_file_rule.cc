@@ -6,8 +6,8 @@
 #include <gtkmm/messagedialog.h>
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treemodelsort.h>
-#include <libappanvil/tree/FileRule.hh>
 #include <libappanvil/tree/FileMode.hh>
+#include <libappanvil/tree/FileRule.hh>
 #include <libappanvil/tree/PrefixNode.hh>
 #include <utility>
 

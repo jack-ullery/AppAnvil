@@ -12,11 +12,11 @@
 #include <gtkmm/treemodelsort.h>
 #include <iomanip>
 #include <iostream>
+#include <libappanvil/tree/AbstractionRule.hh>
 #include <libappanvil/tree/FileRule.hh>
 #include <memory>
 #include <sigc++/functors/ptr_fun.h>
 #include <stdexcept>
-#include <libappanvil/tree/AbstractionRule.hh>
 #include <tuple>
 #include <vector>
 
@@ -332,7 +332,7 @@ StatusColumnRecord::StatusColumnRecord(const std::shared_ptr<Gtk::TreeView> &vie
 
     } else if (names[i].type == ColumnHeader::TIMESTAMP) {
       // Ensure that the togglebutton actually toggles when clicked
-      auto *renderer    = Gtk::make_managed<Gtk::CellRendererText>();
+      auto *renderer = Gtk::make_managed<Gtk::CellRendererText>();
 
       // Called when we want to render the timestamp
       auto render_lambda = [i](Gtk::CellRenderer *renderer, const Gtk::TreeIter &iter) -> void {
