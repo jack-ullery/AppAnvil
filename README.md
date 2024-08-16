@@ -40,15 +40,17 @@ sudo zypper in gtkmm3-devel jsoncpp-devel libapparmor-devel apparmor-utils
 * CMake
 * PkgConfig
 * clang (or another equivalent c++ compiler)
+* Bison
+* Flex
 
 #### Install commands (Ubuntu)
 ```
-sudo apt install pkg-config cmake clang
+sudo apt install pkg-config cmake clang bison flex libfl-dev
 ```
 
 #### Install commands (OpenSUSE)
 ```
-sudo zypper in cmake clang
+sudo zypper in cmake clang bison flex
 ```
 
 ### Optional
@@ -81,6 +83,11 @@ sudo zypper in glade cppcheck clang gtest gmock lcov
 
 # Compilation Instructions
 ### Prebuild
+To download the libappanvil dependency
+```
+git submodule update --init --recursive
+```
+
 Before you build the executable, you must first generate the makefile by running:
 ```
 cmake .
