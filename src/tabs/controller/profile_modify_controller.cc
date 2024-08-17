@@ -1,11 +1,11 @@
 #include "profile_modify_controller.h"
 
-#include <apparmor_parser.hh>
 #include <gtkmm/enums.h>
 #include <gtkmm/messagedialog.h>
 #include <iostream>
+#include <libappanvil/apparmor_parser.hh>
+#include <libappanvil/tree/AbstractionRule.hh>
 #include <memory>
-#include <tree/AbstractionRule.hh>
 
 std::shared_ptr<ProfileModify> ProfileModifyController::get_profile_modify()
 {

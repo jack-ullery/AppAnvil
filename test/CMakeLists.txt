@@ -38,14 +38,6 @@ pkg_check_modules(GMOCK gmock)
 
 include(GoogleTest)
 
-# Find libappanvil
-pkg_search_module(LIBAPPANVIL REQUIRED
-  libappanvil
-  ${CMAKE_INSTALL_PREFIX}/lib64/pkgconfig/libappanvil.pc                  
-  /usr/lib64/pkgconfig/libappanvil.pc
-  /usr/local/lib64/pkgconfig/libappanvil.pc
-)
-
 # Get source dirs
 get_target_property(APPANVIL_SOURCE_DIR appanvil SOURCE_DIR)
 set(APPANVIL_SOURCE_DIR "${APPANVIL_SOURCE_DIR}/src")
@@ -112,7 +104,7 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
   target_link_libraries(${PROJECT_NAME} PUBLIC ${GTKMM_LIBRARIES})
   target_link_libraries(${PROJECT_NAME} PUBLIC ${LIBAPPARMOR_LIBRARIES})
   target_link_libraries(${PROJECT_NAME} PUBLIC "aa-caller_dev")
-  target_link_libraries(${PROJECT_NAME} PUBLIC ${LIBAPPANVIL_LIBRARIES})
+  target_link_libraries(${PROJECT_NAME} PUBLIC appanvil-dev)
 
   #### Add tests to ctest ####
   # To allow whitespace in test names
