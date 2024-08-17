@@ -49,7 +49,7 @@ std::pair<std::string, bool> CommandCaller::get_status(CommandCaller *caller) no
 
   auto result = caller->call_command(command);
 
-  if (result.exit_status != 0 && contains(result.error, "Request dismissed")) {
+  if (result.exit_status != 0) {
     std::cerr << command[0] << ": " << result.error << std::endl;
     return { return_on_error, false };
   }

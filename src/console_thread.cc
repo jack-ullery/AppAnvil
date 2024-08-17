@@ -103,7 +103,7 @@ void ConsoleThread<ProfilesController, ProcessesController, LogsController>::run
         break;
     }
 
-    std::unique_lock<std::mutex> lock(task_ready_mtx);
+    // std::unique_lock<std::mutex> lock(task_ready_mtx);
   }
 }
 
