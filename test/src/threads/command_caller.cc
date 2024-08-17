@@ -112,3 +112,19 @@ TEST_F(CommandCallerTest, TEST_CHANGE_STATUS_CE_FAIL)
   EXPECT_TRUE(output.find(tester.result_error.error) != std::string::npos)
     << "returned string should contain the error returned from `call_command`.";
 }
+
+TEST_F(CommandCallerTest, TEST_GET_AA_ENABLED_FAIL)
+{
+  EXPECT_CALL(tester, call_command(_)).WillOnce(Return(tester.result_error));
+
+  bool aa_enabled = CommandCallerMock::get_enabled(&tester);
+  ASSERT_FALSE(aa_enabled);
+}
+
+TEST_F(CommandCallerTest, TEST_GET_AA_ENABLED_SUCCESS)
+{
+  EXPECT_CALL(tester, call_command(_)).WillOnce(Return(tester.result_success));
+
+  bool aa_enabled = CommandCallerMock::get_enabled(&tester);
+  ASSERT_TRUE(aa_enabled);
+}

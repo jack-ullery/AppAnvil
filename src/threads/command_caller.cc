@@ -170,6 +170,13 @@ std::string CommandCaller::execute_change(CommandCaller *caller,
   return " Changed '" + profile + "' from " + old_status + " to " + new_status;
 }
 
+bool CommandCaller::get_enabled(CommandCaller *caller) noexcept
+{
+  std::vector<std::string> command = { "aa-enabled", "-q" };
+  auto result = caller->call_command(command);
+  return (result.exit_status == 0);
+}
+
 // Static public methods
 std::pair<std::string, bool> CommandCaller::get_status() noexcept
 {
