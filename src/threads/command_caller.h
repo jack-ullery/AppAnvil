@@ -70,7 +70,7 @@ public:
 
   /**
    * @brief Returns true if AppArmor is enabled on the system
-   * 
+   *
    * @return true, if `aa-enabled -q` has exit code 0
    * @return false, if `aa-enabled -q` does not have exit code 0
    */

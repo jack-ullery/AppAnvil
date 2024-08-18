@@ -26,8 +26,7 @@ int main()
   register_resource_bundle();
 
   // If AppArmor is not enabled, send an error message
-  if(!CommandCaller::get_enabled())
-  {
+  if (!CommandCaller::get_enabled()) {
     auto dialog = AppArmorNotInstalled::get_dialog();
     return app->run(*dialog);
   }
