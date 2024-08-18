@@ -28,6 +28,7 @@ set(
   ${PROJECT_SOURCE_DIR}/tabs/controller/profile_loader_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/controller/processes_controller.cc
   ${PROJECT_SOURCE_DIR}/tabs/controller/logs_controller.cc
+  ${PROJECT_SOURCE_DIR}/tabs/view/apparmor_not_installed.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/status.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/profiles.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/processes.cc

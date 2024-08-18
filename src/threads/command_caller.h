@@ -69,6 +69,14 @@ public:
   static std::pair<std::string, bool> get_logs(const std::string &checkpoint_filepath) noexcept;
 
   /**
+   * @brief Returns true if AppArmor is enabled on the system
+   *
+   * @return true, if `aa-enabled -q` has exit code 0
+   * @return false, if `aa-enabled -q` does not have exit code 0
+   */
+  static bool get_enabled() noexcept;
+
+  /**
    * @brief Change the status of a profile
    *
    * @details
@@ -123,6 +131,7 @@ protected:
                                     const std::string &profile,
                                     const std::string &old_status,
                                     const std::string &new_status);
+  static bool get_enabled(CommandCaller *caller) noexcept;
 
 #ifdef TESTS_ENABLED
   FRIEND_TEST(CommandCallerTest, TEST_UNCONF);
@@ -136,6 +145,8 @@ protected:
   FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_CE);
   FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_EC_SUCCESS);
   FRIEND_TEST(CommandCallerTest, TEST_CHANGE_STATUS_CE_FAIL);
+  FRIEND_TEST(CommandCallerTest, TEST_GET_AA_ENABLED_SUCCESS);
+  FRIEND_TEST(CommandCallerTest, TEST_GET_AA_ENABLED_FAIL);
 #endif
 };
 

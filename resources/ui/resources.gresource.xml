@@ -9,6 +9,7 @@
     <file preprocess="xml-stripblanks">profile.glade</file>
     <file preprocess="xml-stripblanks">status.glade</file>
     <file preprocess="xml-stripblanks">log.glade</file>
+    <file preprocess="xml-stripblanks">apparmor_not_installed.glade</file>
 
     <file preprocess="xml-stripblanks">modal/help.glade</file>
     <file preprocess="xml-stripblanks">modal/load_profile.glade</file>
