@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.40.0 -->
+<interface>
+  <requires lib="gtk+" version="3.24"/>
+  <object class="GtkMessageDialog" id="apparmor_not_installed">
+    <property name="can-focus">False</property>
+    <property name="type-hint">dialog</property>
+    <property name="message-type">error</property>
+    <property name="text" translatable="yes">&lt;b&gt;AppArmor is not running&lt;/b&gt;</property>
+    <property name="use-markup">True</property>
+    <property name="secondary-text" translatable="yes">AppArmor is not running on this system (according to &lt;b&gt;aa-enabled&lt;/b&gt;).
+
+Please install AppArmor before running this application.</property>
+    <property name="secondary-use-markup">True</property>
+    <child internal-child="vbox">
+      <object class="GtkBox">
+        <property name="can-focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox" id="button_box">
+            <property name="can-focus">False</property>
+            <property name="homogeneous">True</property>
+            <property name="layout-style">end</property>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

@@ -214,6 +214,12 @@ std::string CommandCaller::execute_change(const std::string &profile, const std:
   return execute_change(&caller, profile, old_status, new_status);
 }
 
+bool CommandCaller::get_enabled() noexcept
+{
+  CommandCaller caller;
+  return get_enabled(&caller);
+}
+
 // TODO(multiple-locations) handle different abstractions in multiple profile locations
 std::vector<std::string> CommandCaller::get_abstractions(const std::string &path)
 {
