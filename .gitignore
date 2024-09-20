@@ -30,3 +30,5 @@ resources/generated
 dist/
 lib/
 report/
+
+*.debhelper.log
