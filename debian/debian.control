@@ -1,0 +1,29 @@
+Source: appanvil
+Section: utils
+Priority: extra
+Maintainer: Jack Ullery <jackullery@proton.me>
+Standards-Version: 4.5.1
+Homepage: https://github.com/jack-ullery/AppAnvil
+Vcs-Git: git@github.com:jack-ullery/AppAnvil.git
+Vcs-Browser: https://github.com/jack-ullery/AppAnvil
+Build-Depends: debhelper (>= 10), 
+	           cmake,
+	           make,
+	           g++,
+	           libgtkmm-3.0-dev,
+	           libjsoncpp-dev,
+	           libapparmor-dev
+
+Package: appanvil
+Section: utils
+Priority: extra
+Architecture: any
+Description: Example package maintenance (under 60 chars)
+ The build output from a repository listing the steps to setup a debian
+ package in a long-format under 80 characters per line.
+Depends: ${shlibs:Depends}, 
+	     ${misc:Depends},
+	     libgtkmm-3.0-dev,
+	     libjsoncpp-dev,
+	     libapparmor-dev,
+	     apparmor-utils
