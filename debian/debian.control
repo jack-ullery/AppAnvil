@@ -18,9 +18,9 @@ Package: appanvil
 Section: utils
 Priority: extra
 Architecture: any
-Description: Example package maintenance (under 60 chars)
- The build output from a repository listing the steps to setup a debian
- package in a long-format under 80 characters per line.
+Description: graphical user interface for AppArmor
+  AppAnvil provides an intuitive graphical interface for monitoring, 
+  editing, deploying, and configuring AppArmor profiles.
 Depends: ${shlibs:Depends}, 
 	     ${misc:Depends},
 	     libgtkmm-3.0-dev,
