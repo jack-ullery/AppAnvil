@@ -127,16 +127,16 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
     TEST_LIST ADDED_TESTS_2
   )
 
-  #### Create fixture for tests ####
-  add_test(test_build
-    "${CMAKE_COMMAND}"
-    --build "${CMAKE_BINARY_DIR}"
-    --config "$<CONFIG>"
-    --target "${PROJECT_NAME}"
-  )
+  # #### Create fixture for tests ####
+  # add_test(test_build
+  #   "${CMAKE_COMMAND}"
+  #   --build "${CMAKE_BINARY_DIR}"
+  #   --config "$<CONFIG>"
+  #   --target "${PROJECT_NAME}"
+  # )
 
-  set_tests_properties(test_build PROPERTIES FIXTURES_SETUP test_fixture)
-  set_tests_properties(${ADDED_TESTS_1} ${ADDED_TESTS_2} PROPERTIES FIXTURES_REQUIRED test_fixture)
+  # set_tests_properties(test_build PROPERTIES FIXTURES_SETUP test_fixture)
+  # set_tests_properties(${ADDED_TESTS_1} ${ADDED_TESTS_2} PROPERTIES FIXTURES_REQUIRED test_fixture)
 
   #### Create report target ####
   # Create target "report", which should run the unit-tests and generate a code coverage report  

@@ -2,8 +2,8 @@
 %:
 	dh $@ 
 
-#override_dh_auto_make:
-#	cmake --build .
+override_dh_auto_test:
+	cmake . && cmake --build . -t appanvil_test
 
 override_dh_auto_configure:
 	dh_auto_configure -- \

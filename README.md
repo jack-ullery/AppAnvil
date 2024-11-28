@@ -104,6 +104,12 @@ sudo make install
 ```
 This builds the necessary executables, installs them, and applies recommended changes to PolicyKit.
 
+### Package
+
+```
+debuild -us -uc
+```
+
 ### Test
 To build and run the unit tests:
 ```
