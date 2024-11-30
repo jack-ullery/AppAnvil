@@ -1,7 +1,6 @@
 cmake_minimum_required (VERSION 3.16.3)
 
 project (appanvil)
-set(PROJECT_VERSION 0.2)
 
 #### Set Source Code #####
 set(PROJECT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -150,6 +149,7 @@ execute_process(
   OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
+message(STATUS "Using install prefix: ${CMAKE_INSTALL_PREFIX}")
 set(APPANVIL_DESKTOP_IN ${PROJECT_RESOURCE_DIR}/appanvil.desktop.in)
 set(APPANVIL_DESKTOP    ${GENERATED_DIR}/appanvil.desktop)
 configure_file(${APPANVIL_DESKTOP_IN} ${APPANVIL_DESKTOP} @ONLY)
