@@ -67,6 +67,8 @@ set(PKEXEC_POLICY_IN ${PROJECT_RESOURCE_DIR}/pkexec.policy.in)
 set(PKEXEC_POLICY ${GENERATED_DIR}/com.github.jack-ullery.AppAnvil.pkexec.policy)
 configure_file("${PKEXEC_POLICY_IN}" "${PKEXEC_POLICY}" @ONLY) 
 
+set(LICENSE_FILE "${CMAKE_CURRENT_SOURCE_DIR}/docs/copyright")
+
 #### Add Linters and Static Analysis ####
 
 # If cmake was compiled with DANALYZE=TRUE
@@ -221,6 +223,12 @@ install(
 install(
   FILES ${APPANVIL_DESKTOP}
   DESTINATION share/applications
+)
+
+install(
+  FILES ${LICENSE_FILE}
+  DESTINATION "share/doc/appanvil"
+  RENAME "copyright"
 )
 
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
