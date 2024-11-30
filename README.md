@@ -107,6 +107,8 @@ This builds the necessary executables, installs them, and applies recommended ch
 ### Package
 
 ```
+git clean -fdx
+git submodule foreach --recursive git clean -fdx
 debuild -us -uc
 ```
 
