@@ -2,11 +2,15 @@
 %:
 	dh $@ 
 
-override_dh_auto_test:
-	cmake . && cmake --build . -t appanvil_test
-
 override_dh_auto_configure:
 	dh_auto_configure -- \
 		-DCMAKE_LIBRARY_ARCHITECTURE="$(DEB_TARGET_MULTIARCH)" \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DDISABLE_LIBAPPANVIL_INSTALL=true
+
+override_dh_auto_test: override_dh_auto_configure
+	cmake -DCMAKE_LIBRARY_ARCHITECTURE="$(DEB_TARGET_MULTIARCH)" \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DDISABLE_LIBAPPANVIL_INSTALL=true .
+	cmake --build . -t appanvil_test -t unit-test
+	ctest --output-on-failure -R "simple|libappanvil"
