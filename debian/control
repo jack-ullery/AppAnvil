@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: Jack Ullery <jackullery@proton.me>
 Standards-Version: 4.5.1
 Homepage: https://github.com/jack-ullery/AppAnvil
-Vcs-Git: git@github.com:jack-ullery/AppAnvil.git
+Vcs-Git: https://github.com/jack-ullery/AppAnvil.git -b main
 Vcs-Browser: https://github.com/jack-ullery/AppAnvil
 Build-Depends: debhelper (>= 10), 
 	           cmake,
@@ -18,7 +18,7 @@ Package: appanvil
 Section: utils
 Priority: extra
 Architecture: any
-Description: graphical user interface for AppArmor
+Description:graphical user interface for AppArmor
   AppAnvil provides an intuitive graphical interface for monitoring, 
   editing, deploying, and configuring AppArmor profiles.
 Depends: ${shlibs:Depends}, 
