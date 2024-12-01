@@ -1,0 +1,13 @@
+#!/usr/bin/make -f
+%:
+	dh $@ 
+
+override_dh_auto_configure:
+	dh_auto_configure -- \
+		-DCMAKE_LIBRARY_ARCHITECTURE="$(DEB_TARGET_MULTIARCH)" \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DDISABLE_LIBAPPANVIL_INSTALL=true
+
+override_dh_auto_test: override_dh_auto_configure
+	dh_auto_build appanvil_test unit-test
+	ctest --output-on-failure -R "simple|libappanvil"

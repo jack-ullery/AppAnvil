@@ -30,3 +30,12 @@ resources/generated
 dist/
 lib/
 report/
+
+*.debhelper.log
+obj-*-gnu
+debian/appanvil
+debian/appanvil.substvars
+debian/debhelper-build-stamp
+debian/files
+debian/.debhelper
+

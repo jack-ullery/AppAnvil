@@ -1,0 +1,9 @@
+Files: *
+Copyright: 2021-2024, Jack Ullery <jackullery@proton.me>
+License: GPL-3+
+
+Files: resources/icon.svg
+Copyright: 2017, Monjin Friends
+License: CC-BY-3.0
+Upstream-Name: forge
+Source: https://commons.wikimedia.org/wiki/File:Forge_Noun_project_1044767.svg

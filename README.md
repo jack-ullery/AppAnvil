@@ -104,6 +104,14 @@ sudo make install
 ```
 This builds the necessary executables, installs them, and applies recommended changes to PolicyKit.
 
+### Package
+
+```
+git clean -fdx
+git submodule foreach --recursive git clean -fdx
+debuild -us -uc
+```
+
 ### Test
 To build and run the unit tests:
 ```

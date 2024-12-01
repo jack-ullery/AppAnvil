@@ -1,7 +1,6 @@
 cmake_minimum_required (VERSION 3.16.3)
 
 project (appanvil)
-set(PROJECT_VERSION 0.2)
 
 #### Set Source Code #####
 set(PROJECT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -66,6 +65,9 @@ set(RESOURCE_BUNDLE_OUTPUT ${GENERATED_DIR}/resource.autogen.c)
 set(PKEXEC_POLICY_IN ${PROJECT_RESOURCE_DIR}/pkexec.policy.in)
 set(PKEXEC_POLICY ${GENERATED_DIR}/com.github.jack-ullery.AppAnvil.pkexec.policy)
 configure_file("${PKEXEC_POLICY_IN}" "${PKEXEC_POLICY}" @ONLY) 
+
+set(LICENSE_FILE "${CMAKE_CURRENT_SOURCE_DIR}/docs/copyright")
+set(ICON_FILE "${PROJECT_UI_DIR}/misc/icon.svg")
 
 #### Add Linters and Static Analysis ####
 
@@ -148,6 +150,7 @@ execute_process(
   OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
+message(STATUS "Using install prefix: ${CMAKE_INSTALL_PREFIX}")
 set(APPANVIL_DESKTOP_IN ${PROJECT_RESOURCE_DIR}/appanvil.desktop.in)
 set(APPANVIL_DESKTOP    ${GENERATED_DIR}/appanvil.desktop)
 configure_file(${APPANVIL_DESKTOP_IN} ${APPANVIL_DESKTOP} @ONLY)
@@ -223,6 +226,20 @@ install(
   DESTINATION share/applications
 )
 
+install(
+  FILES ${LICENSE_FILE}
+  DESTINATION "share/doc/appanvil"
+  RENAME "copyright"
+)
+
+#### Install icon ####
+install(
+  FILES ${ICON_FILE}
+  DESTINATION "share/icons"
+  RENAME "${PROJECT_NAME}.svg"
+)
+
+#### Add CPack target ####
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libgtkmm-3.0-dev,libjsoncpp-dev,libapparmor-dev")
 set(CPACK_PACKAGE_CONTACT "Jack Ullery")
