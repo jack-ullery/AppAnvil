@@ -3,4 +3,5 @@ Encoding=UTF-8
 Version=1.0
 Type=Application
 Exec=@CMAKE_INSTALL_PREFIX@/bin/@PROJECT_NAME@
+Icon=@CMAKE_INSTALL_PREFIX@/share/icons/@PROJECT_NAME@.svg
 Name=AppAnvil

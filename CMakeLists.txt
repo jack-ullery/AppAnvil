@@ -67,6 +67,7 @@ set(PKEXEC_POLICY ${GENERATED_DIR}/com.github.jack-ullery.AppAnvil.pkexec.policy
 configure_file("${PKEXEC_POLICY_IN}" "${PKEXEC_POLICY}" @ONLY) 
 
 set(LICENSE_FILE "${CMAKE_CURRENT_SOURCE_DIR}/docs/copyright")
+set(ICON_FILE "${PROJECT_UI_DIR}/misc/icon.svg")
 
 #### Add Linters and Static Analysis ####
 
@@ -231,6 +232,14 @@ install(
   RENAME "copyright"
 )
 
+#### Install icon ####
+install(
+  FILES ${ICON_FILE}
+  DESTINATION "share/icons"
+  RENAME "${PROJECT_NAME}.svg"
+)
+
+#### Add CPack target ####
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME})
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libgtkmm-3.0-dev,libjsoncpp-dev,libapparmor-dev")
 set(CPACK_PACKAGE_CONTACT "Jack Ullery")
