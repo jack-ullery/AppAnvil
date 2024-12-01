@@ -9,8 +9,5 @@ override_dh_auto_configure:
 		-DDISABLE_LIBAPPANVIL_INSTALL=true
 
 override_dh_auto_test: override_dh_auto_configure
-	cmake -DCMAKE_LIBRARY_ARCHITECTURE="$(DEB_TARGET_MULTIARCH)" \
-		-DCMAKE_INSTALL_PREFIX=/usr \
-		-DDISABLE_LIBAPPANVIL_INSTALL=true .
-	cmake --build . -t appanvil_test -t unit-test
+	dh_auto_build appanvil_test unit-test
 	ctest --output-on-failure -R "simple|libappanvil"
