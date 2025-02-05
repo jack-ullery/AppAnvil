@@ -110,18 +110,15 @@ if(${GTEST_FOUND} AND ${GMOCK_FOUND})
   # To allow whitespace in test names
   cmake_policy(SET CMP0110 NEW)
 
-  # Discover the tests
-  gtest_add_tests(
-    TARGET ${PROJECT_NAME}
-    SOURCES ${APPANVIL_TEST_SOURCES}
+  gtest_discover_tests(
+    ${PROJECT_NAME}
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src"
-    TEST_PREFIX "[appanvil] "
+    TEST_PREFIX "[appanvil]"
     TEST_LIST ADDED_TESTS_1
   )
 
-  gtest_add_tests(
-    TARGET ${PROJECT_NAME}
-    SOURCES ${AA_CALLER_TEST_SOURCES}
+  gtest_discover_tests(
+    ${PROJECT_NAME}
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/aa-caller"
     TEST_PREFIX "[aa-caller] "
     TEST_LIST ADDED_TESTS_2
