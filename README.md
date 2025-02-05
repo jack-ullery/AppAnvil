@@ -115,7 +115,7 @@ debuild -us -uc
 ### Test
 To build and run the unit tests:
 ```
-make appanvil_test -j$(nproc)
+make appanvil_test libappanvil_test -j$(nproc)
 make test
 ```
 To generate a code coverage report:

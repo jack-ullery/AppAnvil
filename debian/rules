@@ -9,5 +9,5 @@ override_dh_auto_configure:
 		-DDISABLE_LIBAPPANVIL_INSTALL=true
 
 override_dh_auto_test: override_dh_auto_configure
-	dh_auto_build appanvil_test unit-test
+	dh_auto_build appanvil_test libappanvil_test
 	ctest --output-on-failure -R "simple|libappanvil"
