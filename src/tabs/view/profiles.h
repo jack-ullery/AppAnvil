@@ -3,7 +3,6 @@
 
 #include "../controller/profile_loader_controller.h"
 #include "../controller/profile_modify_controller.h"
-#include "profile_modify.h"
 #include "status.h"
 
 #include <gtkmm/box.h>
@@ -11,7 +10,6 @@
 #include <gtkmm/togglebutton.h>
 #include <memory>
 #include <string>
-#include <vector>
 
 #ifdef TESTS_ENABLED
 #include <gtest/gtest.h>
@@ -47,8 +45,8 @@ private:
   std::unique_ptr<Gtk::Stack> p_stack;
 
   std::unique_ptr<Gtk::Box> p_profile_info;
-  std::unique_ptr<Gtk::Label> p_num_log_label;
-  std::unique_ptr<Gtk::Label> p_num_proc_label;
+  std::unique_ptr<Gtk::Button> p_num_log_label;
+  std::unique_ptr<Gtk::Button> p_num_proc_label;
 
   // Additional pages, which are added to the stack
   std::unique_ptr<ProfileLoaderController> loader_controller;

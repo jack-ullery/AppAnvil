@@ -1,9 +1,6 @@
 #include "profiles.h"
 #include "../../threads/command_caller.h"
-#include "../entries.h"
-#include "../model/status_column_record.h"
 #include "common.h"
-#include "profile_modify.h"
 #include "status.h"
 
 #include <giomm.h>
@@ -11,13 +8,11 @@
 #include <gtkmm/box.h>
 #include <memory>
 #include <string>
-#include <tuple>
-#include <vector>
 
 void Profiles::set_profile_info(const std::string &num_logs, const std::string &num_procs)
 {
-  p_num_log_label->set_text(num_logs);
-  p_num_proc_label->set_text(num_procs);
+  p_num_log_label->set_label(num_logs);
+  p_num_proc_label->set_label(num_procs);
 }
 
 std::string Profiles::find_path(const std::string &profile_name)
@@ -117,8 +112,8 @@ Profiles::Profiles()
     p_modify_profile_toggle{ Common::get_widget<Gtk::ToggleButton>("p_modify_profile_toggle", builder) },
     p_stack{ Common::get_widget<Gtk::Stack>("p_stack", builder) },
     p_profile_info{ Common::get_widget<Gtk::Box>("p_profile_info", builder) },
-    p_num_log_label{ Common::get_widget<Gtk::Label>("p_num_log_label", builder) },
-    p_num_proc_label{ Common::get_widget<Gtk::Label>("p_num_proc_label", builder) },
+    p_num_log_label{ Common::get_widget<Gtk::Button>("p_num_log_label", builder) },
+    p_num_proc_label{ Common::get_widget<Gtk::Button>("p_num_proc_label", builder) },
     loader_controller{ std::make_unique<ProfileLoaderController>() },
     profile_map{ CommandCaller::get_profiles() }
 {

@@ -57,6 +57,9 @@
                             <property name="can-focus">True</property>
                             <property name="hexpand">True</property>
                             <property name="vexpand">True</property>
+                            <child internal-child="selection">
+                              <object class="GtkTreeSelection"/>
+                            </child>
                           </object>
                         </child>
                       </object>
@@ -296,11 +299,13 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="p_num_proc_label">
+                      <object class="GtkButton" id="p_num_proc_label">
+                        <property name="label" translatable="yes">Placeholder text</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
+                        <property name="receives-default">False</property>
                         <property name="halign">end</property>
-                        <property name="label" translatable="yes">Placeholder text</property>
+                        <property name="relief">none</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -342,11 +347,13 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="p_num_log_label">
+                      <object class="GtkButton" id="p_num_log_label">
+                        <property name="label" translatable="yes">Placeholder text</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
+                        <property name="receives-default">False</property>
                         <property name="halign">end</property>
-                        <property name="label" translatable="yes">Placeholder text</property>
+                        <property name="relief">none</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
