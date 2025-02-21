@@ -100,6 +100,7 @@ cmake -DANALYZE=TRUE .
 ### Build
 After the makefile is generated, you can build and install the executables:
 ```
+make -j$(nproc)
 sudo make install
 ```
 This builds the necessary executables, installs them, and applies recommended changes to PolicyKit.
