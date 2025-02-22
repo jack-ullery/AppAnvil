@@ -16,8 +16,6 @@ By default, AppArmor is not easy to configure, running silently in the backgroun
 
 The AppAnvil project aims to create an intuitive graphical interface for monitoring and configuring AppArmor. In particular, we want it to be easy to monitor and deploy profiles, change a profile’s permissions, and to parse system logs.
 
-Currently, this project is in-progress and not feature complete. There is still some work to do before it is ready for a general audience.
-
 ## Dependencies
 ### Run Time
 * GTKmm
