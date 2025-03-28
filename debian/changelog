@@ -1,6 +1,15 @@
+appanvil (1.0.0-1) UNRELEASED; urgency=low
+
+  * Initial release. (Closes: #1098523: ITP: appanvil -- graphical user
+    interface for AppArmor)
+  * Major rewrite of codebase and Debian files
+
+ -- Jack Ullery <jackullery@proton.me>  Fri, 28 Mar 2025 12:40:51 -0400
+
 appanvil (0.1.1-1) UNRELEASED; urgency=low
 
-  * Initial release.
+  * First attempt at creating Debian package.
+  * Basic Debian configuration for Open Build Service integration. (Located at: https://build.opensuse.org/project/show/home:jackullery:AppAnvil)
 
  -- Jack Ullery <jackullery@proton.me>  Fri, 24 Mar 2023 17:17:22 +0000
  
