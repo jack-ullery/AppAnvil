@@ -38,4 +38,4 @@ debian/appanvil.substvars
 debian/debhelper-build-stamp
 debian/files
 debian/.debhelper
-
+debian/appanvil.*.debhelper

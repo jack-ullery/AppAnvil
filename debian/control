@@ -18,9 +18,9 @@ Package: appanvil
 Section: utils
 Priority: optional
 Architecture: any
-Description: graphical user interface for AppArmor
-  AppAnvil provides an intuitive graphical interface for monitoring, 
-  editing, deploying, and configuring AppArmor profiles.
+Description: Graphical user interface for AppArmor.
+ AppAnvil provides an intuitive graphical interface for monitoring, editing,
+ deploying, and configuring AppArmor profiles.
 Depends: ${shlibs:Depends}, 
 	     ${misc:Depends},
 	     libgtkmm-3.0-dev,
