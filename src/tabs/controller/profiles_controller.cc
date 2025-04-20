@@ -119,8 +119,7 @@ void ProfilesController<ProfilesTab, Database, Adapter>::add_data_to_record(cons
   }
 
   // Refilter the table, but only if tuples were added
-  if(changed)
-  {
+  if (changed) {
     refresh();
   }
 }
