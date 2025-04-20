@@ -109,22 +109,31 @@ void ProfilesController<ProfilesTab, Database, Adapter>::add_data_to_record(cons
   Json::Value root     = StatusController<ProfilesTab>::parse_JSON(data);
   Json::Value profiles = root["profiles"];
 
+  // Parse each object in the "profiles" field of the json,
+  //   and attempt to add each tuple to this db
+  bool changed = false;
   for (auto profile = profiles.begin(); profile != profiles.end(); profile++) {
     auto profile_name = profile.key().asString();
     auto status       = profiles.get(profile_name, UNKNOWN_STR).asString();
-    adapter.put_data(profile_name, status);
+    changed |= adapter.put_data(profile_name, status);
   }
 
-  refresh();
+  // Refilter the table, but only if tuples were added
+  if(changed)
+  {
+    refresh();
+  }
 }
 
 template<class ProfilesTab, class Database, class Adapter>
 void ProfilesController<ProfilesTab, Database, Adapter>::refresh()
 {
+  // Update the label in the profiles section
   std::stringstream label;
   label << " " << adapter.get_col_record()->filter_rows() << " matching profiles";
-
   prof->set_status_label_text(label.str());
+
+  // Check if any row was selected/unselected
   handle_profile_selected();
 }
 
