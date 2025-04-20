@@ -101,7 +101,7 @@ std::list<std::pair<std::string, std::string>> LogRecord::get_metadata() const
   attempt_emplace_pair(metadata, "Requested Mask", record_data->requested_mask);
   attempt_emplace_pair(metadata, "Peer Profile", record_data->peer_profile);
   attempt_emplace_pair(metadata, "Comm", record_data->comm);
-  attempt_emplace_pair(metadata, "Namespace", record_data->namespace_variable);
+  attempt_emplace_pair(metadata, "Namespace", record_data->aa_namespace);
   attempt_emplace_pair(metadata, "Attribute", record_data->attribute);
   attempt_emplace_pair(metadata, "Info", record_data->info);
   attempt_emplace_pair(metadata, "Peer Info", record_data->peer_info);
@@ -120,6 +120,6 @@ std::list<std::pair<std::string, std::string>> LogRecord::get_metadata() const
   attempt_emplace_pair(metadata, "File System Type", record_data->fs_type);
   attempt_emplace_pair(metadata, "Flags", record_data->flags);
   attempt_emplace_pair(metadata, "Source Name", record_data->src_name);
-  // attempt_emplace_pair(metadata, "Class", record_data->class_variable);
+  // attempt_emplace_pair(metadata, "Class", record_data->rule_class);
   return metadata;
 }

@@ -12,7 +12,7 @@ extern "C"
 // Unfortunately the header contains the reserved keywords like "namespace" as a variable name
 // Unlike C, "namespace" is a reserved keyword in C++
 // Therefore, we need to make a minor modification to the header file, so that our C++ code will compile.
-#define namespace namespace_variable // NOLINT
+#define namespace aa_namespace // NOLINT
 #define class class_variable         // NOLINT
 #include <aalogparse/aalogparse.h>
 #undef class
