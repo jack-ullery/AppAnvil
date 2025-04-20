@@ -18,7 +18,10 @@ public:
   // Initializes the database adapter
   ProfileAdapter(std::shared_ptr<Database> db, const std::shared_ptr<Gtk::TreeView> &view);
 
-  void put_data(const std::string &profile_name, const std::string &status);
+  // Inserts the tuple into the database
+  // Returns true if any data was added
+  // Returns false if this tuple already exists in the database
+  bool put_data(const std::string &profile_name, const std::string &status);
 
   void set_profile_status_change_func(const StatusColumnRecord::change_function_type &fun);
 

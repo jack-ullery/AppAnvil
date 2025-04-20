@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 template<class Database>
-void ProfileAdapter<Database>::put_data(const std::string &profile_name, const std::string &status)
+bool ProfileAdapter<Database>::put_data(const std::string &profile_name, const std::string &status)
 {
   if (col_record == nullptr) {
     throw std::runtime_error("Error: Attempted to write to ColumnRecord (Profile) before it was registered.");
@@ -24,14 +24,18 @@ void ProfileAdapter<Database>::put_data(const std::string &profile_name, const s
 
     db->profile_data.insert({ profile_name, entry });
   } else {
-    // A pre-existing entry was found, so we should modify it
+    // A pre-existing entry was found with a different status, we should modify it
     ProfileTableEntry entry = iter->second;
-    entry.status            = status;
-    entry.row->set_value(2, status);
-
-    db->profile_data.erase(profile_name);
-    db->profile_data.insert({ profile_name, entry });
+    if (entry.status != status) {
+      entry.status = status;
+      entry.row->set_value(2, status);
+      db->profile_data.erase(profile_name);
+      db->profile_data.insert({ profile_name, entry });
+      return true;
+    }
   }
+
+  return false;
 }
 
 template<class Database>
