@@ -1,3 +1,10 @@
+appanvil (1.0.1) UNRELEASED; urgency=low
+
+  * Show reauthentication prompt by default.
+  * Fix bug that would cause comboboxes to lose focus, without user input
+
+ -- Jack Ullery <jackullery@proton.me>  Sun, 04 May 2025 14:22:12 -0400
+
 appanvil (1.0.0) UNRELEASED; urgency=low
 
   * Initial release. (Closes: #1098523: ITP: appanvil -- graphical user
