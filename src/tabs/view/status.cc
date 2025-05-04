@@ -97,6 +97,9 @@ Status::Status(const std::string &glade_resource, const std::string &table_item)
   label             = label + table_item;
   auth_error_label->set_text(label);
 
+  // Show the prompt to authenticate by default
+  show_reauthenticate_prompt(true);
+
   // Add all the widgets
   this->add(*s_box);
 }
