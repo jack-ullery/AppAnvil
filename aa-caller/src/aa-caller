@@ -3,12 +3,17 @@
 import argparse
 import json
 import subprocess
+import sys
 import time
 
 def run_command(cmd):
-    result = subprocess.run(cmd, capture_output=True, text=True)
-    if result.returncode == 0:
-        return result.stdout
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        if result.returncode == 0:
+            return result.stdout
+        print(result.stderr)
+    except Exception as ex:
+        print(ex, file=sys.stderr)
     return None
 
 def get_status():
