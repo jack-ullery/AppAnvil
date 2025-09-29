@@ -1,0 +1,92 @@
+#!/usr/bin/env python3
+
+import argparse
+import json
+import subprocess
+import time
+
+def run_command(cmd):
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    if result.returncode == 0:
+        return result.stdout
+    return None
+
+def get_status():
+    cmd = ["aa-status", "--json"]
+    return run_command(cmd)
+
+def get_ps():
+    cmd = ["ps", "-A", "--format", "pid,ppid,user,context,comm", "--no-header"]
+    return run_command(cmd)
+
+# Calls journalctl 
+def get_journalctl(cursor = None):
+    cmd = ["journalctl", "-r", "_AUDIT_TYPE=1400", "--output=json", "--show-cursor"]
+
+    if cursor != None:
+        cmd += ["--after-cursor", cursor]
+
+    data = run_command(cmd)
+    if data == None or len(data) == 0:
+        return None, None
+
+    cursor_index = data.rfind('l')
+    raw_data = data[:cursor_index]
+    cursor = data[cursor_index:]
+    return raw_data, cursor
+
+# Prints out "value" as a line of JSON
+def print_dataline(key, value):
+    if value != None:
+        obj = dict()
+        obj[key] = value
+        print(json.dumps(obj))
+
+def main(args):
+    last_status     = None
+    last_ps         = None
+    last_journalctl = None
+
+    cursor = None
+
+    while True:
+        # Call "aa-status"
+        status = get_status()
+        if status != last_status and not args.disable_status:
+            print_dataline("status", status)
+            last_status = status
+
+        # Call "ps"
+        ps = get_ps()
+        if ps != last_ps and not args.disable_ps:
+            print_dataline("ps", ps)
+            last_ps = ps
+
+        # Call "journalctl", generating a cursor if needed
+        journalctl, new_cursor = get_journalctl(cursor)
+        if new_cursor != None:
+            cursor = new_cursor
+
+        if journalctl != last_journalctl and not args.disable_journalctl:
+            print_dataline("journalctl", journalctl)
+            last_journalctl = journalctl
+
+        # Wait for a little bit before calling again
+        time.sleep(args.time)
+
+if __name__ == "__main__":
+    description = "A daemon application used internally by the AppAnvil Project to collect logs about AppArmor"
+    epilog = "This tool is not intended for direct use by the end-user"
+
+    parser = argparse.ArgumentParser(prog="aa-caller", description=description, epilog=epilog)
+    parser.add_argument("-t", "--time", type=int, default=4, help="How often to collect statistics")
+    parser.add_argument("-s", "--disable-status", action="store_true", help="Disable call to 'aa-status'")
+    parser.add_argument("-p", "--disable_ps",   action="store_true", help="Disable call to 'ps'")
+    parser.add_argument("-j", "--disable_journalctl",   action="store_true", help="Disable call to 'journalctl'")
+
+    args = parser.parse_args()
+
+    if args.time <= 0:
+        raise Exception("\"--time\" argument must be positive.")
+
+    main(args)
