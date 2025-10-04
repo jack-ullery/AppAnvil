@@ -7,9 +7,9 @@
 
 #include <chrono>
 #include <condition_variable>
+#include <functional>
 #include <future>
 #include <glibmm/dispatcher.h>
-#include <memory>
 #include <mutex>
 #include <vector>
 
@@ -17,11 +17,10 @@
  * This class creates a separate thread that the main GUI thread can communicate with.
  * This second thread asynchronously calls terminal commands and communicates the results with the main thread.
  **/
-template<class ProfilesController, class ProcessesController, class LogsController>
 class ConsoleThread
 {
 public:
-  ConsoleThread(std::shared_ptr<ProfilesController> prof, std::shared_ptr<ProcessesController> proc, std::shared_ptr<LogsController> logs);
+  ConsoleThread(dispatch_cb_fun prof_cb, dispatch_cb_fun proc_cb, dispatch_cb_fun logs_cb, std::function<void(bool)> show_reauth);
   ~ConsoleThread();
 
   // Delete the copy-constructor, move constructor, and copy assignment operator
@@ -75,13 +74,13 @@ private:
   void handle_refresh();
 
   // Member fields
-  BlockingQueue<Message, std::deque<Message>, std::mutex> queue;
+  BlockingQueue<Message> queue;
   bool should_try_refresh = true;
 
   AsyncProcess aa_caller_proc;
 
   // DispatcherMiddleman used to communicate results with main thread
-  DispatcherMiddleman<ProfilesController, ProcessesController, LogsController, Glib::Dispatcher, std::mutex> dispatch_man;
+  DispatcherMiddleman<> dispatch_man;
 
   // Representation of the extra thread
   std::future<void> asynchronous_thread;

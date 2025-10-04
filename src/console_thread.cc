@@ -1,30 +1,16 @@
 #include "console_thread.h"
-#include "tabs/controller/logs_controller.h"
-#include "tabs/controller/processes_controller.h"
-#include "tabs/controller/profiles_controller.h"
-#include "tabs/model/database.h"
-#include "tabs/model/status_column_record.h"
-#include "tabs/view/logs.h"
-#include "tabs/view/processes.h"
-#include "tabs/view/profiles.h"
 #include "threads/command_caller.h"
 
-#include <memory>
 #include <string>
 
-template<class ProfilesController, class ProcessesController, class LogsController>
-ConsoleThread<ProfilesController, ProcessesController, LogsController>::ConsoleThread(std::shared_ptr<ProfilesController> prof,
-                                                                                      std::shared_ptr<ProcessesController> proc,
-                                                                                      std::shared_ptr<LogsController> logs)
+ConsoleThread::ConsoleThread(dispatch_cb_fun prof, dispatch_cb_fun proc, dispatch_cb_fun logs, std::function<void(bool)> show_reauth)
   : aa_caller_proc{ CommandCaller::call_aa_caller() },
-    dispatch_man(std::move(prof), std::move(proc), std::move(logs)),
-    asynchronous_thread(
-      std::async(std::launch::async, &ConsoleThread<ProfilesController, ProcessesController, LogsController>::console_caller, this))
+    dispatch_man(prof, proc, logs, show_reauth),
+    asynchronous_thread(std::async(std::launch::async, &ConsoleThread::console_caller, this))
 {
 }
 
-template<class ProfilesController, class ProcessesController, class LogsController>
-void ConsoleThread<ProfilesController, ProcessesController, LogsController>::send_refresh_message()
+void ConsoleThread::send_refresh_message()
 {
   std::unique_lock<std::mutex> lock(task_ready_mtx);
   // Create a message with the state to refresh for, but no data
@@ -34,11 +20,9 @@ void ConsoleThread<ProfilesController, ProcessesController, LogsController>::sen
   cv.notify_one();
 }
 
-template<class ProfilesController, class ProcessesController, class LogsController>
-void ConsoleThread<ProfilesController, ProcessesController, LogsController>::send_change_profile_status_message(
-  const std::string &profile,
-  const std::string &old_status,
-  const std::string &new_status)
+void ConsoleThread::send_change_profile_status_message(const std::string &profile,
+                                                       const std::string &old_status,
+                                                       const std::string &new_status)
 {
   std::unique_lock<std::mutex> lock(task_ready_mtx);
   // Create a message with the state to refresh for, but no data
@@ -48,8 +32,7 @@ void ConsoleThread<ProfilesController, ProcessesController, LogsController>::sen
   cv.notify_one();
 }
 
-template<class ProfilesController, class ProcessesController, class LogsController>
-void ConsoleThread<ProfilesController, ProcessesController, LogsController>::send_quit_message()
+void ConsoleThread::send_quit_message()
 {
   std::unique_lock<std::mutex> lock(task_ready_mtx);
   Message message(QUIT, {});
@@ -57,8 +40,7 @@ void ConsoleThread<ProfilesController, ProcessesController, LogsController>::sen
   cv.notify_one();
 }
 
-template<class ProfilesController, class ProcessesController, class LogsController>
-void ConsoleThread<ProfilesController, ProcessesController, LogsController>::reenable_authentication_for_refresh()
+void ConsoleThread::reenable_authentication_for_refresh()
 {
   std::unique_lock<std::mutex> lock(task_ready_mtx);
   should_try_refresh = true;
@@ -68,18 +50,14 @@ void ConsoleThread<ProfilesController, ProcessesController, LogsController>::ree
   send_refresh_message();
 }
 
-template<class ProfilesController, class ProcessesController, class LogsController>
-std::chrono::time_point<std::chrono::steady_clock>
-ConsoleThread<ProfilesController, ProcessesController, LogsController>::get_wait_time_point()
+std::chrono::time_point<std::chrono::steady_clock> ConsoleThread::get_wait_time_point()
 {
   auto now       = std::chrono::steady_clock::now();
-  auto time_wait = std::chrono::seconds(ConsoleThread<ProfilesController, ProcessesController, LogsController>::TIME_WAIT);
+  auto time_wait = std::chrono::seconds(ConsoleThread::TIME_WAIT);
   return now + time_wait;
 }
 
-template<class ProfilesController, class ProcessesController, class LogsController>
-typename ConsoleThread<ProfilesController, ProcessesController, LogsController>::Message
-ConsoleThread<ProfilesController, ProcessesController, LogsController>::wait_for_message()
+typename ConsoleThread::Message ConsoleThread::wait_for_message()
 {
   std::unique_lock<std::mutex> lock(task_ready_mtx);
 
@@ -97,14 +75,9 @@ ConsoleThread<ProfilesController, ProcessesController, LogsController>::wait_for
   return queue.pop();
 }
 
-template<class ProfilesController, class ProcessesController, class LogsController>
-void ConsoleThread<ProfilesController, ProcessesController, LogsController>::handle_refresh()
-{
-  
-}
+void ConsoleThread::handle_refresh() {}
 
-template<class ProfilesController, class ProcessesController, class LogsController>
-void ConsoleThread<ProfilesController, ProcessesController, LogsController>::console_caller()
+void ConsoleThread::console_caller()
 {
   bool shouldContinue = true;
   while (shouldContinue) {
@@ -132,9 +105,7 @@ void ConsoleThread<ProfilesController, ProcessesController, LogsController>::con
 }
 
 // Move Assignment Operator
-template<class ProfilesController, class ProcessesController, class LogsController>
-ConsoleThread<ProfilesController, ProcessesController, LogsController> &
-ConsoleThread<ProfilesController, ProcessesController, LogsController>::operator=(ConsoleThread &&other) noexcept
+ConsoleThread &ConsoleThread::operator=(ConsoleThread &&other) noexcept
 {
   queue = other.queue;
   // aa_caller_proc = other.aa_caller_proc;
@@ -142,13 +113,8 @@ ConsoleThread<ProfilesController, ProcessesController, LogsController>::operator
   return *this;
 }
 
-template<class ProfilesController, class ProcessesController, class LogsController>
-ConsoleThread<ProfilesController, ProcessesController, LogsController>::~ConsoleThread()
+ConsoleThread::~ConsoleThread()
 {
   send_quit_message();
   asynchronous_thread.wait();
 }
-
-template class ConsoleThread<ProfilesController<Profiles, Database, ProfileAdapter<Database>>,
-                             ProcessesController<Processes, Database, ProcessAdapter<Database, StatusColumnRecord>>,
-                             LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord>, LogRecord>>;

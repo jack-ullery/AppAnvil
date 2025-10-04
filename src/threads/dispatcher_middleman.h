@@ -12,22 +12,24 @@
 #include <gtest/gtest.h>
 #endif
 
+typedef std::function<void(std::string &)> dispatch_cb_fun;
+
 /**
  * Class to extend some of the functionality of `Dispatcher` to easier facilitate inter-thread
  * communication between the second thread and main thread. This is needed to prevent some
  * concurrency errors with the GUI.
  **/
-template<class Profiles, class Processes, class Logs, class Dispatcher, class Mutex>
+template<class Dispatcher = Glib::Dispatcher, class Mutex = std::mutex>
 class DispatcherMiddleman
 {
 public:
   // Constructor
-  DispatcherMiddleman(std::shared_ptr<Profiles> prof, std::shared_ptr<Processes> proc, std::shared_ptr<Logs> logs);
+  DispatcherMiddleman(dispatch_cb_fun prof, dispatch_cb_fun proc, dispatch_cb_fun logs, std::function<void(bool)> show_reauth);
   // For unit testing
   explicit DispatcherMiddleman(std::shared_ptr<Dispatcher> disp,
-                               std::shared_ptr<Profiles> prof,
-                               std::shared_ptr<Processes> proc,
-                               std::shared_ptr<Logs> logs,
+                               dispatch_cb_fun prof,
+                               dispatch_cb_fun proc,
+                               dispatch_cb_fun logs,
                                std::shared_ptr<Mutex> my_mtx);
 
   // Send methods (called from second thread)
@@ -73,12 +75,13 @@ protected:
   void handle_signal();
 
 private:
-  BlockingQueue<CallData, std::deque<CallData>, Mutex> queue;
+  BlockingQueue<CallData, Mutex> queue;
   std::shared_ptr<Dispatcher> dispatch;
 
-  std::shared_ptr<Profiles> prof;
-  std::shared_ptr<Processes> proc;
-  std::shared_ptr<Logs> logs;
+  dispatch_cb_fun prof;
+  dispatch_cb_fun proc;
+  dispatch_cb_fun logs;
+  std::function<void(bool)> show_reauth;
 
 #ifdef TESTS_ENABLED
   FRIEND_TEST(DispatcherMiddlemanTest, UPDATE_PROFILES);

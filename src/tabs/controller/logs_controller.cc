@@ -4,12 +4,15 @@
 #include "../model/status_column_record.h"
 #include "../view/logs.h"
 
+#include <exception>
 #include <glibmm/main.h>
 #include <glibmm/priorities.h>
+#include <iostream>
 #include <list>
 #include <memory>
+#include <regex>
 #include <sigc++/functors/mem_fun.h>
-#include <sstream>
+#include <stdexcept>
 
 template<class LogsTab, class Database, class Adapter, class LogRecord>
 bool LogsController<LogsTab, Database, Adapter, LogRecord>::on_button_event(GdkEventButton *event)
@@ -94,6 +97,12 @@ void LogsController<LogsTab, Database, Adapter, LogRecord>::add_data_to_record(c
   auto ptr    = std::make_shared<std::list<std::shared_ptr<LogRecord>>>(data);
   auto lambda = [&, ptr]() -> bool { return add_data_to_record_helper(ptr); };
   Glib::signal_idle().connect(lambda, Glib::PRIORITY_LOW);
+}
+template<class LogsTab, class Database, class Adapter, class LogRecord>
+void LogsController<LogsTab, Database, Adapter, LogRecord>::add_data_to_record_2(const std::string &json_data)
+{
+  std::cout << "add_data_to_record_2() unimplemented yet!" << std::endl;
+  throw std::runtime_error("add_data_to_record_2() unimplemented yet!");
 }
 
 template<class LogsTab, class Database, class Adapter, class LogRecord>

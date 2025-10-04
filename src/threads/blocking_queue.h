@@ -13,7 +13,7 @@
 /**
  * This is a thread safe queue that blocks on a mutex for each operation
  **/
-template<class T, class Deque, class Mutex>
+template<class T, class Mutex = std::mutex, class Deque = std::deque<T>>
 class BlockingQueue
 {
 public:

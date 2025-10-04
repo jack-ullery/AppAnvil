@@ -1,14 +1,10 @@
 #ifndef TABS_CONTROLLER_LOGS_CONTROLLER_H
 #define TABS_CONTROLLER_LOGS_CONTROLLER_H
 
-#include "../model/status_column_record.h"
 #include "status_controller.h"
 
 #include <memory>
-#include <regex>
-#include <sstream>
 #include <string>
-#include <vector>
 
 #ifdef TESTS_ENABLED
 #include <gtest/gtest.h>
@@ -28,6 +24,7 @@ public:
   bool on_button_event(GdkEventButton *event);
 
   virtual void add_data_to_record(const std::list<std::shared_ptr<LogRecord>> &data);
+  virtual void add_data_to_record_2(const std::string &json_data);
 
   unsigned int num_visible_rows();
   void refresh();

@@ -1,83 +1,75 @@
 #include "blocking_queue.h"
 #include "../console_thread.h"
-#include "../tabs/controller/logs_controller.h"
-#include "../tabs/controller/processes_controller.h"
-#include "../tabs/controller/profiles_controller.h"
-#include "../tabs/model/database.h"
-#include "../tabs/model/status_column_record.h"
-#include "../tabs/view/logs.h"
-#include "../tabs/view/processes.h"
-#include "../tabs/view/profiles.h"
 
 #include <memory>
 
-template<class T, class Deque, class Mutex>
-BlockingQueue<T, Deque, Mutex>::BlockingQueue()
+template<class T, class Mutex, class Deque>
+BlockingQueue<T, Mutex, Deque>::BlockingQueue()
   : internal_queue{ std::make_shared<Deque>() },
     mtx{ std::make_shared<Mutex>() }
 {
 }
 
-template<class T, class Deque, class Mutex>
-BlockingQueue<T, Deque, Mutex>::BlockingQueue(std::shared_ptr<Deque> queue, std::shared_ptr<Mutex> my_mtx)
+template<class T, class Mutex, class Deque>
+BlockingQueue<T, Mutex, Deque>::BlockingQueue(std::shared_ptr<Deque> queue, std::shared_ptr<Mutex> my_mtx)
   : internal_queue{ std::move(queue) },
     mtx{ std::move(my_mtx) }
 {
 }
 
 // Accessor Methods
-template<class T, class Deque, class Mutex>
-T BlockingQueue<T, Deque, Mutex>::front()
+template<class T, class Mutex, class Deque>
+T BlockingQueue<T, Mutex, Deque>::front()
 {
   std::lock_guard<Mutex> lock(*mtx);
   return internal_queue->front();
 }
 
-template<class T, class Deque, class Mutex>
-T BlockingQueue<T, Deque, Mutex>::back()
+template<class T, class Mutex, class Deque>
+T BlockingQueue<T, Mutex, Deque>::back()
 {
   std::lock_guard<Mutex> lock(*mtx);
   return internal_queue->back();
 }
 
-template<class T, class Deque, class Mutex>
-int BlockingQueue<T, Deque, Mutex>::size()
+template<class T, class Mutex, class Deque>
+int BlockingQueue<T, Mutex, Deque>::size()
 {
   std::lock_guard<Mutex> lock(*mtx);
   return internal_queue->size();
 }
 
-template<class T, class Deque, class Mutex>
-bool BlockingQueue<T, Deque, Mutex>::empty()
+template<class T, class Mutex, class Deque>
+bool BlockingQueue<T, Mutex, Deque>::empty()
 {
   std::lock_guard<Mutex> lock(*mtx);
   return internal_queue->empty();
 }
 
 // Mutator Methods
-template<class T, class Deque, class Mutex>
-void BlockingQueue<T, Deque, Mutex>::clear()
+template<class T, class Mutex, class Deque>
+void BlockingQueue<T, Mutex, Deque>::clear()
 {
   std::lock_guard<Mutex> lock(*mtx);
   internal_queue->clear();
 }
 
-template<class T, class Deque, class Mutex>
-void BlockingQueue<T, Deque, Mutex>::push(const T &value)
+template<class T, class Mutex, class Deque>
+void BlockingQueue<T, Mutex, Deque>::push(const T &value)
 {
   std::lock_guard<Mutex> lock(*mtx);
   internal_queue->push_back(value);
 }
 
-template<class T, class Deque, class Mutex>
-void BlockingQueue<T, Deque, Mutex>::push_front(const T &value)
+template<class T, class Mutex, class Deque>
+void BlockingQueue<T, Mutex, Deque>::push_front(const T &value)
 {
   std::lock_guard<Mutex> lock(*mtx);
   internal_queue->push_front(value);
 }
 
-template<class T, class Deque, class Mutex>
-T BlockingQueue<T, Deque, Mutex>::pop()
+template<class T, class Mutex, class Deque>
+T BlockingQueue<T, Mutex, Deque>::pop()
 {
   std::lock_guard<Mutex> lock(*mtx);
   auto value = internal_queue->front();
@@ -87,32 +79,5 @@ T BlockingQueue<T, Deque, Mutex>::pop()
 
 // Used to avoid linker errors
 // For more information, see: https://isocpp.org/wiki/faq/templates#class-templates
-// These next few lines are very gross, as I copied them directly from a Linker error. Don't even try to read them.
-template class BlockingQueue<
-  ConsoleThread<ProfilesController<Profiles, Database, ProfileAdapter<Database>>,
-                ProcessesController<Processes, Database, ProcessAdapter<Database, StatusColumnRecord>>,
-                LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord>, LogRecord>>::Message,
-  std::deque<ConsoleThread<ProfilesController<Profiles, Database, ProfileAdapter<Database>>,
-                           ProcessesController<Processes, Database, ProcessAdapter<Database, StatusColumnRecord>>,
-                           LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord>, LogRecord>>::Message,
-             std::allocator<ConsoleThread<ProfilesController<Profiles, Database, ProfileAdapter<Database>>,
-                                          ProcessesController<Processes, Database, ProcessAdapter<Database, StatusColumnRecord>>,
-                                          LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord>, LogRecord>>::Message>>,
-  std::mutex>;
-template class BlockingQueue<
-  DispatcherMiddleman<ProfilesController<Profiles, Database, ProfileAdapter<Database>>,
-                      ProcessesController<Processes, Database, ProcessAdapter<Database, StatusColumnRecord>>,
-                      LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord>, LogRecord>,
-                      Glib::Dispatcher,
-                      std::mutex>::CallData,
-  std::deque<DispatcherMiddleman<ProfilesController<Profiles, Database, ProfileAdapter<Database>>,
-                                 ProcessesController<Processes, Database, ProcessAdapter<Database, StatusColumnRecord>>,
-                                 LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord>, LogRecord>,
-                                 Glib::Dispatcher,
-                                 std::mutex>::CallData,
-             std::allocator<DispatcherMiddleman<ProfilesController<Profiles, Database, ProfileAdapter<Database>>,
-                                                ProcessesController<Processes, Database, ProcessAdapter<Database, StatusColumnRecord>>,
-                                                LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord>, LogRecord>,
-                                                Glib::Dispatcher,
-                                                std::mutex>::CallData>>,
-  std::mutex>;
+template class BlockingQueue<ConsoleThread::Message>;
+template class BlockingQueue<DispatcherMiddleman<>::CallData>;

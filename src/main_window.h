@@ -12,7 +12,6 @@
 #include "tabs/view/help.h"
 #include "tabs/view/logs.h"
 #include "tabs/view/processes.h"
-#include "tabs/view/profile_loader.h"
 #include "tabs/view/profiles.h"
 
 #include <gtkmm/applicationwindow.h>
@@ -66,14 +65,20 @@ protected:
    */
   bool on_switch(GdkEvent *event);
 
+  /**
+   * @brief Calls the show_reauthenticate_prompt() for each tab
+   * 
+   * @param should_show_reauth 
+   */
+  void show_reauth(bool should_show_reauth);
+  inline std::function<void(bool)> get_show_reauth_func();
+
 private:
   // A set of Typedeffed classes, to handle dependency injection
   // This lowers the amount of repeated <..> symbols
   typedef ProfilesController<Profiles, Database, ProfileAdapter<Database>> ProfilesControllerInstance;
   typedef ProcessesController<Processes, Database, ProcessAdapter<Database, StatusColumnRecord>> ProcessesControllerInstance;
   typedef LogsController<Logs, Database, LogAdapter<Database, StatusColumnRecord>, LogRecord> LogsControllerInstance;
-
-  typedef ConsoleThread<ProfilesControllerInstance, ProcessesControllerInstance, LogsControllerInstance> ConsoleThreadInstance;
 
   // GUI Builder to parse UI from xml file
   Glib::RefPtr<Gtk::Builder> builder;
@@ -96,7 +101,7 @@ private:
   std::shared_ptr<LogsControllerInstance> logs_control;
 
   // Second thread for calling command line utilities
-  std::shared_ptr<ConsoleThreadInstance> console;
+  std::shared_ptr<ConsoleThread> console;
 };
 
 #endif // MAIN_WINDOW_H
