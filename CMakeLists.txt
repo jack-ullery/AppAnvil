@@ -59,10 +59,6 @@ set(GENERATED_DIR ${PROJECT_RESOURCE_DIR}/generated)
 set(XML_GRESOURCE ${PROJECT_UI_DIR}/resources.gresource.xml)
 set(RESOURCE_BUNDLE_OUTPUT ${GENERATED_DIR}/resource.autogen.c)
 
-set(PKEXEC_POLICY_IN ${PROJECT_RESOURCE_DIR}/pkexec.policy.in)
-set(PKEXEC_POLICY ${GENERATED_DIR}/com.github.jack-ullery.AppAnvil.pkexec.policy)
-configure_file("${PKEXEC_POLICY_IN}" "${PKEXEC_POLICY}" @ONLY) 
-
 set(LICENSE_FILE "${CMAKE_CURRENT_SOURCE_DIR}/docs/copyright")
 set(ICON_FILE "${PROJECT_UI_DIR}/misc/icon.svg")
 
@@ -247,12 +243,6 @@ set(CPACK_DEBIAN_PACKAGE_DEPENDS "libgtkmm-3.0-dev,libjsoncpp-dev,libapparmor-de
 set(CPACK_PACKAGE_CONTACT "Jack Ullery")
 set(CPACK_INSTALL_SCRIPT "cmake_install.cmake")
 include(CPack)
-
-#### Set install target to also modify pkexec ####
-install(
-  FILES ${PKEXEC_POLICY}
-  DESTINATION /usr/share/polkit-1/actions/
-)
 
 #### Set install target to make snap profiles modifiable ####
 # This creates symbolic links in `/var/lib/snapd/apparmor/profiles`, to make it easier to modify these profiles
