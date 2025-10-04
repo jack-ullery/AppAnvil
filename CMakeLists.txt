@@ -8,13 +8,12 @@ set(PROJECT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 ### Sources that need to be built ###
 set(
   SOURCES
-  ${PROJECT_SOURCE_DIR}/main_window.cc
-  ${PROJECT_SOURCE_DIR}/console_thread.cc
   ${PROJECT_SOURCE_DIR}/threads/blocking_queue.cc
+  ${PROJECT_SOURCE_DIR}/threads/async_process.cc
   ${PROJECT_SOURCE_DIR}/threads/command_caller.cc
   ${PROJECT_SOURCE_DIR}/threads/dispatcher_middleman.cc
   ${PROJECT_SOURCE_DIR}/threads/log_record.cc
-  ${PROJECT_SOURCE_DIR}/threads/log_reader.cc
+ # ${PROJECT_SOURCE_DIR}/threads/log_reader.cc
   ${PROJECT_SOURCE_DIR}/tabs/model/database.cc
   ${PROJECT_SOURCE_DIR}/tabs/model/combobox_store.cc
   ${PROJECT_SOURCE_DIR}/tabs/model/status_column_record.cc
@@ -39,6 +38,8 @@ set(
   ${PROJECT_SOURCE_DIR}/tabs/view/scrolled_view.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/add_abstraction.cc
   ${PROJECT_SOURCE_DIR}/tabs/view/add_file_rule.cc
+  ${PROJECT_SOURCE_DIR}/console_thread.cc
+  ${PROJECT_SOURCE_DIR}/main_window.cc
 )
 
 ### All the code globbed together for easy formatting ###

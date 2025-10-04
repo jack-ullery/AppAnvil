@@ -1,5 +1,4 @@
 #include "main_window.h"
-#include "console_thread.h"
 
 #include <gtkmm/button.h>
 #include <gtkmm/enums.h>
@@ -95,18 +94,6 @@ void MainWindow::on_search_toggle()
 bool MainWindow::on_switch(GdkEvent *event)
 {
   std::ignore = event;
-
-  const std::string visible_child = m_tab_stack.get_visible_child_name();
-  if (visible_child == "prof") {
-    console->send_refresh_message(PROFILE);
-    help_toggle.set_help_type(Help::Type::PROFILE);
-  } else if (visible_child == "proc") {
-    console->send_refresh_message(PROCESS);
-    help_toggle.set_help_type(Help::Type::PROCESS);
-  } else if (visible_child == "logs") {
-    console->send_refresh_message(LOGS);
-    help_toggle.set_help_type(Help::Type::LOGS);
-  }
-
+  console->send_refresh_message();
   return false;
 }

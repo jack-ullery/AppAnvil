@@ -9,35 +9,28 @@
 #include "tabs/view/profiles.h"
 #include "threads/command_caller.h"
 
-#include <iostream>
-#include <stdexcept>
+#include <memory>
 #include <string>
-#include <tuple>
 
 template<class ProfilesController, class ProcessesController, class LogsController>
 ConsoleThread<ProfilesController, ProcessesController, LogsController>::ConsoleThread(std::shared_ptr<ProfilesController> prof,
                                                                                       std::shared_ptr<ProcessesController> proc,
                                                                                       std::shared_ptr<LogsController> logs)
-  : last_state{ PROFILE },
+  : aa_caller_proc{ CommandCaller::call_aa_caller() },
     dispatch_man(std::move(prof), std::move(proc), std::move(logs)),
     asynchronous_thread(
       std::async(std::launch::async, &ConsoleThread<ProfilesController, ProcessesController, LogsController>::console_caller, this))
 {
-  // Get all the important data at startup
-  send_refresh_message(PROFILE);
-  send_refresh_message(PROCESS);
-  send_refresh_message(LOGS);
 }
 
 template<class ProfilesController, class ProcessesController, class LogsController>
-void ConsoleThread<ProfilesController, ProcessesController, LogsController>::send_refresh_message(TabState new_state)
+void ConsoleThread<ProfilesController, ProcessesController, LogsController>::send_refresh_message()
 {
   std::unique_lock<std::mutex> lock(task_ready_mtx);
   // Create a message with the state to refresh for, but no data
-  Message message(REFRESH, new_state, {});
+  Message message(REFRESH, {});
   // Send the message to the queue, this lets the other thread know what it should do.
   queue.push(message);
-  last_state = new_state;
   cv.notify_one();
 }
 
@@ -49,7 +42,7 @@ void ConsoleThread<ProfilesController, ProcessesController, LogsController>::sen
 {
   std::unique_lock<std::mutex> lock(task_ready_mtx);
   // Create a message with the state to refresh for, but no data
-  Message message(CHANGE_STATUS, OTHER, { profile, old_status, new_status });
+  Message message(CHANGE_STATUS, { profile, old_status, new_status });
   // Send the message to the queue, this lets the other thread know what it should do.
   queue.push(message);
   cv.notify_one();
@@ -59,7 +52,7 @@ template<class ProfilesController, class ProcessesController, class LogsControll
 void ConsoleThread<ProfilesController, ProcessesController, LogsController>::send_quit_message()
 {
   std::unique_lock<std::mutex> lock(task_ready_mtx);
-  Message message(QUIT, OTHER, {});
+  Message message(QUIT, {});
   queue.push(message);
   cv.notify_one();
 }
@@ -72,39 +65,7 @@ void ConsoleThread<ProfilesController, ProcessesController, LogsController>::ree
   lock.unlock();
 
   // Send a refresh message
-  send_refresh_message(last_state);
-}
-
-template<class ProfilesController, class ProcessesController, class LogsController>
-void ConsoleThread<ProfilesController, ProcessesController, LogsController>::run_command(TabState state)
-{
-  if (should_try_refresh) {
-    switch (state) {
-      case PROFILE: {
-        auto results       = CommandCaller::get_status();
-        should_try_refresh = results.second;
-        dispatch_man.update_profiles(results.first, !should_try_refresh);
-      } break;
-
-      case PROCESS: {
-        auto results       = CommandCaller::get_unconfined();
-        should_try_refresh = results.second;
-        dispatch_man.update_processes(results.first, !should_try_refresh);
-      } break;
-
-      case LOGS: {
-        auto results       = log_reader.read_logs();
-        should_try_refresh = results.second;
-        dispatch_man.update_logs(results.first, !should_try_refresh);
-      } break;
-
-      case OTHER:
-        // Do nothing.
-        break;
-    }
-
-    // std::unique_lock<std::mutex> lock(task_ready_mtx);
-  }
+  send_refresh_message();
 }
 
 template<class ProfilesController, class ProcessesController, class LogsController>
@@ -127,13 +88,19 @@ ConsoleThread<ProfilesController, ProcessesController, LogsController>::wait_for
 
     if (cv_status == std::cv_status::timeout) {
       // Create a message with the state to refresh for, but no data
-      Message message(REFRESH, last_state, {});
+      Message message(REFRESH, {});
       // Send the message to the queue, this lets the other thread know what it should do.
       queue.push(message);
     }
   }
 
   return queue.pop();
+}
+
+template<class ProfilesController, class ProcessesController, class LogsController>
+void ConsoleThread<ProfilesController, ProcessesController, LogsController>::handle_refresh()
+{
+  
 }
 
 template<class ProfilesController, class ProcessesController, class LogsController>
@@ -145,7 +112,7 @@ void ConsoleThread<ProfilesController, ProcessesController, LogsController>::con
 
     switch (message.event) {
       case REFRESH:
-        run_command(message.state);
+        handle_refresh();
         break;
 
       case CHANGE_STATUS: {
@@ -154,7 +121,7 @@ void ConsoleThread<ProfilesController, ProcessesController, LogsController>::con
         const std::string new_status = message.data.at(2);
         std::string return_message   = CommandCaller::execute_change(profile, old_status, new_status);
         dispatch_man.update_prof_apply_text(return_message);
-        run_command(PROFILE);
+        handle_refresh();
       } break;
 
       case QUIT:
@@ -166,13 +133,11 @@ void ConsoleThread<ProfilesController, ProcessesController, LogsController>::con
 
 // Move Assignment Operator
 template<class ProfilesController, class ProcessesController, class LogsController>
-ConsoleThread<ProfilesController, ProcessesController, LogsController>
-  &ConsoleThread<ProfilesController, ProcessesController, LogsController>::operator=(ConsoleThread &&other) noexcept
+ConsoleThread<ProfilesController, ProcessesController, LogsController> &
+ConsoleThread<ProfilesController, ProcessesController, LogsController>::operator=(ConsoleThread &&other) noexcept
 {
-  queue      = other.queue;
-  last_state = other.last_state;
-  // log_cursor = other.log_cursor;
-  // log_reader = other.log_reader;
+  queue = other.queue;
+  // aa_caller_proc = other.aa_caller_proc;
   // dispatch_man = other.dispatch_man;
   return *this;
 }

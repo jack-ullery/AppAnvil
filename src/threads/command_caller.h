@@ -7,6 +7,8 @@
 #include <utility>
 #include <vector>
 
+#include "async_process.h"
+
 #ifdef TESTS_ENABLED
 #include <gtest/gtest.h>
 #endif
@@ -29,44 +31,7 @@ public:
   CommandCaller &operator=(const CommandCaller &) = default;
   CommandCaller &operator=(CommandCaller &&)      = delete;
 
-  /**
-   * @brief Return the output of `aa-caller -s`
-   *
-   * @details
-   * Uses aa-caller, to call aa-status to get a list of profiles and processes confined by apparmor.
-   *
-   * Wrapping this call in aa-caller ensures that the user does not need to authenticate
-   * to pkexec every few seconds.
-   *
-   * @returns std::pair<std::string, bool> the raw output of aa-status and whether the call to pkexec was successful
-   */
-  static std::pair<std::string, bool> get_status() noexcept;
-
-  /**
-   * @brief Return the output of `aa-caller -u`
-   *
-   * @details
-   * Uses aa-caller, to call aa-unconfined to get a list of processes not confined by apparmor.
-   *
-   * Wrapping this call in aa-caller ensures that the user does not need to authenticate
-   * to pkexec every few seconds.
-   *
-   * @returns std::pair<std::string, bool> the raw output of aa-unconfined and whether the call to pkexec was successful
-   */
-  static std::pair<std::string, bool> get_unconfined() noexcept;
-
-  /**
-   * @brief Return the output of `aa-caller -l`
-   *
-   * @details
-   * Uses aa-caller which calls ausearch to get a list of logs that may pertain to AppArmor.
-   *
-   * Wrapping this call in aa-caller ensures that the user does not need to authenticate
-   * to pkexec every few seconds.
-   *
-   * @returns std::pair<std::string, bool> the raw output of ausearch and whether the call to pkexec was successful
-   */
-  static std::pair<std::string, bool> get_logs(const std::string &checkpoint_filepath) noexcept;
+  static AsyncProcess call_aa_caller() noexcept;
 
   /**
    * @brief Returns true if AppArmor is enabled on the system
@@ -120,11 +85,10 @@ protected:
   // Used to call command-line commands from `/usr/sbin`
   virtual results call_command(const std::vector<std::string> &command);
   virtual std::string call_command(const std::vector<std::string> &command, const std::string &return_on_error);
+  virtual AsyncProcess call_command_async(const std::vector<std::string> &command);
 
   // Dependency Injection: For unit testing
-  static std::pair<std::string, bool> get_status(CommandCaller *caller) noexcept;
-  static std::pair<std::string, bool> get_unconfined(CommandCaller *caller) noexcept;
-  static std::pair<std::string, bool> get_logs(CommandCaller *caller, const std::string &checkpoint_filepath) noexcept;
+  static AsyncProcess call_aa_caller(CommandCaller *caller) noexcept;
   static std::string load_profile(CommandCaller *caller, const std::string &fullFileName);
   static std::string disable_profile(CommandCaller *caller, const std::string &profileName);
   static std::string execute_change(CommandCaller *caller,

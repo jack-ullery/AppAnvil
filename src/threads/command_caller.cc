@@ -1,7 +1,7 @@
 #include "command_caller.h"
+#include "async_process.h"
 
 #include <filesystem>
-#include <fstream>
 #include <glibmm/spawn.h>
 #include <iostream>
 #include <stdexcept>
@@ -37,56 +37,26 @@ std::string CommandCaller::call_command(const std::vector<std::string> &command,
   return result.output;
 }
 
+AsyncProcess CommandCaller::call_command_async(const std::vector<std::string> &command)
+{
+  Glib::Pid child_pid;
+  Glib::Pid stdout_fd;
+  std::vector<std::string> envp = { "PATH=/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin" };
+
+  Glib::spawn_async_with_pipes("/usr/sbin/", command, envp, Glib::SpawnFlags::SPAWN_SEARCH_PATH_FROM_ENVP, {}, &child_pid, nullptr, &stdout_fd);
+
+  return AsyncProcess(child_pid, stdout_fd);
+}
+
 inline bool contains(const std::string &big_str, const std::string &small_str)
 {
   return big_str.find(small_str) != std::string::npos;
 }
 
-std::pair<std::string, bool> CommandCaller::get_status(CommandCaller *caller) noexcept
+AsyncProcess CommandCaller::call_aa_caller(CommandCaller *caller) noexcept
 {
-  std::vector<std::string> command = { "pkexec", "aa-caller", "-s" };
-  std::string return_on_error      = "{\"processes\": {}, \"profiles\": {}}";
-
-  auto result = caller->call_command(command);
-
-  if (result.exit_status != 0) {
-    std::cerr << command[0] << ": " << result.error << std::endl;
-    return { return_on_error, false };
-  }
-
-  return { result.output, true };
-}
-
-std::pair<std::string, bool> CommandCaller::get_unconfined(CommandCaller *caller) noexcept
-{
-  std::vector<std::string> command = { "pkexec", "aa-caller", "-u" };
-
-  auto result = caller->call_command(command);
-
-  if (result.exit_status != 0 && contains(result.error, "Request dismissed")) {
-    std::cerr << command[0] << ": " << result.error << std::endl;
-    return { "", false };
-  }
-
-  return { result.output, true };
-}
-
-std::pair<std::string, bool> CommandCaller::get_logs(CommandCaller *caller, const std::string &checkpoint_filepath) noexcept
-{
-  std::vector<std::string> command = { "pkexec", "aa-caller", "-l" };
-
-  if (!checkpoint_filepath.empty()) {
-    command.push_back(checkpoint_filepath);
-  }
-
-  auto result = caller->call_command(command);
-
-  if (result.exit_status != 0 && contains(result.error, "Request dismissed")) {
-    std::cerr << command[0] << ": " << result.error << std::endl;
-    return { "", false };
-  }
-
-  return { result.output, true };
+  std::vector<std::string> command = { "pkexec", "aa-caller" };
+  return caller->call_command_async(command);
 }
 
 std::string CommandCaller::load_profile(CommandCaller *caller, const std::string &fullFileName)
@@ -178,22 +148,10 @@ bool CommandCaller::get_enabled(CommandCaller *caller) noexcept
 }
 
 // Static public methods
-std::pair<std::string, bool> CommandCaller::get_status() noexcept
+AsyncProcess CommandCaller::call_aa_caller() noexcept
 {
   CommandCaller caller;
-  return get_status(&caller);
-}
-
-std::pair<std::string, bool> CommandCaller::get_unconfined() noexcept
-{
-  CommandCaller caller;
-  return get_unconfined(&caller);
-}
-
-std::pair<std::string, bool> CommandCaller::get_logs(const std::string &checkpoint_filepath) noexcept
-{
-  CommandCaller caller;
-  return get_logs(&caller, checkpoint_filepath);
+  return call_aa_caller(&caller);
 }
 
 std::string CommandCaller::load_profile(const std::string &fullFileName)
