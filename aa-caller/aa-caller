@@ -40,6 +40,10 @@ def get_journalctl(cursor = None):
     cursor = data[cursor_index:]
     return raw_data, cursor
 
+def get_ausearch():
+    cmd = ["ausearch", "--raw", "-m", "AVC", "--checkpoint", ausearch_cursor_file]
+    return run_command(cmd)
+
 # Prints out "value" as a line of JSON
 def print_dataline(key, value):
     if value != None:

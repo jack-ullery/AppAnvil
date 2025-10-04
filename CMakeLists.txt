@@ -50,9 +50,6 @@ file(GLOB_RECURSE FORMAT_SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/test/src/*.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/test/src/*.h
   ${CMAKE_CURRENT_SOURCE_DIR}/test/src/*.inl
-  ${CMAKE_CURRENT_SOURCE_DIR}/aa-caller/src/*.cc
-  ${CMAKE_CURRENT_SOURCE_DIR}/aa-caller/src/*.h
-  ${CMAKE_CURRENT_SOURCE_DIR}/aa-caller/src/*.inl
 )
 
 set(PROJECT_RESOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/resources)
@@ -211,13 +208,18 @@ pkg_check_modules(GTEST gtest)
 pkg_check_modules(GMOCK gmock)
 
 enable_testing()
-add_subdirectory(aa-caller)
 add_subdirectory(test)
 
 #### Create install target to install binaries  ####
 install(
   TARGETS ${PROJECT_NAME}
   DESTINATION bin
+)
+
+#### Install aa-caller script ####
+install(
+  PROGRAMS "${CMAKE_CURRENT_SOURCE_DIR}/aa-caller/aa-caller"
+  DESTINATION sbin
 )
 
 #### Install desktop entry file ####
