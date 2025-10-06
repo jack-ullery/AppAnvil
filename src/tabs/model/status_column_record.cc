@@ -2,6 +2,7 @@
 #include "../entries.h"
 #include "combobox_store.h"
 
+#include <gtkmm.h>
 #include <gtkmm/box.h>
 #include <gtkmm/cellrenderertext.h>
 #include <gtkmm/cellrenderertoggle.h>
@@ -19,8 +20,6 @@
 #include <stdexcept>
 #include <tuple>
 #include <vector>
-
-#include <gtkmm.h>
 
 /*
     Public Methods

@@ -4,7 +4,6 @@
 #include "../view/profiles.h"
 #include "status_controller.h"
 
-#include <cstddef>
 #include <giomm.h>
 #include <glibmm.h>
 #include <gtkmm/treeiter.h>

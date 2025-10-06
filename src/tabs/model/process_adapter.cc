@@ -1,9 +1,6 @@
 #include "process_adapter.h"
 #include "database.h"
 
-#include <regex>
-#include <stdexcept>
-
 template<class Database, class ColumnRecord>
 ProcessTableEntry ProcessAdapter<Database, ColumnRecord>::add_row(const std::string &profile_name,
                                                                   const std::string &process_name,

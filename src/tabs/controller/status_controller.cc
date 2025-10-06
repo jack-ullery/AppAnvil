@@ -1,5 +1,4 @@
 #include "status_controller.h"
-#include "../model/status_column_record.h"
 #include "../search_info.h"
 #include "../view/logs.h"
 #include "../view/processes.h"

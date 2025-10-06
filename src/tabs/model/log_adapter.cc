@@ -3,11 +3,7 @@
 #include "status_column_record.h"
 
 #include <bits/types/time_t.h>
-#include <cstddef>
 #include <gtkmm/treeiter.h>
-#include <iomanip>
-#include <regex>
-#include <stdexcept>
 #include <string>
 
 template<class Database, class ColumnRecord>

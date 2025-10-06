@@ -1,9 +1,7 @@
 #include "profile_loader.h"
 #include "common.h"
 
-#include <iostream>
 #include <string>
-#include <vector>
 
 ProfileLoader::ProfileLoader()
   : builder{ Gtk::Builder::create_from_resource("/modal/load_profile.glade") },

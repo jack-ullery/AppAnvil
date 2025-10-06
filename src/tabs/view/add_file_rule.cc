@@ -1,4 +1,3 @@
-#include <fstream>
 #include <gtkmm/button.h>
 #include <gtkmm/dialog.h>
 #include <gtkmm/filechooserdialog.h>
@@ -9,9 +8,7 @@
 #include <libappanvil/tree/FileMode.hh>
 #include <libappanvil/tree/FileRule.hh>
 #include <libappanvil/tree/PrefixNode.hh>
-#include <utility>
 
-#include "../../threads/command_caller.h"
 #include "add_file_rule.h"
 #include "common.h"
 

@@ -84,7 +84,6 @@ void ConsoleThread::handle_refresh()
       } else {
         std::cerr << "Unkown key from aa-caller: " << key << std::endl;
       }
-      // std::cerr << "done: " << key << std::endl;
     }
   }
 }

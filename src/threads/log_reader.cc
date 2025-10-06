@@ -1,5 +1,4 @@
 #include "log_reader.h"
-#include "command_caller.h"
 #include "log_record.h"
 
 #include <sstream>

@@ -3,7 +3,6 @@
 #include <gtkmm/button.h>
 #include <gtkmm/enums.h>
 #include <gtkmm/togglebutton.h>
-#include <iostream>
 #include <tuple>
 
 using std::placeholders::_1;

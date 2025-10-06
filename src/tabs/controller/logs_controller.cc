@@ -4,7 +4,6 @@
 #include "../model/status_column_record.h"
 #include "../view/logs.h"
 
-#include <exception>
 #include <glibmm/main.h>
 #include <glibmm/priorities.h>
 #include <iostream>

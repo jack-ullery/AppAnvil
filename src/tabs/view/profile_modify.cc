@@ -1,11 +1,9 @@
 #include "profile_modify.h"
-#include "../../threads/command_caller.h"
 #include "add_abstraction.h"
 #include "add_file_rule.h"
 #include "common.h"
 #include "scrolled_view.h"
 
-#include <exception>
 #include <gtkmm/button.h>
 #include <gtkmm/dialog.h>
 #include <gtkmm/enums.h>
@@ -17,7 +15,6 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
-#include <unordered_set>
 
 template<class AppArmorParser>
 std::shared_ptr<Gtk::TreeView> ProfileModifyImpl<AppArmorParser>::get_abstraction_view()

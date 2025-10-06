@@ -6,9 +6,7 @@
 #include <gtkmm/treemodelcolumn.h>
 #include <gtkmm/treemodelsort.h>
 #include <libappanvil/tree/AbstractionRule.hh>
-#include <utility>
 
-#include "../../threads/command_caller.h"
 #include "add_abstraction.h"
 #include "common.h"
 
