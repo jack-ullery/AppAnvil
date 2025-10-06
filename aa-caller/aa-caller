@@ -58,30 +58,33 @@ def main(args):
 
     cursor = None
 
-    while True:
-        # Call "aa-status"
-        status = get_status()
-        if status != last_status and not args.disable_status:
-            print_dataline("status", status)
-            last_status = status
+    try:
+        while True:
+            # Call "aa-status"
+            status = get_status()
+            if status != last_status and not args.disable_status:
+                print_dataline("status", status)
+                last_status = status
 
-        # Call "ps"
-        ps = get_ps()
-        if ps != last_ps and not args.disable_ps:
-            print_dataline("ps", ps)
-            last_ps = ps
+            # Call "ps"
+            ps = get_ps()
+            if ps != last_ps and not args.disable_ps:
+                print_dataline("ps", ps)
+                last_ps = ps
 
-        # Call "journalctl", generating a cursor if needed
-        journalctl, new_cursor = get_journalctl(cursor)
-        if new_cursor != None:
-            cursor = new_cursor
+            # Call "journalctl", generating a cursor if needed
+            journalctl, new_cursor = get_journalctl(cursor)
+            if new_cursor != None:
+                cursor = new_cursor
 
-        if journalctl != last_journalctl and not args.disable_journalctl:
-            print_dataline("journalctl", journalctl)
-            last_journalctl = journalctl
+            if journalctl != last_journalctl and not args.disable_journalctl:
+                print_dataline("journalctl", journalctl)
+                last_journalctl = journalctl
 
-        # Wait for a little bit before calling again
-        time.sleep(args.time)
+            # Wait for a little bit before calling again
+            time.sleep(args.time)
+    except:
+        pass
 
 if __name__ == "__main__":
     description = "A daemon application used internally by the AppAnvil Project to collect logs about AppArmor"
