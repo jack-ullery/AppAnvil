@@ -1,6 +1,10 @@
 #include "console_thread.h"
 #include "threads/command_caller.h"
 
+#include <iostream>
+#include <json/reader.h>
+#include <json/value.h>
+#include <json/writer.h>
 #include <string>
 
 ConsoleThread::ConsoleThread(dispatch_cb_fun prof, dispatch_cb_fun proc, dispatch_cb_fun logs, std::function<void(bool)> show_reauth)
@@ -40,29 +44,12 @@ void ConsoleThread::send_quit_message()
   cv.notify_one();
 }
 
-void ConsoleThread::reenable_authentication_for_refresh()
-{
-  std::unique_lock<std::mutex> lock(task_ready_mtx);
-  should_try_refresh = true;
-  lock.unlock();
-
-  // Send a refresh message
-  send_refresh_message();
-}
-
-std::chrono::time_point<std::chrono::steady_clock> ConsoleThread::get_wait_time_point()
-{
-  auto now       = std::chrono::steady_clock::now();
-  auto time_wait = std::chrono::seconds(ConsoleThread::TIME_WAIT);
-  return now + time_wait;
-}
-
 typename ConsoleThread::Message ConsoleThread::wait_for_message()
 {
   std::unique_lock<std::mutex> lock(task_ready_mtx);
 
   while (queue.empty()) {
-    auto cv_status = cv.condition_variable::wait_until(lock, get_wait_time_point()); // Look into `wait_until`
+    auto cv_status = cv.condition_variable::wait_for(lock, ConsoleThread::TIME_WAIT); // Look into `wait_until`
 
     if (cv_status == std::cv_status::timeout) {
       // Create a message with the state to refresh for, but no data
@@ -75,7 +62,32 @@ typename ConsoleThread::Message ConsoleThread::wait_for_message()
   return queue.pop();
 }
 
-void ConsoleThread::handle_refresh() {}
+void ConsoleThread::handle_refresh()
+{
+  dispatch_man.update_reauth(!aa_caller_proc.valid());
+  if (!aa_caller_proc.valid()) {
+    return;
+  }
+
+  Json::Reader reader;
+  for (const std::string &line : aa_caller_proc.readlines()) {
+    Json::Value root;
+    reader.parse(line, root);
+    for (const std::string &key : root.getMemberNames()) {
+      Json::Value &value = root[key];
+      if (key == "status") {
+        dispatch_man.update_profiles(value);
+      } else if (key == "ps") {
+        dispatch_man.update_processes(value);
+      } else if (key == "journalctl") {
+        dispatch_man.update_logs(value);
+      } else {
+        std::cerr << "Unkown key from aa-caller: " << key << std::endl;
+      }
+      // std::cerr << "done: " << key << std::endl;
+    }
+  }
+}
 
 void ConsoleThread::console_caller()
 {

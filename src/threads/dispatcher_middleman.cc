@@ -35,26 +35,25 @@ DispatcherMiddleman<Dispatcher, Mutex>::DispatcherMiddleman(std::shared_ptr<Disp
 
 // Send methods (called from second thread)
 template<class Dispatcher, class Mutex>
-void DispatcherMiddleman<Dispatcher, Mutex>::update_profiles(const std::string &confined, const bool &had_authentication_error)
+void DispatcherMiddleman<Dispatcher, Mutex>::update_profiles(Json::Value &value)
 {
-  CallData data(PROFILE, confined, had_authentication_error);
+  CallData data(PROFILE, value);
   queue.push(data);
   dispatch->emit();
 }
 
 template<class Dispatcher, class Mutex>
-void DispatcherMiddleman<Dispatcher, Mutex>::update_processes(const std::string &unconfined, const bool &had_authentication_error)
+void DispatcherMiddleman<Dispatcher, Mutex>::update_processes(Json::Value &value)
 {
-  CallData data(PROCESS, unconfined, had_authentication_error);
+  CallData data(PROCESS, value);
   queue.push(data);
   dispatch->emit();
 }
 
 template<class Dispatcher, class Mutex>
-void DispatcherMiddleman<Dispatcher, Mutex>::update_logs(const std::list<std::shared_ptr<LogRecord>> &logs,
-                                                         const bool &had_authentication_error)
+void DispatcherMiddleman<Dispatcher, Mutex>::update_logs(Json::Value &value)
 {
-  CallData data(LOGS, logs, had_authentication_error);
+  CallData data(LOGS, value);
   queue.push(data);
   dispatch->emit();
 }
@@ -62,7 +61,15 @@ void DispatcherMiddleman<Dispatcher, Mutex>::update_logs(const std::list<std::sh
 template<class Dispatcher, class Mutex>
 void DispatcherMiddleman<Dispatcher, Mutex>::update_prof_apply_text(const std::string &text)
 {
-  CallData data(PROFILES_TEXT, text, false);
+  CallData data(PROFILES_TEXT, text);
+  queue.push(data);
+  dispatch->emit();
+}
+
+template<class Dispatcher, class Mutex>
+void DispatcherMiddleman<Dispatcher, Mutex>::update_reauth(const bool &should_reauth)
+{
+  CallData data(should_reauth);
   queue.push(data);
   dispatch->emit();
 }
@@ -75,28 +82,29 @@ void DispatcherMiddleman<Dispatcher, Mutex>::handle_signal()
 
   switch (data.type) {
     case PROFILE:
-      prof(data.string);
+      prof(data.data);
       break;
 
     case PROCESS:
-      proc(data.string);
+      proc(data.data);
       break;
 
     case LOGS:
-      logs(data.string);
+      logs(data.data);
       break;
 
     case PROFILES_TEXT:
-      std::cerr << data.string << std::endl;
+      std::cerr << data.data << std::endl;
+      break;
+
+    case REAUTH:
+      show_reauth(data.should_reauth);
       break;
 
     case NONE:
       // Do nothing...
       break;
   }
-
-  // If there was an error with pkexec, show the prompt asking to reauthenticate
-  show_reauth(data.had_authentication_error);
 }
 
 // Used to avoid linker errors

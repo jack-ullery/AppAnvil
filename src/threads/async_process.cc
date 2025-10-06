@@ -1,5 +1,5 @@
 #include <cassert>
-#include <cstddef>
+#include <fcntl.h>
 #include <glibmm/spawn.h>
 
 #include "async_process.h"
@@ -9,15 +9,21 @@ AsyncProcess::AsyncProcess(const int pid, const int stdin_fd)
     stdin_fd{ stdin_fd }
 {
   assert(valid());
+
+  // Set the file descriptor to non-blocking
+  int flags = fcntl(stdin_fd, F_GETFL, 0);
+  fcntl(stdin_fd, F_SETFL, flags | O_NONBLOCK);
 }
 
 AsyncProcess::~AsyncProcess()
 {
-  if (pid > 0)
+  if (pid > 0) {
     Glib::spawn_close_pid(pid);
+  }
 
-  if (stdin_fd > 0)
+  if (stdin_fd > 0) {
     close(stdin_fd);
+  }
 }
 
 std::list<std::string> AsyncProcess::readlines()
@@ -26,9 +32,7 @@ std::list<std::string> AsyncProcess::readlines()
 
   // Read data from descriptor into stringstream
   std::stringstream ss;
-
-  const size_t bufferSize = 1024;
-  char buffer[bufferSize];
+  char buffer[1024];
 
   ssize_t bytesRead;
   while ((bytesRead = read(stdin_fd, buffer, sizeof(buffer))) > 0) {
@@ -37,16 +41,9 @@ std::list<std::string> AsyncProcess::readlines()
 
   // Split stringstream into list of results
   std::list<std::string> results;
-  std::string data = ss.str();
-  size_t end_pos   = data.length();
-
-  for (size_t start_pos = 0; start_pos < data.length(); start_pos = end_pos) {
-    size_t end_pos = data.find_first_of('\n');
-    if (end_pos == data.npos) {
-      end_pos = data.length();
-    }
-
-    results.emplace_back(data.substr(start_pos, end_pos));
+  std::string line;
+  while (std::getline(ss, line, '\n')) {
+    results.emplace_back(line);
   }
 
   return results;

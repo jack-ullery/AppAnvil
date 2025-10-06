@@ -31,15 +31,6 @@ public:
   // Create a move assignment operator
   ConsoleThread &operator=(ConsoleThread &&other) noexcept;
 
-  /**
-   * @brief Allows sending calls to pkexec if this was disabled previously.
-   *
-   * @details
-   * This is tells ConsoleThread that we want to continue calling `pkexec aa-caller`.
-   * Those pkexec calls may be disabled by ConsoleThread, if the user decides not to authenticate.
-   * We do this, because we want to avoid spamming the user with pkexec prompts
-   */
-  void reenable_authentication_for_refresh();
   void send_refresh_message();
   void send_change_profile_status_message(const std::string &profile, const std::string &old_status, const std::string &new_status);
   void send_quit_message();
@@ -67,7 +58,7 @@ protected:
   void console_caller();
 
 private:
-  static constexpr unsigned int TIME_WAIT = 5;
+  static constexpr std::chrono::seconds TIME_WAIT = std::chrono::seconds(5);
   static std::chrono::time_point<std::chrono::steady_clock> get_wait_time_point();
 
   Message wait_for_message();
@@ -75,7 +66,6 @@ private:
 
   // Member fields
   BlockingQueue<Message> queue;
-  bool should_try_refresh = true;
 
   AsyncProcess aa_caller_proc;
 

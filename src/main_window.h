@@ -13,6 +13,7 @@
 #include "tabs/view/logs.h"
 #include "tabs/view/processes.h"
 #include "tabs/view/profiles.h"
+#include "threads/log_record.h"
 
 #include <gtkmm/applicationwindow.h>
 #include <gtkmm/builder.h>
@@ -67,8 +68,8 @@ protected:
 
   /**
    * @brief Calls the show_reauthenticate_prompt() for each tab
-   * 
-   * @param should_show_reauth 
+   *
+   * @param should_show_reauth
    */
   void show_reauth(bool should_show_reauth);
   inline std::function<void(bool)> get_show_reauth_func();

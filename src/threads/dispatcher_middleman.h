@@ -2,9 +2,9 @@
 #define SRC_THREADS_DISPATCHER_MIDDLEMAN_H
 
 #include "blocking_queue.h"
-#include "log_record.h"
 
 #include <glibmm/dispatcher.h>
+#include <json/value.h>
 #include <memory>
 
 // If the unit tests are enabled, include the following header
@@ -33,9 +33,10 @@ public:
                                std::shared_ptr<Mutex> my_mtx);
 
   // Send methods (called from second thread)
-  void update_profiles(const std::string &confined, const bool &had_authentication_error);
-  void update_processes(const std::string &unconfined, const bool &had_authentication_error);
-  void update_logs(const std::list<std::shared_ptr<LogRecord>> &logs, const bool &had_authentication_error);
+  void update_profiles(Json::Value &value);
+  void update_processes(Json::Value &value);
+  void update_logs(Json::Value &value);
+  void update_reauth(const bool &reauth);
   void update_prof_apply_text(const std::string &text);
 
 protected:
@@ -45,28 +46,25 @@ protected:
     PROFILE,
     PROCESS,
     LOGS,
-    PROFILES_TEXT
+    PROFILES_TEXT,
+    REAUTH
   };
 
   struct CallData
   {
     CallType type;
+    std::string data;
+    bool should_reauth;
 
-    std::string string;
-    std::list<std::shared_ptr<LogRecord>> logs;
-    bool had_authentication_error;
-
-    CallData(CallType a, const std::string &b, const bool &c)
-      : type{ a },
-        string{ b },
-        had_authentication_error{ c }
+    CallData(CallType type, Json::Value data)
+      : type{ type },
+        data{ data.asString() }
     {
     }
 
-    CallData(CallType a, const std::list<std::shared_ptr<LogRecord>> &b, const bool &c)
-      : type{ a },
-        logs{ b },
-        had_authentication_error{ c }
+    CallData(bool should_reauth)
+      : type{ REAUTH },
+        should_reauth{ should_reauth }
     {
     }
   };

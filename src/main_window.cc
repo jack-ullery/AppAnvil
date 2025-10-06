@@ -3,6 +3,7 @@
 #include <gtkmm/button.h>
 #include <gtkmm/enums.h>
 #include <gtkmm/togglebutton.h>
+#include <iostream>
 #include <tuple>
 
 using std::placeholders::_1;
@@ -48,7 +49,7 @@ MainWindow::MainWindow()
   m_search_button.signal_toggled().connect(search_togggle_fun, true);
 
   // Connect the reauthenticate button
-  auto enable_auth_fun = sigc::mem_fun(*console, &ConsoleThread::reenable_authentication_for_refresh);
+  auto enable_auth_fun = sigc::mem_fun(*console, &ConsoleThread::send_refresh_message);
   prof_control->get_tab()->connect_reauthenticate_button(enable_auth_fun);
   proc_control->get_tab()->connect_reauthenticate_button(enable_auth_fun);
   logs_control->get_tab()->connect_reauthenticate_button(enable_auth_fun);
