@@ -23,7 +23,4 @@ Description: Graphical user interface for AppArmor.
  deploying, and configuring AppArmor profiles.
 Depends: ${shlibs:Depends}, 
 	     ${misc:Depends},
-	     libgtkmm-3.0-dev,
-	     libjsoncpp-dev,
-	     libapparmor-dev,
 	     apparmor-utils
