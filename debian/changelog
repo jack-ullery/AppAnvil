@@ -1,3 +1,9 @@
+appanvil (1.0.2) UNRELEASED; urgency=low
+
+  * Remove superfluous dependencies from debian/control
+
+ -- Jack Ullery <jackullery@proton.me>  Wed, 17 Dec 2025 00:04:52 +0000
+
 appanvil (1.0.1) UNRELEASED; urgency=low
 
   * Show reauthentication prompt by default.
